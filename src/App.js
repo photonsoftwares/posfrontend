@@ -25,14 +25,11 @@ const App = () => {
     <>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={<ProtectedRoutingWhenLogin Component={Home} />}
-          />
-          <Route
+          <Route path="/" element={<Home />} />
+          {/* <Route
             path="/login"
             element={<ProtectedRoutingWhenLogout Component={Login} />}
-          />
+          /> */}
         </Routes>
       </BrowserRouter>
     </>

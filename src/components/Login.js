@@ -7,20 +7,29 @@ import { FaUserAlt } from "react-icons/fa";
 import { handleLoginRequest } from "../../src/redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
+
 const Login = () => {
   const dispatch = useDispatch();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("Raja");
+  const [password, setPassword] = useState("admin@123");
   const location = useLocation();
-  const handleSubmit = (e) => {
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
     console.log("USERNAME", username);
     console.log("PASSWORD", password);
-    e.preventDefault();
-    const params = {
-      username,
-      password,
-    };
-    dispatch(handleLoginRequest(params));
+
+    // const params = {
+    //   username,
+    //   password,
+    // };
+    dispatch(
+      handleLoginRequest({
+        user_name: username,
+        password: password,
+      })
+    );
     // localStorage.setItem("token", "87xiuiu89udjw990")
     // location.replace("/");
   };

@@ -2,18 +2,17 @@ import React, { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
 
-import ComponentPropsManagement, {
-  handleSearchedDataRequest,
-  handleAddtoCart,
-  handleInc,
+import {
+  handleAddCartData,
+  handleAddCartDataRequest,
 } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch, useSelector } from "react-redux";
 const Product = ({ item }) => {
   const { cart_data } = useSelector((e) => e.ComponentPropsManagement);
-  console.log("CART DATA", cart_data);
   const [showButton, setShowButton] = useState(true);
   const [qty, setQty] = useState(1);
   const dispatch = useDispatch();
+  console.log("PRODUCT CART DATA", cart_data);
   return (
     <div
       style={{
@@ -25,7 +24,7 @@ const Product = ({ item }) => {
     >
       <div>
         <p className="h6" style={{ fontWeight: "bold" }}>
-          {item.productName}
+          {item.itemName}
         </p>
         <p style={{ fontWeight: "400" }}>₹ {item.price}</p>
       </div>
@@ -43,13 +42,13 @@ const Product = ({ item }) => {
 
         <button
           style={{ width: "100%" }}
-          className="btn btn-outline-danger my-4"
+          className="btn btn-outline-primary my-4"
           onClick={() => {
-            dispatch(handleAddtoCart(item));
+            dispatch(handleAddCartData(item));
             setShowButton(false);
           }}
         >
-          Add to cart
+          Add to Basket
         </button>
       </div>
     </div>
