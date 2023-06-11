@@ -47,7 +47,7 @@ export const ComponentPropsManagement = createSlice({
       // console.log("ADD ITEM PAYLOAD", payload.payload);
       const tempCart = state.cart_data;
 
-      tempCart.map((el) => console.log("EL", el));
+      // tempCart.map((el) => console.log("EL", el));
       // console.log("tempCart", tempCart);
       let find = state.cart_data.findIndex(
         (item) => item.productId === payload.payload.productId
@@ -77,18 +77,18 @@ export const ComponentPropsManagement = createSlice({
       // state.load = true;
     },
     handleQRImageResponse: (state, payload) => {
-      console.log("QR IMAGE RESPONSE", payload);
+      // console.log("QR IMAGE RESPONSE", payload);
       state.get_QR_img = payload.data;
       // window.location.replace("/");
       state.load = false;
     },
     // GET PDF
     handlePdfRequest: (state, payload) => {
-      console.log("QR IMAGE RESPONSE", payload);
+      // console.log("QR IMAGE RESPONSE", payload);
       // state.load = true;
     },
     handlePdfResponse: (state, payload) => {
-      console.log("QR IMAGE RESPONSE", payload);
+      // console.log("QR IMAGE RESPONSE", payload);
       // state.get_QR_img = payload.data;
       // window.location.replace("/");
       state.load = false;

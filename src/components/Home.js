@@ -48,7 +48,7 @@ const Home = () => {
     (e) => e.ComponentPropsManagement
   );
 
-  console.log("TOTAL PRICE", total_price);
+  // console.log("TOTAL PRICE", total_price);
 
   // CART COUNT TOTAL FIX
   dispatch(handleCartTotal());
@@ -261,6 +261,7 @@ const Home = () => {
 
   const handleWhatsSubmit = (event) => {
     event.preventDefault();
+    // alert("Form Sumbited!");
   };
 
   return (
@@ -817,7 +818,7 @@ const Home = () => {
 
           <form
             style={{ height: "100vh", width: "100%" }}
-            action={handleWhatsSubmit}
+            onSubmit={handleWhatsSubmit}
           >
             <div class="mb-3">
               <label for="exampleInputEmail1" class="form-label">

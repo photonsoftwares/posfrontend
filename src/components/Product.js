@@ -12,7 +12,7 @@ const Product = ({ item }) => {
   const [showButton, setShowButton] = useState(true);
   const [qty, setQty] = useState(1);
   const dispatch = useDispatch();
-  console.log("PRODUCT CART DATA", cart_data);
+  // console.log("PRODUCT CART DATA", cart_data);
   return (
     <div
       style={{
@@ -20,6 +20,7 @@ const Product = ({ item }) => {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+        // height: "100%",
       }}
     >
       <div>
