@@ -224,7 +224,7 @@ const Home = () => {
   };
 
   const handleSelect = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
   };
 
   useEffect(() => {
@@ -261,7 +261,8 @@ const Home = () => {
 
   const handleWhatsSubmit = (event) => {
     event.preventDefault();
-    // alert("Form Sumbited!");
+    alert("Form Sumbited!");
+    window.location.reload();
   };
 
   return (
@@ -296,6 +297,18 @@ const Home = () => {
             }}
           >
             <img src={Logo} style={{ height: "50px", width: "40%" }} />
+          </div>
+          <div
+            className=""
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "50px",
+              width: "100%",
+            }}
+          >
+            <h6>New Generation @Cloud POS</h6>{" "}
           </div>
         </div>
         <div className="mt-3 d-flex align-items-center justify-content-center">
