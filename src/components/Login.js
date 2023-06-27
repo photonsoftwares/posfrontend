@@ -6,12 +6,15 @@ import { FaUserAlt } from "react-icons/fa";
 // import { handleLoginRequest } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { handleLoginRequest } from "../../src/redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+  // console.log("NAVIGATE", navigate());
   const dispatch = useDispatch();
-  const [username, setUsername] = useState("Raja");
-  const [password, setPassword] = useState("admin@123");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const location = useLocation();
 
   const handleSubmit = (event) => {
@@ -30,8 +33,10 @@ const Login = () => {
         password: password,
       })
     );
-    // localStorage.setItem("token", "87xiuiu89udjw990")
-    // location.replace("/");
+    // localStorage.setItem("token", "87xiuiu89udjw990");
+    setTimeout(() => {
+      window.location.replace("/");
+    }, 500);
   };
   return (
     <div className="loyality-login">
@@ -85,6 +90,11 @@ const Login = () => {
             Login
           </Button>
         </Form>
+        {/* <div className="mt-4">
+          <Link to="/register">
+            <h2>Register</h2>
+          </Link>
+        </div> */}
       </div>
     </div>
   );

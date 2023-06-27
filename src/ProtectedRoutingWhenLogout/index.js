@@ -5,13 +5,13 @@ const ProtectedRoutingWhenLogout = (props) => {
   const { Component } = props;
   return (
     <>
-      {localStorage.getItem("client_id") ? (
+      {localStorage.getItem("Token") ? (
         <>
-          <Navigate to="/" />
+          <Navigate />
         </>
       ) : (
         <>
-          <Component />
+          <Component to="/login" />
         </>
       )}
     </>

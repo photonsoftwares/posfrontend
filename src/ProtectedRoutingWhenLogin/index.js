@@ -5,7 +5,7 @@ const ProtectedRoutingWhenLogin = (props) => {
   const { Component } = props;
   return (
     <>
-      {localStorage.getItem("client_id") ? (
+      {localStorage.getItem("Token") ? (
         <>
           <Component />
         </>
