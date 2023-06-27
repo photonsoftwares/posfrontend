@@ -61,10 +61,10 @@ const App = () => {
             path="/register"
             element={<ProtectedRoutingWhenLogout Component={Register} />}
           />
-          {/* <Route
-            path="/return"
+          <Route
+            path="/return-item"
             element={<ProtectedRoutingWhenLogout Component={Return} />}
-          /> */}
+          />
           <Route
             path="/add-customer"
             element={<ProtectedRoutingWhenLogin Component={AddCustomer} />}

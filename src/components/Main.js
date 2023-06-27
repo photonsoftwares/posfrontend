@@ -219,7 +219,7 @@ const Main = () => {
                         } else if (item.value === "purchase") {
                           navigate("/add-purchase");
                         } else if (item.value === "return_credit_note") {
-                          navigate("/return");
+                          navigate("/sales-dashboard");
                         }
                       }}
                     >

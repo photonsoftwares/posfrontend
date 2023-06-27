@@ -3,6 +3,8 @@ import { BASE_Url } from "../URL";
 import { toast } from "react-toastify";
 import { json } from "react-router-dom";
 import Navigation from "../Navigation";
+import { confirmAlert } from "react-confirm-alert"; // Import
+import "react-confirm-alert/src/react-confirm-alert.css";
 // import { useNavigate } from "react-router-dom";
 
 function* handleLoginRequest(e) {
@@ -113,7 +115,7 @@ function* handleSearchedDataRequest(e) {
       });
     }
   } else if (jsonData.status === false && jsonData.data == null) {
-    // toast.error("NO ITEM FOUND, would you like to add this Item to Store.??");
+    toast.error("NO ITEM FOUND, would you like to add this Item to Store.??");
     const confirm = window.confirm(
       "NO ITEM FOUND, would you like to add this Item to Store.??"
     );
@@ -124,7 +126,7 @@ function* handleSearchedDataRequest(e) {
       window.location.replace("/add-item");
     } else {
       // history.push("/");
-      window.location.replace("/");
+      window.location.replace("/home");
       // navigate("/");
     }
     yield put({
