@@ -36,17 +36,6 @@ const LinkCustomer = () => {
       });
   };
   useEffect(() => {}, [handleSearch]);
-  // const data = axios
-  //   .post("http://3.111.70.84:8088/api/v1/customer/search-customer", {
-  //     mobile_number: "8644542324",
-  //   })
-  //   .then((res) => {
-  //     console.log(res);
-  //     setDataRes(res);
-  //   });
-
-  // useEffect(() => {
-  // }, [data]);
 
   // console.log(dataRes);
   const debounce = (func) => {

@@ -163,7 +163,7 @@ const AddItem = () => {
     <section>
       <div className="container">
         <div className="row d-flex justify-content-center">
-          <div className="col-lg-5 col-md-10 col-sm-12">
+          <div className="col-lg-5 col-md-10 col-sm-12 px-5">
             {productId ? (
               <div>
                 <p>Upload Pic</p>

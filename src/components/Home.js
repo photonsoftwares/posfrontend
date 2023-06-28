@@ -633,11 +633,11 @@ const Home = () => {
           bottom: "0",
           // marginBottom: "10px",
           backgroundColor: "#ffd700",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          // display: "flex",
+          // alignItems: "center",
+          // justifyContent: "center",
           width: "100%",
-          height: "55px",
+          height: "100px",
           borderRadius: "5px",
         }}
       >
@@ -724,7 +724,7 @@ const Home = () => {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                padding: "10px",
+                // padding: "10px",
                 border: "1px solid #e7e7e7",
                 marginBottom: "10px",
               }}
@@ -1375,6 +1375,18 @@ const Home = () => {
               >
                 WhatsApp <IoLogoWhatsapp size={25} />
               </Button>
+              <div>
+                <TextField
+                  type="email"
+                  className="form-control my-2"
+                  id="customer-name"
+                  required
+                  size="small"
+                  label="Email"
+                // value={email}
+                // onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
             </div>
           </div>
         </Modal.Body>

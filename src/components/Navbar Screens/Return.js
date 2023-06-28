@@ -12,7 +12,7 @@ const Return = () => {
     <section>
       <div className="container">
         <div className="row d-flex justify-content-center">
-          <div className="col-lg-5 col-md-10 col-sm-12 py-4">
+          <div className="col-lg-5 col-md-9 col-sm-12 px-5">
             <div className="d-flex justify-content-center">
               <div class="form-check form-check-inline">
                 <input
@@ -70,7 +70,7 @@ const Return = () => {
                 style={{ flex: 1 }}
                 onClick={() => alert(searchItem)}
               >
-                <Button variant="dark">Go</Button>
+                <Button variant="warning">Go</Button>
               </div>
             </div>
             <div className="d-flex flex-column align-items-center justify-content-center">
@@ -87,12 +87,12 @@ const Return = () => {
                   </Button>
                 </div>
                 <div className="d-flex align-items-center justify-content-evenly py-3">
-                  <Button size="sm" variant="outline-dark">
+                  {/* <Button size="sm" variant="outline-dark">
                     Calculate Return
-                  </Button>
-                  <Button size="sm" variant="outline-dark">
+                  </Button> */}
+                  {/* <Button size="sm" variant="outline-dark">
                     Calculate Amount
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
               <Button size="sm" variant="outline-dark" className="mt-3">

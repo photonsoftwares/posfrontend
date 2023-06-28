@@ -119,294 +119,295 @@ const AddPurchase = () => {
 
   return (
     <>
-      <div style={{ width: "100vw" }}>
-        <div style={{ maxWidth: "500px", margin: "auto" }}>
-          {/* <div className="row d-flex justify-content-center">
+      <div className="container">
+        <div className="row d-flex justify-content-center">
+          <div className="col-lg-5 col-md-10 col-sm-12 px-5">
+            {/* <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-10 col-sm-12"> */}
-          <form className="form-box" onSubmit={handleSubmit}>
-            <h2>Add Purchase</h2>
+            <form className="form-box" onSubmit={handleSubmit}>
+              <h2>Add Purchase</h2>
 
-            <div
-              className=""
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-                justifyContent: "space-between",
-              }}
-            >
               <div
-              //  style={{ flex: 1 }}
-              >
-                <TextField
-                  type="text"
-                  className="form-control my-2"
-                  id="customer-name"
-                  size="small"
-                  value={billNumber}
-                  onChange={(e) => setBillnumber(e.target.value)}
-                  required
-                  disabled
-                  label="Bill Number"
-                />
-              </div>
-              <div
-                style={
-                  {
-                    // width: "100%",
-                  }
-                }
-              >
-                <ReactDatePicker
-                  style={{ width: "500px" }}
-                  selected={startDate}
-                  // style={{ zIndex: 2 }}
-                  onChange={(date) => setStartDate(date)}
-                />
-              </div>
-            </div>
-
-            <TextField
-              type="text"
-              className="form-control my-2"
-              id="customer-name"
-              size="small"
-              required
-              value={phoneNumber}
-              onChange={(e) => {
-                optimizedFn(e);
-                setPhoneNumber(e.target.value);
-              }}
-              label="Phone Number"
-            />
-            <TextField
-              type="text"
-              className="form-control my-2"
-              id="customer-name"
-              size="small"
-              required
-              value={partyName}
-              onChange={(e) => setPartyName(e.target.value)}
-              label="Party Name"
-            />
-            <div
-              style={{ width: "100%" }}
-              onClick={() => setAddItem((state) => !state)}
-            >
-              <button
-                className="btn btn-outline-primary"
+                className=""
                 style={{
-                  width: "100%",
                   display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  flexDirection: "column",
+                  width: "100%",
+                  justifyContent: "space-between",
                 }}
               >
-                <AiOutlinePlusCircle />
-                Add Item (Optional)
-              </button>
-            </div>
+                <div
+                //  style={{ flex: 1 }}
+                >
+                  <TextField
+                    type="text"
+                    className="form-control my-2"
+                    id="customer-name"
+                    size="small"
+                    value={billNumber}
+                    onChange={(e) => setBillnumber(e.target.value)}
+                    required
+                    disabled
+                    label="Bill Number"
+                  />
+                </div>
+                <div
+                  style={{
+                    zIndex: 2,
+                  }}
+                >
+                  <ReactDatePicker
+                    style={{ width: "500px" }}
+                    selected={startDate}
+                    // style={{ zIndex: 2 }}
+                    onChange={(date) => setStartDate(date)}
+                  />
+                </div>
+              </div>
 
-            <div>
-              {addItem ? (
-                <>
-                  <div>
-                    <TextField
-                      type="text"
-                      className="form-control my-2"
-                      id="customer-name"
-                      size="small"
-                      required
-                      value={itemName}
-                      onChange={(e) => {
-                        optimizedFnItemSearch(e);
-                        setItemName(e.target.value);
-                      }}
-                      label="Item Name"
-                    />
-                    <TextField
-                      type="text"
-                      className="form-control my-2"
-                      id="customer-name"
-                      size="small"
-                      required
-                      value={quantity}
-                      onChange={(e) => setQuantity(e.target.value)}
-                      label="Quantity"
-                    />
-                    <TextField
-                      type="text"
-                      className="form-control my-2"
-                      id="customer-name"
-                      size="small"
-                      required
-                      value={itemCode}
-                      onChange={(e) => setItemCode(e.target.value)}
-                      label="Item Code / Barcode"
-                    />
-                    <TextField
-                      type="text"
-                      className="form-control my-2"
-                      id="customer-name"
-                      size="small"
-                      required
-                      value={itemCategory}
-                      onChange={(e) => setItemCategory(e.target.value)}
-                      label="Item Category"
-                    />
-                    <TextField
-                      type="text"
-                      className="form-control my-2"
-                      id="customer-name"
-                      size="small"
-                      // required
-                      // placeholder={`HSN/SAC Code ${(<BiSearchAlt2 />)}`}
-                      value={mobile}
-                      onChange={(e) => setMobile(e.target.value)}
-                      label="Phone Number"
-                    />
-                  </div>
-                  <div style={{ marginBottom: 0, paddingBottom: 0 }}>
-                    <div
-                    // style={{ width: "500px" }}
-                    >
-                      <ul
-                        className="d-flex flex-row"
-                        style={{
-                          listStyle: "none",
-                          marginRight: "40px",
-                          // width: "500px",
+              <TextField
+                type="text"
+                className="form-control my-2"
+                id="customer-name"
+                size="small"
+                required
+                value={phoneNumber}
+                onChange={(e) => {
+                  optimizedFn(e);
+                  setPhoneNumber(e.target.value);
+                }}
+                // style={{ zIndex: -2 }}
+                label="Phone Number"
+              />
+              <TextField
+                type="text"
+                className="form-control my-2"
+                id="customer-name"
+                size="small"
+                required
+                value={partyName}
+                onChange={(e) => setPartyName(e.target.value)}
+                label="Party Name"
+              />
+              <div
+                style={{ width: "100%" }}
+                onClick={() => setAddItem((state) => !state)}
+              >
+                <button
+                  className="btn btn-outline-primary"
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <AiOutlinePlusCircle />
+                  Add Item (Optional)
+                </button>
+              </div>
+
+              <div>
+                {addItem ? (
+                  <>
+                    <div>
+                      <TextField
+                        type="text"
+                        className="form-control my-2"
+                        id="customer-name"
+                        size="small"
+                        required
+                        value={itemName}
+                        onChange={(e) => {
+                          optimizedFnItemSearch(e);
+                          setItemName(e.target.value);
                         }}
+                        label="Item Name"
+                      />
+                      <TextField
+                        type="text"
+                        className="form-control my-2"
+                        id="customer-name"
+                        size="small"
+                        required
+                        value={quantity}
+                        onChange={(e) => setQuantity(e.target.value)}
+                        label="Quantity"
+                      />
+                      <TextField
+                        type="text"
+                        className="form-control my-2"
+                        id="customer-name"
+                        size="small"
+                        required
+                        value={itemCode}
+                        onChange={(e) => setItemCode(e.target.value)}
+                        label="Item Code / Barcode"
+                      />
+                      <TextField
+                        type="text"
+                        className="form-control my-2"
+                        id="customer-name"
+                        size="small"
+                        required
+                        value={itemCategory}
+                        onChange={(e) => setItemCategory(e.target.value)}
+                        label="Item Category"
+                      />
+                      <TextField
+                        type="text"
+                        className="form-control my-2"
+                        id="customer-name"
+                        size="small"
+                        // required
+                        // placeholder={`HSN/SAC Code ${(<BiSearchAlt2 />)}`}
+                        value={mobile}
+                        onChange={(e) => setMobile(e.target.value)}
+                        label="Phone Number"
+                      />
+                    </div>
+                    <div style={{ marginBottom: 0, paddingBottom: 0 }}>
+                      <div
+                      // style={{ width: "500px" }}
                       >
-                        {tabs.map((tab, index) => (
-                          <li
-                            key={tab.id}
-                            // className="border-bottom border border-danger"
-                            style={{
-                              border: "none",
-                              outline: "none",
-                              flex: 1,
-                              alignItems: "center",
-                              display: "flex",
-                              justifyContent: "center",
-                              borderBottom:
-                                index === value && "2px solid red",
-                            }}
-                          >
-                            <button
-                              style={{ outline: "none", border: "none" }}
-                              onClick={() => setValue(index)}
-                              className={`btn mx-2`}
+                        <ul
+                          className="d-flex flex-row"
+                          style={{
+                            listStyle: "none",
+                            marginRight: "40px",
+                            // width: "500px",
+                          }}
+                        >
+                          {tabs.map((tab, index) => (
+                            <li
+                              key={tab.id}
+                              // className="border-bottom border border-danger"
+                              style={{
+                                border: "none",
+                                outline: "none",
+                                flex: 1,
+                                alignItems: "center",
+                                display: "flex",
+                                justifyContent: "center",
+                                borderBottom:
+                                  index === value && "2px solid red",
+                              }}
                             >
-                              {tab.button}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                      <div
-                      // className="d-flex justify-content-center"
-                      >
-                        {component}
-                      </div>
-                      <div
-                        className="d-flex flex-row"
-                        style={{ width: "100%" }}
-                      >
-                        <div style={{ flex: 1, width: "100%" }}>
-                          <button
-                            style={{
-                              width: "100%",
-                              outline: "none",
-                              border: "none",
-                              padding: "10px",
-                              backgroundColor: "#e2e2e2",
-                              color: "#000",
-                            }}
-                            className=""
-                          >
-                            Cancel
-                          </button>
+                              <button
+                                style={{ outline: "none", border: "none" }}
+                                onClick={() => setValue(index)}
+                                className={`btn mx-2`}
+                              >
+                                {tab.button}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                        <div
+                        // className="d-flex justify-content-center"
+                        >
+                          {component}
                         </div>
-                        <div style={{ flex: 1 }}>
-                          <button
-                            style={{
-                              width: "100%",
-                              outline: "none",
-                              border: "none",
-                              padding: "10px",
-                              backgroundColor: "red",
-                              color: "#fff",
-                            }}
-                            className=""
-                          >
-                            Save
-                          </button>
+                        <div
+                          className="d-flex flex-row"
+                          style={{ width: "100%" }}
+                        >
+                          <div style={{ flex: 1, width: "100%" }}>
+                            <button
+                              style={{
+                                width: "100%",
+                                outline: "none",
+                                border: "none",
+                                padding: "10px",
+                                backgroundColor: "#e2e2e2",
+                                color: "#000",
+                              }}
+                              className=""
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <button
+                              style={{
+                                width: "100%",
+                                outline: "none",
+                                border: "none",
+                                padding: "10px",
+                                backgroundColor: "red",
+                                color: "#fff",
+                              }}
+                              className=""
+                            >
+                              Save
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </>
-              ) : (
-                ""
-              )}
-            </div>
-            <div
-              style={{
-                height: "300px",
-                width: "100%",
-                marginTop: "10px",
-                backgroundColor: "#e2e2e2",
-                padding: "20px 20px",
-              }}
-            >
-              <div className="d-flex align-items-center justify-content-between">
-                <p>Total Amount</p>
-                <p>₹_____________</p>
+                  </>
+                ) : (
+                  ""
+                )}
               </div>
-            </div>
+              {/* <div
+                style={{
+                  height: "300px",
+                  width: "100%",
+                  marginTop: "10px",
+                  backgroundColor: "#e2e2e2",
+                  padding: "20px 20px",
+                }}
+              >
+                <div className="d-flex align-items-center justify-content-between">
+                  <p>Total Amount</p>
+                  <p>₹_____________</p>
+                </div>
+              </div> */}
 
-            <div className="mt-3">
-              <button
-                type="submit"
-                className="btn btn-primary"
-                style={{
-                  backgroundColor: "#fc0202",
-                  outline: "none",
-                  border: "none",
-                  fontSize: "20px",
-                  padding: "10px 20px",
-                  borderRadius: "10px",
-                  color: "#fff",
-                }}
-              >
-                Save
-              </button>
-              <Link
-                to="/"
-                type="submit"
-                // onClick={()=>}
-                className="btn btn-primary"
-                onClick={() => dispatch(handleOpneMenuRequest(false))}
-                style={{
-                  backgroundColor: "gray",
-                  outline: "none",
-                  border: "none",
-                  marginLeft: "20px",
-                  fontSize: "20px",
-                  padding: "10px 20px",
-                  borderRadius: "10px",
-                  color: "#fff",
-                }}
-              >
-                Close
-              </Link>
-            </div>
-          </form>
-          {/* </div>
+              <div className="mt-3">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{
+                    backgroundColor: "#fc0202",
+                    outline: "none",
+                    border: "none",
+                    fontSize: "20px",
+                    padding: "10px 20px",
+                    borderRadius: "10px",
+                    color: "#fff",
+                  }}
+                >
+                  Save
+                </button>
+                <Link
+                  to="/"
+                  type="submit"
+                  // onClick={()=>}
+                  className="btn btn-primary"
+                  onClick={() => dispatch(handleOpneMenuRequest(false))}
+                  style={{
+                    backgroundColor: "gray",
+                    outline: "none",
+                    border: "none",
+                    marginLeft: "20px",
+                    fontSize: "20px",
+                    padding: "10px 20px",
+                    borderRadius: "10px",
+                    color: "#fff",
+                  }}
+                >
+                  Close
+                </Link>
+              </div>
+            </form>
+            {/* </div>
         </div> */}
+          </div>
         </div>
       </div>
-    </ >
+    </>
   );
 };
 
