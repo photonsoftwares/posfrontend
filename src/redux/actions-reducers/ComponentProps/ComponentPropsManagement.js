@@ -23,8 +23,50 @@ const initialComponentPropsManagementState = {
   handle_link_user_data: {},
   save_product_id: "",
   open_menu: false,
-  // qr_file_name: "",
-  // pdf_file_name: "",
+  user_data: localStorage.getItem("User_data") ? JSON.parse(localStorage.getItem("User_data")) : null,
+  sales_overview_data: null,
+  last_week_sales: 0,
+  last_month_sales: 0,
+  number_of_customer: 0,
+  low_stock_items: 0,
+  quantity_in_hand: 0,
+  today_sales: 0,
+  last_fourteen_days: 0,
+  last_sixty_days: 0,
+  yesterday_sales: 0,
+  state_dropdown: [
+    { label: "Andhra Pradesh", value: "Andhra Pradesh" },
+    { label: "Arunachal Pradesh", value: "Arunachal Pradesh" },
+    { label: "Assam", value: "Assam" },
+    { label: "Bihar", value: "Bihar" },
+    { label: "Chhattisgarh", value: "Chhattisgarh" },
+    { label: "Goa", value: "Goa" },
+    { label: "Gujarat", value: "Gujarat" },
+    { label: "Haryana", value: "Haryana" },
+    { label: "Himachal Pradesh", value: "Himachal Pradesh" },
+    { label: "Jammu and Kashmir", value: "Jammu and Kashmir" },
+    { label: "Jharkhand", value: "Jharkhand" },
+    { label: "Karnataka", value: "Karnataka" },
+    { label: "Kerala", value: "Kerala" },
+    { label: "Madhya Pradesh", value: "Madhya Pradesh" },
+    { label: "Maharashtra", value: "Maharashtra" },
+    { label: "Manipur", value: "Manipur" },
+    { label: "Meghalaya", value: "Meghalaya" },
+    { label: "Mizoram", value: "Mizoram" },
+    { label: "Nagaland", value: "Nagaland" },
+    { label: "Odisha", value: "Odisha" },
+    { label: "Punjab", value: "Punjab" },
+    { label: "Rajasthan", value: "Rajasthan" },
+    { label: "Sikkim", value: "Sikkim" },
+    { label: "Tamil Nadu", value: "Tamil Nadu" },
+    { label: "Telangana", value: "Telangana" },
+    { label: "Tripura", value: "Tripura" },
+    { label: "Uttarakhand", value: "Uttarakhand" },
+    { label: "Uttar Pradesh", value: "Uttar Pradesh" },
+    { label: "West Bengal", value: "West Bengal" }
+  ],
+  gst_type_dropdown: [],
+  hsn_code_dropdown: []
 };
 
 export const ComponentPropsManagement = createSlice({
@@ -40,8 +82,8 @@ export const ComponentPropsManagement = createSlice({
     handleLoginResponse: (state, payload) => {
       console.log("SEARCH PAYLOAD", payload);
       state.login_data = payload.data;
-      // window.location.replace("/");
       state.load = false;
+      window.location.replace("/");
     },
 
     // Handle Open Menu
@@ -240,6 +282,96 @@ export const ComponentPropsManagement = createSlice({
       console.log("UPLOAD IMAGE RES", payload);
       // state.handle_hsn_codes = payload.data;
     },
+
+    handleUploadItemRequest: (state, payload) => {
+
+    },
+    handleUploadItemResponse: (state, payload) => {
+      // state.flag = !state.flag
+    },
+    handleUploadInventoryRequest: (state, payload) => {
+
+    },
+    handleUploadInventoryResponse: (state, payload) => {
+      // state.flag = !state.flag
+    },
+    handleSalesOverviewRequest: (state, payload) => {
+
+    },
+    handleSalesOverviewResponse: (state, payload) => {
+      const data = payload?.data?.data
+      state.sales_overview_data = data
+      // state.flag = !state.flag
+    },
+    handleLastWeekSalesRequest: (state, payload) => {
+
+    },
+    handleLastWeekSalesResponse: (state, payload) => {
+      const data = payload?.data?.data
+      state.last_week_sales = data
+    },
+
+    handleLastMonthSalesRequest: (state, payload) => {
+
+    },
+    handleLastMonthSalesResponse: (state, payload) => {
+      const data = payload?.data?.data
+      state.last_month_sales = data
+    },
+    handleTodaySalesRequest: (state, payload) => {
+      // state.add_temple_modal_close_flag = true
+    },
+    handleTodaySalesResponse: (state, payload) => {
+      state.today_sales = payload.data.data ? payload.data.data : 0
+    },
+    handleNumberOfCustomerRequest: (state, payload) => {
+
+    },
+    handleNumberOfCustomerResponse: (state, payload) => {
+      state.number_of_customer = payload.data.data ? payload.data.data : 0
+    },
+    handleLowStockItemsRequest: (state, payload) => {
+
+    },
+    handleLowStockItemsResponse: (state, payload) => {
+      state.low_stock_items = payload.data.data ? payload.data.data : 0
+    },
+    handleQuantityInHandRequest: (state, payload) => {
+
+    },
+    handleQuantityInHandResponse: (state, payload) => {
+      state.quantity_in_hand = payload.data.data ? payload.data.data : 0
+    },
+    handleLastFourteenDaysSalesRequest: (state, payload) => {
+
+    },
+    handleLastFourteenDaysSalesResponse: (state, payload) => {
+      state.last_fourteen_days = payload.data.data ? payload.data.data : 0
+    },
+    handleLastSixtyDaysSalesRequest: (state, payload) => {
+
+    },
+    handleLastSixtyDaysSalesResponse: (state, payload) => {
+      state.last_sixty_days = payload.data.data ? payload.data.data : 0
+    },
+    handleYesterdaySalesRequest: (state, payload) => {
+
+    },
+    handleYesterdaySalesResponse: (state, payload) => {
+      state.yesterday_sales = payload.data.data ? payload.data.data : 0
+    },
+    handleGstTypeDropdownRequest: (state, payload) => {
+
+    },
+    handleGstTypeDropdownResponse: (state, payload) => {
+      state.gst_type_dropdown = payload.data
+    },
+    handleGetHsnCodeDropdownRequest: (state, payload) => {
+
+    },
+    handleGetHsnCodeDropdownResponse: (state, payload) => {
+      state.hsn_code_dropdown = payload.data
+    },
   },
 });
 
@@ -273,6 +405,20 @@ export const {
   // handlePdfRequest,
   handleQRImageRequest,
   getCartTotal,
+  handleUploadItemRequest,
+  handleUploadInventoryRequest,
+  handleSalesOverviewRequest,
+  handleLastWeekSalesRequest,
+  handleLastMonthSalesRequest,
+  handleTodaySalesRequest,
+  handleNumberOfCustomerRequest,
+  handleLowStockItemsRequest,
+  handleQuantityInHandRequest,
+  handleLastFourteenDaysSalesRequest,
+  handleLastSixtyDaysSalesRequest,
+  handleYesterdaySalesRequest,
+  handleGstTypeDropdownRequest,
+  handleGetHsnCodeDropdownRequest
 } = ComponentPropsManagement.actions;
 
 export default ComponentPropsManagement.reducer;

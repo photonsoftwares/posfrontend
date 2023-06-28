@@ -60,7 +60,7 @@ import { TextField } from "@mui/material";
 const Home = () => {
   // console.log("SAAS REGISTER STORE", saasId, registerId, storeId);
   // useEffect(() => {
-  //   if (localStorage.getItem("user_data")) {
+  //   if (localStorage.getItem("User_data")) {
   //   }
   // });
   const [popoverIsOpen, setPopoverIsOpen] = useState(false);
@@ -158,7 +158,7 @@ const Home = () => {
   }, [sumValue, totalDiscountVal]);
 
   // const { registerId, saasId, storeId } = JSON.parse(
-  //   localStorage.getItem("user_data")
+  //   localStorage.getItem("User_data")
   // );
   // console.log("REGISTER HOME", registerId);
   // console.log("--1--", overDicount);

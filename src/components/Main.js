@@ -176,107 +176,119 @@ const Main = () => {
           style={{
             backgroundColor: "#ffd700",
             width: "100%",
+            height: "85vh",
             maxWidth: "500px",
             border: "1px solid black",
           }}
         >
-          <div
-            style={{ fontSize: "20px", fontWeight: "900", paddingLeft: "20px" }}
-          >
-            Create Transactions
-          </div>
-          <div
-            style={{
-              backgroundColor: "white",
-              margin: "20px",
-              borderRadius: "10px",
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              alignItems: "center",
-              userSelect: "none",
-            }}
-          >
-            {create_transaction_arr
-              .filter((io) => io.isActive === true)
-              .map((item) => {
-                return (
-                  <>
-                    <div
-                      key={item.id}
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        flexDirection: "column",
-                        margin: "10px",
-                        marginBottom: "20px",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        if (item.value === "retail_billing") {
-                          navigate("/home");
-                        } else if (item.value === "purchase") {
-                          navigate("/add-purchase");
-                        } else if (item.value === "return_credit_note") {
-                          navigate("/sales-dashboard");
-                        }
-                      }}
-                    >
-                      <div>{item.icon}</div>
-                      <div>{item.label}</div>
-                    </div>
-                  </>
-                );
-              })}
+          <div style={{ height: "75vh", overflow: "auto" }}>
+
+
+            <div
+              style={{ fontSize: "20px", fontWeight: "900", paddingLeft: "20px" }}
+            >
+              Create Transactions
+            </div>
+            <div
+              style={{
+                backgroundColor: "white",
+                margin: "20px",
+                borderRadius: "10px",
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                alignItems: "center",
+                userSelect: "none",
+              }}
+            >
+              {create_transaction_arr
+                .filter((io) => io.isActive === true)
+                .map((item) => {
+                  return (
+                    <>
+                      <div
+                        key={item.id}
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "column",
+                          margin: "10px",
+                          marginBottom: "20px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          if (item.value === "retail_billing") {
+                            navigate("/home");
+                          } else if (item.value === "purchase") {
+                            navigate("/add-purchase");
+                          } else if (item.value === "return_credit_note") {
+                            navigate("/sales-dashboard");
+                          }
+                        }}
+                      >
+                        <div>{item.icon}</div>
+                        <div>{item.label}</div>
+                      </div>
+                    </>
+                  );
+                })}
+            </div>
+
+            <div
+              style={{
+                fontSize: "20px",
+                fontWeight: "900",
+                paddingLeft: "20px",
+                marginTop: "30px",
+              }}
+            >
+              Features
+            </div>
+            <div
+              style={{
+                backgroundColor: "white",
+                margin: "20px",
+                borderRadius: "10px",
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                alignItems: "center",
+                userSelect: "none",
+              }}
+            >
+              {feature_arr
+                .filter((io) => io.isActive === true)
+                .map((item) => {
+                  return (
+                    <>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "column",
+                          margin: "10px",
+                          marginBottom: "20px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          if (item.value === "dashboard") {
+                            navigate("/retailer-dashboard")
+                          }
+                        }}
+                      >
+                        <div>{item.icon}</div>
+                        <div>{item.label}</div>
+                      </div>
+                    </>
+                  );
+                })}
+            </div>
+
           </div>
 
-          <div
-            style={{
-              fontSize: "20px",
-              fontWeight: "900",
-              paddingLeft: "20px",
-              marginTop: "30px",
-            }}
-          >
-            Features
-          </div>
-          <div
-            style={{
-              backgroundColor: "white",
-              margin: "20px",
-              borderRadius: "10px",
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              alignItems: "center",
-              userSelect: "none",
-            }}
-          >
-            {feature_arr
-              .filter((io) => io.isActive === true)
-              .map((item) => {
-                return (
-                  <>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        flexDirection: "column",
-                        margin: "10px",
-                        marginBottom: "20px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <div>{item.icon}</div>
-                      <div>{item.label}</div>
-                    </div>
-                  </>
-                );
-              })}
-          </div>
-          <div style={{ marginTop: "40px" }}>
+          <div style={{}}>
             <div
               style={{
                 backgroundColor: "white",

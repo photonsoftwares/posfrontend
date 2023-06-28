@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 // import Home from "./components/Home";
 import Home from "./components/Home";
 import "./App.css";
@@ -25,12 +25,15 @@ import AddSupplier from "./components/Navbar Screens/AddSupplier";
 import Register from "./components/Register";
 import Main from "./components/Main";
 import Return from "./components/Navbar Screens/Return";
+import RetailerDashboard from "./components/retailer-dashboard/home/index"
+import RetailerDashboardNanbar from "./components/retailer-dashboard/navbar/index"
 // import { Navbar } from "react-bootstrap";
 
 const App = () => {
   const dispatch = useDispatch();
   const login_data = localStorage.getItem("login_data");
-
+  const location = useLocation()
+  console.log("llo", location)
   useEffect(() => {
     if (login_data) {
       dispatch(handleGetUserData(login_data));
@@ -42,93 +45,100 @@ const App = () => {
 
   return (
     <>
-      <BrowserRouter>
+      {location.pathname === "/retailer-dashboard" ? (<>
+        <RetailerDashboardNanbar />
+      </>) : (<>
         <Navbar />
-        <Routes>
-          <Route
-            path="/"
-            element={<ProtectedRoutingWhenLogin Component={Main} />}
-          />
-          <Route
-            path="/home"
-            element={<ProtectedRoutingWhenLogin Component={Home} />}
-          />
-          <Route
-            path="/login"
-            element={<ProtectedRoutingWhenLogout Component={Login} />}
-          />
-          <Route
-            path="/register"
-            element={<ProtectedRoutingWhenLogout Component={Register} />}
-          />
-          <Route
-            path="/return-item"
-            element={<ProtectedRoutingWhenLogout Component={Return} />}
-          />
-          <Route
-            path="/add-customer"
-            element={<ProtectedRoutingWhenLogin Component={AddCustomer} />}
-          />
-          <Route
-            path="/add-party"
-            element={<ProtectedRoutingWhenLogin Component={AddParty} />}
-          />
-          <Route
-            path="/add-supplier"
-            element={<ProtectedRoutingWhenLogin Component={AddSupplier} />}
-          />
-          <Route
-            path="/add-item"
-            element={<ProtectedRoutingWhenLogin Component={AddItem} />}
-          />
-          <Route
-            path="/sales-dashboard"
-            element={<ProtectedRoutingWhenLogin Component={SalesDashboard} />}
-          />
-          <Route
-            path="/inventory-dashboard"
-            element={
-              <ProtectedRoutingWhenLogin Component={InventoryDashboard} />
-            }
-          />
-          <Route
-            path="/GST-report"
-            element={<ProtectedRoutingWhenLogin Component={GSTReport} />}
-          />
-          <Route
-            path="/link-customer"
-            element={<ProtectedRoutingWhenLogin Component={LinkCustomer} />}
-          />
-          <Route
-            path="/add-purchase"
-            element={<ProtectedRoutingWhenLogin Component={AddPurchase} />}
-          />
-          <Route
-            path="/reconciliation-report"
-            element={
-              <ProtectedRoutingWhenLogin Component={ReconciliationReport} />
-            }
-          />
-          <Route
-            path="/sales-dashboard"
-            element={<ProtectedRoutingWhenLogin Component={SalesDashboard} />}
-          />
-          <Route
-            path="/tax"
-            element={<ProtectedRoutingWhenLogin Component={Tax} />}
-          />
-          <Route
-            path="/HSN"
-            element={<ProtectedRoutingWhenLogin Component={Hsn} />}
-          />
-          <Route
-            path="/inventory-dashboard"
-            element={
-              <ProtectedRoutingWhenLogin Component={InventoryDashboard} />
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      </>)}
+      <Routes>
+        <Route
+          path="/"
+          element={<ProtectedRoutingWhenLogin Component={Main} />}
+        />
+        <Route
+          path="/home"
+          element={<ProtectedRoutingWhenLogin Component={Home} />}
+        />
+        <Route
+          path="/retailer-dashboard"
+          element={<ProtectedRoutingWhenLogin Component={RetailerDashboard} />}
+        />
+        <Route
+          path="/login"
+          element={<ProtectedRoutingWhenLogout Component={Login} />}
+        />
+        <Route
+          path="/register"
+          element={<ProtectedRoutingWhenLogout Component={Register} />}
+        />
+        <Route
+          path="/return-item"
+          element={<ProtectedRoutingWhenLogout Component={Return} />}
+        />
+        <Route
+          path="/add-customer"
+          element={<ProtectedRoutingWhenLogin Component={AddCustomer} />}
+        />
+        <Route
+          path="/add-party"
+          element={<ProtectedRoutingWhenLogin Component={AddParty} />}
+        />
+        <Route
+          path="/add-supplier"
+          element={<ProtectedRoutingWhenLogin Component={AddSupplier} />}
+        />
+        <Route
+          path="/add-item"
+          element={<ProtectedRoutingWhenLogin Component={AddItem} />}
+        />
+        <Route
+          path="/sales-dashboard"
+          element={<ProtectedRoutingWhenLogin Component={SalesDashboard} />}
+        />
+        <Route
+          path="/inventory-dashboard"
+          element={
+            <ProtectedRoutingWhenLogin Component={InventoryDashboard} />
+          }
+        />
+        <Route
+          path="/GST-report"
+          element={<ProtectedRoutingWhenLogin Component={GSTReport} />}
+        />
+        <Route
+          path="/link-customer"
+          element={<ProtectedRoutingWhenLogin Component={LinkCustomer} />}
+        />
+        <Route
+          path="/add-purchase"
+          element={<ProtectedRoutingWhenLogin Component={AddPurchase} />}
+        />
+        <Route
+          path="/reconciliation-report"
+          element={
+            <ProtectedRoutingWhenLogin Component={ReconciliationReport} />
+          }
+        />
+        <Route
+          path="/sales-dashboard"
+          element={<ProtectedRoutingWhenLogin Component={SalesDashboard} />}
+        />
+        <Route
+          path="/tax"
+          element={<ProtectedRoutingWhenLogin Component={Tax} />}
+        />
+        <Route
+          path="/HSN"
+          element={<ProtectedRoutingWhenLogin Component={Hsn} />}
+        />
+        <Route
+          path="/inventory-dashboard"
+          element={
+            <ProtectedRoutingWhenLogin Component={InventoryDashboard} />
+          }
+        />
+      </Routes>
+      {/* </BrowserRouter> */}
     </>
   );
 };

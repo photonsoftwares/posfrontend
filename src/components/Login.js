@@ -34,9 +34,9 @@ const Login = () => {
       })
     );
     // localStorage.setItem("token", "87xiuiu89udjw990");
-    setTimeout(() => {
-      window.location.replace("/");
-    }, 500);
+    // setTimeout(() => {
+    //   window.location.replace("/");
+    // }, 500);
   };
   return (
     <div className="loyality-login">
@@ -44,11 +44,13 @@ const Login = () => {
         <div
           className="my-4"
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: "30px",
+            border: "1px solid black"
           }}
         >
+          Welcome to NanoMPoS Solutions
           {/* <img
             src={Billboard}
             alt=""
@@ -90,6 +92,12 @@ const Login = () => {
             Login
           </Button>
         </Form>
+        <div style={{ marginTop: "10px" }} >
+
+          <small>
+            ** This is WPA worked in any browser
+          </small>
+        </div>
         {/* <div className="mt-4">
           <Link to="/register">
             <h2>Register</h2>

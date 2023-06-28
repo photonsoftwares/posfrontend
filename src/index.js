@@ -6,27 +6,31 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "../src/redux/store";
 import "react-toastify/dist/ReactToastify.css";
+import "flatpickr/dist/flatpickr.css";
+import "react-toggle/style.css" // for ES6 modules
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={true}
-        newestOnTop={true}
+    <BrowserRouter>
+      <Provider store={store}>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={true}
+          newestOnTop={true}
         // closeOnClick
         // rtl={false}
         // pauseOnFocusLoss
         // draggable
         // pauseOnHover
         // theme="light"
-      />
+        />
 
-      <App />
-    </Provider>
+        <App />
+      </Provider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

@@ -37,6 +37,14 @@
   }
 } */
 
+
+:root {
+  --primary: #22A699;
+  --primary1: #F2BE22;
+  --primary2: #F29727;
+  --primary3: #22A699;
+}
+
 .app {
   max-width: 500px;
   margin: auto;
@@ -253,3 +261,44 @@ input[type=number] {
     position: relative;
   }
 } */
+
+
+.react-toggle--checked .react-toggle-track {
+  background-color: var(--primary2) !important;
+}
+
+.react-toggle--checked .react-toggle-thumb {
+  border-color: var(--primary2) !important;
+}
+
+.mouse-pointer {
+  cursor: pointer;
+}
+
+.text-red {
+  color: red;
+}
+
+body {
+  background-color: var(--primary3);
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+input[type=file] {
+  display: none;
+}
+
+.upload-doc {
+  border: 2px solid var(--primary2);
+  padding: 1px 25px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.upload-doc:hover {
+  background-color: var(--primary2);
+  border: 2px solid var(--primary2);
+  color: white;
+}
