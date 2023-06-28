@@ -157,7 +157,7 @@ const Main = () => {
       label: "More",
       value: "more",
       icon: <RxDashboard color="blue" size="25" />,
-      isActive: true,
+      isActive: false,
     },
   ];
 
