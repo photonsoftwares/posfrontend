@@ -176,7 +176,7 @@ const Main = () => {
           style={{
             backgroundColor: "#ffd700",
             width: "100%",
-            height: "85vh",
+            // height: "85vh",
             maxWidth: "500px",
             border: "1px solid black",
           }}
