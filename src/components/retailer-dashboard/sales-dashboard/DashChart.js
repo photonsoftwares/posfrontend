@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect } from 'react'
 import Chart from "react-apexcharts";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Card, CardBody, Col, Row } from 'reactstrap';
 import { handleSalesDashboardChartRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
 
 const DashChart = () => {
     const dispatch = useDispatch()
+    const { sales_dashboard_chart_data } = useSelector((e) => e.ComponentPropsManagement);
+
     // const options = {
     //     chart: {
     //         id: "basic-bar",
@@ -27,17 +29,21 @@ const DashChart = () => {
     //     }
     // ]
 
-
+    // console.log("sales_dashboard_chart_data", sales_dashboard_chart_data)
+    // console.log(sales_dashboard_chart_data?.map(io => io.sales))
 
     const series = [{
         name: 'Sales',
         type: 'column',
-        data: [440, 505, 414, 671, 227, 413]
-    }, {
-        name: '% Total',
-        type: 'line',
-        data: [23, 28, 22, 37, 10, 20]
-    }]
+        data: sales_dashboard_chart_data?.map(io => io.sales)
+        // data: [440, 505, 414, 671, 227, 413]
+    },
+        //  {
+        //     name: '% Total',
+        //     type: 'line',
+        //     data: [23, 28, 22, 37, 10, 20]
+        // }
+    ]
 
     const options = {
         chart: {
@@ -59,7 +65,7 @@ const DashChart = () => {
             enabled: true,
             enabledOnSeries: [1]
         },
-        labels: ["Jan-23", "Feb-23", "Mar-23", "Apr-23", "May-23", "Jun-23"],
+        labels: sales_dashboard_chart_data?.map(io => io.month),
         xaxis: {
             type: 'datetime'
         },
@@ -68,12 +74,14 @@ const DashChart = () => {
                 text: 'Sales',
             },
 
-        }, {
+        },
+        {
             opposite: true,
             title: {
                 text: '% Total'
             }
-        }]
+        }
+        ]
     }
 
 
@@ -114,12 +122,14 @@ const DashChart = () => {
                         <CardBody style={{ width: "100%" }}>
 
                             <div style={{ overflowX: "auto", width: "100%", height: "340px" }}>
-                                <Chart
-                                    options={options}
-                                    series={series}
-                                    type="line"
-                                    width="500"
-                                />
+                                {sales_dashboard_chart_data && (<>
+                                    <Chart
+                                        options={options}
+                                        series={series}
+                                        type="line"
+                                        width="500"
+                                    />
+                                </>)}
                             </div>
                         </CardBody>
                     </Card>

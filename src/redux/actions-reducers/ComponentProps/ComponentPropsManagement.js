@@ -66,7 +66,8 @@ const initialComponentPropsManagementState = {
     { label: "West Bengal", value: "West Bengal" }
   ],
   gst_type_dropdown: [],
-  hsn_code_dropdown: []
+  hsn_code_dropdown: [],
+  sales_dashboard_chart_data: null
 };
 
 export const ComponentPropsManagement = createSlice({
@@ -373,10 +374,11 @@ export const ComponentPropsManagement = createSlice({
       state.hsn_code_dropdown = payload.data
     },
     handleSalesDashboardChartRequest: (state, payload) => {
-      console.log("rrsc", payload)
       // state.hsn_code_dropdown = payload.data
     },
     handleSalesDashboardChartResponse: (state, payload) => {
+      state.sales_dashboard_chart_data = payload.data.last_six_month_sales
+      // console.log("rrsc", payload.data.last_six_month_sales)
 
     },
     handleCreateTaxMasterRequest: (state, payload) => {
