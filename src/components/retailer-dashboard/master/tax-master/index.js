@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label, Row } from 'reactstrap'
-import { handleGetHsnCodeDropdownRequest } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
+import { handleGetHsnCodeDropdownRequest, handleCreateTaxMasterRequest } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
 import { useDispatch, useSelector } from 'react-redux'
 import Select from "react-select"
 import Flatpickr from "react-flatpickr";
+import moment from 'moment'
 
 const TaxMaster = () => {
     const dispatch = useDispatch()
-    const { hsn_code_dropdown } = useSelector(state => state.ComponentPropsManagement)
+    const { hsn_code_dropdown, gst_type_dropdown } = useSelector(state => state.ComponentPropsManagement)
     const [hsnCode, setHsnCode] = useState("")
-
+    const [gstType, setGstType] = useState("")
     const [taxDescription, setTaxDescription] = useState("")
     const [effectiveFrom, setEffectiveFrom] = useState("")
     const [endDate, setEndDate] = useState("")
@@ -35,12 +36,37 @@ const TaxMaster = () => {
         optimizedFn()
     }, [])
 
+    const handleFormSubmit = (e) => {
+        e.preventDefault()
+        const obj = {
+            hsn_code: hsnCode,
+            tax_desc: taxDescription,
+            effective_from: moment(effectiveFrom).format("Y-MM-D"),
+            end_date: moment(endDate).format("Y-MM-D")
+        }
+        dispatch(handleCreateTaxMasterRequest(obj))
+    }
+
     return (<>
         <div>
             <Card>
                 <CardBody>
-                    <Form>
+                    <Form onSubmit={handleFormSubmit}>
                         <Row>
+                            {/* <Col md={3}>
+                                <FormGroup>
+                                    <Label>Select GST Type <span className="text-red"> * </span></Label>
+                                    <Select
+                                        options={gst_type_dropdown}
+                                        onChange={e => {
+                                            setGstType(e.value)
+                                        }}
+                                        value={gst_type_dropdown.filter(io => io.value === gstType)}
+                                        required={true}
+                                        placeholder="Select Gst Type"
+                                    />
+                                </FormGroup>
+                            </Col> */}
                             <Col md={3}>
                                 <FormGroup>
                                     <Label>HSN Code <span className="text-red"> * </span></Label>
@@ -108,7 +134,10 @@ const TaxMaster = () => {
                                 <FormGroup>
                                     <Label>&nbsp;</Label>
                                     <div>
-                                        <Button style={{ border: "none", backgroundColor: "var(--primary2)" }}>
+                                        <Button
+                                            type='submit'
+                                            style={{ border: "none", backgroundColor: "var(--primary2)" }}
+                                        >
                                             Submit
                                         </Button>
                                     </div>

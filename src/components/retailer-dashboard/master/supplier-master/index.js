@@ -6,7 +6,7 @@ import Select from "react-select"
 import Flatpickr from "react-flatpickr";
 import { AiFillInfoCircle } from "react-icons/ai"
 import Toggle from 'react-toggle'
-import { handleGstTypeDropdownRequest } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
+import { handleGstTypeDropdownRequest, handleAddPartyRequest } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
 import { useDispatch, useSelector } from 'react-redux'
 const SupplierMaster = () => {
     const dispatch = useDispatch()
@@ -39,19 +39,24 @@ const SupplierMaster = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        const formData = new FormData();
-        formData.append("saas_id", user_data.saasId)
-        formData.append("party_name", partyName)
-        formData.append("gstin", gstin)
-        formData.append("phone_number", phone)
-        formData.append("gst_type", gstType)
-        formData.append("state", state)
-        formData.append("email", email)
-        formData.append("billing_address", billingAddress)
-        formData.append("opening_balance", openingBalance)
-        formData.append("credit_limit_flag", limitFlag)
-        formData.append("creditLimitAmount", creditLimitAmount)
-        console.log(formData)
+        const obj = {
+            "saas_id": user_data.saasId,
+            "party_name": partyName,
+            "gstin": gstin,
+            "phone_number": phone,
+            "gst_type": gstType,
+            "state": state,
+            "email": email,
+            "billing_address": billingAddress,
+            "opening_balance": openingBalance,
+            "credit_limit_flag": limitFlag,
+            "creditLimitAmount": creditLimitAmount
+        }
+        // const formData = new FormData();
+        // console.log(formData)
+
+        dispatch(handleAddPartyRequest(obj))
+
     }
 
 
@@ -119,7 +124,7 @@ const SupplierMaster = () => {
                                 <FormGroup>
                                     <Label>Phone <span className="text-red"> * </span></Label>
                                     <Input
-                                        type='text'
+                                        type='number'
                                         onChange={e => {
                                             setPhone(e.target.value)
                                         }}

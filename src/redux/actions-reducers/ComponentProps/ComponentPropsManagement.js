@@ -308,7 +308,7 @@ export const ComponentPropsManagement = createSlice({
     },
     handleLastWeekSalesResponse: (state, payload) => {
       const data = payload?.data?.data
-      state.last_week_sales = data
+      state.last_week_sales = data ? data : 0
     },
 
     handleLastMonthSalesRequest: (state, payload) => {
@@ -316,7 +316,7 @@ export const ComponentPropsManagement = createSlice({
     },
     handleLastMonthSalesResponse: (state, payload) => {
       const data = payload?.data?.data
-      state.last_month_sales = data
+      state.last_month_sales = data ? data : 0
     },
     handleTodaySalesRequest: (state, payload) => {
       // state.add_temple_modal_close_flag = true
@@ -372,6 +372,20 @@ export const ComponentPropsManagement = createSlice({
     handleGetHsnCodeDropdownResponse: (state, payload) => {
       state.hsn_code_dropdown = payload.data
     },
+    handleSalesDashboardChartRequest: (state, payload) => {
+      console.log("rrsc", payload)
+      // state.hsn_code_dropdown = payload.data
+    },
+    handleSalesDashboardChartResponse: (state, payload) => {
+
+    },
+    handleCreateTaxMasterRequest: (state, payload) => {
+      // state.hsn_code_dropdown = payload.data
+    },
+    handleCreateTaxMasterResponse: (state, payload) => {
+      console.log("dds", payload.data)
+    }
+
   },
 });
 
@@ -418,7 +432,9 @@ export const {
   handleLastSixtyDaysSalesRequest,
   handleYesterdaySalesRequest,
   handleGstTypeDropdownRequest,
-  handleGetHsnCodeDropdownRequest
+  handleGetHsnCodeDropdownRequest,
+  handleSalesDashboardChartRequest,
+  handleCreateTaxMasterRequest
 } = ComponentPropsManagement.actions;
 
 export default ComponentPropsManagement.reducer;

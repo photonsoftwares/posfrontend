@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import Chart from "react-apexcharts";
+import { useDispatch } from 'react-redux';
 import { Card, CardBody, Col, Row } from 'reactstrap';
+import { handleSalesDashboardChartRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
 
 const DashChart = () => {
-
+    const dispatch = useDispatch()
     // const options = {
     //     chart: {
     //         id: "basic-bar",
@@ -73,6 +75,28 @@ const DashChart = () => {
             }
         }]
     }
+
+
+    const debounce = (func) => {
+        let timer;
+        return function (...args) {
+            const context = this;
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(() => {
+                timer = null;
+                func.apply(context, args);
+            }, 1000);
+        };
+    };
+
+    const handleFunCall = () => {
+        dispatch(handleSalesDashboardChartRequest())
+    }
+
+    const optimizedFn = useCallback(debounce(handleFunCall), []);
+    useEffect(() => {
+        optimizedFn()
+    }, [])
 
     return (<>
         <Row>

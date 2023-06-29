@@ -5,10 +5,10 @@ import { json } from "react-router-dom";
 import Navigation from "../Navigation";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css";
+import moment from "moment"
 // import { useNavigate } from "react-router-dom";
-const { createdAt, password, registerId, saasId, status, storeId, storeName, userId, userName } = localStorage.getItem("User_data") ? JSON.parse(localStorage.getItem("User_data")) : {}
+const { createdAt, password, registerId, status, saasId, storeId, storeName, userId, userName } = localStorage.getItem("User_data") ? JSON.parse(localStorage.getItem("User_data")) : {}
 
-const saas_id = saasId
 
 function* handleLoginRequest(e) {
   const response = yield fetch(`${BASE_Url}/auth/user-login`, {
@@ -493,21 +493,20 @@ function* handleAddPartyRequest(e) {
     }
   );
   const jsonData = yield response.json();
-  console.log("ADD PARTY DATA", jsonData);
   if (jsonData) {
-    toast.success(jsonData.message);
-    //   if (jsonData && jsonData.data) {
-    //     const cartData = jsonData.data;
-    //     yield put({
-    //       type: "ComponentPropsManagement/handleSavaTransactionResponse",
-    //       data: jsonData.data,
-    //     });
-    //   }
-    // } else {
-    //   yield put({
-    //     type: "ComponentPropsManagement/handleSavaTransactionResponse",
-    //     data: {},
-    //   });
+    if (jsonData.status === true) {
+      toast.success(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleAddPartyResponse",
+        data: jsonData,
+      });
+    } else {
+      toast.error(jsonData.message)
+      yield put({
+        type: "ComponentPropsManagement/handleAddPartyResponse",
+        data: {},
+      });
+    }
   } else {
     toast.error(jsonData.message);
   }
@@ -613,7 +612,7 @@ function* handleUploadItemRequest(e) {
 
     const formData = new FormData();
     formData.append('file', csvFile);
-    formData.append("saas-id", saas_id)
+    formData.append("saas-id", saasId)
     // var myHeaders = new Headers();
     // myHeaders.append("Authorization", `Bearer ${token}`)
 
@@ -644,7 +643,7 @@ function* handleUploadInventoryRequest(e) {
     const { csvFile } = e.payload
     const formData = new FormData();
     formData.append('file', csvFile);
-    formData.append("saas-id", saas_id)
+    formData.append("saas-id", saasId)
     // var myHeaders = new Headers();
     // myHeaders.append("Authorization", `Bearer ${token}`)
 
@@ -765,7 +764,7 @@ function* handleLastMonthSalesRequest(e) {
 }
 
 function* handleTodaySalesRequest(e) {
-  // console.log("running...")
+  const date = new Date()
   // const formData = new FormData();
   // formData.append('today_sales', "2023-06-19");
   // var myHeaders = new Headers();
@@ -778,7 +777,7 @@ function* handleTodaySalesRequest(e) {
       },
 
       body: JSON.stringify({
-        today_sales: "2023-06-19"
+        today_sales: moment(date).format("Y-MM-D")
       }),
       // body: formData
       // body: e.payload
@@ -982,6 +981,66 @@ function* handleGetHsnCodeDropdownRequest(e) {
   }
 }
 
+function* handleSalesDashboardChartRequest(e) {
+  // var myHeaders = new Headers();
+  // myHeaders.append("Content-Type", "application/json");
+  // myHeaders.append("Authorization", `Bearer ${ token }`)
+  try {
+    const response = yield fetch(`${host}dashboard/last-six-month/${saasId}`, {
+      method: "GET",
+      // headers: myHeaders,
+      // body: e.payload,
+      // redirect: 'follow'
+    })
+    const jsonData = yield response.json();
+    console.log("rs", jsonData)
+    if (jsonData) {
+      if (jsonData.status === true) {
+
+        // toast.success(jsonData.message)
+        yield put({ type: "ComponentPropsManagement/handleSalesDashboardChartResponse", data: jsonData.data })
+        return
+      }
+      toast.error(jsonData.message)
+      yield put({ type: "ComponentPropsManagement/handleSalesDashboardChartResponse", data: null })
+    } else {
+      toast.error("Something went wrong server side")
+    }
+  } catch (err) {
+    toast.error(err.message)
+  }
+}
+
+// Create Row in Tax Master
+function* handleCreateTaxMasterRequest(e) {
+  try {
+    const response = yield fetch(`${BASE_Url}/tax/create/${saasId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    });
+    const jsonData = yield response.json();
+    console.log("E TAX MASTER JSONDATA", jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleCreateTaxMasterResponse",
+          data: jsonData.data,
+        });
+      } else {
+        toast.error(jsonData.message)
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message)
+  }
+}
+
 
 export function* helloSaga() {
   yield takeEvery(
@@ -1068,6 +1127,9 @@ export function* helloSaga() {
   yield takeEvery('ComponentPropsManagement/handleYesterdaySalesRequest', handleYesterdaySalesRequest)
   yield takeEvery('ComponentPropsManagement/handleGstTypeDropdownRequest', handleGstTypeDropdownRequest)
   yield takeEvery('ComponentPropsManagement/handleGetHsnCodeDropdownRequest', handleGetHsnCodeDropdownRequest)
+  yield takeEvery('ComponentPropsManagement/handleSalesDashboardChartRequest', handleSalesDashboardChartRequest)
+  yield takeEvery('ComponentPropsManagement/handleCreateTaxMasterRequest', handleCreateTaxMasterRequest)
+
 }
 
 // export function* incrementAsync() {
