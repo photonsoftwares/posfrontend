@@ -30,6 +30,7 @@ const Tax = () => {
   useEffect(() => {
     dispatch(handleTaxRatesRequest());
   }, []);
+  console.log("handle_tax_rate", handle_tax_rate)
   useEffect(() => {
     if (handle_tax_rate) {
       setTaxRates(handle_tax_rate);

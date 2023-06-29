@@ -75,6 +75,59 @@ const SalesDashboard = () => {
                             </div>
 
                             <div className='card-container-style' style={{ marginRight: "20px", minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
+                                <div className="d-flex justify-content-between" >
+                                    <div className='me-4'>
+                                        {yesterday_sales !== null && yesterday_sales !== 0 && (<>
+                                            <BsArrowDown className='me-2' size={25} />
+                                        </>)}
+                                        Yesterdays's
+                                    </div>
+                                    <div>
+                                        {yesterday_sales}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div className='card-container-style' style={{ minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
+                                <div className="d-flex justify-content-between">
+                                    <div className='me-4'>
+                                        {last_week_sales !== null && last_week_sales !== 0 && (<>
+                                            <BsArrowUp className='me-2' size={25} />
+                                        </>)}
+                                        Last Week
+                                    </div>
+                                    <div>
+                                        {last_week_sales}
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </Col>
+
+
+                <Col md={12} >
+                    <div className='d-flex justify-content-center'>
+                        <div style={{ display: "flex", justifyContent: "flex-start", flexWrap: "wrap" }}>
+                            <div className='card-container-style' style={{ marginRight: "20px", minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
+                                <div className="d-flex justify-content-between" >
+                                    <div className='me-4'>
+                                        {last_month_sales !== null && last_month_sales !== 0 && (<>
+                                            <BsArrowDown size={25} className='me-2' />
+                                        </>)}
+                                        Last Month
+                                    </div>
+                                    <div>
+                                        {last_month_sales}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className='card-container-style' style={{ marginRight: "20px", minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
                                 <div className="d-flex justify-content-between">
                                     <div className='me-4'>
                                         {last_fourteen_days !== null && last_fourteen_days !== 0 && (<>
@@ -104,55 +157,6 @@ const SalesDashboard = () => {
                                     </div>
                                 </div>
 
-                            </div>
-                        </div>
-                    </div>
-                </Col>
-
-
-                <Col md={12} >
-                    <div className='d-flex justify-content-center'>
-                        <div style={{ display: "flex", justifyContent: "flex-start", flexWrap: "wrap" }}>
-                            <div className='card-container-style' style={{ marginRight: "20px", minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
-                                <div className="d-flex justify-content-between" >
-                                    <div className='me-4'>
-                                        {yesterday_sales !== null && yesterday_sales !== 0 && (<>
-                                            <BsArrowDown className='me-2' size={25} />
-                                        </>)}
-                                        Yesterdays's
-                                    </div>
-                                    <div>
-                                        {yesterday_sales}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className='card-container-style' style={{ marginRight: "20px", minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
-                                <div className="d-flex justify-content-between">
-                                    <div className='me-4'>
-                                        {last_week_sales !== null && last_week_sales !== 0 && (<>
-                                            <BsArrowUp className='me-2' size={25} />
-                                        </>)}
-                                        Last Week
-                                    </div>
-                                    <div>
-                                        {last_week_sales}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className='card-container-style' style={{ fontSize: "18px", fontWeight: "bold", minWidth: "300px", }}>
-                                <div className="d-flex justify-content-between" >
-                                    <div className='me-4'>
-                                        {last_month_sales !== null && last_month_sales !== 0 && (<>
-                                            <BsArrowDown size={25} className='me-2' />
-                                        </>)}
-                                        Last Month
-                                    </div>
-                                    <div>
-                                        {last_month_sales}
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
