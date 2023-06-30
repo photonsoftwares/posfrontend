@@ -779,14 +779,13 @@ function* handleLastWeekSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${token}`)
   try {
-    const response = yield fetch(
-      `${host}dashboard/last-week-sales/${storeId}`,
-      {
-        method: "GET",
-        // headers: myHeaders,
-        // body: e.payload
-      }
-    );
+
+    const response = yield fetch(`${host}dashboard/last-week-sales/${saasId}`, {
+      method: "GET",
+      // headers: myHeaders,
+      // body: e.payload
+    })
+
     const jsonData = yield response.json();
     // console.log("jsonData", jsonData)
     if (jsonData) {
@@ -818,14 +817,13 @@ function* handleLastMonthSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${token}`)
   try {
-    const response = yield fetch(
-      `${host}dashboard/last-month-sales/${storeId}`,
-      {
-        method: "GET",
-        // headers: myHeaders,
-        // body: e.payload
-      }
-    );
+
+    const response = yield fetch(`${host}dashboard/last-month-sales/${saasId}`, {
+      method: "GET",
+      // headers: myHeaders,
+      // body: e.payload
+    })
+
     const jsonData = yield response.json();
     // console.log("jsonData", jsonData)
     if (jsonData) {
@@ -857,7 +855,7 @@ function* handleTodaySalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${token}`)
   try {
-    const response = yield fetch(`${host}dashboard/today-sales/${storeId}`, {
+    const response = yield fetch(`${host}dashboard/today-sales/${saasId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -984,13 +982,12 @@ function* handleQuantityInHandRequest(e) {
 function* handleLastFourteenDaysSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-  const response = yield fetch(
-    `${host}dashboard/last-fourteen-days-sales/${storeId}`,
-    {
-      method: "GET",
-      // headers: myHeaders,
-    }
-  );
+
+  const response = yield fetch(`${host}dashboard/last-fourteen-days-sales/${saasId}`, {
+    method: "GET",
+    // headers: myHeaders,
+  })
+
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
@@ -1013,13 +1010,12 @@ function* handleLastFourteenDaysSalesRequest(e) {
 function* handleLastSixtyDaysSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-  const response = yield fetch(
-    `${host}dashboard/last-sixty-days-sales/${storeId}`,
-    {
-      method: "GET",
-      // headers: myHeaders,
-    }
-  );
+
+  const response = yield fetch(`${host}dashboard/last-sixty-days-sales/${saasId}`, {
+    method: "GET",
+    // headers: myHeaders,
+  })
+
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
@@ -1042,7 +1038,7 @@ function* handleLastSixtyDaysSalesRequest(e) {
 function* handleYesterdaySalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-  const response = yield fetch(`${host}dashboard/yesterday-sales/${storeId}`, {
+  const response = yield fetch(`${host}dashboard/yesterday-sales/${saasId}`, {
     method: "GET",
     // headers: myHeaders,
   });
