@@ -548,11 +548,17 @@ const Home = () => {
   const handleNotifyEmail = (e) => {
     e.preventDefault();
     if (email) {
-      dispatch(handleEmailNotificationResponse({ to: email }));
+      dispatch(
+        handleEmailNotificationResponse({
+          to: email,
+          receiptFileName:
+            handle_saveTransaction_data &&
+            handle_saveTransaction_data.pdf_file_name,
+        })
+      );
     }
     setEmail("");
   };
-
   return (
     <div className="app">
       <div
