@@ -1,4 +1,14 @@
-export const BASE_Url = "http://3.111.70.84:8089/api/v1";
-export const Proxy_Url = "http://3.111.70.84:8089/";
-export const Email_Url = "http://3.111.70.84:8089/";
-export const host = "http://3.111.70.84:8089/api/v1/";
+export let BASE_Url = "";
+export let Email_Url = "";
+export let host = "";
+export const isDev = false
+
+if (isDev === true) {
+    BASE_Url = "http://3.111.70.84:8088/api/v1";
+    Email_Url = "http://3.111.70.84:8088/";
+    host = "http://3.111.70.84:8088/api/v1/";
+} else if (isDev === false) {
+    BASE_Url = "http://3.111.70.84:8089/api/v1";
+    Email_Url = "http://3.111.70.84:8089/";
+    host = "http://3.111.70.84:8089/api/v1/";
+}

@@ -1,5 +1,5 @@
 import { put, takeEvery, all, retry } from "redux-saga/effects";
-import { BASE_Url, Email_Url, Proxy_Url, host } from "../URL";
+import { BASE_Url, Email_Url, host } from "../URL";
 import { toast } from "react-toastify";
 import { json } from "react-router-dom";
 import Navigation from "../Navigation";
@@ -19,8 +19,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-  ? JSON.parse(localStorage.getItem("User_data"))
-  : {};
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
 
 function* handleLoginRequest(e) {
   const response = yield fetch(`${BASE_Url}/auth/user-login`, {
