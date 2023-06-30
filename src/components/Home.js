@@ -58,10 +58,10 @@ import { BASE_Url } from "../URL";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../Navigation";
 import { TextField } from "@mui/material";
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 // import Visibility from '@mui/icons-material/Visibility';
 // import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
@@ -143,7 +143,7 @@ const Home = () => {
   const [totalDiscountVal, setTotalDiscountVal] = useState(0);
   const [invoiceValue, setInvoiceValue] = useState(0);
   const [addPrice, setAddPrice] = useState("");
-  const [email, setEmail] = useState("r@mail.com");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     if (
@@ -542,6 +542,7 @@ const Home = () => {
     if (email) {
       dispatch(handleEmailNotificationResponse({ to: email }));
     }
+    setEmail("");
   };
 
   return (
@@ -603,10 +604,10 @@ const Home = () => {
             opacity={0.9}
             // onClick={() => setSpechModal(true)}
             onClick={handleVoiceCommand}
-          // onClick={() => {
-          //   setVisibleVoiceCommand(true);
-          //   startListening;
-          // }}
+            // onClick={() => {
+            //   setVisibleVoiceCommand(true);
+            //   startListening;
+            // }}
           />
         </div>
       </div>
@@ -782,7 +783,6 @@ const Home = () => {
                   </div>
                 </div>
                 <div style={{ flex: 1, marginLeft: "20px" }}>
-
                   {/* {Number(item.price) * Number(item.productQty) === 0 ? (<> */}
                   {/* <TextField
                       label="Enter Price"
@@ -794,7 +794,6 @@ const Home = () => {
                       }}
                       value={item.zero_price}
                     /> */}
-
 
                   {/* <InputLabel
                     >Enter Amount</InputLabel>
@@ -824,7 +823,6 @@ const Home = () => {
                   {/* </>) : (<> */}
                   {item.price * item.productQty}
                   {/* </>)} */}
-
                 </div>
                 {/*  */}
               </div>
@@ -888,14 +886,14 @@ const Home = () => {
                           }
                         }}
                         value={item.amount_value}
-                      // disabled={percentOff.length > 0 ? true : false}
-                      // value={amountOff}
-                      // onChange={(e) => setAmountOff(e.target.value)}
+                        // disabled={percentOff.length > 0 ? true : false}
+                        // value={amountOff}
+                        // onChange={(e) => setAmountOff(e.target.value)}
                       />
                       <div>
                         <button
                           className="btn btn-danger my-3"
-                        // onClick={() => handleDiscountOff(item)}
+                          // onClick={() => handleDiscountOff(item)}
                         >
                           Apply
                         </button>
@@ -950,7 +948,7 @@ const Home = () => {
                     cursor: "pointer",
                   }}
                   onClick={() => dispatch(handleDeleteCartItem(item))}
-                // onClick={() => handelDeleteProduct(item)}
+                  // onClick={() => handelDeleteProduct(item)}
                 >
                   Remove
                 </p>
@@ -1014,32 +1012,32 @@ const Home = () => {
           {/* </div> */}
           {cartData?.filter((io) => io.discount_menu_is_open === true)
             .length === 0 && (
-              <>
-                <div
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: "20px",
+                }}
+              >
+                <button
+                  type="button"
                   style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "20px",
+                    backgroundColor: "green",
+                    border: "none",
+                    color: "white",
+                    fontWeight: "bold",
+                    padding: "6px 20px",
+                    borderRadius: "10px",
                   }}
+                  id="pop112"
+                  onClick={() => setPopoverIsOpen(!popoverIsOpen)}
                 >
-                  <button
-                    type="button"
-                    style={{
-                      backgroundColor: "green",
-                      border: "none",
-                      color: "white",
-                      fontWeight: "bold",
-                      padding: "6px 20px",
-                      borderRadius: "10px",
-                    }}
-                    id="pop112"
-                    onClick={() => setPopoverIsOpen(!popoverIsOpen)}
-                  >
-                    Invoice Discount
-                  </button>
-                </div>
-              </>
-            )}
+                  Invoice Discount
+                </button>
+              </div>
+            </>
+          )}
 
           <Modal
             show={popoverIsOpen}
@@ -1179,7 +1177,7 @@ const Home = () => {
               border: "none",
               fontSize: "20px",
             }}
-          // className="bg-primary"
+            // className="bg-primary"
           >
             {cartData && cartData.length > 0
               ? "Proceed to checkout"
@@ -1194,7 +1192,7 @@ const Home = () => {
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-      // style={{ position: "relative" }}
+        // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -1275,22 +1273,23 @@ const Home = () => {
                               }
                             }
                           }}
-                          className={`option-item ${optionTick.filter((io) => io.name === item.value)
+                          className={`option-item ${
+                            optionTick.filter((io) => io.name === item.value)
                               .length > 0 && ""
-                            }`}
+                          }`}
                           style={{
                             backgroundColor:
                               item.name === "Cash"
                                 ? "#fed813"
                                 : item.name === "Paytm"
-                                  ? "#00B9F1"
-                                  : item.name === "Google Pay"
-                                    ? "#2DA94F"
-                                    : item.name === "Phone Pay"
-                                      ? "#5f259f"
-                                      : item.name === "UPI"
-                                        ? "#ff7909"
-                                        : "silver",
+                                ? "#00B9F1"
+                                : item.name === "Google Pay"
+                                ? "#2DA94F"
+                                : item.name === "Phone Pay"
+                                ? "#5f259f"
+                                : item.name === "UPI"
+                                ? "#ff7909"
+                                : "silver",
                           }}
                         >
                           <div style={{ position: "relative", top: "2px" }}>
@@ -1302,14 +1301,14 @@ const Home = () => {
                                 item.name === "Cash"
                                   ? "black"
                                   : item.name === "Paytm"
-                                    ? "black"
-                                    : item.name === "Google Pay"
-                                      ? "white"
-                                      : item.name === "Phone Pay"
-                                        ? "white"
-                                        : item.name === "UPI"
-                                          ? "white"
-                                          : "black",
+                                  ? "black"
+                                  : item.name === "Google Pay"
+                                  ? "white"
+                                  : item.name === "Phone Pay"
+                                  ? "white"
+                                  : item.name === "UPI"
+                                  ? "white"
+                                  : "black",
                             }}
                           >
                             {item.name}
@@ -1395,9 +1394,10 @@ const Home = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${
+                      handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                      }`}
+                    }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -1426,9 +1426,10 @@ const Home = () => {
                 }}
               >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${
+                    handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                    }`}
+                  }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />
