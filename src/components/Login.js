@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, FormGroup, Input, Button, Form } from "reactstrap";
 import { FaUserAlt } from "react-icons/fa";
 // import Billboard from "../../assets/images/logo.png";
@@ -8,7 +8,7 @@ import { handleLoginRequest } from "../../src/redux/actions-reducers/ComponentPr
 import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import { isDev } from "../URL";
 const Login = () => {
   const navigate = useNavigate();
   // console.log("NAVIGATE", navigate());
@@ -16,6 +16,15 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const location = useLocation();
+
+  useEffect(() => {
+
+    if (isDev === true) {
+      setUsername("80001")
+      setPassword("demo123")
+    }
+  }, [isDev])
+
 
   const handleSubmit = (event) => {
     event.preventDefault();

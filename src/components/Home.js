@@ -840,129 +840,129 @@ const Home = () => {
                       />
                     </FormControl>
                   </>) : (<>
-                    {item.price * item.productQty}
+                    <div>
+                      {item.price * item.productQty}
+                    </div>
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "10px",
+                          // display: "flex",
+                          // justifyContent: "center",
+                          marginRight: "30px",
+                        }}
+                      >
+                        {item.discount_value || item.amount_value ? (
+                          <>
+                            <span style={{ textDecorationLine: "line-through" }}>
+                              {item.price * item.productQty}
+                            </span>{" "}
+                            / {parseFloat(item.new_price).toFixed(2)}
+                          </>
+                        ) : (<>
+                          {/* // <>{item.price * item.productQty}</> */}
+                        </>)}
+
+                      </div>
+                    </div>
                   </>)}
 
                 </div>
                 {/*  */}
               </div>
               {/* {item.discount ? ( */}
-              {
-                item.discount_menu_is_open ? (
-                  <>
-                    <div className="d-flex flex-sm-row">
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "center",
+              {item.discount_menu_is_open === true && (
+                <>
+                  <div className="d-flex flex-sm-row">
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <TextField
+                        label="Percent Off"
+                        type="number"
+                        className="me-3"
+                        // ref={ref}
+                        // disabled={amountOff.length > 0 ? true : false}
+                        disabled={item.amount_value}
+                        // value={percentOff}
+                        // onChange={(e) => setPercentOff(e.target.value)}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          if (val) {
+                            if (val >= 1 && val <= 99) {
+                              item.discount_value = val;
+                              handleDiscount(item, val);
+                            } else {
+                              item.discount_value = 99;
+                              handleDiscount(item, 99);
+                            }
+                          } else {
+                            item.discount_value = "";
+                            handleDiscount(item, 0);
+                          }
+                          // handleDiscount(item, "");
                         }}
-                      >
-                        <TextField
-                          label="Percent Off"
-                          type="number"
-                          className="me-3"
-                          // ref={ref}
-                          // disabled={amountOff.length > 0 ? true : false}
-                          disabled={item.amount_value}
-                          // value={percentOff}
-                          // onChange={(e) => setPercentOff(e.target.value)}
-                          onChange={(e) => {
-                            const val = Number(e.target.value);
-                            if (val) {
-                              if (val >= 1 && val <= 99) {
-                                item.discount_value = val;
-                                handleDiscount(item, val);
-                              } else {
-                                item.discount_value = 99;
-                                handleDiscount(item, 99);
-                              }
+                        value={item.discount_value}
+                      />
+                      <TextField
+                        label="Amount Off"
+                        type="number"
+                        className="me-3"
+                        disabled={item.discount_value}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          if (val) {
+                            if (val >= 1 && val <= 99999) {
+                              item.amount_value = val;
+                              handleDiscountAmount(item, val);
                             } else {
-                              item.discount_value = "";
-                              handleDiscount(item, 0);
+                              item.amount_value = 99999;
+                              handleDiscountAmount(item, 99999);
                             }
-                            // handleDiscount(item, "");
-                          }}
-                          value={item.discount_value}
-                        />
-                        <TextField
-                          label="Amount Off"
-                          type="number"
-                          className="me-3"
-                          disabled={item.discount_value}
-                          onChange={(e) => {
-                            const val = Number(e.target.value);
-                            if (val) {
-                              if (val >= 1 && val <= 99999) {
-                                item.amount_value = val;
-                                handleDiscountAmount(item, val);
-                              } else {
-                                item.amount_value = 99999;
-                                handleDiscountAmount(item, 99999);
-                              }
-                            } else {
-                              item.amount_value = "";
-                              handleDiscountAmount(item, 0);
-                            }
+                          } else {
+                            item.amount_value = "";
+                            handleDiscountAmount(item, 0);
+                          }
 
-                          }}
-                          value={item.amount_value}
-                        // disabled={percentOff.length > 0 ? true : false}
-                        // value={amountOff}
-                        // onChange={(e) => setAmountOff(e.target.value)}
-                        />
-                        <div>
-                          <button
-                            className="btn btn-danger my-3"
-                          // onClick={() => handleDiscountOff(item)}
-                          >
-                            Apply
-                          </button>
-                          {/* {console.log("cartData", cartData)} */}
-                          <div style={{ fontSize: "10px" }}>
-                            {item.discount_value || item.amount_value ? (
-                              <>
-                                <span
-                                  style={{ textDecorationLine: "line-through" }}
-                                >
-                                  {item.price * item.productQty}
-                                </span>{" "}
-                                / {parseFloat(item.new_price).toFixed(2)}
-                              </>
-                            ) : (
-                              <>{item.price * item.productQty}</>
-                            )}
-                          </div>
+                        }}
+                        value={item.amount_value}
+                      // disabled={percentOff.length > 0 ? true : false}
+                      // value={amountOff}
+                      // onChange={(e) => setAmountOff(e.target.value)}
+                      />
+                      <div>
+                        <button
+                          className="btn btn-danger my-3"
+                        // onClick={() => handleDiscountOff(item)}
+                        >
+                          Apply
+                        </button>
+                        {/* {console.log("cartData", cartData)} */}
+                        <div style={{ fontSize: "10px" }}>
+
+                          {item.discount_value || item.amount_value ? (
+                            <>
+                              <span
+                                style={{ textDecorationLine: "line-through" }}
+                              >
+                                {item.price * item.productQty}
+                              </span>{" "}
+                              / {parseFloat(item.new_price).toFixed(2)}
+                            </>
+                          ) : (
+                            <>{item.price * item.productQty}</>
+                          )}
                         </div>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  <>
-                    <div
-                      style={{
-                        fontSize: "10px",
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        marginRight: "30px",
-                      }}
-                    >
-                      {item.discount_value || item.amount_value ? (
-                        <>
-                          <span style={{ textDecorationLine: "line-through" }}>
-                            {item.price * item.productQty}
-                          </span>{" "}
-                          / {parseFloat(item.new_price).toFixed(2)}
-                        </>
-                      ) : (<>
-                        {/* // <>{item.price * item.productQty}</> */}
-                      </>)}
-
-                    </div>
-                  </>
-                )
-              }
+                  </div>
+                </>
+              )}
               {/* {console.log("ITEM", item)} */}
               < div style={{ display: "flex", flexDirection: "row" }}>
                 <p
