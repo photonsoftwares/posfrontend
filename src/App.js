@@ -27,6 +27,7 @@ import Main from "./components/Main";
 import Return from "./components/Navbar Screens/Return";
 import RetailerDashboard from "./components/retailer-dashboard/home/index";
 import RetailerDashboardNanbar from "./components/retailer-dashboard/navbar/index";
+import LoyalityDashboard from "./components/Navbar Screens/LoyalityDashboard";
 // import { Navbar } from "react-bootstrap";
 
 const App = () => {
@@ -76,8 +77,8 @@ const App = () => {
           element={<ProtectedRoutingWhenLogout Component={Register} />}
         />
         <Route
-          path="/return-item"
-          element={<ProtectedRoutingWhenLogout Component={Return} />}
+          path="/loyality-dashboard"
+          element={<ProtectedRoutingWhenLogin Component={LoyalityDashboard} />}
         />
         <Route
           path="/add-customer"
@@ -96,8 +97,8 @@ const App = () => {
           element={<ProtectedRoutingWhenLogin Component={AddItem} />}
         />
         <Route
-          path="/sales-dashboard"
-          element={<ProtectedRoutingWhenLogin Component={SalesDashboard} />}
+          path="/return"
+          element={<ProtectedRoutingWhenLogin Component={Return} />}
         />
         <Route
           path="/inventory-dashboard"
@@ -124,10 +125,6 @@ const App = () => {
           element={
             <ProtectedRoutingWhenLogin Component={ReconciliationReport} />
           }
-        />
-        <Route
-          path="/sales-dashboard"
-          element={<ProtectedRoutingWhenLogin Component={SalesDashboard} />}
         />
         <Route
           path="/tax"
