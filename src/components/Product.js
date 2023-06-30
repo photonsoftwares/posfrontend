@@ -74,14 +74,14 @@ const Product = ({ item }) => {
           <Button
             size="sm"
             variant="warning"
-            style={{ width: "100%", fontSize: "13px" }}
+            style={{ width: "100%", fontSize: "10px" }}
             // className="btn btn-outline-primary"
             onClick={() => {
               dispatch(handleAddCartData(item));
               setShowButton(false);
             }}
           >
-            Add to Basket
+            Add to Cart
           </Button>
         </div>
       </div>

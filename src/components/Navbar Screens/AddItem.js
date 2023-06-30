@@ -79,6 +79,7 @@ const AddItem = () => {
   const [openCam, setOpenCam] = useState(false);
   const [productId, setProductId] = useState("");
   const [taxPercentage, setTaxPercentage] = useState("");
+  const [itemCategory, setItemCategory] = useState("");
 
   // console.log("UPLOAD ITEM", uploadItem);
 
@@ -107,7 +108,7 @@ const AddItem = () => {
     e.preventDefault();
     dispatch(
       handleAddItemToStoreRequest({
-        item_name: "",
+        item_name: itemName,
         item_code: Number(itemCode),
         description: itemDesc,
         price: Number(itemPrice),
@@ -119,7 +120,7 @@ const AddItem = () => {
         store_id: storeId,
         // promo_id: saasId,
         sku: "SKU123",
-        department: department,
+        department: itemCategory,
       })
     );
     setItemName("");
@@ -262,7 +263,7 @@ const AddItem = () => {
                   className="d-flex flex-col"
                   style={{ display: "flex", flexDirection: "column" }}
                 >
-                  <TextField
+                  {/* <TextField
                     size="small"
                     type="text"
                     className="form-control mt-4"
@@ -270,7 +271,7 @@ const AddItem = () => {
                     value={itemCode}
                     onChange={(e) => setItemCode(e.target.value)}
                     label="Item Code"
-                  />
+                  /> */}
                   <div
                   // className="d-flex flex-column"
                   // style={{ borderBottom: "1px solid #000" }}
@@ -330,9 +331,31 @@ const AddItem = () => {
                     id="customer-name"
                     value={itemDesc}
                     onChange={(e) => setItemDesc(e.target.value)}
-                    label="Item Description"
+                    label="Item Name"
+                    multiline
+                    rows={1}
+                  />
+                  <TextField
+                    size="small"
+                    type="text"
+                    className="form-control my-2"
+                    id="customer-name"
+                    value={itemDesc}
+                    onChange={(e) => setItemDesc(e.target.value)}
+                    label="Item Desc"
                     multiline
                     rows={3}
+                  />
+                  <TextField
+                    size="small"
+                    type="text"
+                    className="form-control my-2"
+                    id="customer-name"
+                    value={itemCategory}
+                    onChange={(e) => setItemCategory(e.target.value)}
+                    label="Item Category"
+                    multiline
+                    rows={1}
                   />
                   <TextField
                     size="small"

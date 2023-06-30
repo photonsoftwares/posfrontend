@@ -23,7 +23,10 @@ const initialComponentPropsManagementState = {
   handle_link_user_data: {},
   save_product_id: "",
   open_menu: false,
-  user_data: localStorage.getItem("User_data") ? JSON.parse(localStorage.getItem("User_data")) : null,
+  email_notification: "",
+  user_data: localStorage.getItem("User_data")
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : null,
   sales_overview_data: null,
   last_week_sales: 0,
   last_month_sales: 0,
@@ -34,6 +37,7 @@ const initialComponentPropsManagementState = {
   last_fourteen_days: 0,
   last_sixty_days: 0,
   yesterday_sales: 0,
+
   state_dropdown: [
     { label: "Andhra Pradesh", value: "Andhra Pradesh" },
     { label: "Arunachal Pradesh", value: "Arunachal Pradesh" },
@@ -63,11 +67,12 @@ const initialComponentPropsManagementState = {
     { label: "Tripura", value: "Tripura" },
     { label: "Uttarakhand", value: "Uttarakhand" },
     { label: "Uttar Pradesh", value: "Uttar Pradesh" },
-    { label: "West Bengal", value: "West Bengal" }
+    { label: "West Bengal", value: "West Bengal" },
   ],
   gst_type_dropdown: [],
   hsn_code_dropdown: [],
-  sales_dashboard_chart_data: null
+
+  sales_dashboard_chart_data: null,
 };
 
 export const ComponentPropsManagement = createSlice({
@@ -284,110 +289,89 @@ export const ComponentPropsManagement = createSlice({
       // state.handle_hsn_codes = payload.data;
     },
 
-    handleUploadItemRequest: (state, payload) => {
-
-    },
+    handleUploadItemRequest: (state, payload) => {},
     handleUploadItemResponse: (state, payload) => {
       // state.flag = !state.flag
     },
-    handleUploadInventoryRequest: (state, payload) => {
-
-    },
+    handleUploadInventoryRequest: (state, payload) => {},
     handleUploadInventoryResponse: (state, payload) => {
       // state.flag = !state.flag
     },
-    handleSalesOverviewRequest: (state, payload) => {
-
-    },
+    handleSalesOverviewRequest: (state, payload) => {},
     handleSalesOverviewResponse: (state, payload) => {
-      const data = payload?.data?.data
-      state.sales_overview_data = data
+      const data = payload?.data?.data;
+      state.sales_overview_data = data;
       // state.flag = !state.flag
     },
-    handleLastWeekSalesRequest: (state, payload) => {
-
-    },
+    handleLastWeekSalesRequest: (state, payload) => {},
     handleLastWeekSalesResponse: (state, payload) => {
-      const data = payload?.data?.data
-      state.last_week_sales = data ? data : 0
+      const data = payload?.data?.data;
+      state.last_week_sales = data ? data : 0;
     },
 
-    handleLastMonthSalesRequest: (state, payload) => {
-
-    },
+    handleLastMonthSalesRequest: (state, payload) => {},
     handleLastMonthSalesResponse: (state, payload) => {
-      const data = payload?.data?.data
-      state.last_month_sales = data ? data : 0
+      const data = payload?.data?.data;
+      state.last_month_sales = data ? data : 0;
     },
     handleTodaySalesRequest: (state, payload) => {
       // state.add_temple_modal_close_flag = true
     },
     handleTodaySalesResponse: (state, payload) => {
-      state.today_sales = payload.data.data ? payload.data.data : 0
+      state.today_sales = payload.data.data ? payload.data.data : 0;
     },
-    handleNumberOfCustomerRequest: (state, payload) => {
-
-    },
+    handleNumberOfCustomerRequest: (state, payload) => {},
     handleNumberOfCustomerResponse: (state, payload) => {
-      state.number_of_customer = payload.data.data ? payload.data.data : 0
+      state.number_of_customer = payload.data.data ? payload.data.data : 0;
     },
-    handleLowStockItemsRequest: (state, payload) => {
-
-    },
+    handleLowStockItemsRequest: (state, payload) => {},
     handleLowStockItemsResponse: (state, payload) => {
-      state.low_stock_items = payload.data.data ? payload.data.data : 0
+      state.low_stock_items = payload.data.data ? payload.data.data : 0;
     },
-    handleQuantityInHandRequest: (state, payload) => {
-
-    },
+    handleQuantityInHandRequest: (state, payload) => {},
     handleQuantityInHandResponse: (state, payload) => {
-      state.quantity_in_hand = payload.data.data ? payload.data.data : 0
+      state.quantity_in_hand = payload.data.data ? payload.data.data : 0;
     },
-    handleLastFourteenDaysSalesRequest: (state, payload) => {
-
-    },
+    handleLastFourteenDaysSalesRequest: (state, payload) => {},
     handleLastFourteenDaysSalesResponse: (state, payload) => {
-      state.last_fourteen_days = payload.data.data ? payload.data.data : 0
+      state.last_fourteen_days = payload.data.data ? payload.data.data : 0;
     },
-    handleLastSixtyDaysSalesRequest: (state, payload) => {
-
-    },
+    handleLastSixtyDaysSalesRequest: (state, payload) => {},
     handleLastSixtyDaysSalesResponse: (state, payload) => {
-      state.last_sixty_days = payload.data.data ? payload.data.data : 0
+      state.last_sixty_days = payload.data.data ? payload.data.data : 0;
     },
-    handleYesterdaySalesRequest: (state, payload) => {
-
-    },
+    handleYesterdaySalesRequest: (state, payload) => {},
     handleYesterdaySalesResponse: (state, payload) => {
-      state.yesterday_sales = payload.data.data ? payload.data.data : 0
+      state.yesterday_sales = payload.data.data ? payload.data.data : 0;
     },
-    handleGstTypeDropdownRequest: (state, payload) => {
-
-    },
+    handleGstTypeDropdownRequest: (state, payload) => {},
     handleGstTypeDropdownResponse: (state, payload) => {
-      state.gst_type_dropdown = payload.data
+      state.gst_type_dropdown = payload.data;
     },
-    handleGetHsnCodeDropdownRequest: (state, payload) => {
-
-    },
+    handleGetHsnCodeDropdownRequest: (state, payload) => {},
     handleGetHsnCodeDropdownResponse: (state, payload) => {
-      state.hsn_code_dropdown = payload.data
+      state.hsn_code_dropdown = payload.data;
+    },
+    handleEmailNotificationRequest: (state, payload) => {
+      console.log(payload.payload);
+    },
+    handleEmailNotificationResponse: (state, payload) => {
+      console.log(payload);
+      // state.email_notification = payload.data;
     },
     handleSalesDashboardChartRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
     },
     handleSalesDashboardChartResponse: (state, payload) => {
-      state.sales_dashboard_chart_data = payload.data.last_six_month_sales
+      state.sales_dashboard_chart_data = payload.data.last_six_month_sales;
       // console.log("rrsc", payload.data.last_six_month_sales)
-
     },
     handleCreateTaxMasterRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
     },
     handleCreateTaxMasterResponse: (state, payload) => {
-      console.log("dds", payload.data)
-    }
-
+      console.log("dds", payload.data);
+    },
   },
 });
 
@@ -395,6 +379,8 @@ export const ComponentPropsManagement = createSlice({
 
 export const {
   handleUploadPicRequest,
+  handleEmailNotificationResponse,
+  handleEmailNotificationRequest,
   handleLoginRequest,
   handleOpneMenuRequest,
   handleRegisterRequest,
@@ -436,7 +422,7 @@ export const {
   handleGstTypeDropdownRequest,
   handleGetHsnCodeDropdownRequest,
   handleSalesDashboardChartRequest,
-  handleCreateTaxMasterRequest
+  handleCreateTaxMasterRequest,
 } = ComponentPropsManagement.actions;
 
 export default ComponentPropsManagement.reducer;
