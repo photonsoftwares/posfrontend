@@ -779,12 +779,11 @@ function* handleLastWeekSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${token}`)
   try {
-
     const response = yield fetch(`${host}dashboard/last-week-sales/${saasId}`, {
       method: "GET",
       // headers: myHeaders,
       // body: e.payload
-    })
+    });
 
     const jsonData = yield response.json();
     // console.log("jsonData", jsonData)
@@ -817,12 +816,14 @@ function* handleLastMonthSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${token}`)
   try {
-
-    const response = yield fetch(`${host}dashboard/last-month-sales/${saasId}`, {
-      method: "GET",
-      // headers: myHeaders,
-      // body: e.payload
-    })
+    const response = yield fetch(
+      `${host}dashboard/last-month-sales/${saasId}`,
+      {
+        method: "GET",
+        // headers: myHeaders,
+        // body: e.payload
+      }
+    );
 
     const jsonData = yield response.json();
     // console.log("jsonData", jsonData)
@@ -983,10 +984,13 @@ function* handleLastFourteenDaysSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
 
-  const response = yield fetch(`${host}dashboard/last-fourteen-days-sales/${saasId}`, {
-    method: "GET",
-    // headers: myHeaders,
-  })
+  const response = yield fetch(
+    `${host}dashboard/last-fourteen-days-sales/${saasId}`,
+    {
+      method: "GET",
+      // headers: myHeaders,
+    }
+  );
 
   const jsonData = yield response.json();
   if (jsonData) {
@@ -1011,10 +1015,13 @@ function* handleLastSixtyDaysSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
 
-  const response = yield fetch(`${host}dashboard/last-sixty-days-sales/${saasId}`, {
-    method: "GET",
-    // headers: myHeaders,
-  })
+  const response = yield fetch(
+    `${host}dashboard/last-sixty-days-sales/${saasId}`,
+    {
+      method: "GET",
+      // headers: myHeaders,
+    }
+  );
 
   const jsonData = yield response.json();
   if (jsonData) {
@@ -1332,6 +1339,10 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleCreateTaxMasterRequest",
     handleCreateTaxMasterRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleEmailNotificationResponse",
+    handleEmailNotificationResponse
   );
 }
 
