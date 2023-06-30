@@ -79,7 +79,7 @@ const AddParty = () => {
     <section>
       <div className="container">
         <div className="row d-flex justify-content-center">
-          <div className="col-lg-5 col-md-10 col-sm-12">
+          <div className="col-lg-5 col-md-10 col-sm-12 px-5">
             <form className="form-box" onSubmit={handleSubmit}>
               <h2>Add Party</h2>
 

@@ -25,15 +25,15 @@ import AddSupplier from "./components/Navbar Screens/AddSupplier";
 import Register from "./components/Register";
 import Main from "./components/Main";
 import Return from "./components/Navbar Screens/Return";
-import RetailerDashboard from "./components/retailer-dashboard/home/index"
-import RetailerDashboardNanbar from "./components/retailer-dashboard/navbar/index"
+import RetailerDashboard from "./components/retailer-dashboard/home/index";
+import RetailerDashboardNanbar from "./components/retailer-dashboard/navbar/index";
 // import { Navbar } from "react-bootstrap";
 
 const App = () => {
   const dispatch = useDispatch();
   const login_data = localStorage.getItem("login_data");
-  const location = useLocation()
-  console.log("llo", location)
+  const location = useLocation();
+  console.log("llo", location);
   useEffect(() => {
     if (login_data) {
       dispatch(handleGetUserData(login_data));
@@ -45,11 +45,15 @@ const App = () => {
 
   return (
     <>
-      {location.pathname === "/retailer-dashboard" ? (<>
-        <RetailerDashboardNanbar />
-      </>) : (<>
-        <Navbar />
-      </>)}
+      {location.pathname === "/retailer-dashboard" ? (
+        <>
+          <RetailerDashboardNanbar />
+        </>
+      ) : (
+        <>
+          <Navbar />
+        </>
+      )}
       <Routes>
         <Route
           path="/"
@@ -97,9 +101,7 @@ const App = () => {
         />
         <Route
           path="/inventory-dashboard"
-          element={
-            <ProtectedRoutingWhenLogin Component={InventoryDashboard} />
-          }
+          element={<ProtectedRoutingWhenLogin Component={InventoryDashboard} />}
         />
         <Route
           path="/GST-report"
@@ -108,6 +110,10 @@ const App = () => {
         <Route
           path="/link-customer"
           element={<ProtectedRoutingWhenLogin Component={LinkCustomer} />}
+        />
+        <Route
+          path="/add-party"
+          element={<ProtectedRoutingWhenLogin Component={AddParty} />}
         />
         <Route
           path="/add-purchase"
@@ -133,9 +139,7 @@ const App = () => {
         />
         <Route
           path="/inventory-dashboard"
-          element={
-            <ProtectedRoutingWhenLogin Component={InventoryDashboard} />
-          }
+          element={<ProtectedRoutingWhenLogin Component={InventoryDashboard} />}
         />
       </Routes>
       {/* </BrowserRouter> */}

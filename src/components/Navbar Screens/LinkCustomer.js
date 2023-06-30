@@ -56,139 +56,137 @@ const LinkCustomer = () => {
     e.preventDefault();
   };
   return (
-    <section>
-      <div className="container">
-        <div className="row d-flex justify-content-center">
-          <div className="col-lg-5 col-md-10 col-sm-12">
-            <form className="form-box" onSubmit={handleSubmit}>
-              <h2>Link Customer</h2>
+    <div className="container">
+      <div className="row d-flex justify-content-center">
+        <div className="col-lg-5 col-md-10 col-sm-12 px-5">
+          <form className="form-box" onSubmit={handleSubmit}>
+            <h2>Link Customer</h2>
+            <div>
+              <TextField
+                size="small"
+                type="text"
+                className="form-control my-2"
+                id="customer-name"
+                label="Mobile Number"
+                value={searchValue}
+                onChange={(e) => {
+                  optimizedFn(e);
+                  setSearchValue(e.target.value);
+                }}
+              />
+            </div>
+            {searchValue && searchValue ? (
               <div>
-                <TextField
-                  size="small"
-                  type="text"
-                  className="form-control my-2"
-                  id="customer-name"
-                  label="Mobile Number"
-                  value={searchValue}
-                  onChange={(e) => {
-                    optimizedFn(e);
-                    setSearchValue(e.target.value);
-                  }}
-                />
-              </div>
-              {searchValue && searchValue ? (
-                <div>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <p style={{ padding: 0, margin: 0 }}>Customer Name</p>
-                    <p
-                      style={{
-                        fontWeight: "900",
-                        padding: 0,
-                        margin: 0,
-                        // fontSize: "20px",
-                      }}
-                    >
-                      {userName}
-                    </p>
-                  </div>
-                  <div className="d-flex align-items-center justify-content-between my-3">
-                    <p style={{ padding: 0, margin: 0 }}>Mobile Number</p>
-                    <p
-                      style={{
-                        fontWeight: "900",
-                        padding: 0,
-                        margin: 0,
-                        // fontSize: "20px",
-                      }}
-                    >
-                      {userMobile}
-                    </p>
-                  </div>
-                  <div>
-                    {userMobile && userName ? (
-                      <div className="mt-3">
-                        <button
-                          type="submit"
-                          className="btn btn-primary"
-                          style={{
-                            backgroundColor: "#fc0202",
-                            outline: "none",
-                            border: "none",
-                            fontSize: "20px",
-                            padding: "10px 20px",
-                            borderRadius: "10px",
-                            color: "#fff",
-                          }}
-                        >
-                          Link
-                        </button>
-                        <Link
-                          to="/"
-                          type="submit"
-                          // onClick={()=>}
-                          className="btn btn-primary"
-                          style={{
-                            backgroundColor: "gray",
-                            outline: "none",
-                            border: "none",
-                            marginLeft: "20px",
-                            fontSize: "20px",
-                            padding: "10px 20px",
-                            borderRadius: "10px",
-                            color: "#fff",
-                          }}
-                        >
-                          Cancel
-                        </Link>
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                  </div>
+                <div className="d-flex align-items-center justify-content-between">
+                  <p style={{ padding: 0, margin: 0 }}>Customer Name</p>
+                  <p
+                    style={{
+                      fontWeight: "900",
+                      padding: 0,
+                      margin: 0,
+                      // fontSize: "20px",
+                    }}
+                  >
+                    {userName}
+                  </p>
                 </div>
-              ) : (
-                err
-              )}
-              <div className="mt-3">
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  style={{
-                    backgroundColor: "#fc0202",
-                    outline: "none",
-                    border: "none",
-                    fontSize: "20px",
-                    padding: "10px 20px",
-                    borderRadius: "10px",
-                    color: "#fff",
-                  }}
-                >
-                  Save
-                </button>
-                <Link
-                  to="/"
-                  type="submit"
-                  // onClick={()=>}
-                  className="btn btn-primary"
-                  style={{
-                    backgroundColor: "gray",
-                    outline: "none",
-                    border: "none",
-                    marginLeft: "20px",
-                    fontSize: "20px",
-                    padding: "10px 20px",
-                    borderRadius: "10px",
-                    color: "#fff",
-                  }}
-                >
-                  Close
-                </Link>
+                <div className="d-flex align-items-center justify-content-between my-3">
+                  <p style={{ padding: 0, margin: 0 }}>Mobile Number</p>
+                  <p
+                    style={{
+                      fontWeight: "900",
+                      padding: 0,
+                      margin: 0,
+                      // fontSize: "20px",
+                    }}
+                  >
+                    {userMobile}
+                  </p>
+                </div>
+                <div>
+                  {userMobile && userName ? (
+                    <div className="mt-3">
+                      <button
+                        type="submit"
+                        className="btn btn-primary"
+                        style={{
+                          backgroundColor: "#fc0202",
+                          outline: "none",
+                          border: "none",
+                          fontSize: "20px",
+                          padding: "10px 20px",
+                          borderRadius: "10px",
+                          color: "#fff",
+                        }}
+                      >
+                        Link
+                      </button>
+                      <Link
+                        to="/"
+                        type="submit"
+                        // onClick={()=>}
+                        className="btn btn-primary"
+                        style={{
+                          backgroundColor: "gray",
+                          outline: "none",
+                          border: "none",
+                          marginLeft: "20px",
+                          fontSize: "20px",
+                          padding: "10px 20px",
+                          borderRadius: "10px",
+                          color: "#fff",
+                        }}
+                      >
+                        Cancel
+                      </Link>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
-            </form>
-          </div>
+            ) : (
+              err
+            )}
+            <div className="mt-3">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                style={{
+                  backgroundColor: "#fc0202",
+                  outline: "none",
+                  border: "none",
+                  fontSize: "20px",
+                  padding: "10px 20px",
+                  borderRadius: "10px",
+                  color: "#fff",
+                }}
+              >
+                Save
+              </button>
+              <Link
+                to="/"
+                type="submit"
+                // onClick={()=>}
+                className="btn btn-primary"
+                style={{
+                  backgroundColor: "gray",
+                  outline: "none",
+                  border: "none",
+                  marginLeft: "20px",
+                  fontSize: "20px",
+                  padding: "10px 20px",
+                  borderRadius: "10px",
+                  color: "#fff",
+                }}
+              >
+                Close
+              </Link>
+            </div>
+          </form>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

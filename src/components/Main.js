@@ -182,10 +182,12 @@ const Main = () => {
           }}
         >
           <div style={{ height: "75vh", overflow: "auto" }}>
-
-
             <div
-              style={{ fontSize: "20px", fontWeight: "900", paddingLeft: "20px" }}
+              style={{
+                fontSize: "20px",
+                fontWeight: "900",
+                paddingLeft: "20px",
+              }}
             >
               Create Transactions
             </div>
@@ -274,7 +276,7 @@ const Main = () => {
                         }}
                         onClick={() => {
                           if (item.value === "dashboard") {
-                            navigate("/retailer-dashboard")
+                            navigate("/retailer-dashboard");
                           }
                         }}
                       >
@@ -285,7 +287,6 @@ const Main = () => {
                   );
                 })}
             </div>
-
           </div>
 
           <div style={{}}>

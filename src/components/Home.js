@@ -40,6 +40,8 @@ import {
   handleRecommendedDataRequest,
   handleEmptyCartItem,
   handleDiscountItem,
+  handleEmailNotificationRequest,
+  handleEmailNotificationResponse,
 } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { Button } from "react-bootstrap";
 // import SpeechRecognition, {
@@ -132,7 +134,7 @@ const Home = () => {
   const [sumValue, setSumValue] = useState(0);
   const [QR, setQR] = useState(null);
   const [overDicount, setOverDiscount] = useState([]);
-  const [isIndividualDiscount, setIsIndividualDiscount] = useState(true)
+  const [isIndividualDiscount, setIsIndividualDiscount] = useState(true);
   const [amount, setAmount] = useState("");
   const [optionTick, setOptionTick] = useState([]);
   const [optionTickSum, setOptionTickSum] = useState(0);
@@ -140,6 +142,8 @@ const Home = () => {
   const [discountAmountVal, setDiscountAmountVal] = useState("");
   const [totalDiscountVal, setTotalDiscountVal] = useState(0);
   const [invoiceValue, setInvoiceValue] = useState(0);
+  const [addPrice, setAddPrice] = useState("");
+  const [email, setEmail] = useState("r@mail.com");
 
   useEffect(() => {
     if (
@@ -208,7 +212,6 @@ const Home = () => {
     // setBalanceDue(sum);
     setSumValue(sum);
     setAmount(sum);
-
 
     // =============================
   }, [cartData]);
@@ -407,7 +410,7 @@ const Home = () => {
   const handleDec = (item) => {
     if (item.productQty === 1) {
       item.productQty = item.productQty = 1;
-      item.new_price = item.price
+      item.new_price = item.price;
       setCartData([...cartData]);
     } else {
       const q = item.productQty - 1;
@@ -495,33 +498,33 @@ const Home = () => {
   const handleDiscount = (item, discount_value) => {
     const price = Number(item.price) * Number(item.productQty);
     const calculatedVal = (price * discount_value) / 100;
-    const t1 = price - calculatedVal
-    item.new_price = t1
+    const t1 = price - calculatedVal;
+    item.new_price = t1;
     setCartData([...cartData]);
   };
 
   const handleDiscountLarge = (discount_value) => {
-    cartData.map(item => {
-      item.discount_value = discount_value
+    cartData.map((item) => {
+      item.discount_value = discount_value;
       const price = Number(item.price) * Number(item.productQty);
       const calculatedVal = (price * discount_value) / 100;
-      const t1 = price - calculatedVal
-      item.new_price = t1
-    })
+      const t1 = price - calculatedVal;
+      item.new_price = t1;
+    });
     setCartData([...cartData]);
   };
 
   const handleDiscountAmountLarge = (discountAmountVal) => {
-    cartData.map(item => {
-      item.amount_value = discountAmountVal
+    cartData.map((item) => {
+      item.amount_value = discountAmountVal;
       const price = Number(item.price) * Number(item.productQty);
       const calculatedVal = price - discountAmountVal;
-      item.new_price = calculatedVal
-    })
+      item.new_price = calculatedVal;
+    });
     setCartData([...cartData]);
   };
 
-  console.log("cartData", cartData)
+  console.log("cartData", cartData);
   const handleDiscountAmount = (item, amount_value) => {
     const price = Number(item.price) * Number(item.productQty);
     const calculatedVal = price - amount_value;
@@ -533,6 +536,13 @@ const Home = () => {
   //   console.log("DELETE ITEM HANDLER", item);
   //   // setCartData(cartData.filter((el) => el.id !== item.id));
   // };
+
+  const handleNotifyEmail = (e) => {
+    e.preventDefault();
+    if (email) {
+      dispatch(handleEmailNotificationResponse({ to: email }));
+    }
+  };
 
   return (
     <div className="app">
@@ -593,10 +603,10 @@ const Home = () => {
             opacity={0.9}
             // onClick={() => setSpechModal(true)}
             onClick={handleVoiceCommand}
-          // onClick={() => {
-          //   setVisibleVoiceCommand(true);
-          //   startListening;
-          // }}
+            // onClick={() => {
+            //   setVisibleVoiceCommand(true);
+            //   startListening;
+            // }}
           />
         </div>
       </div>
@@ -737,11 +747,8 @@ const Home = () => {
               }}
             >
               <h1>{item.itemName}</h1>
-              <div className="cart_product" style={{}}>
-                <div
-                  style={{ flex: 1, height: "50px" }}
-                  className="cart_column"
-                >
+              <div className="cart_product">
+                <div style={{ height: "50px" }} className="cart_column">
                   <div
                     style={{
                       border: "1px solid #eee",
@@ -775,154 +782,124 @@ const Home = () => {
                   </div>
                 </div>
                 <div style={{ flex: 1, marginLeft: "20px" }}>
-                  {Number(item.price) * Number(item.productQty) === 0 ? (<>
-                    {/* <TextField
-                      label="Enter Price"
-                      type="number"
-                      onChange={e => {
-                        const val = e.target.value
-                        item.zero_price = val
-                        setCartData([...cartData])
-                      }}
-                      value={item.zero_price}
-                    /> */}
 
-
-                    <InputLabel
-                    >Enter Amount</InputLabel>
-                    <OutlinedInput
-                      type="number"
-                      size="small"
-                      // style={{ border: "2px solid #979797" }}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            // onClick={handleClickShowPassword}
-                            edge="end"
-                          >
-                            <BsFillCheckCircleFill color="green" />
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                      label="Amount"
-                      onChange={e => {
-                        const val = e.target.value
-                        item.zero_price = val
-                        setCartData([...cartData])
-                      }}
-                      value={item.zero_price}
-                    />
-
-                  </>) : (<>
-                    {item.price * item.productQty}
-                  </>)}
+                  {item.price * item.productQty}
                 </div>
+                {/*  */}
               </div>
               {/* {item.discount ? ( */}
-              {item.discount_menu_is_open ? (<>
-                <div className="d-flex flex-sm-row">
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <TextField
-                      label="Percent Off"
-                      type="number"
-                      className="me-3"
-                      // ref={ref}
-                      // disabled={amountOff.length > 0 ? true : false}
-                      disabled={item.amount_value}
-                      // value={percentOff}
-                      // onChange={(e) => setPercentOff(e.target.value)}
-                      onChange={(e) => {
-                        const val = Number(e.target.value);
-                        if (val) {
-                          if (val >= 1 && val <= 99) {
-                            item.discount_value = val;
-                            handleDiscount(item, val);
-                          } else {
-                            item.discount_value = 99;
-                            handleDiscount(item, 99);
-                          }
-                        } else {
-                          item.discount_value = "";
-                          handleDiscount(item, 0)
-                        }
-                        // handleDiscount(item, "");
+              {item.discount_menu_is_open ? (
+                <>
+                  <div className="d-flex flex-sm-row">
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
-                      value={item.discount_value}
-                    />
-                    <TextField
-                      label="Amount Off"
-                      type="number"
-                      className="me-3"
-                      disabled={item.discount_value}
-                      onChange={(e) => {
-                        const val = Number(e.target.value);
-                        if (val) {
-                          if (val >= 1 && val <= 99999) {
-                            item.amount_value = val;
-                            handleDiscountAmount(item, val);
+                    >
+                      <TextField
+                        label="Percent Off"
+                        type="number"
+                        className="me-3"
+                        // ref={ref}
+                        // disabled={amountOff.length > 0 ? true : false}
+                        disabled={item.amount_value}
+                        // value={percentOff}
+                        // onChange={(e) => setPercentOff(e.target.value)}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          if (val) {
+                            if (val >= 1 && val <= 99) {
+                              item.discount_value = val;
+                              handleDiscount(item, val);
+                            } else {
+                              item.discount_value = 99;
+                              handleDiscount(item, 99);
+                            }
                           } else {
-                            item.amount_value = 99999;
-                            handleDiscountAmount(item, 99999);
+                            item.discount_value = "";
+                            handleDiscount(item, 0);
                           }
-                        } else {
-                          item.amount_value = "";
-                          handleDiscountAmount(item, 0)
-                        }
-                      }}
-                      value={item.amount_value}
-                    // disabled={percentOff.length > 0 ? true : false}
-                    // value={amountOff}
-                    // onChange={(e) => setAmountOff(e.target.value)}
-                    />
-                    <div>
-                      <button
-                        className="btn btn-danger my-3"
-                      // onClick={() => handleDiscountOff(item)}
-                      >
-                        Apply
-                      </button>
-                      {console.log("cartData", cartData)}
-                      <div style={{ fontSize: "10px" }}>
-                        {item.discount_value || item.amount_value ? (
-                          <>
-                            <span
-                              style={{ textDecorationLine: "line-through" }}
-                            >
-                              {item.price * item.productQty}
-                            </span>{" "}
-                            / {parseFloat(item.new_price).toFixed(2)}
-                          </>
-                        ) : (
-                          <>{item.price * item.productQty}</>
-                        )}
+                          // handleDiscount(item, "");
+                        }}
+                        value={item.discount_value}
+                      />
+                      <TextField
+                        label="Amount Off"
+                        type="number"
+                        className="me-3"
+                        disabled={item.discount_value}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          if (val) {
+                            if (val >= 1 && val <= 99999) {
+                              item.amount_value = val;
+                              handleDiscountAmount(item, val);
+                            } else {
+                              item.amount_value = 99999;
+                              handleDiscountAmount(item, 99999);
+                            }
+                          } else {
+                            item.amount_value = "";
+                            handleDiscountAmount(item, 0);
+                          }
+                        }}
+                        value={item.amount_value}
+                        // disabled={percentOff.length > 0 ? true : false}
+                        // value={amountOff}
+                        // onChange={(e) => setAmountOff(e.target.value)}
+                      />
+                      <div>
+                        <button
+                          className="btn btn-danger my-3"
+                          // onClick={() => handleDiscountOff(item)}
+                        >
+                          Apply
+                        </button>
+                        {/* {console.log("cartData", cartData)} */}
+                        {/* <div style={{ fontSize: "10px" }}>
+                          {item.discount_value || item.amount_value ? (
+                            <>
+                              <span
+                                style={{ textDecorationLine: "line-through" }}
+                              >
+                                {item.price * item.productQty}
+                              </span>{" "}
+                              / {parseFloat(item.new_price).toFixed(2)}
+                            </>
+                          ) : (
+                            <>{item.price * item.productQty}</>
+                          )}
+                        </div> */}
                       </div>
                     </div>
                   </div>
-                </div>
-              </>) : (<>
-                <div style={{ fontSize: "10px", display: "flex", justifyContent: "flex-end", marginRight: "30px" }}>
-                  {item.discount_value || item.amount_value ? (
-                    <>
-                      <span
-                        style={{ textDecorationLine: "line-through" }}
-                      >
-                        {item.price * item.productQty}
-                      </span>{" "}
-                      / {parseFloat(item.new_price).toFixed(2)}
-                    </>
-                  ) : (
-                    <>{item.price * item.productQty}</>
-                  )}
-                </div>
-              </>)}
+                </>
+              ) : (
+                <>
+                  {/* <div
+                    style={{
+                      fontSize: "10px",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      marginRight: "30px",
+                    }}
+                  >
+                    {item.discount_value || item.amount_value ? (
+                      <>
+                        <span style={{ textDecorationLine: "line-through" }}>
+                          {item.price * item.productQty}
+                        </span>{" "}
+                        / {parseFloat(item.new_price).toFixed(2)}
+                      </>
+                    ) : (
+                      <>{item.price * item.productQty}</>
+                    )}
+                  </div> */}
+                </>
+              )}
               {/* {console.log("ITEM", item)} */}
               <div style={{ display: "flex", flexDirection: "row" }}>
                 <p
@@ -932,32 +909,35 @@ const Home = () => {
                     cursor: "pointer",
                   }}
                   onClick={() => dispatch(handleDeleteCartItem(item))}
-                // onClick={() => handelDeleteProduct(item)}
+                  // onClick={() => handelDeleteProduct(item)}
                 >
                   Remove
                 </p>
-                {totalDiscountVal === 0 && (<>
-                  <p
-                    style={{
-                      color: "darkblue",
-                      fontWeight: "600",
-                      cursor: "pointer",
-                    }}
-                    // onClick={() => {
-                    //   item.discount = !item.discount;
-                    //   setCartData([...cartData]);
-                    //   // setDiscount((state) => !state);
-                    // }}
-                    onClick={() => {
-                      item.discount_menu_is_open = !item.discount_menu_is_open;
-                      setCartData([...cartData]);
-                      // item.discount == !true ? setDiscount((state) => !state) : ""
-                    }}
-                    className="mx-4"
-                  >
-                    Discount
-                  </p>
-                </>)}
+                {totalDiscountVal === 0 && (
+                  <>
+                    <p
+                      style={{
+                        color: "darkblue",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                      }}
+                      // onClick={() => {
+                      //   item.discount = !item.discount;
+                      //   setCartData([...cartData]);
+                      //   // setDiscount((state) => !state);
+                      // }}
+                      onClick={() => {
+                        item.discount_menu_is_open =
+                          !item.discount_menu_is_open;
+                        setCartData([...cartData]);
+                        // item.discount == !true ? setDiscount((state) => !state) : ""
+                      }}
+                      className="mx-4"
+                    >
+                      Discount
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           ))}
@@ -975,44 +955,50 @@ const Home = () => {
             Total Invoice Value: {invoiceValue}
             <br />
           </div>
-          {cartData?.filter(io => io.discount_menu_is_open === true).length === 0 && totalDiscountVal !== 0 && (<>
-            <div
-              style={{
-                fontSize: "20px",
-                fontWeight: "bold",
-                textAlign: "center",
-              }}
-            >
-              Total Discount: {totalDiscountVal}
-            </div>
-          </>)}
+          {cartData?.filter((io) => io.discount_menu_is_open === true)
+            .length === 0 &&
+            totalDiscountVal !== 0 && (
+              <>
+                <div
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
+                >
+                  Total Discount: {totalDiscountVal}
+                </div>
+              </>
+            )}
           {/* </div> */}
-          {cartData?.filter(io => io.discount_menu_is_open === true).length === 0 && (<>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: "20px",
-              }}
-            >
-              <button
-                type="button"
+          {cartData?.filter((io) => io.discount_menu_is_open === true)
+            .length === 0 && (
+            <>
+              <div
                 style={{
-                  backgroundColor: "green",
-                  border: "none",
-                  color: "white",
-                  fontWeight: "bold",
-                  padding: "6px 20px",
-                  borderRadius: "10px",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: "20px",
                 }}
-                id="pop112"
-                onClick={() => setPopoverIsOpen(!popoverIsOpen)}
               >
-                Invoice Discount
-              </button>
-            </div>
-          </>)}
+                <button
+                  type="button"
+                  style={{
+                    backgroundColor: "green",
+                    border: "none",
+                    color: "white",
+                    fontWeight: "bold",
+                    padding: "6px 20px",
+                    borderRadius: "10px",
+                  }}
+                  id="pop112"
+                  onClick={() => setPopoverIsOpen(!popoverIsOpen)}
+                >
+                  Invoice Discount
+                </button>
+              </div>
+            </>
+          )}
 
           <Modal
             show={popoverIsOpen}
@@ -1092,7 +1078,7 @@ const Home = () => {
                       className="btn btn-sm btn-danger"
                       onClick={() => {
                         if (discountPercentVal) {
-                          handleDiscountLarge(discountPercentVal)
+                          handleDiscountLarge(discountPercentVal);
                           // cartData.map(item => {
                           //   item.discount_value = discountPercentVal
                           // })
@@ -1102,13 +1088,13 @@ const Home = () => {
 
                           setTotalDiscountVal(parseFloat(val1).toFixed(2));
                         } else if (discountAmountVal) {
-                          handleDiscountAmountLarge(discountAmountVal)
+                          handleDiscountAmountLarge(discountAmountVal);
                           setTotalDiscountVal(
                             parseFloat(discountAmountVal).toFixed(2)
                           );
                         } else {
                           setTotalDiscountVal(0);
-                          handleDiscountAmountLarge(0)
+                          handleDiscountAmountLarge(0);
                         }
                         setPopoverIsOpen(!popoverIsOpen);
                       }}
@@ -1152,7 +1138,7 @@ const Home = () => {
               border: "none",
               fontSize: "20px",
             }}
-          // className="bg-primary"
+            // className="bg-primary"
           >
             {cartData && cartData.length > 0
               ? "Proceed to checkout"
@@ -1167,7 +1153,7 @@ const Home = () => {
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-      // style={{ position: "relative" }}
+        // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -1248,22 +1234,23 @@ const Home = () => {
                               }
                             }
                           }}
-                          className={`option-item ${optionTick.filter((io) => io.name === item.value)
-                            .length > 0 && ""
-                            }`}
+                          className={`option-item ${
+                            optionTick.filter((io) => io.name === item.value)
+                              .length > 0 && ""
+                          }`}
                           style={{
                             backgroundColor:
                               item.name === "Cash"
                                 ? "#fed813"
                                 : item.name === "Paytm"
-                                  ? "#00B9F1"
-                                  : item.name === "Google Pay"
-                                    ? "#2DA94F"
-                                    : item.name === "Phone Pay"
-                                      ? "#5f259f"
-                                      : item.name === "UPI"
-                                        ? "#ff7909"
-                                        : "silver",
+                                ? "#00B9F1"
+                                : item.name === "Google Pay"
+                                ? "#2DA94F"
+                                : item.name === "Phone Pay"
+                                ? "#5f259f"
+                                : item.name === "UPI"
+                                ? "#ff7909"
+                                : "silver",
                           }}
                         >
                           <div style={{ position: "relative", top: "2px" }}>
@@ -1275,14 +1262,14 @@ const Home = () => {
                                 item.name === "Cash"
                                   ? "black"
                                   : item.name === "Paytm"
-                                    ? "black"
-                                    : item.name === "Google Pay"
-                                      ? "white"
-                                      : item.name === "Phone Pay"
-                                        ? "white"
-                                        : item.name === "UPI"
-                                          ? "white"
-                                          : "black",
+                                  ? "black"
+                                  : item.name === "Google Pay"
+                                  ? "white"
+                                  : item.name === "Phone Pay"
+                                  ? "white"
+                                  : item.name === "UPI"
+                                  ? "white"
+                                  : "black",
                             }}
                           >
                             {item.name}
@@ -1368,9 +1355,10 @@ const Home = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${
+                      handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                      }`}
+                    }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -1399,9 +1387,10 @@ const Home = () => {
                 }}
               >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${
+                    handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                    }`}
+                  }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />
@@ -1413,7 +1402,11 @@ const Home = () => {
               >
                 WhatsApp <IoLogoWhatsapp size={25} />
               </Button>
-              <div>
+              <form
+                onSubmit={handleNotifyEmail}
+                className="d-flex flex-row align-items-center"
+                style={{ width: "50%" }}
+              >
                 <TextField
                   type="email"
                   className="form-control my-2"
@@ -1421,10 +1414,15 @@ const Home = () => {
                   required
                   size="small"
                   label="Email"
-                // value={email}
-                // onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
-              </div>
+                <div className="mx-2">
+                  <button type="submit" className="btn btn-primary">
+                    Send
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </Modal.Body>
