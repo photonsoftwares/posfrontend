@@ -425,11 +425,13 @@ const Home = () => {
   const RenderUi = () => {
     if (searchedData && searchValue.length > 0) {
       return searchedData.map((item, index) => (
-        <Product item={item} index={index} />
+        <Product item={item} index={index}
+          setSearchValue={setSearchValue}
+        />
       ));
     } else if (recommendedData && recommendedData.length > 0) {
       return recommendedData.map((item, index) => (
-        <Product item={item} index={index} />
+        <Product item={item} index={index} setSearchValue={setSearchValue} />
       ));
     }
     //  else if (searchedData) {
@@ -799,6 +801,14 @@ const Home = () => {
                       <OutlinedInput
                         type="number"
                         size="small"
+                        onKeyDown={e => {
+                          if (e.key === "Enter") {
+                            item.price = item.zero_price
+                            item.new_price = item.zero_price
+                            setCartData([...cartData])
+                          }
+                          console.log(e.key)
+                        }}
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
@@ -945,9 +955,10 @@ const Home = () => {
                           </span>{" "}
                           / {parseFloat(item.new_price).toFixed(2)}
                         </>
-                      ) : (
-                        <>{item.price * item.productQty}</>
-                      )}
+                      ) : (<>
+                        {/* // <>{item.price * item.productQty}</> */}
+                      </>)}
+
                     </div>
                   </>
                 )
@@ -1033,12 +1044,9 @@ const Home = () => {
               <>
                 <div
                   style={{
-                    backgroundColor: "green",
-                    border: "none",
-                    color: "white",
-                    fontWeight: "bold",
-                    padding: "6px 20px",
-                    borderRadius: "10px",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: "20px",
                   }}
                   id="pop112"
                   onClick={() => setPopoverIsOpen(!popoverIsOpen)}
@@ -1191,10 +1199,17 @@ const Home = () => {
         >
           <Button
             onClick={() => {
-              cartData.length > 0
-                ? setPaymentModal(true)
-                : setPaymentModal(false);
-              // setPaymentModal((state) => !state);
+              if (cartData.length > 0) {
+                if (cartData.filter(io => io.price === 0).length === 0) {
+                  setPaymentModal(true)
+                } else {
+                  toast.error("Item amount should not be zero")
+                }
+              } else {
+
+                setPaymentModal(false);
+              }
+
             }}
             style={{
               backgroundColor: "#20b9e3",
