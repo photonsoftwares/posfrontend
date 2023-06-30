@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BASE_Url } from "../URL";
 import { Button } from "react-bootstrap";
 
-const Product = ({ item }) => {
+const Product = ({ item, setSearchValue }) => {
   const { cart_data } = useSelector((e) => e.ComponentPropsManagement);
   const [showButton, setShowButton] = useState(true);
   // const [qty, setQty] = useState(1);
@@ -79,6 +79,7 @@ const Product = ({ item }) => {
             onClick={() => {
               dispatch(handleAddCartData(item));
               setShowButton(false);
+              setSearchValue('')
             }}
           >
             Add to Cart
