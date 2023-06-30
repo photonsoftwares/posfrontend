@@ -60,10 +60,10 @@ import { BASE_Url } from "../URL";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../Navigation";
 import { TextField } from "@mui/material";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 // import Visibility from '@mui/icons-material/Visibility';
 // import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
@@ -548,7 +548,6 @@ const Home = () => {
     if (email) {
       dispatch(handleEmailNotificationResponse({ to: email }));
     }
-    setEmail("");
   };
 
   return (
@@ -790,8 +789,8 @@ const Home = () => {
                 </div>
                 <div style={{ flex: 1, marginLeft: "20px" }}>
 
-
                   {Number(item.price) * Number(item.productQty) === 0 ? (<>
+
                     <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
 
                       <InputLabel
@@ -895,7 +894,6 @@ const Home = () => {
                               item.amount_value = "";
                               handleDiscountAmount(item, 0);
                             }
-
                           }}
                           value={item.amount_value}
                         // disabled={percentOff.length > 0 ? true : false}
@@ -1026,24 +1024,17 @@ const Home = () => {
             )
           }
           {/* </div> */}
-
           {
             cartData?.filter((io) => io.discount_menu_is_open === true)
               .length === 0 && (
               <>
                 <div
                   style={{
-                    backgroundColor: "green",
-                    border: "none",
-                    color: "white",
-                    fontWeight: "bold",
-                    padding: "6px 20px",
-                    borderRadius: "10px",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: "20px",
                   }}
-                  id="pop112"
-                  onClick={() => setPopoverIsOpen(!popoverIsOpen)}
                 >
-
                   <button
                     type="button"
                     style={{
@@ -1298,7 +1289,6 @@ const Home = () => {
                               }
                             }
                           }}
-
                           className={`option-item ${optionTick.filter((io) => io.name === item.value)
                             .length > 0 && ""
                             }`}
