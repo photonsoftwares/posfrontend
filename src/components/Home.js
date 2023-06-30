@@ -13,6 +13,8 @@ import { SiPhonepe } from "react-icons/si";
 import { SiContactlesspayment } from "react-icons/si";
 import { BsCreditCardFill, BsFillCheckCircleFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
+import FormControl from '@mui/material/FormControl';
+
 import {
   Popover,
   PopoverHeader,
@@ -143,7 +145,7 @@ const Home = () => {
   const [totalDiscountVal, setTotalDiscountVal] = useState(0);
   const [invoiceValue, setInvoiceValue] = useState(0);
   const [addPrice, setAddPrice] = useState("");
-  const [email, setEmail] = useState("r@mail.com");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     if (
@@ -507,9 +509,11 @@ const Home = () => {
     cartData.map((item) => {
       item.discount_value = discount_value;
       const price = Number(item.price) * Number(item.productQty);
-      const calculatedVal = (price * discount_value) / 100;
-      const t1 = price - calculatedVal;
-      item.new_price = t1;
+      if (price !== 0) {
+        const calculatedVal = (price * discount_value) / 100;
+        const t1 = price - calculatedVal;
+        item.new_price = t1;
+      }
     });
     setCartData([...cartData]);
   };
@@ -518,8 +522,10 @@ const Home = () => {
     cartData.map((item) => {
       item.amount_value = discountAmountVal;
       const price = Number(item.price) * Number(item.productQty);
-      const calculatedVal = price - discountAmountVal;
-      item.new_price = calculatedVal;
+      if (price !== 0) {
+        const calculatedVal = price - discountAmountVal;
+        item.new_price = calculatedVal;
+      }
     });
     setCartData([...cartData]);
   };
@@ -783,8 +789,8 @@ const Home = () => {
                 </div>
                 <div style={{ flex: 1, marginLeft: "20px" }}>
 
-                  {/* {Number(item.price) * Number(item.productQty) === 0 ? (<> */}
-                  {/* <TextField
+                  {Number(item.price) * Number(item.productQty) === 0 ? (<>
+                    {/* <TextField
                       label="Enter Price"
                       type="number"
                       onChange={e => {
@@ -795,154 +801,167 @@ const Home = () => {
                       value={item.zero_price}
                     /> */}
 
+                    <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
 
-                  {/* <InputLabel
-                    >Enter Amount</InputLabel>
-                    <OutlinedInput
-                      type="number"
-                      size="small"
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            // onClick={handleClickShowPassword}
-                            edge="end"
-                          >
-                            <BsFillCheckCircleFill color="green" />
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                      label="Amount"
-                      onChange={e => {
-                        const val = e.target.value
-                        item.zero_price = val
-                        setCartData([...cartData])
-                      }}
-                      value={item.zero_price}
-                    /> */}
-
-                  {/* </>) : (<> */}
-                  {item.price * item.productQty}
-                  {/* </>)} */}
+                      <InputLabel
+                      >Amount</InputLabel>
+                      <OutlinedInput
+                        type="number"
+                        size="small"
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              // aria-label="toggle password visibility"
+                              onClick={() => {
+                                item.price = item.zero_price
+                                item.new_price = item.zero_price
+                                setCartData([...cartData])
+                              }}
+                              edge="end"
+                            >
+                              <BsFillCheckCircleFill color={(item.zero_price === "" || item.zero_price === 0) ? "#979797" : "green"} />
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                        label="Amount"
+                        className="w-50"
+                        onChange={e => {
+                          const val = e.target.value
+                          if (val) {
+                            item.zero_price = Number(val)
+                            setCartData([...cartData])
+                          } else {
+                            item.zero_price = ''
+                            setCartData([...cartData])
+                          }
+                        }}
+                        value={item.zero_price}
+                      />
+                    </FormControl>
+                  </>) : (<>
+                    {item.price * item.productQty}
+                  </>)}
 
                 </div>
                 {/*  */}
               </div>
               {/* {item.discount ? ( */}
-              {item.discount_menu_is_open ? (
-                <>
-                  <div className="d-flex flex-sm-row">
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <TextField
-                        label="Percent Off"
-                        type="number"
-                        className="me-3"
-                        // ref={ref}
-                        // disabled={amountOff.length > 0 ? true : false}
-                        disabled={item.amount_value}
-                        // value={percentOff}
-                        // onChange={(e) => setPercentOff(e.target.value)}
-                        onChange={(e) => {
-                          const val = Number(e.target.value);
-                          if (val) {
-                            if (val >= 1 && val <= 99) {
-                              item.discount_value = val;
-                              handleDiscount(item, val);
-                            } else {
-                              item.discount_value = 99;
-                              handleDiscount(item, 99);
-                            }
-                          } else {
-                            item.discount_value = "";
-                            handleDiscount(item, 0);
-                          }
-                          // handleDiscount(item, "");
+              {
+                item.discount_menu_is_open ? (
+                  <>
+                    <div className="d-flex flex-sm-row">
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "center",
                         }}
-                        value={item.discount_value}
-                      />
-                      <TextField
-                        label="Amount Off"
-                        type="number"
-                        className="me-3"
-                        disabled={item.discount_value}
-                        onChange={(e) => {
-                          const val = Number(e.target.value);
-                          if (val) {
-                            if (val >= 1 && val <= 99999) {
-                              item.amount_value = val;
-                              handleDiscountAmount(item, val);
+                      >
+                        <TextField
+                          label="Percent Off"
+                          type="number"
+                          className="me-3"
+                          // ref={ref}
+                          // disabled={amountOff.length > 0 ? true : false}
+                          disabled={item.amount_value}
+                          // value={percentOff}
+                          // onChange={(e) => setPercentOff(e.target.value)}
+                          onChange={(e) => {
+                            const val = Number(e.target.value);
+                            if (val) {
+                              if (val >= 1 && val <= 99) {
+                                item.discount_value = val;
+                                handleDiscount(item, val);
+                              } else {
+                                item.discount_value = 99;
+                                handleDiscount(item, 99);
+                              }
                             } else {
-                              item.amount_value = 99999;
-                              handleDiscountAmount(item, 99999);
+                              item.discount_value = "";
+                              handleDiscount(item, 0);
                             }
-                          } else {
-                            item.amount_value = "";
-                            handleDiscountAmount(item, 0);
-                          }
-                        }}
-                        value={item.amount_value}
-                      // disabled={percentOff.length > 0 ? true : false}
-                      // value={amountOff}
-                      // onChange={(e) => setAmountOff(e.target.value)}
-                      />
-                      <div>
-                        <button
-                          className="btn btn-danger my-3"
-                        // onClick={() => handleDiscountOff(item)}
-                        >
-                          Apply
-                        </button>
-                        {/* {console.log("cartData", cartData)} */}
-                        {/* <div style={{ fontSize: "10px" }}>
-                          {item.discount_value || item.amount_value ? (
-                            <>
-                              <span
-                                style={{ textDecorationLine: "line-through" }}
-                              >
-                                {item.price * item.productQty}
-                              </span>{" "}
-                              / {parseFloat(item.new_price).toFixed(2)}
-                            </>
-                          ) : (
-                            <>{item.price * item.productQty}</>
-                          )}
-                        </div> */}
+                            // handleDiscount(item, "");
+                          }}
+                          value={item.discount_value}
+                        />
+                        <TextField
+                          label="Amount Off"
+                          type="number"
+                          className="me-3"
+                          disabled={item.discount_value}
+                          onChange={(e) => {
+                            const val = Number(e.target.value);
+                            if (val) {
+                              if (val >= 1 && val <= 99999) {
+                                item.amount_value = val;
+                                handleDiscountAmount(item, val);
+                              } else {
+                                item.amount_value = 99999;
+                                handleDiscountAmount(item, 99999);
+                              }
+                            } else {
+                              item.amount_value = "";
+                              handleDiscountAmount(item, 0);
+                            }
+                          }}
+                          value={item.amount_value}
+                        // disabled={percentOff.length > 0 ? true : false}
+                        // value={amountOff}
+                        // onChange={(e) => setAmountOff(e.target.value)}
+                        />
+                        <div>
+                          <button
+                            className="btn btn-danger my-3"
+                          // onClick={() => handleDiscountOff(item)}
+                          >
+                            Apply
+                          </button>
+                          {/* {console.log("cartData", cartData)} */}
+                          <div style={{ fontSize: "10px" }}>
+                            {item.discount_value || item.amount_value ? (
+                              <>
+                                <span
+                                  style={{ textDecorationLine: "line-through" }}
+                                >
+                                  {item.price * item.productQty}
+                                </span>{" "}
+                                / {parseFloat(item.new_price).toFixed(2)}
+                              </>
+                            ) : (
+                              <>{item.price * item.productQty}</>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {/* <div
-                    style={{
-                      fontSize: "10px",
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      marginRight: "30px",
-                    }}
-                  >
-                    {item.discount_value || item.amount_value ? (
-                      <>
-                        <span style={{ textDecorationLine: "line-through" }}>
-                          {item.price * item.productQty}
-                        </span>{" "}
-                        / {parseFloat(item.new_price).toFixed(2)}
-                      </>
-                    ) : (
-                      <>{item.price * item.productQty}</>
-                    )}
-                  </div> */}
-                </>
-              )}
+                  </>
+                ) : (
+                  <>
+                    <div
+                      style={{
+                        fontSize: "10px",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginRight: "30px",
+                      }}
+                    >
+                      {item.discount_value || item.amount_value ? (
+                        <>
+                          <span style={{ textDecorationLine: "line-through" }}>
+                            {item.price * item.productQty}
+                          </span>{" "}
+                          / {parseFloat(item.new_price).toFixed(2)}
+                        </>
+                      ) : (
+                        <>{item.price * item.productQty}</>
+                      )}
+                    </div>
+                  </>
+                )
+              }
               {/* {console.log("ITEM", item)} */}
-              <div style={{ display: "flex", flexDirection: "row" }}>
+              < div style={{ display: "flex", flexDirection: "row" }}>
                 <p
                   style={{
                     color: "#a90a0a",
@@ -981,7 +1000,8 @@ const Home = () => {
                 )}
               </div>
             </div>
-          ))}
+          ))
+          }
 
           {/* <div> */}
 
@@ -996,8 +1016,9 @@ const Home = () => {
             Total Invoice Value: {invoiceValue}
             <br />
           </div>
-          {cartData?.filter((io) => io.discount_menu_is_open === true)
-            .length === 0 &&
+          {
+            cartData?.filter((io) => io.discount_menu_is_open === true)
+              .length === 0 &&
             totalDiscountVal !== 0 && (
               <>
                 <div
@@ -1010,10 +1031,12 @@ const Home = () => {
                   Total Discount: {totalDiscountVal}
                 </div>
               </>
-            )}
+            )
+          }
           {/* </div> */}
-          {cartData?.filter((io) => io.discount_menu_is_open === true)
-            .length === 0 && (
+          {
+            cartData?.filter((io) => io.discount_menu_is_open === true)
+              .length === 0 && (
               <>
                 <div
                   style={{
@@ -1039,7 +1062,8 @@ const Home = () => {
                   </button>
                 </div>
               </>
-            )}
+            )
+          }
 
           <Modal
             show={popoverIsOpen}
@@ -1158,7 +1182,7 @@ const Home = () => {
               </div>
             </PopoverBody>
           </Popover> */}
-        </Modal.Body>
+        </Modal.Body >
         <Modal.Footer
           style={{
             display: "flex",
@@ -1187,7 +1211,7 @@ const Home = () => {
             {/* Proceed to checkout */}
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal >
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
@@ -1276,7 +1300,7 @@ const Home = () => {
                             }
                           }}
                           className={`option-item ${optionTick.filter((io) => io.name === item.value)
-                              .length > 0 && ""
+                            .length > 0 && ""
                             }`}
                           style={{
                             backgroundColor:
@@ -1540,7 +1564,7 @@ const Home = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </div>
+    </div >
   );
 };
 
