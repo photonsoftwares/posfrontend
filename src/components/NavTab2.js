@@ -22,6 +22,13 @@ const NavTab2 = () => {
         <p>Add Item</p>
       </Link>
       <Link
+        to="/loyality-dashboard"
+        style={{ textDecoration: "none", color: "#20b9e3" }}
+        onClick={() => dispatch(handleOpneMenuRequest(false))}
+      >
+        <p>Loyality Dashboard</p>
+      </Link>
+      <Link
         to="/tax"
         style={{ textDecoration: "none", color: "#20b9e3" }}
         onClick={() => dispatch(handleOpneMenuRequest(false))}

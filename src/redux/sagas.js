@@ -130,7 +130,7 @@ function* handleSearchedDataRequest(e) {
       });
     }
   } else if (jsonData.status === false && jsonData.data == null) {
-    toast.error("NO ITEM FOUND, would you like to add this Item to Store.??");
+    // toast.error("NO ITEM FOUND, would you like to add this Item to Store.??");
     const confirm = window.confirm(
       "NO ITEM FOUND, would you like to add this Item to Store.??"
     );

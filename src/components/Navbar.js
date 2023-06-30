@@ -40,6 +40,11 @@ const Navbar = () => {
       button: "Master",
       component: <NavTab2 />,
     },
+    {
+      id: 3,
+      button: "Master",
+      component: <NavTab2 />,
+    },
   ];
   const [openMenu, setOpenMenu] = useState(false);
   const [storeName, setStoreName] = useState("");
@@ -69,6 +74,7 @@ const Navbar = () => {
       setStoreName(allData.storeName);
     }
   }, [storeName]);
+
   const footer_arr = [
     {
       id: 1,
@@ -245,6 +251,13 @@ const Navbar = () => {
                               }}
                             >
                               Link Customer
+                            </DropdownItem>
+                            <DropdownItem
+                              onClick={() => {
+                                navigate("/loyality-dashboard");
+                              }}
+                            >
+                              Loyality Dashboard
                             </DropdownItem>
                           </DropdownMenu>
                         </Dropdown>
