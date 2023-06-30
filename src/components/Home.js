@@ -11,7 +11,7 @@ import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { FaGooglePay } from "react-icons/fa";
 import { SiPhonepe } from "react-icons/si";
 import { SiContactlesspayment } from "react-icons/si";
-import { BsCreditCardFill } from "react-icons/bs";
+import { BsCreditCardFill, BsFillCheckCircleFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
 import {
   Popover,
@@ -56,6 +56,12 @@ import { BASE_Url } from "../URL";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../Navigation";
 import { TextField } from "@mui/material";
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+// import Visibility from '@mui/icons-material/Visibility';
+// import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const Home = () => {
   // console.log("SAAS REGISTER STORE", saasId, registerId, storeId);
@@ -234,6 +240,7 @@ const Home = () => {
           item["discount_value"] = "";
           item["amount_value"] = "";
           item["new_price"] = item.price;
+          item["zero_price"] = item.price;
         });
         setCartData(t1);
       }
@@ -282,15 +289,15 @@ const Home = () => {
     },
   ];
 
-  function removeElement(array, value) {
-    // Find the index of the element to be removed
-    let index = array.indexOf(value);
+  // function removeElement(array, value) {
+  //   // Find the index of the element to be removed
+  //   let index = array.indexOf(value);
 
-    // If the element is found, remove it from the array
-    if (index !== -1) {
-      array.splice(index, 1);
-    }
-  }
+  //   // If the element is found, remove it from the array
+  //   if (index !== -1) {
+  //     array.splice(index, 1);
+  //   }
+  // }
 
   // Payment
 
@@ -768,17 +775,48 @@ const Home = () => {
                   </div>
                 </div>
                 <div style={{ flex: 1, marginLeft: "20px" }}>
-                  {/* {item.discount_value || item.amount_value ? (
-                    <>
-                      <span style={{ textDecorationLine: "line-through" }}>
-                        {item.price * item.productQty}
-                      </span>{" "}
-                      / {item.new_price}
-                    </>
-                  ) : (
-                    <>{item.price * item.productQty}</>
-                  )} */}
-                  {item.price * item.productQty}
+                  {Number(item.price) * Number(item.productQty) === 0 ? (<>
+                    {/* <TextField
+                      label="Enter Price"
+                      type="number"
+                      onChange={e => {
+                        const val = e.target.value
+                        item.zero_price = val
+                        setCartData([...cartData])
+                      }}
+                      value={item.zero_price}
+                    /> */}
+
+
+                    <InputLabel
+                    >Enter Amount</InputLabel>
+                    <OutlinedInput
+                      type="number"
+                      size="small"
+                      // style={{ border: "2px solid #979797" }}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            // onClick={handleClickShowPassword}
+                            edge="end"
+                          >
+                            <BsFillCheckCircleFill color="green" />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="Amount"
+                      onChange={e => {
+                        const val = e.target.value
+                        item.zero_price = val
+                        setCartData([...cartData])
+                      }}
+                      value={item.zero_price}
+                    />
+
+                  </>) : (<>
+                    {item.price * item.productQty}
+                  </>)}
                 </div>
               </div>
               {/* {item.discount ? ( */}
