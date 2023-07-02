@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Button, Col, FormGroup, Input, Label, Modal, Row } from "reactstrap";
+import React from "react";
+import { Button, Col, FormGroup, Modal, Row } from "react-bootstrap";
+import { Input, Label } from "reactstrap";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
-
+import { useDispatch } from "react-redux";
+import { handleDeleteCartItem } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 const MyCart = ({
   show,
   cartData,
@@ -12,19 +13,12 @@ const MyCart = ({
   discountPercentVal,
   totalDiscountVal,
   setShow,
+  setPaymentModal,
 }) => {
-  const {
-    get_searched_data,
-    cart_data,
-    get_QR_img,
-    total_price,
-    handle_saveTransaction_data,
-    get_recommended_items,
-  } = useSelector((e) => e.ComponentPropsManagement);
-  //   const [cartData, setCartData] = useState(null);
+  const dispatch = useDispatch();
   return (
     <Modal
-      show={cartData.lenght > 0 ? setShow(true) : setShow(false)}
+      show={show}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
@@ -85,51 +79,95 @@ const MyCart = ({
                 </div>
               </div>
               <div style={{ flex: 1, marginLeft: "20px" }}>
-                {/* {Number(item.price) * Number(item.productQty) === 0 ? (<> */}
-                {/* <TextField
-                label="Enter Price"
-                type="number"
-                onChange={e => {
-                  const val = e.target.value
-                  item.zero_price = val
-                  setCartData([...cartData])
-                }}
-                value={item.zero_price}
-              /> */}
-
-                {/* <InputLabel
-              >Enter Amount</InputLabel>
-              <OutlinedInput
-                type="number"
-                size="small"
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      // onClick={handleClickShowPassword}
-                      edge="end"
+                {Number(item.price) * Number(item.productQty) === 0 ? (
+                  <>
+                    <FormControl
+                      sx={{ m: 1, width: "25ch" }}
+                      variant="outlined"
                     >
-                      <BsFillCheckCircleFill color="green" />
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Amount"
-                onChange={e => {
-                  const val = e.target.value
-                  item.zero_price = val
-                  setCartData([...cartData])
-                }}
-                value={item.zero_price}
-              /> */}
-
-                {/* </>) : (<> */}
-                {item.price * item.productQty}
-                {/* </>)} */}
+                      <InputLabel>Amount</InputLabel>
+                      <OutlinedInput
+                        type="number"
+                        size="small"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            item.price = item.zero_price;
+                            item.new_price = item.zero_price;
+                            setCartData([...cartData]);
+                          }
+                          console.log(e.key);
+                        }}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              // aria-label="toggle password visibility"
+                              onClick={() => {
+                                item.price = item.zero_price;
+                                item.new_price = item.zero_price;
+                                setCartData([...cartData]);
+                              }}
+                              edge="end"
+                            >
+                              <BsFillCheckCircleFill
+                                color={
+                                  item.zero_price === "" ||
+                                  item.zero_price === 0
+                                    ? "#979797"
+                                    : "green"
+                                }
+                              />
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                        label="Amount"
+                        className="w-50"
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val) {
+                            item.zero_price = Number(val);
+                            setCartData([...cartData]);
+                          } else {
+                            item.zero_price = "";
+                            setCartData([...cartData]);
+                          }
+                        }}
+                        value={item.zero_price}
+                      />
+                    </FormControl>
+                  </>
+                ) : (
+                  <>
+                    <div>{item.price * item.productQty}</div>
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "10px",
+                          // display: "flex",
+                          // justifyContent: "center",
+                          marginRight: "30px",
+                        }}
+                      >
+                        {item.discount_value || item.amount_value ? (
+                          <>
+                            <span
+                              style={{ textDecorationLine: "line-through" }}
+                            >
+                              {item.price * item.productQty}
+                            </span>{" "}
+                            / {parseFloat(item.new_price).toFixed(2)}
+                          </>
+                        ) : (
+                          <>{/* // <>{item.price * item.productQty}</> */}</>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
               {/*  */}
             </div>
             {/* {item.discount ? ( */}
-            {item.discount_menu_is_open ? (
+            {item.discount_menu_is_open === true && (
               <>
                 <div className="d-flex flex-sm-row">
                   <div
@@ -200,45 +238,23 @@ const MyCart = ({
                         Apply
                       </button>
                       {/* {console.log("cartData", cartData)} */}
-                      {/* <div style={{ fontSize: "10px" }}>
-                    {item.discount_value || item.amount_value ? (
-                      <>
-                        <span
-                          style={{ textDecorationLine: "line-through" }}
-                        >
-                          {item.price * item.productQty}
-                        </span>{" "}
-                        / {parseFloat(item.new_price).toFixed(2)}
-                      </>
-                    ) : (
-                      <>{item.price * item.productQty}</>
-                    )}
-                  </div> */}
+                      <div style={{ fontSize: "10px" }}>
+                        {item.discount_value || item.amount_value ? (
+                          <>
+                            <span
+                              style={{ textDecorationLine: "line-through" }}
+                            >
+                              {item.price * item.productQty}
+                            </span>{" "}
+                            / {parseFloat(item.new_price).toFixed(2)}
+                          </>
+                        ) : (
+                          <>{item.price * item.productQty}</>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </>
-            ) : (
-              <>
-                {/* <div
-              style={{
-                fontSize: "10px",
-                display: "flex",
-                justifyContent: "flex-end",
-                marginRight: "30px",
-              }}
-            >
-              {item.discount_value || item.amount_value ? (
-                <>
-                  <span style={{ textDecorationLine: "line-through" }}>
-                    {item.price * item.productQty}
-                  </span>{" "}
-                  / {parseFloat(item.new_price).toFixed(2)}
-                </>
-              ) : (
-                <>{item.price * item.productQty}</>
-              )}
-            </div> */}
               </>
             )}
             {/* {console.log("ITEM", item)} */}
@@ -311,6 +327,7 @@ const MyCart = ({
             </>
           )}
         {/* </div> */}
+
         {cartData?.filter((io) => io.discount_menu_is_open === true).length ===
           0 && (
           <>
@@ -320,6 +337,8 @@ const MyCart = ({
                 justifyContent: "flex-end",
                 marginTop: "20px",
               }}
+              id="pop112"
+              onClick={() => setPopoverIsOpen(!popoverIsOpen)}
             >
               <button
                 type="button"
@@ -467,10 +486,15 @@ const MyCart = ({
       >
         <Button
           onClick={() => {
-            cartData.length > 0
-              ? setPaymentModal(true)
-              : setPaymentModal(false);
-            // setPaymentModal((state) => !state);
+            if (cartData.length > 0) {
+              if (cartData.filter((io) => io.price === 0).length === 0) {
+                setPaymentModal(true);
+              } else {
+                toast.error("Item amount should not be zero");
+              }
+            } else {
+              setPaymentModal(false);
+            }
           }}
           style={{
             backgroundColor: "#20b9e3",

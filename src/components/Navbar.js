@@ -204,7 +204,7 @@ const Navbar = () => {
 
           {footer_arr
             .filter((io) => io.isActive === true)
-            .map((item) => {
+            .map((item, i) => {
               return (
                 <>
                   <div
@@ -217,6 +217,7 @@ const Navbar = () => {
                       marginBottom: "20px",
                       cursor: "pointer",
                     }}
+                    key={i}
                     onClick={() => {
                       if (item.value === "product") {
                         navigate("/add-item");

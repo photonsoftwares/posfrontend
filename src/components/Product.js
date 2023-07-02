@@ -29,6 +29,7 @@ const Product = ({ item, setSearchValue }) => {
         justifyContent: "flex-start",
         marginBottom: "20px",
       }}
+      key={item.productId}
     >
       <div style={{ height: "62px", width: "100px", marginRight: "20px" }}>
         <img
@@ -79,7 +80,7 @@ const Product = ({ item, setSearchValue }) => {
             onClick={() => {
               dispatch(handleAddCartData(item));
               setShowButton(false);
-              setSearchValue('')
+              setSearchValue("");
             }}
           >
             Add to Cart
