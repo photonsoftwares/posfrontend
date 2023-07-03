@@ -1,31 +1,16 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import Select from "react-select";
-import Logo from "../assets/logo.jpeg";
+
 import { IoIosSearch } from "react-icons/io";
-import { BsHandbag, BsArrowRight, BsThreeDots } from "react-icons/bs";
+import { BsHandbag, BsArrowRight } from "react-icons/bs";
 import { FcSpeaker } from "react-icons/fc";
 import { IoCashOutline } from "react-icons/io5";
 import { SiPaytm } from "react-icons/si";
-import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { FaGooglePay } from "react-icons/fa";
 import { SiPhonepe } from "react-icons/si";
 import { SiContactlesspayment } from "react-icons/si";
-import { BsCreditCardFill, BsFillCheckCircleFill } from "react-icons/bs";
+import { BsCreditCardFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
-import FormControl from '@mui/material/FormControl';
-
-import {
-  Popover,
-  PopoverHeader,
-  PopoverBody,
-  Input,
-  Label,
-  Row,
-  Col,
-  FormGroup,
-  Form,
-} from "reactstrap";
 
 import Modal from "react-bootstrap/Modal";
 import Product from "../components/Product";
@@ -33,24 +18,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 import qrData from "../assets/QR.jpeg";
 import {
-  handleDeleteCartItem,
   handleSearchedDataRequest,
-  handleCartTotal,
-  handleSavaTransactionRequest,
   handleSaveTransactionRequest,
-  handlePdfRequest,
   handleRecommendedDataRequest,
-  handleEmptyCartItem,
-  handleDiscountItem,
-  handleEmailNotificationRequest,
   handleEmailNotificationResponse,
 } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { Button } from "react-bootstrap";
-// import SpeechRecognition, {
-//   useSpeechRecognition,
-// } from "react-speech-recognition";
 import pdfFile from "../assets/PDF.pdf";
-
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
@@ -58,33 +32,17 @@ import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import { toast } from "react-toastify";
 import { BASE_Url } from "../URL";
 import { useNavigate } from "react-router-dom";
-import Navigation from "../Navigation";
 import { TextField } from "@mui/material";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-// import Visibility from '@mui/icons-material/Visibility';
-// import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
+import MyCart from "./my-cart/MyCart";
 
 const Home = () => {
-  // console.log("SAAS REGISTER STORE", saasId, registerId, storeId);
-  // useEffect(() => {
-  //   if (localStorage.getItem("User_data")) {
-  //   }
-  // });
-  const [popoverIsOpen, setPopoverIsOpen] = useState(false);
+  const [popoverIsOpen] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [defaultPdfFile] = useState(pdfFile);
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
-  // useEffect(() => { }, [defaultPdfFile]);
-
   const userData = JSON.parse(localStorage.getItem("User_data"));
-  // console.log("HOME DATA", userData);
-
-  // useEffect(() => { }, [userData]);
 
   const {
     get_searched_data,
@@ -99,33 +57,16 @@ const Home = () => {
     dispatch(handleRecommendedDataRequest());
   }, []);
 
-  // useEffect(() => {
-  //   if (handle_saveTransaction_data) {
-  //     dispatch(handlePdfRequest(handle_saveTransaction_data));
-  //   }
-  // }, [handle_saveTransaction_data]);
-
-  // CART COUNT TOTAL FIX
-  // dispatch(handleCartTotal());
-
-  // useEffect(() => {
-  //   setAmount(total_price);
-  // }, [total_price]);
-
-  // const { transcript, browserSupportsSpeechRecognition } =
-  // useSpeechRecognition();
   const [validated, setValidated] = useState(false);
   const [searchedData, setSearchedData] = useState(get_searched_data);
   const [recommendedData, setRecommendedData] = useState(get_recommended_items);
   const [searchValue, setSearchValue] = useState("");
   const [cartData, setCartData] = useState(null);
-  // const [cartData, setCartData] = useState([]);
   const [percentOff, setPercentOff] = useState(1);
   const [amountOff, setAmountOff] = useState("");
   const [show, setShow] = useState(false);
   const [speachModal, setSpechModal] = useState(false);
   const [visibleVoiceCommand, setVisibleVoiceCommand] = useState(true);
-  // const [transScriptSearch, setTransScriptSearch] = useState(transcript);
   const [selectedOption, setSelectedOption] = useState(null);
   const [paymentModal, setPaymentModal] = useState(false);
   const [handleShowReceipt, setHandleShowReceipt] = useState(false);
@@ -169,25 +110,11 @@ const Home = () => {
     setInvoiceValue(parseFloat(sumValue).toFixed(2));
   }, [sumValue, totalDiscountVal]);
 
-  // const { registerId, saasId, storeId } = JSON.parse(
-  //   localStorage.getItem("User_data")
-  // );
-  // console.log("REGISTER HOME", registerId);
-  // console.log("--1--", overDicount);
-  // console.log(cartData);
-
-  // console.log("SEARCH DATA STATE", searchedData);
-  // console.log("SEARCH DATA", get_searched_data);
   useEffect(() => {
     if (get_recommended_items && get_recommended_items.data) {
       setRecommendedData(get_recommended_items.data);
     }
   }, [get_recommended_items]);
-
-  // console.log(optionTick);
-
-  // console.log("recommended", recommendedData);
-  // console.log("recommended", get_recommended_items);
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -224,18 +151,6 @@ const Home = () => {
     }
   }, [get_QR_img]);
 
-  const options = [
-    { value: "1", label: "1" },
-    { value: "2", label: "2" },
-    { value: "4", label: "4" },
-    { value: "5", label: "5" },
-    { value: "6", label: "6" },
-    { value: "7", label: "7" },
-    { value: "8", label: "8" },
-    { value: "9", label: "9" },
-    { value: "10", label: "10" },
-  ];
-
   useEffect(() => {
     if (cart_data) {
       if (cart_data.length > 0) {
@@ -251,10 +166,6 @@ const Home = () => {
       }
     }
   }, [cart_data]);
-  // console.log("cartData", cartData)
-  // Payment
-
-  // console.log("**", amount);
   const optionArray = [
     {
       id: 1,
@@ -294,18 +205,6 @@ const Home = () => {
     },
   ];
 
-  // function removeElement(array, value) {
-  //   // Find the index of the element to be removed
-  //   let index = array.indexOf(value);
-
-  //   // If the element is found, remove it from the array
-  //   if (index !== -1) {
-  //     array.splice(index, 1);
-  //   }
-  // }
-
-  // Payment
-
   const debounce = (func) => {
     let timer;
     return function (...args) {
@@ -323,14 +222,6 @@ const Home = () => {
   };
 
   const optimizedVoicefn = useCallback(debounce(handleVoiceSearch), []);
-
-  // useEffect(() => {
-  //   // const { transcript, browserSupportsSpeechRecognition } =
-  //   //   useSpeechRecognition();
-  //   if (transcript) {
-  //     optimizedVoicefn(transcript);
-  //   }
-  // }, [transcript]);
 
   useEffect(() => {
     if (get_searched_data && get_searched_data.data) {
@@ -425,9 +316,7 @@ const Home = () => {
   const RenderUi = () => {
     if (searchedData && searchValue.length > 0) {
       return searchedData.map((item, index) => (
-        <Product item={item} index={index}
-          setSearchValue={setSearchValue}
-        />
+        <Product item={item} index={index} setSearchValue={setSearchValue} />
       ));
     } else if (recommendedData && recommendedData.length > 0) {
       return recommendedData.map((item, index) => (
@@ -532,7 +421,7 @@ const Home = () => {
     setCartData([...cartData]);
   };
 
-  console.log("cartData", cartData);
+  // console.log("cartData", cartData);
   const handleDiscountAmount = (item, amount_value) => {
     const price = Number(item.price) * Number(item.productQty);
     const calculatedVal = price - amount_value;
@@ -618,10 +507,10 @@ const Home = () => {
             opacity={0.9}
             // onClick={() => setSpechModal(true)}
             onClick={handleVoiceCommand}
-          // onClick={() => {
-          //   setVisibleVoiceCommand(true);
-          //   startListening;
-          // }}
+            // onClick={() => {
+            //   setVisibleVoiceCommand(true);
+            //   startListening;
+            // }}
           />
         </div>
       </div>
@@ -735,510 +624,24 @@ const Home = () => {
           </div>
         )}
       </div>
-      <Modal
+      <MyCart
         show={show}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton onClick={() => setShow(false)}>
-          <Modal.Title id="contained-modal-title-vcenter">
-            <span style={{ fontWeight: "900", marginRight: "10px" }}>
-              My Basket
-            </span>
-            ({cartData?.length} items)
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {cartData?.map((item) => (
-            <div
-              // className="cart_container"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                // padding: "10px",
-                border: "1px solid #e7e7e7",
-                marginBottom: "10px",
-              }}
-            >
-              <h1>{item.itemName}</h1>
-              <div className="cart_product">
-                <div style={{ height: "50px" }} className="cart_column">
-                  <div
-                    style={{
-                      border: "1px solid #eee",
-                      borderRadius: "20px",
-                      padding: "10px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-evenly",
-                    }}
-                  >
-                    <AiOutlineMinus
-                      onClick={() => {
-                        handleDec(item);
-                        // item.productQty = item.productQty - 1;
-                        // setCartData([...cartData]);
-                      }}
-                    />
-
-                    {item.productQty}
-                    <AiOutlinePlus
-                      onClick={() => {
-                        const q = item.productQty + 1;
-                        item.productQty = q;
-                        const newP = item.price * q;
-                        item.new_price = newP;
-                        // item.price = newP
-                        // console.log("ITEM", item);
-                        setCartData([...cartData]);
-                      }}
-                    />
-                  </div>
-                </div>
-                <div style={{ flex: 1, marginLeft: "20px" }}>
-
-
-                  {Number(item.price) * Number(item.productQty) === 0 ? (<>
-                    <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-
-                      <InputLabel
-                      >Amount</InputLabel>
-                      <OutlinedInput
-                        type="number"
-                        size="small"
-                        onKeyDown={e => {
-                          if (e.key === "Enter") {
-                            item.price = item.zero_price
-                            item.new_price = item.zero_price
-                            setCartData([...cartData])
-                          }
-                          console.log(e.key)
-                        }}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              // aria-label="toggle password visibility"
-                              onClick={() => {
-                                item.price = item.zero_price
-                                item.new_price = item.zero_price
-                                setCartData([...cartData])
-                              }}
-                              edge="end"
-                            >
-                              <BsFillCheckCircleFill color={(item.zero_price === "" || item.zero_price === 0) ? "#979797" : "green"} />
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                        label="Amount"
-                        className="w-50"
-                        onChange={e => {
-                          const val = e.target.value
-                          if (val) {
-                            item.zero_price = Number(val)
-                            setCartData([...cartData])
-                          } else {
-                            item.zero_price = ''
-                            setCartData([...cartData])
-                          }
-                        }}
-                        value={item.zero_price}
-                      />
-                    </FormControl>
-                  </>) : (<>
-                    <div>
-                      {item.price * item.productQty}
-                    </div>
-                    <div>
-                      <div
-                        style={{
-                          fontSize: "10px",
-                          // display: "flex",
-                          // justifyContent: "center",
-                          marginRight: "30px",
-                        }}
-                      >
-                        {item.discount_value || item.amount_value ? (
-                          <>
-                            <span style={{ textDecorationLine: "line-through" }}>
-                              {item.price * item.productQty}
-                            </span>{" "}
-                            / {parseFloat(item.new_price).toFixed(2)}
-                          </>
-                        ) : (<>
-                          {/* // <>{item.price * item.productQty}</> */}
-                        </>)}
-
-                      </div>
-                    </div>
-                  </>)}
-
-                </div>
-                {/*  */}
-              </div>
-              {/* {item.discount ? ( */}
-              {item.discount_menu_is_open === true && (
-                <>
-                  <div className="d-flex flex-sm-row">
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <TextField
-                        label="Percent Off"
-                        type="number"
-                        className="me-3"
-                        // ref={ref}
-                        // disabled={amountOff.length > 0 ? true : false}
-                        disabled={item.amount_value}
-                        // value={percentOff}
-                        // onChange={(e) => setPercentOff(e.target.value)}
-                        onChange={(e) => {
-                          const val = Number(e.target.value);
-                          if (val) {
-                            if (val >= 1 && val <= 99) {
-                              item.discount_value = val;
-                              handleDiscount(item, val);
-                            } else {
-                              item.discount_value = 99;
-                              handleDiscount(item, 99);
-                            }
-                          } else {
-                            item.discount_value = "";
-                            handleDiscount(item, 0);
-                          }
-                          // handleDiscount(item, "");
-                        }}
-                        value={item.discount_value}
-                      />
-                      <TextField
-                        label="Amount Off"
-                        type="number"
-                        className="me-3"
-                        disabled={item.discount_value}
-                        onChange={(e) => {
-                          const val = Number(e.target.value);
-                          if (val) {
-                            if (val >= 1 && val <= 99999) {
-                              item.amount_value = val;
-                              handleDiscountAmount(item, val);
-                            } else {
-                              item.amount_value = 99999;
-                              handleDiscountAmount(item, 99999);
-                            }
-                          } else {
-                            item.amount_value = "";
-                            handleDiscountAmount(item, 0);
-                          }
-
-                        }}
-                        value={item.amount_value}
-                      // disabled={percentOff.length > 0 ? true : false}
-                      // value={amountOff}
-                      // onChange={(e) => setAmountOff(e.target.value)}
-                      />
-                      <div>
-                        <button
-                          className="btn btn-danger my-3"
-                        // onClick={() => handleDiscountOff(item)}
-                        >
-                          Apply
-                        </button>
-                        {/* {console.log("cartData", cartData)} */}
-                        <div style={{ fontSize: "10px" }}>
-
-                          {item.discount_value || item.amount_value ? (
-                            <>
-                              <span
-                                style={{ textDecorationLine: "line-through" }}
-                              >
-                                {item.price * item.productQty}
-                              </span>{" "}
-                              / {parseFloat(item.new_price).toFixed(2)}
-                            </>
-                          ) : (
-                            <>{item.price * item.productQty}</>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
-              {/* {console.log("ITEM", item)} */}
-              < div style={{ display: "flex", flexDirection: "row" }}>
-                <p
-                  style={{
-                    color: "#a90a0a",
-                    fontWeight: "600",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => dispatch(handleDeleteCartItem(item))}
-                // onClick={() => handelDeleteProduct(item)}
-                >
-                  Remove
-                </p>
-                {totalDiscountVal === 0 && (
-                  <>
-                    <p
-                      style={{
-                        color: "darkblue",
-                        fontWeight: "600",
-                        cursor: "pointer",
-                      }}
-                      // onClick={() => {
-                      //   item.discount = !item.discount;
-                      //   setCartData([...cartData]);
-                      //   // setDiscount((state) => !state);
-                      // }}
-                      onClick={() => {
-                        item.discount_menu_is_open =
-                          !item.discount_menu_is_open;
-                        setCartData([...cartData]);
-                        // item.discount == !true ? setDiscount((state) => !state) : ""
-                      }}
-                      className="mx-4"
-                    >
-                      Discount
-                    </p>
-                  </>
-                )}
-              </div>
-            </div>
-          ))
-          }
-
-          {/* <div> */}
-
-          <div
-            style={{
-              fontSize: "20px",
-              fontWeight: "bold",
-              textAlign: "center",
-              marginBottom: "10px",
-            }}
-          >
-            Total Invoice Value: {invoiceValue}
-            <br />
-          </div>
-          {
-            cartData?.filter((io) => io.discount_menu_is_open === true)
-              .length === 0 &&
-            totalDiscountVal !== 0 && (
-              <>
-                <div
-                  style={{
-                    fontSize: "20px",
-                    fontWeight: "bold",
-                    textAlign: "center",
-                  }}
-                >
-                  Total Discount: {totalDiscountVal}
-                </div>
-              </>
-            )
-          }
-          {/* </div> */}
-
-          {
-            cartData?.filter((io) => io.discount_menu_is_open === true)
-              .length === 0 && (
-              <>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "20px",
-                  }}
-                  id="pop112"
-                  onClick={() => setPopoverIsOpen(!popoverIsOpen)}
-                >
-
-                  <button
-                    type="button"
-                    style={{
-                      backgroundColor: "green",
-                      border: "none",
-                      color: "white",
-                      fontWeight: "bold",
-                      padding: "6px 20px",
-                      borderRadius: "10px",
-                    }}
-                    id="pop112"
-                    onClick={() => setPopoverIsOpen(!popoverIsOpen)}
-                  >
-                    Invoice Discount
-                  </button>
-                </div>
-              </>
-            )
-          }
-
-          <Modal
-            show={popoverIsOpen}
-            size="sm"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-          >
-            <Modal.Header
-              closeButton
-              onClick={() => setPopoverIsOpen(!popoverIsOpen)}
-            >
-              <Modal.Title id="contained-modal-title-vcenter">
-                <span style={{ fontWeight: "900", marginRight: "10px" }}>
-                  Invoice Discount
-                </span>
-                {/* ({cartData?.length} items) */}
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Row>
-                <Col md={12}>
-                  <FormGroup>
-                    <Label>
-                      Percent <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      disabled={discountAmountVal}
-                      onChange={(e) => {
-                        const val = Number(e.target.value);
-                        if (val) {
-                          if (val >= 1 && val <= 99) {
-                            setDiscountPercentVal(val);
-                          } else {
-                            setDiscountPercentVal(99);
-                          }
-                        } else {
-                          setDiscountPercentVal("");
-                        }
-                        // handleDiscount(item, val);
-                      }}
-                      value={discountPercentVal}
-                      placeholder="Percent Value"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={12}>
-                  <FormGroup>
-                    <Label>
-                      Amount <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      disabled={discountPercentVal}
-                      onChange={(e) => {
-                        const val = Number(e.target.value);
-                        if (val) {
-                          if (val >= 1 && val <= 99999) {
-                            setDiscountAmountVal(val);
-                          } else {
-                            setDiscountAmountVal(99999);
-                          }
-                        } else {
-                          setDiscountAmountVal("");
-                        }
-                        // handleDiscountAmount(item, val);
-                      }}
-                      value={discountAmountVal}
-                      placeholder="Amount Value"
-                    />
-                  </FormGroup>
-                </Col>
-                <Col md={12}>
-                  <FormGroup className="d-flex justify-content-end">
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => {
-                        if (discountPercentVal) {
-                          handleDiscountLarge(discountPercentVal);
-                          // cartData.map(item => {
-                          //   item.discount_value = discountPercentVal
-                          // })
-                          // { console.log("cartData", cartData) }
-                          // setCartData([...cartData])
-                          const val1 = (sumValue * discountPercentVal) / 100;
-
-                          setTotalDiscountVal(parseFloat(val1).toFixed(2));
-                        } else if (discountAmountVal) {
-                          handleDiscountAmountLarge(discountAmountVal);
-                          setTotalDiscountVal(
-                            parseFloat(discountAmountVal).toFixed(2)
-                          );
-                        } else {
-                          setTotalDiscountVal(0);
-                          handleDiscountAmountLarge(0);
-                        }
-                        setPopoverIsOpen(!popoverIsOpen);
-                      }}
-                    >
-                      Apply
-                    </button>
-                  </FormGroup>
-                </Col>
-              </Row>
-            </Modal.Body>
-          </Modal>
-          {/* <Popover placement="bottom" isOpen={popoverIsOpen} target="pop112" toggle={() => setPopoverIsOpen(!popoverIsOpen)}>
-            <PopoverHeader>Invoice Discount</PopoverHeader>
-            <PopoverBody>
-              <div>
-                <Input
-                  type="text"
-                  id="aaa"
-                />
-              </div>
-            </PopoverBody>
-          </Popover> */}
-        </Modal.Body >
-        <Modal.Footer
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Button
-            onClick={() => {
-              if (cartData.length > 0) {
-                if (cartData.filter(io => io.price === 0).length === 0) {
-                  setPaymentModal(true)
-                } else {
-                  toast.error("Item amount should not be zero")
-                }
-              } else {
-
-                setPaymentModal(false);
-              }
-
-            }}
-            style={{
-              backgroundColor: "#20b9e3",
-              outline: "none",
-              border: "none",
-              fontSize: "20px",
-            }}
-          // className="bg-primary"
-          >
-            {cartData && cartData.length > 0
-              ? "Proceed to checkout"
-              : "No Item here"}
-            {/* Proceed to checkout */}
-          </Button>
-        </Modal.Footer>
-      </Modal >
+        cartData={cartData}
+        invoiceValue={invoiceValue}
+        popoverIsOpen={popoverIsOpen}
+        discountAmountVal={discountAmountVal}
+        discountPercentVal={discountPercentVal}
+        totalDiscountVal={totalDiscountVal}
+        setShow={setShow}
+        setPaymentModal={setPaymentModal}
+      />
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-      // style={{ position: "relative" }}
+        // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -1291,7 +694,7 @@ const Home = () => {
                 </div>
               </div>
               <div className="option-item-container">
-                {optionArray.map((item) => {
+                {optionArray.map((item, i) => {
                   return (
                     <>
                       <div className="me-3 mb-3 d-flex" key={item.id}>
@@ -1319,23 +722,23 @@ const Home = () => {
                               }
                             }
                           }}
-
-                          className={`option-item ${optionTick.filter((io) => io.name === item.value)
-                            .length > 0 && ""
-                            }`}
+                          className={`option-item ${
+                            optionTick.filter((io) => io.name === item.value)
+                              .length > 0 && ""
+                          }`}
                           style={{
                             backgroundColor:
                               item.name === "Cash"
                                 ? "#fed813"
                                 : item.name === "Paytm"
-                                  ? "#00B9F1"
-                                  : item.name === "Google Pay"
-                                    ? "#2DA94F"
-                                    : item.name === "Phone Pay"
-                                      ? "#5f259f"
-                                      : item.name === "UPI"
-                                        ? "#ff7909"
-                                        : "silver",
+                                ? "#00B9F1"
+                                : item.name === "Google Pay"
+                                ? "#2DA94F"
+                                : item.name === "Phone Pay"
+                                ? "#5f259f"
+                                : item.name === "UPI"
+                                ? "#ff7909"
+                                : "silver",
                           }}
                         >
                           <div style={{ position: "relative", top: "2px" }}>
@@ -1347,14 +750,14 @@ const Home = () => {
                                 item.name === "Cash"
                                   ? "black"
                                   : item.name === "Paytm"
-                                    ? "black"
-                                    : item.name === "Google Pay"
-                                      ? "white"
-                                      : item.name === "Phone Pay"
-                                        ? "white"
-                                        : item.name === "UPI"
-                                          ? "white"
-                                          : "black",
+                                  ? "black"
+                                  : item.name === "Google Pay"
+                                  ? "white"
+                                  : item.name === "Phone Pay"
+                                  ? "white"
+                                  : item.name === "UPI"
+                                  ? "white"
+                                  : "black",
                             }}
                           >
                             {item.name}
@@ -1440,9 +843,10 @@ const Home = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${
+                      handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                      }`}
+                    }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -1471,9 +875,10 @@ const Home = () => {
                 }}
               >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${
+                    handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                    }`}
+                  }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />
@@ -1585,7 +990,7 @@ const Home = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </div >
+    </div>
   );
 };
 

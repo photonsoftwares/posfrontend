@@ -19,8 +19,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-    ? JSON.parse(localStorage.getItem("User_data"))
-    : {};
+  ? JSON.parse(localStorage.getItem("User_data"))
+  : {};
 
 function* handleLoginRequest(e) {
   const response = yield fetch(`${BASE_Url}/auth/user-login`, {
@@ -238,7 +238,7 @@ function* handleRecommendedDataRequest() {
     }
   );
   const jsonData = yield response.json();
-  console.log("JSONDATA RECOMMENDED", jsonData);
+  // console.log("JSONDATA RECOMMENDED", jsonData);
   if (jsonData) {
     if (jsonData.data && jsonData.data.length > 0) {
       // console.log("INSIDE", jsonData);

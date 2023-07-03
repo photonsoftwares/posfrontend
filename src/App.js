@@ -34,7 +34,7 @@ const App = () => {
   const dispatch = useDispatch();
   const login_data = localStorage.getItem("login_data");
   const location = useLocation();
-  console.log("llo", location);
+  // console.log("llo", location);
   useEffect(() => {
     if (login_data) {
       dispatch(handleGetUserData(login_data));
