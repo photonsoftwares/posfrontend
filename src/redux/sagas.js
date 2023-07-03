@@ -19,8 +19,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-  ? JSON.parse(localStorage.getItem("User_data"))
-  : {};
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
 
 function* handleLoginRequest(e) {
   const response = yield fetch(`${BASE_Url}/auth/user-login`, {
@@ -607,7 +607,7 @@ function* handleDeleteCartItemRequest(e) {
     }
   );
   const jsonData = yield response.json();
-  console.log("JSONDATA", jsonData);
+
   if (jsonData && jsonData.data) {
     yield put({
       type: "ComponentPropsManagement/handleAddCartDataResponse",
@@ -944,6 +944,35 @@ function* handleLowStockItemsRequest(e) {
     toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleLowStockItemsResponse",
+      data: null,
+    });
+  } else {
+    toast.error("Something went wrong server side");
+  }
+}
+
+function* handleLowStockItemListRequest(e) {
+  // var myHeaders = new Headers();
+  // myHeaders.append("Authorization", `Bearer ${ token }`)
+  const response = yield fetch(
+    `${host}inventory-master/low-stock-item`,
+    {
+      method: "GET",
+      // headers: myHeaders,
+    }
+  );
+  const jsonData = yield response.json();
+  if (jsonData) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleLowStockItemListResponse",
+        data: jsonData.data,
+      });
+      return;
+    }
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleLowStockItemListResponse",
       data: null,
     });
   } else {
@@ -1344,6 +1373,11 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleEmailNotificationResponse",
     handleEmailNotificationResponse
   );
+  yield takeEvery(
+    "ComponentPropsManagement/handleLowStockItemListRequest",
+    handleLowStockItemListRequest
+  );
+
 }
 
 // export function* incrementAsync() {
