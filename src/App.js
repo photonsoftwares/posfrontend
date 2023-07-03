@@ -28,6 +28,7 @@ import Return from "./components/Navbar Screens/Return";
 import RetailerDashboard from "./components/retailer-dashboard/home/index";
 import RetailerDashboardNanbar from "./components/retailer-dashboard/navbar/index";
 import LoyalityDashboard from "./components/Navbar Screens/LoyalityDashboard";
+import DebitNote from "./components/Navbar Screens/DebitNote";
 // import { Navbar } from "react-bootstrap";
 
 const App = () => {
@@ -99,6 +100,10 @@ const App = () => {
         <Route
           path="/return"
           element={<ProtectedRoutingWhenLogin Component={Return} />}
+        />
+        <Route
+          path="/debit-note"
+          element={<ProtectedRoutingWhenLogin Component={DebitNote} />}
         />
         <Route
           path="/inventory-dashboard"
