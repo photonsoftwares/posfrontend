@@ -226,6 +226,8 @@ const Main = () => {
                             navigate("/add-purchase");
                           } else if (item.value === "return_credit_note") {
                             navigate("/return");
+                          } else if (item.value === "debit_note") {
+                            navigate("/debit-note");
                           }
                         }}
                       >

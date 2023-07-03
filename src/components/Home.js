@@ -624,6 +624,7 @@ const Home = () => {
           </div>
         )}
       </div>
+      {/* MY CART */}
       <MyCart
         show={show}
         cartData={cartData}
