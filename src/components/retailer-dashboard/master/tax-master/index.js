@@ -41,8 +41,8 @@ const TaxMaster = () => {
         const obj = {
             hsn_code: hsnCode,
             tax_desc: taxDescription,
-            effective_from: moment(effectiveFrom).format("Y-MM-D"),
-            end_date: moment(endDate).format("Y-MM-D")
+            effective_from: moment(effectiveFrom).format("Y-MM-DD"),
+            end_date: moment(endDate).format("Y-MM-DD")
         }
         dispatch(handleCreateTaxMasterRequest(obj))
     }
