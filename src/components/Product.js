@@ -17,6 +17,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_Url } from "../URL";
 import { Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 const Product = ({ setSearchValue, data, setData }) => {
   const { cart_data } = useSelector((e) => e.ComponentPropsManagement);
@@ -145,12 +146,20 @@ const Product = ({ setSearchValue, data, setData }) => {
                 // className="btn btn-outline-primary"
                 onClick={() => {
                   if (Number(item.price) === 0) {
-                    item.price = item.new_price;
-                    setData([...data])
+                    if (Number(item.new_price) !== 0) {
+                      item.price = item.new_price;
+                      setData([...data])
+                      dispatch(handleAddCartData(item));
+                      setShowButton(false);
+                      setSearchValue("");
+                    } else {
+                      toast.error("Price cannot be zero")
+                    }
+                  } else if (Number(item.price) !== 0) {
+                    dispatch(handleAddCartData(item));
+                    setShowButton(false);
+                    setSearchValue("");
                   }
-                  dispatch(handleAddCartData(item));
-                  setShowButton(false);
-                  setSearchValue("");
                 }}
               >
                 Add to Cart
