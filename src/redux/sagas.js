@@ -1,14 +1,26 @@
 import { put, takeEvery, all, retry } from "redux-saga/effects";
-import { BASE_Url, host } from "../URL";
+import { BASE_Url, Email_Url, host } from "../URL";
 import { toast } from "react-toastify";
 import { json } from "react-router-dom";
 import Navigation from "../Navigation";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css";
+import moment from "moment";
 // import { useNavigate } from "react-router-dom";
-const { createdAt, password, registerId, saasId, status, storeId, storeName, userId, userName } = localStorage.getItem("User_data") ? JSON.parse(localStorage.getItem("User_data")) : {}
 
-const saas_id = saasId
+const {
+  createdAt,
+  password,
+  registerId,
+  status,
+  saasId,
+  storeId,
+  storeName,
+  userId,
+  userName,
+} = localStorage.getItem("User_data")
+  ? JSON.parse(localStorage.getItem("User_data"))
+  : {};
 
 function* handleLoginRequest(e) {
   const response = yield fetch(`${BASE_Url}/auth/user-login`, {
@@ -118,7 +130,7 @@ function* handleSearchedDataRequest(e) {
       });
     }
   } else if (jsonData.status === false && jsonData.data == null) {
-    toast.error("NO ITEM FOUND, would you like to add this Item to Store.??");
+    // toast.error("NO ITEM FOUND, would you like to add this Item to Store.??");
     const confirm = window.confirm(
       "NO ITEM FOUND, would you like to add this Item to Store.??"
     );
@@ -235,6 +247,7 @@ function* handleRecommendedDataRequest() {
         el["productQty"] = 1;
         el["sku"] = "SKU";
         el["department"] = "Dept2";
+        // el["new_edit_price"] = 0;
         // el["discount"] = false;
       });
       // console.log("tempSearchArr", tempSearchArr);
@@ -303,6 +316,38 @@ function* handleRegisterUserRequest(e) {
     } else {
       toast.error(jsonData.message);
     }
+  } else {
+    toast.error(jsonData.message);
+    // yield put({
+    //   type: "ComponentPropsManagement/handleRegisterUserResponse",
+    //   data: {},
+    // });
+  }
+}
+function* handleEmailNotificationResponse(e) {
+  console.log("E EMAIL NOTIFICATION", e.payload);
+  const response = yield fetch(`${Email_Url}email/send`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify(e.payload),
+  });
+  const jsonData = yield response.json();
+  console.log("Email Notify JSONDATA", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    toast.success(jsonData.message);
+    // alert(jsonData.message);
+    // const cartData = jsonData.data;
+    // yield put({
+    //   type: "ComponentPropsManagement/handleRegisterUserResponse",
+    //   data: jsonData.data,
+    // });
+    // } else {
+    //   toast.error(jsonData.message);
+    // }
   } else {
     toast.error(jsonData.message);
     // yield put({
@@ -493,21 +538,20 @@ function* handleAddPartyRequest(e) {
     }
   );
   const jsonData = yield response.json();
-  console.log("ADD PARTY DATA", jsonData);
   if (jsonData) {
-    toast.success(jsonData.message);
-    //   if (jsonData && jsonData.data) {
-    //     const cartData = jsonData.data;
-    //     yield put({
-    //       type: "ComponentPropsManagement/handleSavaTransactionResponse",
-    //       data: jsonData.data,
-    //     });
-    //   }
-    // } else {
-    //   yield put({
-    //     type: "ComponentPropsManagement/handleSavaTransactionResponse",
-    //     data: {},
-    //   });
+    if (jsonData.status === true) {
+      toast.success(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleAddPartyResponse",
+        data: jsonData,
+      });
+    } else {
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleAddPartyResponse",
+        data: {},
+      });
+    }
   } else {
     toast.error(jsonData.message);
   }
@@ -563,7 +607,7 @@ function* handleDeleteCartItemRequest(e) {
     }
   );
   const jsonData = yield response.json();
-  console.log("JSONDATA", jsonData);
+
   if (jsonData && jsonData.data) {
     yield put({
       type: "ComponentPropsManagement/handleAddCartDataResponse",
@@ -606,67 +650,82 @@ function* handleUploadPicRequest(e) {
   }
 }
 
-
 function* handleUploadItemRequest(e) {
   try {
-    const { csvFile } = e.payload
+    const { csvFile } = e.payload;
 
     const formData = new FormData();
-    formData.append('file', csvFile);
-    formData.append("saas-id", saas_id)
+
+    formData.append("file", csvFile);
+    formData.append("saas-id", saasId);
+
     // var myHeaders = new Headers();
     // myHeaders.append("Authorization", `Bearer ${token}`)
 
     const response = yield fetch(`${host}dashboard/upload-items`, {
       method: "POST",
       // headers: myHeaders,
-      body: formData
-    })
+      body: formData,
+    });
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
-        toast.success(jsonData.message)
-        yield put({ type: "ComponentPropsManagement/handleUploadItemResponse", data: jsonData })
-        return
+        toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleUploadItemResponse",
+          data: jsonData,
+        });
+        return;
       }
-      toast.error(jsonData.message)
-      yield put({ type: "ComponentPropsManagement/handleUploadItemResponse", data: null })
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleUploadItemResponse",
+        data: null,
+      });
     } else {
-      toast.error("Something went wrong server side")
+      toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - dashboard/upload-items`)
+    toast.error(`${err.message} - dashboard/upload-items`);
   }
 }
 
 function* handleUploadInventoryRequest(e) {
   try {
-    const { csvFile } = e.payload
+    const { csvFile } = e.payload;
     const formData = new FormData();
-    formData.append('file', csvFile);
-    formData.append("saas-id", saas_id)
+
+    formData.append("file", csvFile);
+    formData.append("saas-id", saasId);
+
     // var myHeaders = new Headers();
     // myHeaders.append("Authorization", `Bearer ${token}`)
 
     const response = yield fetch(`${host}dashboard/upload-inventory`, {
       method: "POST",
       // headers: myHeaders,
-      body: formData
-    })
+      body: formData,
+    });
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
-        toast.success(jsonData.message)
-        yield put({ type: "ComponentPropsManagement/handleUploadInventoryResponse", data: jsonData })
-        return
+        toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleUploadInventoryResponse",
+          data: jsonData,
+        });
+        return;
       }
-      toast.error(jsonData.message)
-      yield put({ type: "ComponentPropsManagement/handleUploadInventoryResponse", data: null })
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleUploadInventoryResponse",
+        data: null,
+      });
     } else {
-      toast.error("Something went wrong server side")
+      toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - dashboard/upload-inventory`)
+    toast.error(`${err.message} - dashboard/upload-inventory`);
   }
 }
 
@@ -681,26 +740,35 @@ function* handleSalesOverviewRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${token}`)
   try {
-    const response = yield fetch(`${host}inventory-master/inventory-dashboard/${userId}`, {
-      method: "GET",
-      // headers: myHeaders,
-      // body: e.payload
-    })
+    const response = yield fetch(
+      `${host}inventory-master/inventory-dashboard/${userId}`,
+      {
+        method: "GET",
+        // headers: myHeaders,
+        // body: e.payload
+      }
+    );
     const jsonData = yield response.json();
     // console.log("jsonData", jsonData)
     if (jsonData) {
       if (jsonData.status === true) {
         // toast.success(jsonData.message)
-        yield put({ type: "ComponentPropsManagement/handleSalesOverviewResponse", data: jsonData })
-        return
+        yield put({
+          type: "ComponentPropsManagement/handleSalesOverviewResponse",
+          data: jsonData,
+        });
+        return;
       }
-      toast.error(jsonData.message)
-      yield put({ type: "ComponentPropsManagement/handleSalesOverviewResponse", data: null })
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleSalesOverviewResponse",
+        data: null,
+      });
     } else {
-      toast.error("Something went wrong server side")
+      toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - inventory-master/inventory-dashboard`)
+    toast.error(`${err.message} - inventory-master/inventory-dashboard`);
   }
 }
 
@@ -711,26 +779,33 @@ function* handleLastWeekSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${token}`)
   try {
-    const response = yield fetch(`${host}dashboard/last-week-sales/${storeId}`, {
+    const response = yield fetch(`${host}dashboard/last-week-sales/${saasId}`, {
       method: "GET",
       // headers: myHeaders,
       // body: e.payload
-    })
+    });
+
     const jsonData = yield response.json();
     // console.log("jsonData", jsonData)
     if (jsonData) {
       if (jsonData.status === true) {
         // toast.success(jsonData.message)
-        yield put({ type: "ComponentPropsManagement/handleLastWeekSalesResponse", data: jsonData })
-        return
+        yield put({
+          type: "ComponentPropsManagement/handleLastWeekSalesResponse",
+          data: jsonData,
+        });
+        return;
       }
-      toast.error(jsonData.message)
-      yield put({ type: "ComponentPropsManagement/handleLastWeekSalesResponse", data: null })
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleLastWeekSalesResponse",
+        data: null,
+      });
     } else {
-      toast.error("Something went wrong server side")
+      toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - dashboard/last-week-sales`)
+    toast.error(`${err.message} - dashboard/last-week-sales`);
   }
 }
 
@@ -741,66 +816,81 @@ function* handleLastMonthSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${token}`)
   try {
-    const response = yield fetch(`${host}dashboard/last-month-sales/${storeId}`, {
-      method: "GET",
-      // headers: myHeaders,
-      // body: e.payload
-    })
+    const response = yield fetch(
+      `${host}dashboard/last-month-sales/${saasId}`,
+      {
+        method: "GET",
+        // headers: myHeaders,
+        // body: e.payload
+      }
+    );
+
     const jsonData = yield response.json();
     // console.log("jsonData", jsonData)
     if (jsonData) {
       if (jsonData.status === true) {
         // toast.success(jsonData.message)
-        yield put({ type: "ComponentPropsManagement/handleLastMonthSalesResponse", data: jsonData })
-        return
+        yield put({
+          type: "ComponentPropsManagement/handleLastMonthSalesResponse",
+          data: jsonData,
+        });
+        return;
       }
-      toast.error(jsonData.message)
-      yield put({ type: "ComponentPropsManagement/handleLastMonthSalesResponse", data: null })
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleLastMonthSalesResponse",
+        data: null,
+      });
     } else {
-      toast.error("Something went wrong server side")
+      toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - dashboard/last-month-sales`)
+    toast.error(`${err.message} - dashboard/last-month-sales`);
   }
 }
 
 function* handleTodaySalesRequest(e) {
-  // console.log("running...")
+  const date = new Date();
   // const formData = new FormData();
   // formData.append('today_sales', "2023-06-19");
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${token}`)
   try {
-    const response = yield fetch(`${host}dashboard/today-sales/${storeId}`, {
+    const response = yield fetch(`${host}dashboard/today-sales/${saasId}`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
 
       body: JSON.stringify({
-        today_sales: "2023-06-19"
+        today_sales: moment(date).format("Y-MM-DD"),
       }),
       // body: formData
       // body: e.payload
-    })
+    });
     const jsonData = yield response.json();
     // console.log("jsonData", jsonData)
     if (jsonData) {
       if (jsonData.status === true) {
         // toast.success(jsonData.message)
-        yield put({ type: "ComponentPropsManagement/handleTodaySalesResponse", data: jsonData })
-        return
+        yield put({
+          type: "ComponentPropsManagement/handleTodaySalesResponse",
+          data: jsonData,
+        });
+        return;
       }
-      toast.error(jsonData.message)
-      yield put({ type: "ComponentPropsManagement/handleTodaySalesResponse", data: null })
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleTodaySalesResponse",
+        data: null,
+      });
     } else {
-      toast.error("Something went wrong server side")
+      toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - dashboard/today-sales`)
+    toast.error(`${err.message} - dashboard/today-sales`);
   }
 }
-
 
 function* handleNumberOfCustomerRequest(e) {
   // var myHeaders = new Headers();
@@ -809,120 +899,198 @@ function* handleNumberOfCustomerRequest(e) {
     const response = yield fetch(`${host}inventory-master/total-customer`, {
       method: "GET",
       // headers: myHeaders,
-    })
+    });
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
-        yield put({ type: "ComponentPropsManagement/handleNumberOfCustomerResponse", data: jsonData })
-        return
+        yield put({
+          type: "ComponentPropsManagement/handleNumberOfCustomerResponse",
+          data: jsonData,
+        });
+        return;
       }
-      toast.error(jsonData.message)
-      yield put({ type: "ComponentPropsManagement/handleNumberOfCustomerResponse", data: null })
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleNumberOfCustomerResponse",
+        data: null,
+      });
     } else {
-      toast.error("Something went wrong server side")
+      toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - inventory-master/total-customer`)
+    toast.error(`${err.message} - inventory-master/total-customer`);
   }
 }
 
 function* handleLowStockItemsRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-  const response = yield fetch(`${host}inventory-master/inventory-less-closing-quantity`, {
-    method: "GET",
-    // headers: myHeaders,
-  })
+  const response = yield fetch(
+    `${host}inventory-master/inventory-less-closing-quantity`,
+    {
+      method: "GET",
+      // headers: myHeaders,
+    }
+  );
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
-      yield put({ type: "ComponentPropsManagement/handleLowStockItemsResponse", data: jsonData })
-      return
+      yield put({
+        type: "ComponentPropsManagement/handleLowStockItemsResponse",
+        data: jsonData,
+      });
+      return;
     }
-    toast.error(jsonData.message)
-    yield put({ type: "ComponentPropsManagement/handleLowStockItemsResponse", data: null })
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleLowStockItemsResponse",
+      data: null,
+    });
   } else {
-    toast.error("Something went wrong server side")
+    toast.error("Something went wrong server side");
+  }
+}
+
+function* handleLowStockItemListRequest(e) {
+  // var myHeaders = new Headers();
+  // myHeaders.append("Authorization", `Bearer ${ token }`)
+  const response = yield fetch(`${host}inventory-master/low-stock-item`, {
+    method: "GET",
+    // headers: myHeaders,
+  });
+  const jsonData = yield response.json();
+  if (jsonData) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleLowStockItemListResponse",
+        data: jsonData.data,
+      });
+      return;
+    }
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleLowStockItemListResponse",
+      data: null,
+    });
+  } else {
+    toast.error("Something went wrong server side");
   }
 }
 
 function* handleQuantityInHandRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-  const response = yield fetch(`${host}inventory-master/inventory-closing-stock/${userId}`, {
-    method: "GET",
-    // headers: myHeaders,
-  })
+  const response = yield fetch(
+    `${host}inventory-master/inventory-closing-stock/${userId}`,
+    {
+      method: "GET",
+      // headers: myHeaders,
+    }
+  );
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
-      yield put({ type: "ComponentPropsManagement/handleQuantityInHandResponse", data: jsonData })
-      return
+      yield put({
+        type: "ComponentPropsManagement/handleQuantityInHandResponse",
+        data: jsonData,
+      });
+      return;
     }
-    toast.error(jsonData.message)
-    yield put({ type: "ComponentPropsManagement/handleQuantityInHandResponse", data: null })
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleQuantityInHandResponse",
+      data: null,
+    });
   } else {
-    toast.error("Something went wrong server side")
+    toast.error("Something went wrong server side");
   }
 }
 
 function* handleLastFourteenDaysSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-  const response = yield fetch(`${host}dashboard/last-fourteen-days-sales/${storeId}`, {
-    method: "GET",
-    // headers: myHeaders,
-  })
+
+  const response = yield fetch(
+    `${host}dashboard/last-fourteen-days-sales/${saasId}`,
+    {
+      method: "GET",
+      // headers: myHeaders,
+    }
+  );
+
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
-      yield put({ type: "ComponentPropsManagement/handleLastFourteenDaysSalesResponse", data: jsonData })
-      return
+      yield put({
+        type: "ComponentPropsManagement/handleLastFourteenDaysSalesResponse",
+        data: jsonData,
+      });
+      return;
     }
-    toast.error(jsonData.message)
-    yield put({ type: "ComponentPropsManagement/handleLastFourteenDaysSalesResponse", data: null })
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleLastFourteenDaysSalesResponse",
+      data: null,
+    });
   } else {
-    toast.error("Something went wrong server side")
+    toast.error("Something went wrong server side");
   }
 }
 
 function* handleLastSixtyDaysSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-  const response = yield fetch(`${host}dashboard/last-sixty-days-sales/${storeId}`, {
-    method: "GET",
-    // headers: myHeaders,
-  })
+
+  const response = yield fetch(
+    `${host}dashboard/last-sixty-days-sales/${saasId}`,
+    {
+      method: "GET",
+      // headers: myHeaders,
+    }
+  );
+
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
-      yield put({ type: "ComponentPropsManagement/handleLastSixtyDaysSalesResponse", data: jsonData })
-      return
+      yield put({
+        type: "ComponentPropsManagement/handleLastSixtyDaysSalesResponse",
+        data: jsonData,
+      });
+      return;
     }
-    toast.error(jsonData.message)
-    yield put({ type: "ComponentPropsManagement/handleLastSixtyDaysSalesResponse", data: null })
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleLastSixtyDaysSalesResponse",
+      data: null,
+    });
   } else {
-    toast.error("Something went wrong server side")
+    toast.error("Something went wrong server side");
   }
 }
 
 function* handleYesterdaySalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-  const response = yield fetch(`${host}dashboard/yesterday-sales/${storeId}`, {
+  const response = yield fetch(`${host}dashboard/yesterday-sales/${saasId}`, {
     method: "GET",
     // headers: myHeaders,
-  })
+  });
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
-      yield put({ type: "ComponentPropsManagement/handleYesterdaySalesResponse", data: jsonData })
-      return
+      yield put({
+        type: "ComponentPropsManagement/handleYesterdaySalesResponse",
+        data: jsonData,
+      });
+      return;
     }
-    toast.error(jsonData.message)
-    yield put({ type: "ComponentPropsManagement/handleYesterdaySalesResponse", data: null })
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleYesterdaySalesResponse",
+      data: null,
+    });
   } else {
-    toast.error("Something went wrong server side")
+    toast.error("Something went wrong server side");
   }
 }
 
@@ -935,22 +1103,32 @@ function* handleGstTypeDropdownRequest(e) {
     // headers: myHeaders,
     // body: e.payload,
     // redirect: 'follow'
-  })
+  });
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
-      const arr = []
-      jsonData.data.map(item => {
-        arr.push({ ...item, label: `${item.taxCode}@${item.taxRate}%`, value: item.taxRate })
-      })
+      const arr = [];
+      jsonData.data.map((item) => {
+        arr.push({
+          ...item,
+          label: `${item.taxCode}@${item.taxRate}%`,
+          value: item.taxRate,
+        });
+      });
       // toast.success(jsonData.message)
-      yield put({ type: "ComponentPropsManagement/handleGstTypeDropdownResponse", data: arr })
-      return
+      yield put({
+        type: "ComponentPropsManagement/handleGstTypeDropdownResponse",
+        data: arr,
+      });
+      return;
     }
-    toast.error(jsonData.message)
-    yield put({ type: "ComponentPropsManagement/handleGstTypeDropdownResponse", data: null })
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleGstTypeDropdownResponse",
+      data: null,
+    });
   } else {
-    toast.error("Something went wrong server side")
+    toast.error("Something went wrong server side");
   }
 }
 
@@ -963,25 +1141,125 @@ function* handleGetHsnCodeDropdownRequest(e) {
     // headers: myHeaders,
     // body: e.payload,
     // redirect: 'follow'
-  })
+  });
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
-      const arr = []
-      jsonData.data.map(item => {
-        arr.push({ ...item, label: `${item.hsn_name}`, value: item.hsn_code })
-      })
+      const arr = [];
+      jsonData.data.map((item) => {
+        arr.push({ ...item, label: `${item.hsn_name}`, value: item.hsn_code });
+      });
       // toast.success(jsonData.message)
-      yield put({ type: "ComponentPropsManagement/handleGetHsnCodeDropdownResponse", data: arr })
-      return
+      yield put({
+        type: "ComponentPropsManagement/handleGetHsnCodeDropdownResponse",
+        data: arr,
+      });
+      return;
     }
-    toast.error(jsonData.message)
-    yield put({ type: "ComponentPropsManagement/handleGetHsnCodeDropdownResponse", data: null })
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleGetHsnCodeDropdownResponse",
+      data: null,
+    });
   } else {
-    toast.error("Something went wrong server side")
+    toast.error("Something went wrong server side");
   }
 }
 
+function* handleSalesDashboardChartRequest(e) {
+  // var myHeaders = new Headers();
+  // myHeaders.append("Content-Type", "application/json");
+  // myHeaders.append("Authorization", `Bearer ${ token }`)
+  try {
+    const response = yield fetch(`${host}dashboard/last-six-month/${saasId}`, {
+      method: "GET",
+      // headers: myHeaders,
+      // body: e.payload,
+      // redirect: 'follow'
+    });
+    const jsonData = yield response.json();
+    console.log("rs", jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        // toast.success(jsonData.message)
+        yield put({
+          type: "ComponentPropsManagement/handleSalesDashboardChartResponse",
+          data: jsonData.data,
+        });
+        return;
+      }
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleSalesDashboardChartResponse",
+        data: null,
+      });
+    } else {
+      toast.error("Something went wrong server side");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
+// Create Row in Tax Master
+function* handleCreateTaxMasterRequest(e) {
+  try {
+    const response = yield fetch(`${BASE_Url}/tax/create/${saasId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    });
+    const jsonData = yield response.json();
+    console.log("E TAX MASTER JSONDATA", jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleCreateTaxMasterResponse",
+          data: jsonData.data,
+        });
+      } else {
+        toast.error(jsonData.message);
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+// Member Enrollment
+function* handleMemberEnrollmentRequest(e) {
+  console.log("E PAYLOAD", e.payload);
+
+  const response = yield fetch(`http://3.111.70.84:8091/v1/loyalty/customer`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(e.payload),
+  });
+  const jsonData = yield response.json();
+  console.log("JSONDATA MEMBER", jsonData);
+  // if (jsonData) {
+  //   if (jsonData.status === true) {
+  //     yield put({
+  //       type: "ComponentPropsManagement/handleYesterdaySalesResponse",
+  //       data: jsonData,
+  //     });
+  //     return;
+  //   }
+  //   toast.error(jsonData.message);
+  //   yield put({
+  //     type: "ComponentPropsManagement/handleYesterdaySalesResponse",
+  //     data: null,
+  //   });
+  // } else {
+  //   toast.error("Something went wrong server side");
+  // }
+}
 
 export function* helloSaga() {
   yield takeEvery(
@@ -1054,20 +1332,82 @@ export function* helloSaga() {
     handleUploadPicRequest
   );
 
-  yield takeEvery('ComponentPropsManagement/handleUploadItemRequest', handleUploadItemRequest)
-  yield takeEvery('ComponentPropsManagement/handleUploadInventoryRequest', handleUploadInventoryRequest)
-  yield takeEvery('ComponentPropsManagement/handleSalesOverviewRequest', handleSalesOverviewRequest)
-  yield takeEvery('ComponentPropsManagement/handleLastWeekSalesRequest', handleLastWeekSalesRequest)
-  yield takeEvery('ComponentPropsManagement/handleLastMonthSalesRequest', handleLastMonthSalesRequest)
-  yield takeEvery('ComponentPropsManagement/handleTodaySalesRequest', handleTodaySalesRequest)
-  yield takeEvery('ComponentPropsManagement/handleNumberOfCustomerRequest', handleNumberOfCustomerRequest)
-  yield takeEvery('ComponentPropsManagement/handleLowStockItemsRequest', handleLowStockItemsRequest)
-  yield takeEvery('ComponentPropsManagement/handleQuantityInHandRequest', handleQuantityInHandRequest)
-  yield takeEvery('ComponentPropsManagement/handleLastFourteenDaysSalesRequest', handleLastFourteenDaysSalesRequest)
-  yield takeEvery('ComponentPropsManagement/handleLastSixtyDaysSalesRequest', handleLastSixtyDaysSalesRequest)
-  yield takeEvery('ComponentPropsManagement/handleYesterdaySalesRequest', handleYesterdaySalesRequest)
-  yield takeEvery('ComponentPropsManagement/handleGstTypeDropdownRequest', handleGstTypeDropdownRequest)
-  yield takeEvery('ComponentPropsManagement/handleGetHsnCodeDropdownRequest', handleGetHsnCodeDropdownRequest)
+  yield takeEvery(
+    "ComponentPropsManagement/handleUploadItemRequest",
+    handleUploadItemRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleUploadInventoryRequest",
+    handleUploadInventoryRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleSalesOverviewRequest",
+    handleSalesOverviewRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleLastWeekSalesRequest",
+    handleLastWeekSalesRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleLastMonthSalesRequest",
+    handleLastMonthSalesRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleTodaySalesRequest",
+    handleTodaySalesRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleNumberOfCustomerRequest",
+    handleNumberOfCustomerRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleLowStockItemsRequest",
+    handleLowStockItemsRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleQuantityInHandRequest",
+    handleQuantityInHandRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleLastFourteenDaysSalesRequest",
+    handleLastFourteenDaysSalesRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleLastSixtyDaysSalesRequest",
+    handleLastSixtyDaysSalesRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleYesterdaySalesRequest",
+    handleYesterdaySalesRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleGstTypeDropdownRequest",
+    handleGstTypeDropdownRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleGetHsnCodeDropdownRequest",
+    handleGetHsnCodeDropdownRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleSalesDashboardChartRequest",
+    handleSalesDashboardChartRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleCreateTaxMasterRequest",
+    handleCreateTaxMasterRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleEmailNotificationResponse",
+    handleEmailNotificationResponse
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleLowStockItemListRequest",
+    handleLowStockItemListRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleMemberEnrollmentRequest",
+    handleMemberEnrollmentRequest
+  );
 }
 
 // export function* incrementAsync() {

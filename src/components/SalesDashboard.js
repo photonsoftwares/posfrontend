@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Badge, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const Return = () => {
+const SalesDashboard = () => {
   //   const { storeName, saasId } = JSON.parse(localStorage.getItem("User_data"));
   //   useEffect(() => {}, [storeName, saasId]);
   const [searchItem, setSearchItem] = useState("");
@@ -106,4 +106,4 @@ const Return = () => {
   );
 };
 
-export default Return;
+export default SalesDashboard;

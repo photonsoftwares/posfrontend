@@ -7,11 +7,20 @@ import { Link } from "react-router-dom";
 import NavTab2 from "./NavTab2";
 import NavTab1 from "./NavTab1";
 import { GrLogout } from "react-icons/gr";
-import { BiArrowBack } from "react-icons/bi";
+import { BiArrowBack, BiGroup } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { handleOpneMenuRequest } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "reactstrap";
 const Navbar = () => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
   const { open_menu } = useSelector((e) => e.ComponentPropsManagement);
   useEffect(() => {
     if (open_menu) {
@@ -28,6 +37,11 @@ const Navbar = () => {
     },
     {
       id: 2,
+      button: "Master",
+      component: <NavTab2 />,
+    },
+    {
+      id: 3,
       button: "Master",
       component: <NavTab2 />,
     },
@@ -51,15 +65,25 @@ const Navbar = () => {
     localStorage.removeItem("User_data");
     navigate("/login");
   };
-  useEffect(() => {}, [handleLogout]);
+  useEffect(() => { }, [handleLogout]);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
       const allData = JSON.parse(localStorage.getItem("Store_data"));
       // console.log("STORE NAME", storeName);
-      setStoreName(allData.storeName);
+      setStoreName(allData?.storeName);
     }
   }, [storeName]);
+
+  const footer_arr = [
+    {
+      id: 1,
+      // label: "Parties",
+      value: "parties",
+      icon: <FaBars color="#211212" size="25" />,
+      isActive: true,
+    },
+  ];
   return (
     <div
       style={{
@@ -164,7 +188,7 @@ const Navbar = () => {
             }}
           >
             {localStorage.getItem("User_data") &&
-            localStorage.getItem("Token") ? (
+              localStorage.getItem("Token") ? (
               <GrLogout
                 size={25}
                 style={{ cursor: "pointer" }}
@@ -178,26 +202,84 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* {localStorage.getItem("User_data") &&
-            localStorage.getItem("Token") ? (
-            <div
-              onClick={() => {
-                dispatch(handleOpneMenuRequest(!open_menu));
-              }}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                cursor: "pointer",
-                marginTop: "10px",
-              }}
-            >
-              <FaBars
-                style={{ marginLeft: "15px" }}
-                fontSize={30}
-                color="#212121"
-              />
-            </div>
-          ) : null} */}
+          {footer_arr
+            .filter((io) => io.isActive === true)
+            .map((item, i) => {
+              return (
+                <>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "column",
+                      margin: "10px",
+                      marginBottom: "20px",
+                      cursor: "pointer",
+                    }}
+                    key={i}
+                    onClick={() => {
+                      if (item.value === "product") {
+                        navigate("/add-item");
+                      }
+                    }}
+                  >
+                    {item.value === "parties" ? (
+                      <>
+                        <Dropdown
+                          isOpen={dropdownOpen}
+                          toggle={toggle}
+                          direction={"down"}
+                        >
+                          <DropdownToggle
+                            style={{ textAlign: "center" }}
+                            tag={"span"}
+                          >
+                            <div>{item.icon}</div>
+                            <div>{item.label}</div>
+                          </DropdownToggle>
+                          <DropdownMenu>
+                            <DropdownItem
+                              onClick={() => {
+                                navigate("/add-party");
+                              }}
+                            >
+                              Link Loyalty
+                            </DropdownItem>
+                            <DropdownItem
+                              onClick={() => {
+                                navigate("/link-customer");
+                              }}
+                            >
+                              Link Customer
+                            </DropdownItem>
+                            <DropdownItem
+                              onClick={() => {
+                                navigate("/loyality-dashboard");
+                              }}
+                            >
+                              Loyality Dashboard
+                            </DropdownItem>
+                            <DropdownItem
+                              onClick={() => {
+                                navigate("/member-enrollment");
+                              }}
+                            >
+                              Member Enrollment
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown>
+                      </>
+                    ) : (
+                      <>
+                        <div>{item.icon}</div>
+                        <div>{item.label}</div>
+                      </>
+                    )}
+                  </div>
+                </>
+              );
+            })}
         </div>
       </div>
       <div className="nevbar-menu">

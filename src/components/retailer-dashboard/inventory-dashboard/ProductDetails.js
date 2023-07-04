@@ -1,13 +1,15 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, CardBody } from 'reactstrap'
+import { Card, CardBody, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import { Table } from 'reactstrap';
-import { handleLowStockItemsRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
+import { HiOutlineArrowSmallLeft } from "react-icons/hi2"
+import { handleLowStockItemsRequest, handleLowStockItemListRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
 
 const ProductDetails = () => {
 
     const dispatch = useDispatch()
     const { low_stock_items } = useSelector(state => state.ComponentPropsManagement)
+    const [modalIsOpen, setModalIsOpen] = useState(false)
 
     const debounce = (func) => {
         let timer;
@@ -23,12 +25,36 @@ const ProductDetails = () => {
 
     const handleFunCall = () => {
         dispatch(handleLowStockItemsRequest())
+        dispatch(handleLowStockItemListRequest())
     }
 
     const optimizedFn = useCallback(debounce(handleFunCall), []);
     useEffect(() => {
         optimizedFn()
     }, [])
+
+    const obj = [
+        {
+            "item_code": "345",
+            "item_name": "Mayonaise",
+            "closing_quantity": 7
+        },
+        {
+            "item_code": "345",
+            "item_name": "Tomato sauce",
+            "closing_quantity": 5
+        },
+        {
+            "item_code": "345",
+            "item_name": "Sandwich Small",
+            "closing_quantity": 8
+        },
+        {
+            "item_code": "345",
+            "item_name": "Pizza Base",
+            "closing_quantity": 4
+        }
+    ]
 
     return (<>
         <Card style={{ border: "none", borderRadius: "12px", maxWidth: "400px" }} className='w-100 mb-4'>
@@ -48,7 +74,11 @@ const ProductDetails = () => {
                             </tr>
                         </thead> */}
                         <tbody>
-                            <tr>
+                            <tr onClick={() => {
+                                if (Number(low_stock_items) > 10) {
+                                    setModalIsOpen(true)
+                                }
+                            }}>
                                 <td>Low Stock Items</td>
                                 <td style={{ fontWeight: "bold" }}>{low_stock_items}</td>
                             </tr>
@@ -65,6 +95,41 @@ const ProductDetails = () => {
                 </div>
             </CardBody>
         </Card>
+
+        <Modal isOpen={modalIsOpen} toggle={() => {
+            setModalIsOpen(!modalIsOpen)
+        }}>
+            <ModalHeader>
+                <HiOutlineArrowSmallLeft
+                    className='mouse-pointer'
+                    onClick={() => {
+                        setModalIsOpen(!modalIsOpen)
+                    }}
+                />&nbsp;Low Stock
+            </ModalHeader>
+            <ModalBody>
+                <Table className='text-center'>
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {obj.map(item => {
+                            return (<>
+                                <tr key={item.item_code}>
+                                    <td>{item.item_code}</td>
+                                    <td>{item.item_name}</td>
+                                    <td>{item.closing_quantity}</td>
+                                </tr>
+                            </>)
+                        })}
+                    </tbody>
+                </Table>
+            </ModalBody>
+        </Modal>
     </>)
 }
 

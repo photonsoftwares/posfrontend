@@ -20,9 +20,11 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
+import Expense from "./expense";
 
 const Main = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [expenseModalIsOpen, setExpenseModalIsOpen] = useState(false)
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const navigate = useNavigate();
@@ -66,7 +68,7 @@ const Main = () => {
       id: 6,
       label: "Expense",
       value: "expense",
-      icon: <GiExpense color="#979797" size="25" />,
+      icon: <GiExpense color="#6700ff" size="25" />,
       isActive: true,
     },
     {
@@ -182,10 +184,12 @@ const Main = () => {
           }}
         >
           <div style={{ height: "75vh", overflow: "auto" }}>
-
-
             <div
-              style={{ fontSize: "20px", fontWeight: "900", paddingLeft: "20px" }}
+              style={{
+                fontSize: "20px",
+                fontWeight: "900",
+                paddingLeft: "20px",
+              }}
             >
               Create Transactions
             </div>
@@ -223,7 +227,11 @@ const Main = () => {
                           } else if (item.value === "purchase") {
                             navigate("/add-purchase");
                           } else if (item.value === "return_credit_note") {
-                            navigate("/sales-dashboard");
+                            navigate("/return");
+                          } else if (item.value === "debit_note") {
+                            navigate("/debit-note");
+                          } else if (item.value === "expense") {
+                            setExpenseModalIsOpen(!expenseModalIsOpen)
                           }
                         }}
                       >
@@ -274,7 +282,7 @@ const Main = () => {
                         }}
                         onClick={() => {
                           if (item.value === "dashboard") {
-                            navigate("/retailer-dashboard")
+                            navigate("/retailer-dashboard");
                           }
                         }}
                       >
@@ -285,7 +293,6 @@ const Main = () => {
                   );
                 })}
             </div>
-
           </div>
 
           <div style={{}}>
@@ -368,9 +375,11 @@ const Main = () => {
           </div>
         </div>
       </div>
-      {/* </div> */}
-    </>
-  );
+      <Expense
+        expenseModalIsOpen={expenseModalIsOpen}
+        setExpenseModalIsOpen={setExpenseModalIsOpen}
+      />
+    </>);
 };
 
 export default Main;

@@ -1,66 +1,42 @@
 import { TextField } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
-import { handleLinkUserRequest } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-import { useDispatch } from "react-redux";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import { BASE_Url } from "../../URL";
+import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 
-const LinkCustomer = () => {
-  const dispatch = useDispatch();
+const LoyalityDashboard = () => {
   const [searchValue, setSearchValue] = useState("");
   const [userName, setUsername] = useState("");
   const [userMobile, setUserMobile] = useState("");
   const [err, setErr] = useState("");
-  // const [dataRes, setDataRes] = useState({});
+  // const TabsData = [
+  //   {
+  //     id: 1,
+  //     button: "Tab 1",
+  //     component: "Component 1",
+  //   },
+  //   {
+  //     id: 2,
+  //     button: "Tab 2",
+  //     component: "Component 2",
+  //   },
+  //   {
+  //     id: 3,
+  //     button: "Tab 3",
+  //     component: "Component 3",
+  //   },
+  // ];
+  // const [value, setValue] = useState(0);
+  // const [tabs] = useState(TabsData);
+  // const { component } = tabs[value];
 
-  const handleSearch = (e) => {
-    //   dispatch(handleSearchedDataRequest({ searchValue: e.target.value }));
-    // };
-    // dispatch(handleLinkUserRequest({ mobile_number: e.target.value }));
-
-    axios
-      .post(`${BASE_Url}/customer/search-customer`, {
-        mobile_number: e.target.value,
-      })
-      // .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        console.log(data.data.data.name);
-        setUsername(data.data.data.name);
-        setUserMobile(data.data.data.mobile_number);
-      })
-      .catch((err) => {
-        console.log(err);
-        setErr(err.message);
-      });
-  };
-  useEffect(() => {}, [handleSearch]);
-
-  // console.log(dataRes);
-  const debounce = (func) => {
-    let timer;
-    return function (...args) {
-      const context = this;
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
-        timer = null;
-        func.apply(context, args);
-      }, 1000);
-    };
-  };
-
-  const optimizedFn = useCallback(debounce(handleSearch), []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
   return (
     <div className="container">
       <div className="row d-flex justify-content-center">
         <div className="col-lg-5 col-md-10 col-sm-12 px-5">
-          <form className="form-box" onSubmit={handleSubmit}>
-            <h2>Link Customer</h2>
+          <form
+            className="form-box"
+            // onSubmit={handleSubmit}
+          >
+            <h2>Link Loyality</h2>
             <div>
               <TextField
                 size="small"
@@ -68,11 +44,11 @@ const LinkCustomer = () => {
                 className="form-control my-2"
                 id="customer-name"
                 label="Mobile Number"
-                value={searchValue}
-                onChange={(e) => {
-                  optimizedFn(e);
-                  setSearchValue(e.target.value);
-                }}
+                // value={searchValue}
+                // onChange={(e) => {
+                //   optimizedFn(e);
+                //   setSearchValue(e.target.value);
+                // }}
               />
             </div>
             {searchValue && searchValue ? (
@@ -162,7 +138,7 @@ const LinkCustomer = () => {
                   color: "#fff",
                 }}
               >
-                Save
+                Link
               </button>
               <Link
                 to="/"
@@ -190,4 +166,4 @@ const LinkCustomer = () => {
   );
 };
 
-export default LinkCustomer;
+export default LoyalityDashboard;
