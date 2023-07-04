@@ -260,6 +260,13 @@ const Navbar = () => {
                             >
                               Loyality Dashboard
                             </DropdownItem>
+                            <DropdownItem
+                              onClick={() => {
+                                navigate("/member-enrollment");
+                              }}
+                            >
+                              Member Enrollment
+                            </DropdownItem>
                           </DropdownMenu>
                         </Dropdown>
                       </>

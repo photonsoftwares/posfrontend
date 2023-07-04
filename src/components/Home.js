@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { BsHandbag, BsArrowRight } from "react-icons/bs";
-import { FcSpeaker } from "react-icons/fc";
+import { FcSalesPerformance, FcSpeaker } from "react-icons/fc";
 import { IoCashOutline } from "react-icons/io5";
 import { SiPaytm } from "react-icons/si";
 import { FaGooglePay } from "react-icons/fa";
@@ -33,6 +33,7 @@ import { useNavigate } from "react-router-dom";
 import { TextField } from "@mui/material";
 
 import MyCart from "./my-cart/MyCart";
+import { HiCreditCard } from "react-icons/hi2";
 
 const Home = () => {
   const [popoverIsOpen, setPopoverIsOpen] = useState(false);
@@ -111,7 +112,9 @@ const Home = () => {
   useEffect(() => {
     if (get_recommended_items && get_recommended_items.data) {
       if (get_recommended_items.data.length > 0) {
-        setRecommendedData(JSON.parse(JSON.stringify(get_recommended_items.data)));
+        setRecommendedData(
+          JSON.parse(JSON.stringify(get_recommended_items.data))
+        );
       }
     }
   }, [get_recommended_items]);
@@ -164,8 +167,8 @@ const Home = () => {
         });
         setCartData(t1);
       } else {
-        setCartData([])
-        setTotalDiscountVal(0)
+        setCartData([]);
+        setTotalDiscountVal(0);
       }
     }
   }, [cart_data]);
@@ -204,6 +207,12 @@ const Home = () => {
       id: 6,
       name: "Card",
       icon: <BsCreditCardFill size={25} />,
+      value: "card",
+    },
+    {
+      id: 7,
+      name: "Credit Sale",
+      icon: <FcSalesPerformance size={25} />,
       value: "card",
     },
   ];
@@ -307,21 +316,25 @@ const Home = () => {
 
   const RenderUi = () => {
     if (searchedData && searchValue.length > 0) {
-      return (<>
-        <Product
-          setSearchValue={setSearchValue}
-          setData={setSearchedData}
-          data={searchedData}
-        />
-      </>)
+      return (
+        <>
+          <Product
+            setSearchValue={setSearchValue}
+            setData={setSearchedData}
+            data={searchedData}
+          />
+        </>
+      );
     } else if (recommendedData && recommendedData.length > 0) {
-      return (<>
-        <Product
-          setSearchValue={setSearchValue}
-          data={recommendedData}
-          setData={setRecommendedData}
-        />
-      </>)
+      return (
+        <>
+          <Product
+            setSearchValue={setSearchValue}
+            data={recommendedData}
+            setData={setRecommendedData}
+          />
+        </>
+      );
     }
     //  else if (searchedData) {
     //   console.log("INSIDE IF", searchedData);
@@ -466,10 +479,10 @@ const Home = () => {
             opacity={0.9}
             // onClick={() => setSpechModal(true)}
             onClick={handleVoiceCommand}
-          // onClick={() => {
-          //   setVisibleVoiceCommand(true);
-          //   startListening;
-          // }}
+            // onClick={() => {
+            //   setVisibleVoiceCommand(true);
+            //   startListening;
+            // }}
           />
         </div>
       </div>
@@ -607,7 +620,7 @@ const Home = () => {
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-      // style={{ position: "relative" }}
+        // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -688,22 +701,25 @@ const Home = () => {
                               }
                             }
                           }}
-                          className={`option-item ${optionTick.filter((io) => io.name === item.value)
-                            .length > 0 && ""
-                            }`}
+                          className={`option-item ${
+                            optionTick.filter((io) => io.name === item.value)
+                              .length > 0 && ""
+                          }`}
                           style={{
                             backgroundColor:
                               item.name === "Cash"
                                 ? "#fed813"
                                 : item.name === "Paytm"
-                                  ? "#00B9F1"
-                                  : item.name === "Google Pay"
-                                    ? "#2DA94F"
-                                    : item.name === "Phone Pay"
-                                      ? "#5f259f"
-                                      : item.name === "UPI"
-                                        ? "#ff7909"
-                                        : "silver",
+                                ? "#00B9F1"
+                                : item.name === "Google Pay"
+                                ? "#2DA94F"
+                                : item.name === "Phone Pay"
+                                ? "#5f259f"
+                                : item.name === "UPI"
+                                ? "#ff7909"
+                                : item.name === "Credit Sale"
+                                ? "#1741b2"
+                                : "silver",
                           }}
                         >
                           <div style={{ position: "relative", top: "2px" }}>
@@ -715,14 +731,16 @@ const Home = () => {
                                 item.name === "Cash"
                                   ? "black"
                                   : item.name === "Paytm"
-                                    ? "black"
-                                    : item.name === "Google Pay"
-                                      ? "white"
-                                      : item.name === "Phone Pay"
-                                        ? "white"
-                                        : item.name === "UPI"
-                                          ? "white"
-                                          : "black",
+                                  ? "black"
+                                  : item.name === "Google Pay"
+                                  ? "white"
+                                  : item.name === "Phone Pay"
+                                  ? "white"
+                                  : item.name === "UPI"
+                                  ? "white"
+                                  : item.name === "Credit Sale"
+                                  ? "#fff"
+                                  : "black",
                             }}
                           >
                             {item.name}
@@ -808,9 +826,10 @@ const Home = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${
+                      handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                      }`}
+                    }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -839,9 +858,10 @@ const Home = () => {
                 }}
               >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${
+                    handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                    }`}
+                  }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />

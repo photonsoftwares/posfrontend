@@ -137,13 +137,15 @@ export const ComponentPropsManagement = createSlice({
       //   (item) => item.productId === payload.payload.productId
       // );
 
-      const a1 = state.cart_data.filter(io => io.productId === payload.payload.productId)
+      const a1 = state.cart_data.filter(
+        (io) => io.productId === payload.payload.productId
+      );
       if (a1 && a1.length > 0) {
-        state.cart_data.map(item => {
+        state.cart_data.map((item) => {
           if (item.productId === payload.payload.productId) {
-            item.productQty = Number(item.productQty) + 1
+            item.productQty = Number(item.productQty) + 1;
           }
-        })
+        });
       } else {
         state.cart_data = [...state.cart_data, payload.payload];
       }
@@ -155,7 +157,9 @@ export const ComponentPropsManagement = createSlice({
     },
     // delete Data!
     handleDeleteCartItem: (state, payload) => {
-      state.cart_data = state.cart_data.filter((el) => el.productId !== payload.payload.productId);
+      state.cart_data = state.cart_data.filter(
+        (el) => el.productId !== payload.payload.productId
+      );
       console.log("state.cart_data", state.cart_data);
       state.load = false;
     },
@@ -298,27 +302,27 @@ export const ComponentPropsManagement = createSlice({
       // state.handle_hsn_codes = payload.data;
     },
 
-    handleUploadItemRequest: (state, payload) => { },
+    handleUploadItemRequest: (state, payload) => {},
     handleUploadItemResponse: (state, payload) => {
       // state.flag = !state.flag
     },
-    handleUploadInventoryRequest: (state, payload) => { },
+    handleUploadInventoryRequest: (state, payload) => {},
     handleUploadInventoryResponse: (state, payload) => {
       // state.flag = !state.flag
     },
-    handleSalesOverviewRequest: (state, payload) => { },
+    handleSalesOverviewRequest: (state, payload) => {},
     handleSalesOverviewResponse: (state, payload) => {
       const data = payload?.data?.data;
       state.sales_overview_data = data;
       // state.flag = !state.flag
     },
-    handleLastWeekSalesRequest: (state, payload) => { },
+    handleLastWeekSalesRequest: (state, payload) => {},
     handleLastWeekSalesResponse: (state, payload) => {
       const data = payload?.data?.data;
       state.last_week_sales = data ? data : 0;
     },
 
-    handleLastMonthSalesRequest: (state, payload) => { },
+    handleLastMonthSalesRequest: (state, payload) => {},
     handleLastMonthSalesResponse: (state, payload) => {
       const data = payload?.data?.data;
       state.last_month_sales = data ? data : 0;
@@ -329,35 +333,35 @@ export const ComponentPropsManagement = createSlice({
     handleTodaySalesResponse: (state, payload) => {
       state.today_sales = payload.data.data ? payload.data.data : 0;
     },
-    handleNumberOfCustomerRequest: (state, payload) => { },
+    handleNumberOfCustomerRequest: (state, payload) => {},
     handleNumberOfCustomerResponse: (state, payload) => {
       state.number_of_customer = payload.data.data ? payload.data.data : 0;
     },
-    handleLowStockItemsRequest: (state, payload) => { },
+    handleLowStockItemsRequest: (state, payload) => {},
     handleLowStockItemsResponse: (state, payload) => {
       state.low_stock_items = payload.data.data ? payload.data.data : 0;
     },
-    handleQuantityInHandRequest: (state, payload) => { },
+    handleQuantityInHandRequest: (state, payload) => {},
     handleQuantityInHandResponse: (state, payload) => {
       state.quantity_in_hand = payload.data.data ? payload.data.data : 0;
     },
-    handleLastFourteenDaysSalesRequest: (state, payload) => { },
+    handleLastFourteenDaysSalesRequest: (state, payload) => {},
     handleLastFourteenDaysSalesResponse: (state, payload) => {
       state.last_fourteen_days = payload.data.data ? payload.data.data : 0;
     },
-    handleLastSixtyDaysSalesRequest: (state, payload) => { },
+    handleLastSixtyDaysSalesRequest: (state, payload) => {},
     handleLastSixtyDaysSalesResponse: (state, payload) => {
       state.last_sixty_days = payload.data.data ? payload.data.data : 0;
     },
-    handleYesterdaySalesRequest: (state, payload) => { },
+    handleYesterdaySalesRequest: (state, payload) => {},
     handleYesterdaySalesResponse: (state, payload) => {
       state.yesterday_sales = payload.data.data ? payload.data.data : 0;
     },
-    handleGstTypeDropdownRequest: (state, payload) => { },
+    handleGstTypeDropdownRequest: (state, payload) => {},
     handleGstTypeDropdownResponse: (state, payload) => {
       state.gst_type_dropdown = payload.data;
     },
-    handleGetHsnCodeDropdownRequest: (state, payload) => { },
+    handleGetHsnCodeDropdownRequest: (state, payload) => {},
     handleGetHsnCodeDropdownResponse: (state, payload) => {
       state.hsn_code_dropdown = payload.data;
     },
@@ -385,23 +389,33 @@ export const ComponentPropsManagement = createSlice({
       // state.hsn_code_dropdown = payload.data
     },
     handleLowStockItemListResponse: (state, payload) => {
-      console.log("fd", payload)
+      console.log("fd", payload);
       // state.hsn_code_dropdown = payload.data
     },
+    // Member Enrollmemt
+    handleMemberEnrollmentRequest: (state, payload) => {
+      // state.hsn_code_dropdown = payload.data
+      console.log("REQUEST", payload.payload);
+    },
+    handleMemberEnrollmentResponse: (state, payload) => {
+      console.log("RESPONSE", payload.payload);
+    },
     handleEmptyCartData: (state, payload) => {
-      state.cart_data = []
-    }
-  }
+      state.cart_data = [];
+    },
+  },
 });
 
 // Action creators are generated for each case reducer function
 
 export const {
   handleUploadPicRequest,
+  handleMemberEnrollmentResponse,
   handleEmailNotificationResponse,
   handleEmailNotificationRequest,
   handleLoginRequest,
   handleOpneMenuRequest,
+  handleMemberEnrollmentRequest,
   handleRegisterRequest,
   handleHSNCODERequest,
   handleCreateRowTaxMasterRequest,
@@ -443,7 +457,7 @@ export const {
   handleGetHsnCodeDropdownRequest,
   handleSalesDashboardChartRequest,
   handleCreateTaxMasterRequest,
-  handleLowStockItemListRequest
+  handleLowStockItemListRequest,
 } = ComponentPropsManagement.actions;
 
 export default ComponentPropsManagement.reducer;
