@@ -112,9 +112,11 @@ const Home = () => {
   useEffect(() => {
     if (get_recommended_items && get_recommended_items.data) {
       if (get_recommended_items.data.length > 0) {
-        setRecommendedData(
-          JSON.parse(JSON.stringify(get_recommended_items.data))
-        );
+        const t1 = JSON.parse(JSON.stringify(get_recommended_items.data))
+        t1.map(item => {
+          item['new_price'] = item.price
+        })
+        setRecommendedData(t1)
       }
     }
   }, [get_recommended_items]);
@@ -238,7 +240,11 @@ const Home = () => {
   useEffect(() => {
     if (get_searched_data && get_searched_data.data) {
       if (get_searched_data.data.length > 0) {
-        setSearchedData(JSON.parse(JSON.stringify(get_searched_data.data)));
+        const t1 = JSON.parse(JSON.stringify(get_searched_data.data))
+        t1.map(item => {
+          item['new_price'] = item.price
+        })
+        setSearchedData(t1)
       }
     }
   }, [get_searched_data]);
@@ -479,10 +485,10 @@ const Home = () => {
             opacity={0.9}
             // onClick={() => setSpechModal(true)}
             onClick={handleVoiceCommand}
-            // onClick={() => {
-            //   setVisibleVoiceCommand(true);
-            //   startListening;
-            // }}
+          // onClick={() => {
+          //   setVisibleVoiceCommand(true);
+          //   startListening;
+          // }}
           />
         </div>
       </div>
@@ -620,7 +626,7 @@ const Home = () => {
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-        // style={{ position: "relative" }}
+      // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -701,25 +707,24 @@ const Home = () => {
                               }
                             }
                           }}
-                          className={`option-item ${
-                            optionTick.filter((io) => io.name === item.value)
+                          className={`option-item ${optionTick.filter((io) => io.name === item.value)
                               .length > 0 && ""
-                          }`}
+                            }`}
                           style={{
                             backgroundColor:
                               item.name === "Cash"
                                 ? "#fed813"
                                 : item.name === "Paytm"
-                                ? "#00B9F1"
-                                : item.name === "Google Pay"
-                                ? "#2DA94F"
-                                : item.name === "Phone Pay"
-                                ? "#5f259f"
-                                : item.name === "UPI"
-                                ? "#ff7909"
-                                : item.name === "Credit Sale"
-                                ? "#1741b2"
-                                : "silver",
+                                  ? "#00B9F1"
+                                  : item.name === "Google Pay"
+                                    ? "#2DA94F"
+                                    : item.name === "Phone Pay"
+                                      ? "#5f259f"
+                                      : item.name === "UPI"
+                                        ? "#ff7909"
+                                        : item.name === "Credit Sale"
+                                          ? "#1741b2"
+                                          : "silver",
                           }}
                         >
                           <div style={{ position: "relative", top: "2px" }}>
@@ -731,16 +736,16 @@ const Home = () => {
                                 item.name === "Cash"
                                   ? "black"
                                   : item.name === "Paytm"
-                                  ? "black"
-                                  : item.name === "Google Pay"
-                                  ? "white"
-                                  : item.name === "Phone Pay"
-                                  ? "white"
-                                  : item.name === "UPI"
-                                  ? "white"
-                                  : item.name === "Credit Sale"
-                                  ? "#fff"
-                                  : "black",
+                                    ? "black"
+                                    : item.name === "Google Pay"
+                                      ? "white"
+                                      : item.name === "Phone Pay"
+                                        ? "white"
+                                        : item.name === "UPI"
+                                          ? "white"
+                                          : item.name === "Credit Sale"
+                                            ? "#fff"
+                                            : "black",
                             }}
                           >
                             {item.name}
@@ -826,10 +831,9 @@ const Home = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${
-                      handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                    }`}
+                      }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -858,10 +862,9 @@ const Home = () => {
                 }}
               >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${
-                    handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                  }`}
+                    }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />

@@ -342,7 +342,6 @@ const MyCart = ({
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  console.log("re")
                   dispatch(handleDeleteCartItem(item))
                 }}
               // onClick={() => handelDeleteProduct(item)}
@@ -425,10 +424,7 @@ const MyCart = ({
               >
 
                 {parseInt(invoiceValue) !== 0 && (<>
-                  <div>
-                    &nbsp;
-                  </div>
-                  {/* <button
+                  <button
                     type="button"
                     style={{
                       backgroundColor: "rgb(169, 10, 10)",
@@ -442,7 +438,7 @@ const MyCart = ({
                     onClick={() => dispatch(handleEmptyCartData())}
                   >
                     Remove All Cart Items
-                  </button> */}
+                  </button>
 
                   <button
                     type="button"

@@ -20,7 +20,7 @@ import { Button } from "react-bootstrap";
 
 const Product = ({ setSearchValue, data, setData }) => {
   const { cart_data } = useSelector((e) => e.ComponentPropsManagement);
-  const [myPrice, setMyPrice] = useState(0)
+  const [myPrice, setMyPrice] = useState({ productId: "", price: "" })
   const [showButton, setShowButton] = useState(true);
   // const [qty, setQty] = useState(1);
   const dispatch = useDispatch();
@@ -30,7 +30,6 @@ const Product = ({ setSearchValue, data, setData }) => {
   return (<>
     {data.map((item, index) => {
       return (<>
-
         <div
           style={{
             display: "flex",
@@ -83,7 +82,7 @@ const Product = ({ setSearchValue, data, setData }) => {
                     size="small"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        item.price = myPrice;
+                        item.price = item.new_price;
                         setData([...data])
                       }
                     }}
@@ -92,15 +91,15 @@ const Product = ({ setSearchValue, data, setData }) => {
                         <IconButton
                           // aria-label="toggle password visibility"
                           onClick={() => {
-                            item.price = myPrice;
+                            item.price = item.new_price;
                             setData([...data])
                           }}
                           edge="end"
                         >
                           <BsFillCheckCircleFill
                             color={
-                              myPrice === "" ||
-                                myPrice === 0
+                              item.new_price === "" ||
+                                item.new_price === 0
                                 ? "#979797"
                                 : "green"
                             }
@@ -113,14 +112,20 @@ const Product = ({ setSearchValue, data, setData }) => {
                     onChange={(e) => {
                       const val = e.target.value;
                       if (val) {
-                        setMyPrice(Number(val))
+                        setMyPrice({ productId: item.productId, price: Number(val) })
+                        item.new_price = Number(val)
+                        // setMyPrice(Number(val))
                       } else {
-                        setMyPrice(val)
+                        item.new_price = ""
+                        setMyPrice({ productId: item.productId, price: val })
+                        // setMyPrice(val)
                       }
+                      // setData([...data])
                     }}
-                    value={myPrice}
+                    value={item.productId === myPrice.productId ? myPrice.price : ""}
                   />
                 </FormControl>
+
               </>) : (<>
                 <p style={{ fontWeight: "400" }}>₹ {item.price}</p>
               </>)}
@@ -139,6 +144,10 @@ const Product = ({ setSearchValue, data, setData }) => {
                 style={{ width: "100%", fontSize: "10px" }}
                 // className="btn btn-outline-primary"
                 onClick={() => {
+                  if (Number(item.price) === 0) {
+                    item.price = item.new_price;
+                    setData([...data])
+                  }
                   dispatch(handleAddCartData(item));
                   setShowButton(false);
                   setSearchValue("");
