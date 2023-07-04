@@ -19,8 +19,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-    ? JSON.parse(localStorage.getItem("User_data"))
-    : {};
+  ? JSON.parse(localStorage.getItem("User_data"))
+  : {};
 
 function* handleLoginRequest(e) {
   const response = yield fetch(`${BASE_Url}/auth/user-login`, {
@@ -954,13 +954,10 @@ function* handleLowStockItemsRequest(e) {
 function* handleLowStockItemListRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-  const response = yield fetch(
-    `${host}inventory-master/low-stock-item`,
-    {
-      method: "GET",
-      // headers: myHeaders,
-    }
-  );
+  const response = yield fetch(`${host}inventory-master/low-stock-item`, {
+    method: "GET",
+    // headers: myHeaders,
+  });
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
@@ -1233,6 +1230,36 @@ function* handleCreateTaxMasterRequest(e) {
     toast.error(err.message);
   }
 }
+// Member Enrollment
+function* handleMemberEnrollmentRequest(e) {
+  console.log("E PAYLOAD", e.payload);
+
+  const response = yield fetch(`http://3.111.70.84:8091/v1/loyalty/customer`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(e.payload),
+  });
+  const jsonData = yield response.json();
+  console.log("JSONDATA MEMBER", jsonData);
+  // if (jsonData) {
+  //   if (jsonData.status === true) {
+  //     yield put({
+  //       type: "ComponentPropsManagement/handleYesterdaySalesResponse",
+  //       data: jsonData,
+  //     });
+  //     return;
+  //   }
+  //   toast.error(jsonData.message);
+  //   yield put({
+  //     type: "ComponentPropsManagement/handleYesterdaySalesResponse",
+  //     data: null,
+  //   });
+  // } else {
+  //   toast.error("Something went wrong server side");
+  // }
+}
 
 export function* helloSaga() {
   yield takeEvery(
@@ -1377,7 +1404,10 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleLowStockItemListRequest",
     handleLowStockItemListRequest
   );
-
+  yield takeEvery(
+    "ComponentPropsManagement/handleMemberEnrollmentRequest",
+    handleMemberEnrollmentRequest
+  );
 }
 
 // export function* incrementAsync() {

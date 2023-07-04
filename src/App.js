@@ -29,6 +29,7 @@ import RetailerDashboard from "./components/retailer-dashboard/home/index";
 import RetailerDashboardNanbar from "./components/retailer-dashboard/navbar/index";
 import LoyalityDashboard from "./components/Navbar Screens/LoyalityDashboard";
 import DebitNote from "./components/Navbar Screens/DebitNote";
+import MemberEnrollment from "./components/Navbar Screens/MemberEnrollment";
 // import { Navbar } from "react-bootstrap";
 
 const App = () => {
@@ -80,6 +81,10 @@ const App = () => {
         <Route
           path="/loyality-dashboard"
           element={<ProtectedRoutingWhenLogin Component={LoyalityDashboard} />}
+        />
+        <Route
+          path="/member-enrollment"
+          element={<ProtectedRoutingWhenLogin Component={MemberEnrollment} />}
         />
         <Route
           path="/add-customer"
