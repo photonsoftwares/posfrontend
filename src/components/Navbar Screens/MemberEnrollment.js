@@ -14,23 +14,22 @@ import moment from "moment";
 const MemberEnrollment = () => {
   const dispatch = useDispatch();
   //   const [DOB, setDob] = useState(new Date());
-  const [dob, setDob] = useState("1980-01-01");
-  const [clientId, setClientId] = useState("4224");
-  const [baseCurrecy, setBaseCurrency] = useState("AED");
-  const [mobile, setMobile] = useState("7021438713");
-  const [customerName, setCustomerName] = useState("Kushal Nerani");
-  const [email, setEmail] = useState("kushalneranitest@example5.com");
-  const [nationality, setNationality] = useState("Emirati");
-  const [language, setLanguage] = useState("Arabic");
-  const [sourceChannel, setSourceChannel] = useState("Web");
-  const [pinCode, setPincode] = useState("90001");
-  const [preferredAddress, setPreferredAddress] = useState("Home");
-  const [address1, setAddress1] = useState("123 Main St");
-  const [address2, setAddress2] = useState("Apt 4");
+  const [dob, setDob] = useState("");
+  const [clientId, setClientId] = useState("");
+  const [baseCurrecy, setBaseCurrency] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [email, setEmail] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [language, setLanguage] = useState("");
+  const [sourceChannel, setSourceChannel] = useState("");
+  const [pinCode, setPincode] = useState("");
+  const [preferredAddress, setPreferredAddress] = useState("");
+  const [address1, setAddress1] = useState("");
+  const [address2, setAddress2] = useState("");
   const [gender, setGender] = useState("");
-  const [businessCreatedDate, setBusinessCreatedDate] =
-    useState("2022 - 01 - 01");
-  const [anniversaryDate, setAnniversaryDate] = useState("2005-06-01");
+  const [businessCreatedDate, setBusinessCreatedDate] = useState("");
+  const [anniversaryDate, setAnniversaryDate] = useState("");
   //   const [selectedOptionBaseCurrency, setSelectedOptionBaseCurrency] =
   //     useState(null);
 
