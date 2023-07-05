@@ -3,8 +3,7 @@ import { BASE_Url, Email_Url, host } from "../URL";
 import { toast } from "react-toastify";
 import { json } from "react-router-dom";
 import Navigation from "../Navigation";
-import { confirmAlert } from "react-confirm-alert"; // Import
-import "react-confirm-alert/src/react-confirm-alert.css";
+
 import moment from "moment";
 // import { useNavigate } from "react-router-dom";
 
@@ -19,8 +18,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-  ? JSON.parse(localStorage.getItem("User_data"))
-  : {};
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
 // console.log("SAAS DATA", saasId);

@@ -116,7 +116,8 @@ const Navbar = () => {
         >
           <img src={Logo3} style={{ height: "35px", width: "100%" }} />
         </Link>
-        {location.pathname !== "/" && (
+
+        {!(location.pathname === "/" || location.pathname === "/login") && (
           <>
             <BiArrowBack
               size={20}
@@ -231,13 +232,15 @@ const Navbar = () => {
                           toggle={toggle}
                           direction={"down"}
                         >
-                          <DropdownToggle
-                            style={{ textAlign: "center" }}
-                            tag={"span"}
-                          >
-                            <div>{item.icon}</div>
-                            <div>{item.label}</div>
-                          </DropdownToggle>
+                          {location.pathname !== "/login" && (<>
+                            <DropdownToggle
+                              style={{ textAlign: "center" }}
+                              tag={"span"}
+                            >
+                              <div>{item.icon}</div>
+                              <div>{item.label}</div>
+                            </DropdownToggle>
+                          </>)}
                           <DropdownMenu>
                             <DropdownItem
                               onClick={() => {
