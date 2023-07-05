@@ -27,6 +27,7 @@
     "react-bootstrap": "^2.7.4",
     "react-camera-photo": "^1.5.17",
     "react-confirm-alert": "^3.0.6",
+    "react-csv": "^2.2.2",
     "react-data-table-component": "^7.5.3",
     "react-datepicker": "^4.13.0",
     "react-dom": "^18.2.0",

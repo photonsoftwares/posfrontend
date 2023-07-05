@@ -31,9 +31,9 @@ const Master = () => {
             <Nav tabs>
                 {tabArray.map((item, index) => {
                     return (<>
-                        <NavItem style={{ backgroundColor: "var(--primary1)" }}>
+                        <NavItem style={{ backgroundColor: "var(--primary1)", borderRadius: String(index + 1) === activeTab ? "10px" : "0px", border: "none" }}>
                             <NavLink
-                                style={{ color: String(index + 1) === activeTab ? "black" : "white", fontWeight: "bold" }}
+                                style={{ color: String(index + 1) === activeTab ? "black" : "white", fontWeight: "bold", border: "none" }}
                                 className={`${String(index + 1) === activeTab && "active"} mouse-pointer`}
                                 onClick={() => {
                                     setActiveTab(String(index + 1))

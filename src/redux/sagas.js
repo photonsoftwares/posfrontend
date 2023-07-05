@@ -1,8 +1,6 @@
 import { put, takeEvery, all, retry } from "redux-saga/effects";
 import { BASE_Url, Email_Url, host } from "../URL";
 import { toast } from "react-toastify";
-import { json } from "react-router-dom";
-import Navigation from "../Navigation";
 
 import moment from "moment";
 // import { useNavigate } from "react-router-dom";
@@ -1165,18 +1163,11 @@ function* handleGetHsnCodeDropdownRequest(e) {
 }
 
 function* handleSalesDashboardChartRequest(e) {
-  // var myHeaders = new Headers();
-  // myHeaders.append("Content-Type", "application/json");
-  // myHeaders.append("Authorization", `Bearer ${ token }`)
   try {
     const response = yield fetch(`${host}dashboard/last-six-month/${saasId}`, {
-      method: "GET",
-      // headers: myHeaders,
-      // body: e.payload,
-      // redirect: 'follow'
+      method: "GET"
     });
     const jsonData = yield response.json();
-    console.log("rs", jsonData);
     if (jsonData) {
       if (jsonData.status === true) {
         // toast.success(jsonData.message)
@@ -1198,6 +1189,91 @@ function* handleSalesDashboardChartRequest(e) {
     toast.error(err.message);
   }
 }
+
+function* handleSalesReportRequest(e) {
+  try {
+    const response = yield fetch(`${host}tax/get-sales-report/${moment(new Date()).format("Y-MM-DD")}`, {
+      method: "GET"
+    });
+    const jsonData = yield response.json();
+    if (jsonData) {
+      if (jsonData.status === true) {
+        // toast.success(jsonData.message)
+        yield put({
+          type: "ComponentPropsManagement/handleSalesReportResponse",
+          data: jsonData.list_sales_report,
+        });
+        return;
+      }
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleSalesReportResponse",
+        data: null,
+      });
+    } else {
+      toast.error("Something went wrong server side");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
+function* handleGstReportRequest(e) {
+  try {
+    const response = yield fetch(`${host}tax/get-hsn-list`, {
+      method: "GET"
+    });
+    const jsonData = yield response.json();
+    if (jsonData) {
+      if (jsonData.status === true) {
+        // toast.success(jsonData.message)
+        yield put({
+          type: "ComponentPropsManagement/handleGstReportResponse",
+          data: jsonData.tax_list,
+        });
+        return;
+      }
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleGstReportResponse",
+        data: null,
+      });
+    } else {
+      toast.error("Something went wrong server side");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
+function* handleGstReportItemRequest(e) {
+  try {
+    const response = yield fetch(`${host}tax/get-hsn-item-list`, {
+      method: "GET"
+    });
+    const jsonData = yield response.json();
+    if (jsonData) {
+      if (jsonData.status === true) {
+        // toast.success(jsonData.message)
+        yield put({
+          type: "ComponentPropsManagement/handleGstReportItemResponse",
+          data: jsonData.tax_item_list,
+        });
+        return;
+      }
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleGstReportItemResponse",
+        data: null,
+      });
+    } else {
+      toast.error("Something went wrong server side");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
 
 // Create Row in Tax Master
 function* handleCreateTaxMasterRequest(e) {
@@ -1309,6 +1385,20 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleLoginRequest",
     handleLoginRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleSalesReportRequest",
+    handleSalesReportRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleGstReportRequest",
+    handleGstReportRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleGstReportItemRequest",
+    handleGstReportItemRequest
   );
   yield takeEvery(
     "ComponentPropsManagement/handleRegisterRequest",
