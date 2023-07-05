@@ -136,6 +136,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    console.log("cartData", cartData)
     const arr = [];
     let sum = 0;
     cartData?.map((el) => {
@@ -712,7 +713,7 @@ const Home = () => {
                             }
                           }}
                           className={`option-item ${optionTick.filter((io) => io.name === item.value)
-                              .length > 0 && ""
+                            .length > 0 && ""
                             }`}
                           style={{
                             backgroundColor:

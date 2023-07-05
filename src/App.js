@@ -32,6 +32,7 @@ import DebitNote from "./components/Navbar Screens/DebitNote";
 import MemberEnrollment from "./components/Navbar Screens/MemberEnrollment";
 import LinkLoyalityCustomer from "./components/Navbar Screens/LinkLoyalityCustomer";
 import MembePointRedemption from "./components/Navbar Screens/MembePointRedemption";
+import "react-confirm-alert/src/react-confirm-alert.css";
 // import { Navbar } from "react-bootstrap";
 
 const App = () => {
