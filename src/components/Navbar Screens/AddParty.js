@@ -55,7 +55,7 @@ const AddParty = () => {
         party_name: partyName,
         gstin: GSTIN,
         phone_number: mobile,
-        gst_type: GSTType.toUpperCase,
+        gst_type: GSTType.toUpperCase(),
         state: state,
         email: email,
         billing_address: billingAddress,

@@ -12,9 +12,9 @@ import Home from "../Home";
 import moment from "moment";
 
 const MemberEnrollment = () => {
-  const moment = require("moment"); // require
   const dispatch = useDispatch();
-  const [DOB, setDob] = useState(new Date());
+  //   const [DOB, setDob] = useState(new Date());
+  const [dob, setDob] = useState("");
   const [clientId, setClientId] = useState("");
   const [baseCurrecy, setBaseCurrency] = useState("");
   const [mobile, setMobile] = useState("");
@@ -28,10 +28,12 @@ const MemberEnrollment = () => {
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
   const [gender, setGender] = useState("");
-  const [businessCreatedDate, setBusinessCreatedDate] = useState(new Date());
-  const [anniversaryDate, setAnniversaryDate] = useState(new Date());
+  const [businessCreatedDate, setBusinessCreatedDate] = useState("");
+  const [anniversaryDate, setAnniversaryDate] = useState("");
   //   const [selectedOptionBaseCurrency, setSelectedOptionBaseCurrency] =
   //     useState(null);
+
+  console.log("INPUT DOB", dob);
 
   const [selectedMaritalOption, setSelectedMaritalOption] = useState(null);
   const [selectedCountryOption, setSelectedCountryOption] = useState(null);
@@ -90,43 +92,45 @@ const MemberEnrollment = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // console.log(gender);
-    console.log(DOB);
-    // console.log(DOB.getMonth());
-    // console.log(selectedMaritalOption);
-    // console.log(selectedLocationOption);
-    // console.log(selectedCityOption);
-    // console.log(selectedCountryOption);
-    // console.log(sourceChannel);
-    // console.log(nationality);
-    // console.log(language);
-    // dispatch(
-    //   handleMemberEnrollmentRequest({
-    //     customer_id: "",
-    //     client_id: clientId,
-    //     base_currency: baseCurrecy,
-    //     mobile_number: mobile,
-    //     customer_name: customerName,
-    //     email_id: email,
-    //     source_channel: sourceChannel,
-    //     business_created_date: businessCreatedDate.moment().format(),
-    //     nationality: nationality,
-    //     language: language,
-    //     dob: DOB + "",
-    //     gender: gender,
-    //     suffix: selectedSuffixOption,
-    //     marital_status: selectedMaritalOption,
-    //     anniversary_date: anniversaryDate + "",
-    //     preferred_address: preferredAddress,
-    //     location: selectedLocationOption,
-    //     address_line1: address1,
-    //     address_line2: address2,
-    //     city: selectedCityOption,
-    //     country: selectedCountryOption,
-    //     pincode: pinCode,
-    //   })
-    // );
+    console.log(baseCurrecy.toUpperCase());
+    dispatch(
+      handleMemberEnrollmentRequest({
+        customer_id: "",
+        client_id: clientId,
+        base_currency: baseCurrecy,
+        mobile_number: mobile,
+        customer_name: customerName,
+        email_id: email,
+        source_channel: sourceChannel,
+        business_created_date: businessCreatedDate,
+        nationality: nationality,
+        language: language,
+        dob: dob,
+        gender: gender,
+        suffix: selectedSuffixOption,
+        marital_status: selectedMaritalOption,
+        anniversary_date: anniversaryDate,
+        preferred_address: preferredAddress,
+        location: selectedLocationOption,
+        address_line1: address1,
+        address_line2: address2,
+        city: selectedCityOption,
+        country: selectedCountryOption,
+        pincode: pinCode,
+      })
+    );
+    setClientId("");
+    setBaseCurrency("");
+    setMobile("");
+    setCustomerName("");
+    setEmail("");
+    setSourceChannel("");
+    setBaseCurrency("");
+    setNationality("");
+    setLanguage("");
+    setPreferredAddress("");
+    setAddress1("");
+    setAddress2("");
   };
 
   return (
@@ -207,9 +211,17 @@ const MemberEnrollment = () => {
               <div className="d-flex flex-row items-center justify-content-between mt-3">
                 <p>Business created date</p>
                 <div>
-                  <ReactDatePicker
+                  {/* <ReactDatePicker
                     selected={businessCreatedDate}
                     onChange={(date) => setBusinessCreatedDate(date)}
+                  /> */}
+                  <input
+                    type="date"
+                    name=""
+                    id=""
+                    // placeholder="Date of Birth"
+                    value={businessCreatedDate}
+                    onChange={(e) => setBusinessCreatedDate(e.target.value)}
                   />
                 </div>
               </div>
@@ -233,12 +245,20 @@ const MemberEnrollment = () => {
                 onChange={(e) => setLanguage(e.target.value)}
                 required
               />
-              <div className="d-flex flex-row items-center justify-content-between  mt-3">
+              <div className="d-flex flex-row items-center justify-content-between mt-3">
                 <p>Date of Birth</p>
                 <div>
-                  <ReactDatePicker
+                  {/* <ReactDatePicker
                     selected={DOB}
                     onChange={(date) => setDob(date)}
+                  /> */}
+                  <input
+                    type="date"
+                    name=""
+                    id=""
+                    // placeholder="Date of Birth"
+                    value={dob}
+                    onChange={(e) => setDob(e.target.value)}
                   />
                 </div>
               </div>
@@ -272,14 +292,21 @@ const MemberEnrollment = () => {
                 </div>
               </div>
               <div
-                className="d-flex flex-row items-center justify-content-between"
+                className="d-flex flex-row items-center justify-content-between mt-3"
                 // style={{ width: "100%" }}
               >
-                <p style={{ flex: "1" }}>Anniversary Date</p>
-                <div style={{ flex: "1" }}>
-                  <ReactDatePicker
+                <p>Anniversary Date</p>
+                <div>
+                  {/* <ReactDatePicker
                     selected={anniversaryDate}
                     onChange={(date) => setAnniversaryDate(date)}
+                  /> */}
+                  <input
+                    type="date"
+                    name=""
+                    id=""
+                    value={anniversaryDate}
+                    onChange={(e) => setAnniversaryDate(e.target.value)}
                   />
                 </div>
               </div>
@@ -299,10 +326,10 @@ const MemberEnrollment = () => {
                 className="form-control mt-2"
                 id="customer-name"
                 value={address1}
-                onOptionChange={(e) => setAddress1(e.target.value)}
+                onChange={(e) => setAddress1(e.target.value)}
                 label="Address 1"
                 required
-              />{" "}
+              />
               <TextField
                 size="small"
                 type="text"
@@ -310,7 +337,7 @@ const MemberEnrollment = () => {
                 id="customer-name"
                 label="Address 2"
                 value={address2}
-                onOptionChange={(e) => setAddress2(e.target.value)}
+                onChange={(e) => setAddress2(e.target.value)}
                 required
               />
               <div className="mt-2">

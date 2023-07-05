@@ -116,7 +116,8 @@ const Navbar = () => {
         >
           <img src={Logo3} style={{ height: "35px", width: "100%" }} />
         </Link>
-        {location.pathname !== "/" && (
+
+        {!(location.pathname === "/" || location.pathname === "/login") && (
           <>
             <BiArrowBack
               size={20}
@@ -231,13 +232,15 @@ const Navbar = () => {
                           toggle={toggle}
                           direction={"down"}
                         >
-                          <DropdownToggle
-                            style={{ textAlign: "center" }}
-                            tag={"span"}
-                          >
-                            <div>{item.icon}</div>
-                            <div>{item.label}</div>
-                          </DropdownToggle>
+                          {location.pathname !== "/login" && (<>
+                            <DropdownToggle
+                              style={{ textAlign: "center" }}
+                              tag={"span"}
+                            >
+                              <div>{item.icon}</div>
+                              <div>{item.label}</div>
+                            </DropdownToggle>
+                          </>)}
                           <DropdownMenu>
                             <DropdownItem
                               onClick={() => {
@@ -246,26 +249,35 @@ const Navbar = () => {
                             >
                               Link Loyalty
                             </DropdownItem>
-                            <DropdownItem
+                            {/* <DropdownItem
                               onClick={() => {
-                                navigate("/link-customer");
+                                // navigate("/link-customer");
+                                navigate("/member-enrolment");
                               }}
                             >
                               Link Customer
+                            </DropdownItem> */}
+                            <DropdownItem
+                              onClick={() => {
+                                // navigate("/link-customer");
+                                navigate("/member-enrollment");
+                              }}
+                            >
+                              Member Enrol
                             </DropdownItem>
                             <DropdownItem
                               onClick={() => {
-                                navigate("/loyality-dashboard");
+                                navigate("/link-loyality-customer");
                               }}
                             >
                               Loyality Dashboard
                             </DropdownItem>
                             <DropdownItem
                               onClick={() => {
-                                navigate("/member-enrollment");
+                                navigate("/member-point-redemption");
                               }}
                             >
-                              Member Enrollment
+                              Member Point Redemption
                             </DropdownItem>
                           </DropdownMenu>
                         </Dropdown>

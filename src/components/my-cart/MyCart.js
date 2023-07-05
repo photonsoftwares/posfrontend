@@ -8,6 +8,7 @@ import { IoIosSearch } from "react-icons/io";
 import { BsHandbag, BsArrowRight } from "react-icons/bs";
 import { FcSpeaker } from "react-icons/fc";
 import { IoCashOutline } from "react-icons/io5";
+import { BsArrowLeft } from "react-icons/bs"
 import { SiPaytm } from "react-icons/si";
 import { FaGooglePay } from "react-icons/fa";
 import FormControl from '@mui/material/FormControl';
@@ -20,6 +21,7 @@ import { SiPhonepe } from "react-icons/si";
 import { SiContactlesspayment } from "react-icons/si";
 import { BsCreditCardFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
+import { confirmAlert } from "react-confirm-alert"; // Import
 import { TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -45,18 +47,52 @@ const MyCart = ({
     const price = Number(item.price) * Number(item.productQty);
     const calculatedVal = (price * discount_value) / 100;
     const t1 = price - calculatedVal;
+    item.discount = parseFloat(calculatedVal).toFixed(2)
     item.new_price = t1;
     setCartData([...cartData]);
   };
+
+  useEffect(() => {
+    const handleWindowClose = (event) => {
+      event.preventDefault();
+      // Custom message to display in the confirmation dialog
+
+      const confirmationMessage = 'Please complete the transaction, we can see you have some items in your cart if you leave or exit data will be deleted!!';
+      event.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+      return confirmationMessage; // Gecko, WebKit, Chrome <34
+    };
+
+    window.addEventListener('beforeunload', handleWindowClose);
+
+
+    const disableBackButton = (event) => {
+      event.preventDefault();
+      window.history.forward(); // Navigates forward to the next page
+    };
+
+    window.history.pushState(null, null, window.location.href);
+    window.addEventListener('popstate', disableBackButton);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose);
+      window.removeEventListener('popstate', disableBackButton);
+
+    };
+  }, []);
+
 
   const handleDiscountLarge = (discount_value) => {
     cartData.map((item) => {
       item.discount_value = discount_value;
       const price = Number(item.price) * Number(item.productQty);
       if (price !== 0) {
-        const calculatedVal = (price * discount_value) / 100;
-        const t1 = price - calculatedVal;
-        item.new_price = t1;
+        const val = sumValue * discount_value / 100
+        const calculatedVal = (price * val) / sumValue
+        // const calculatedVal = (price * discount_value) / 100;
+        // const t1 = price - calculatedVal;
+        // item.new_price = t1;
+        item.discount = parseFloat(calculatedVal).toFixed(2)
+        item.new_price = price - calculatedVal
       }
     });
     setCartData([...cartData]);
@@ -67,8 +103,11 @@ const MyCart = ({
       item.amount_value = discountAmountVal;
       const price = Number(item.price) * Number(item.productQty);
       if (price !== 0) {
-        const calculatedVal = price - discountAmountVal;
-        item.new_price = calculatedVal;
+
+        const calculatedVal = (price * discountAmountVal) / sumValue
+        // const calculatedVal = price - discountAmountVal;
+        item.discount = parseFloat(calculatedVal).toFixed(2)
+        item.new_price = price - calculatedVal;
       }
     });
     setCartData([...cartData]);
@@ -91,9 +130,30 @@ const MyCart = ({
   const handleDiscountAmount = (item, amount_value) => {
     const price = Number(item.price) * Number(item.productQty);
     const calculatedVal = price - amount_value;
+    item.discount = parseFloat(amount_value).toFixed(2)
     item.new_price = calculatedVal;
     setCartData([...cartData]);
   };
+
+  const confirmBack = () => {
+    confirmAlert({
+      title: 'Are you sure to exit',
+      message: 'Are you sure to do this.',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => {
+            setShow(false)
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => { }
+        }
+      ]
+    });
+  }
+
   return (
     <Modal
       show={show}
@@ -101,10 +161,17 @@ const MyCart = ({
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
-      <Modal.Header closeButton onClick={() => setShow(false)}>
+      <Modal.Header  >
         <Modal.Title id="contained-modal-title-vcenter">
           <span style={{ fontWeight: "900", marginRight: "10px" }}>
-            My Basket
+            <BsArrowLeft style={{ cursor: "pointer", marginRight: "5px" }}
+              onClick={() => {
+                confirmBack()
+                // if (cartData?.length === 0) {
+
+                // }
+              }}
+            />  My Basket
           </span>
           ({cartData?.length} items)
         </Modal.Title>
@@ -554,6 +621,7 @@ const MyCart = ({
                           parseFloat(discountAmountVal).toFixed(2)
                         );
                       } else {
+
                         setTotalDiscountVal(0);
                         handleDiscountAmountLarge(0);
                       }
