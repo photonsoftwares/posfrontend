@@ -119,7 +119,7 @@ const AddItem = () => {
         saas_id: saasId,
         store_id: storeId,
         // promo_id: saasId,
-        sku: "SKU123",
+
         department: itemCategory,
       })
     );
@@ -233,7 +233,7 @@ const AddItem = () => {
                       capture="environment"
                       onChange={(e) => handleCapture(e.target)}
                     />
-                    <label htmlFor="icon-button-file">
+                    {/* <label htmlFor="icon-button-file">
                       <IconButton
                         color="primary"
                         aria-label="upload picture"
@@ -241,7 +241,7 @@ const AddItem = () => {
                       >
                         <AiFillCamera size="large" color="red" />
                       </IconButton>
-                    </label>
+                    </label> */}
                   </Grid>
                 </Grid>
                 {/*  */}
@@ -329,10 +329,11 @@ const AddItem = () => {
                     type="text"
                     className="form-control my-2"
                     id="customer-name"
-                    value={itemDesc}
-                    onChange={(e) => setItemDesc(e.target.value)}
+                    value={itemName}
+                    onChange={(e) => setItemName(e.target.value)}
                     label="Item Name"
                     multiline
+                    required
                     rows={1}
                   />
                   <TextField
@@ -341,6 +342,7 @@ const AddItem = () => {
                     className="form-control my-2"
                     id="customer-name"
                     value={itemDesc}
+                    required
                     onChange={(e) => setItemDesc(e.target.value)}
                     label="Item Desc"
                     multiline
@@ -354,6 +356,7 @@ const AddItem = () => {
                     value={itemCategory}
                     onChange={(e) => setItemCategory(e.target.value)}
                     label="Item Category"
+                    required
                     multiline
                     rows={1}
                   />
@@ -363,6 +366,7 @@ const AddItem = () => {
                     className="form-control my-2"
                     id="customer-name"
                     value={itemPrice}
+                    required
                     onChange={(e) => setItemPrice(e.target.value)}
                     label="Item Price"
                   />
@@ -372,6 +376,7 @@ const AddItem = () => {
                     className="form-control my-2"
                     id="customer-name"
                     value={taxPercentage}
+                    required
                     onChange={(e) => setTaxPercentage(e.target.value)}
                     label="Tax Percentage"
                   />

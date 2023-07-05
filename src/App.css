@@ -6,7 +6,6 @@ div.react-confirm-alert-overlay {
   z-index: 9999 !important;
 }
 
-
 :root {
   --primary: #22a699;
   --primary1: #f2be22;
@@ -135,13 +134,18 @@ div.react-confirm-alert-overlay {
   padding: 15px 30px !important;
 }
 
+.no_padding {
+  padding: 0 !important;
+  margin: 0;
+}
+
 .option-item-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   justify-content: flex-start;
   align-items: center;
   margin-top: 30px;
-  max-width: 400px;
+  /* max-width: 400px; */
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -159,7 +163,8 @@ input[type="number"] {
 .calculated_amount-container {
   border: 2px solid #20b9e3;
   padding: 20px;
-  margin-left: 34px;
+  width: 80%;
+  /* margin-left: 34px; */
   font-size: 20px;
   font-weight: 500;
   border-radius: 10px;

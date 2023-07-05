@@ -35,6 +35,7 @@ import { TextField } from "@mui/material";
 
 import MyCart from "./my-cart/MyCart";
 import { HiCreditCard } from "react-icons/hi2";
+import { RiMoneyDollarCircleFill } from "react-icons/ri";
 
 const Home = () => {
   const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
@@ -54,6 +55,7 @@ const Home = () => {
     total_price,
     handle_saveTransaction_data,
     get_recommended_items,
+    show_cart_modal,
   } = useSelector((e) => e.ComponentPropsManagement);
   // console.log("GSD", get_searched_data);
   useEffect(() => {
@@ -92,6 +94,10 @@ const Home = () => {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
+    setShow(show_cart_modal);
+  }, [show_cart_modal]);
+
+  useEffect(() => {
     if (
       Number(optionTickSum) === Number(invoiceValue) &&
       Number(invoiceValue) !== 0
@@ -116,11 +122,11 @@ const Home = () => {
   useEffect(() => {
     if (get_recommended_items && get_recommended_items.data) {
       if (get_recommended_items.data.length > 0) {
-        const t1 = JSON.parse(JSON.stringify(get_recommended_items.data))
-        t1.map(item => {
-          item['new_price'] = item.price
-        })
-        setRecommendedData(t1)
+        const t1 = JSON.parse(JSON.stringify(get_recommended_items.data));
+        t1.map((item) => {
+          item["new_price"] = item.price;
+        });
+        setRecommendedData(t1);
       }
     }
   }, [get_recommended_items]);
@@ -136,7 +142,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    console.log("cartData", cartData)
+    // console.log("cartData", cartData);
     const arr = [];
     let sum = 0;
     cartData?.map((el) => {
@@ -222,6 +228,12 @@ const Home = () => {
       icon: <FcSalesPerformance size={25} />,
       value: "card",
     },
+    {
+      id: 8,
+      name: "Loyalty",
+      icon: <RiMoneyDollarCircleFill color="#F1C40F" size={25} />,
+      value: "card",
+    },
   ];
 
   const debounce = (func) => {
@@ -245,11 +257,11 @@ const Home = () => {
   useEffect(() => {
     if (get_searched_data && get_searched_data.data) {
       if (get_searched_data.data.length > 0) {
-        const t1 = JSON.parse(JSON.stringify(get_searched_data.data))
-        t1.map(item => {
-          item['new_price'] = item.price
-        })
-        setSearchedData(t1)
+        const t1 = JSON.parse(JSON.stringify(get_searched_data.data));
+        t1.map((item) => {
+          item["new_price"] = item.price;
+        });
+        setSearchedData(t1);
       }
     }
   }, [get_searched_data]);
@@ -347,58 +359,7 @@ const Home = () => {
         </>
       );
     }
-    //  else if (searchedData) {
-    //   console.log("INSIDE IF", searchedData);
-    //   return (
-    //     <>
-    //       <span>No data found,</span>
-    //       <Button>Add this Item to store!!</Button>
-    //     </>
-    //   );
-    // }
   };
-  // const DiscountUI = () => {
-  //   return (
-  //     <div className="d-flex flex-sm-row">
-  //       <div>
-  //         <div></div>
-  //         <TextField
-  //           label="Percent Off"
-  //           type="number"
-  //           // ref={ref}
-  //           disabled={amountOff.length > 0 ? true : false}
-  //           value={percentOff}
-  //           style={{ flex: 1 }}
-  //           onChange={(e) => setPercentOff(e.target.value)}
-  //         />
-  //         <TextField
-  //           label="Amount Off"
-  //           type="number"
-  //           style={{ flex: 1 }}
-  //           // className="mt-2"
-  //           disabled={percentOff.length > 0 ? true : false}
-  //           value={amountOff}
-  //           onChange={(e) => setAmountOff(e.target.value)}
-  //         />
-  //         <Button variant="secondary" size="sm">
-  //           Apply
-  //         </Button>
-  //       </div>
-  //     </div>
-  //   );
-  // };
-  // const handleDiscountOff = (el) => {
-  // console.log("EL", el);
-  // if (el.discount == true && amountOff.length > 0) {
-  //   el.price * el.productQty - amountOff;
-  // } else if (el.discount == true && percentOff.length > 0) {
-  //   (el.price * el.productQty * percentOff) / 100;
-  // } else {
-  //   el.price * el.productQty;
-  // }
-  // console.log("EL", el);
-  // return el;
-  // };
 
   const handleTenderAmount = () => {
     if (optionTick.length > 0) {
@@ -411,11 +372,6 @@ const Home = () => {
     }
     return {};
   };
-
-  // const handelDeleteProduct = (item) => {
-  //   console.log("DELETE ITEM HANDLER", item);
-  //   // setCartData(cartData.filter((el) => el.id !== item.id));
-  // };
 
   const handleNotifyEmail = (e) => {
     e.preventDefault();
@@ -490,10 +446,10 @@ const Home = () => {
             opacity={0.9}
             // onClick={() => setSpechModal(true)}
             onClick={handleVoiceCommand}
-          // onClick={() => {
-          //   setVisibleVoiceCommand(true);
-          //   startListening;
-          // }}
+            // onClick={() => {
+            //   setVisibleVoiceCommand(true);
+            //   startListening;
+            // }}
           />
         </div>
       </div>
@@ -531,15 +487,11 @@ const Home = () => {
               </>
             ))} */}
       </ul>
-      <div
+      {/* <div
         style={{
           position: "absolute",
           bottom: "0",
-          // marginBottom: "10px",
           backgroundColor: "#ffd700",
-          // display: "flex",
-          // alignItems: "center",
-          // justifyContent: "center",
           width: "100%",
           height: "100px",
           borderRadius: "5px",
@@ -550,8 +502,6 @@ const Home = () => {
             style={{
               paddingLeft: "20px",
               paddingRight: "20px",
-              // height: "45px",
-              // paddingTop: "3px",
               display: "flex",
               width: "100%",
               alignItems: "center",
@@ -606,32 +556,35 @@ const Home = () => {
             </h2>
           </div>
         )}
-      </div>
+      </div> */}
       {/* MY CART */}
-      <MyCart
-        show={show}
-        cartData={cartData}
-        invoiceValue={invoiceValue}
-        popoverIsOpen={popoverIsOpen}
-        setPopoverIsOpen={setPopoverIsOpen}
-        discountAmountVal={discountAmountVal}
-        discountPercentVal={discountPercentVal}
-        setDiscountPercentVal={setDiscountPercentVal}
-        totalDiscountVal={totalDiscountVal}
-        setShow={setShow}
-        setPaymentModal={setPaymentModal}
-        setCartData={setCartData}
-        sumValue={sumValue}
-        setTotalDiscountVal={setTotalDiscountVal}
-        setDiscountAmountVal={setDiscountAmountVal}
-      />
+      {show === true && (
+        <MyCart
+          show={show}
+          cartData={cartData}
+          invoiceValue={invoiceValue}
+          popoverIsOpen={popoverIsOpen}
+          setPopoverIsOpen={setPopoverIsOpen}
+          discountAmountVal={discountAmountVal}
+          discountPercentVal={discountPercentVal}
+          setDiscountPercentVal={setDiscountPercentVal}
+          totalDiscountVal={totalDiscountVal}
+          setShow={setShow}
+          setPaymentModal={setPaymentModal}
+          setCartData={setCartData}
+          sumValue={sumValue}
+          setTotalDiscountVal={setTotalDiscountVal}
+          setDiscountAmountVal={setDiscountAmountVal}
+        />
+      )}
+
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-      // style={{ position: "relative" }}
+        // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -683,98 +636,122 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              <div className="option-item-container">
-                {optionArray.map((item, i) => {
-                  return (
-                    <>
-                      <div className="me-3 mb-3 d-flex" key={item.id}>
-                        <div
-                          onClick={() => {
-                            if (optionTick.length === 0) {
-                              const obj = { ...item, amount };
-                              setOptionTick([...optionTick, obj]);
-                            } else if (optionTick.length > 0) {
-                              if (
-                                optionTick.filter(
-                                  (io) => io.value === item.value
-                                ).length > 0
-                              ) {
-                                setOptionTick(
+              <div
+                style={{
+                  maxWidth: "100%",
+                  display: "flex",
+                  marginRight: "26px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="option-item-container">
+                  {optionArray.map((item, i) => {
+                    return (
+                      <>
+                        <div className="mb-2 d-flex px-0" key={item.id}>
+                          <div
+                            onClick={() => {
+                              if (optionTick.length === 0) {
+                                const obj = { ...item, amount };
+                                setOptionTick([...optionTick, obj]);
+                              } else if (optionTick.length > 0) {
+                                if (
                                   optionTick.filter(
-                                    (io) => io.value !== item.value
-                                  )
-                                );
-                              } else {
-                                if (Number(optionTickSum) <= sumValue) {
-                                  const obj = { ...item, amount };
-                                  setOptionTick([...optionTick, obj]);
+                                    (io) => io.value === item.value
+                                  ).length > 0
+                                ) {
+                                  setOptionTick(
+                                    optionTick.filter(
+                                      (io) => io.value !== item.value
+                                    )
+                                  );
+                                } else {
+                                  if (Number(optionTickSum) <= sumValue) {
+                                    const obj = { ...item, amount };
+                                    setOptionTick([...optionTick, obj]);
+                                  }
                                 }
                               }
-                            }
-                          }}
-                          className={`option-item ${optionTick.filter((io) => io.name === item.value)
-                            .length > 0 && ""
+                            }}
+                            className={`option-item ${
+                              optionTick.filter((io) => io.name === item.value)
+                                .length > 0 && ""
                             }`}
-                          style={{
-                            backgroundColor:
-                              item.name === "Cash"
-                                ? "#fed813"
-                                : item.name === "Paytm"
+                            style={{
+                              backgroundColor:
+                                item.name === "Cash"
+                                  ? "#fed813"
+                                  : item.name === "Paytm"
                                   ? "#00B9F1"
                                   : item.name === "Google Pay"
-                                    ? "#2DA94F"
-                                    : item.name === "Phone Pay"
-                                      ? "#5f259f"
-                                      : item.name === "UPI"
-                                        ? "#ff7909"
-                                        : item.name === "Credit Sale"
-                                          ? "#1741b2"
-                                          : "silver",
-                          }}
-                        >
-                          <div style={{ position: "relative", top: "2px" }}>
-                            {item.icon}
-                          </div>
-                          <div
-                            style={{
-                              color:
-                                item.name === "Cash"
-                                  ? "black"
-                                  : item.name === "Paytm"
-                                    ? "black"
-                                    : item.name === "Google Pay"
-                                      ? "white"
-                                      : item.name === "Phone Pay"
-                                        ? "white"
-                                        : item.name === "UPI"
-                                          ? "white"
-                                          : item.name === "Credit Sale"
-                                            ? "#fff"
-                                            : "black",
+                                  ? "#2DA94F"
+                                  : item.name === "Phone Pay"
+                                  ? "#5f259f"
+                                  : item.name === "UPI"
+                                  ? "#ff7909"
+                                  : item.name === "Credit Sale"
+                                  ? "#1741b2"
+                                  : item.name === "Loyalty"
+                                  ? "#c8030e"
+                                  : "silver",
                             }}
                           >
-                            {item.name}
+                            <div style={{ position: "relative", top: "2px" }}>
+                              {item.icon}
+                            </div>
+                            <div
+                              style={{
+                                color:
+                                  item.name === "Cash"
+                                    ? "black"
+                                    : item.name === "Paytm"
+                                    ? "black"
+                                    : item.name === "Google Pay"
+                                    ? "white"
+                                    : item.name === "Phone Pay"
+                                    ? "white"
+                                    : item.name === "UPI"
+                                    ? "white"
+                                    : item.name === "Credit Sale"
+                                    ? "#fff"
+                                    : item.name === "Loyalty"
+                                    ? "#fff"
+                                    : "black",
+                              }}
+                            >
+                              {item.name}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </>
-                  );
-                })}
+                      </>
+                    );
+                  })}
+                </div>
               </div>
-              <div className="calculated_amount-container">
-                {optionTick && optionTick.length > 0 && (
-                  <>
-                    {optionTick.map((item) => {
-                      return (
-                        <>
-                          <div style={{ fontSize: "20px" }}>
-                            {item.name} - {item.amount}
-                          </div>
-                        </>
-                      );
-                    })}
-                  </>
-                )}
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="calculated_amount-container">
+                  {optionTick && optionTick.length > 0 && (
+                    <>
+                      {optionTick.map((item) => {
+                        return (
+                          <>
+                            <div style={{ fontSize: "20px" }}>
+                              {item.name} - {item.amount}
+                            </div>
+                          </>
+                        );
+                      })}
+                    </>
+                  )}
+                </div>
               </div>
 
               <div className="due-blnce-container">
@@ -797,40 +774,40 @@ const Home = () => {
                         cartItems: cartData,
                       })
                     );
-                    dispatch(
-                      handleAccruvalRequest({
-                        client_id: userData && userData.saasId,
-                        source_channel: "POS",
-                        register_id: "2002",
-                        total_invoice_amount: balanceDue,
-                        store_id: userData && userData.storeId,
-                        business_date: "2023-04-05",
-                        invoice_no: "8487021",
-                        source_app: "POS",
-                        concept_code: 1,
-                        source_function: "POST",
-                        country: loyalty_data && loyalty_data.data.country,
-                        reference_number: "8487021",
-                        territory_code:
-                          loyalty_data && loyalty_data.data.country,
-                        remarks: "GOOD",
-                        product: cartData,
-                        transaction_type: "PURCHASE",
-                        program_name: "campaign name",
-                        base_currency: loyalty_data.data.base_currency,
-                        tender: handleTenderAmount(),
-                        //  [
-                        //   {
-                        //     tender_name: "check",
-                        //     tender_value: 300,
-                        //   },
-                        //   {
-                        //     tender_name: "cash",
-                        //     tender_value: 300,
-                        //   },
-                        // ],
-                      })
-                    );
+                    // dispatch(
+                    //   handleAccruvalRequest({
+                    //     client_id: userData && userData.saasId,
+                    //     source_channel: "POS",
+                    //     register_id: "2002",
+                    //     total_invoice_amount: balanceDue,
+                    //     store_id: userData && userData.storeId,
+                    //     business_date: "2023-04-05",
+                    //     invoice_no: "8487021",
+                    //     source_app: "POS",
+                    //     concept_code: 1,
+                    //     source_function: "POST",
+                    //     country: loyalty_data && loyalty_data.data.country,
+                    //     reference_number: "8487021",
+                    //     territory_code:
+                    //       loyalty_data && loyalty_data.data.country,
+                    //     remarks: "GOOD",
+                    //     product: cartData,
+                    //     transaction_type: "PURCHASE",
+                    //     program_name: "campaign name",
+                    //     base_currency: loyalty_data.data.base_currency,
+                    //     tender: handleTenderAmount(),
+                    //     //  [
+                    //     //   {
+                    //     //     tender_name: "check",
+                    //     //     tender_value: 300,
+                    //     //   },
+                    //     //   {
+                    //     //     tender_name: "cash",
+                    //     //     tender_value: 300,
+                    //     //   },
+                    //     // ],
+                    //   })
+                    // );
                   }}
                 >
                   Receipts
@@ -870,9 +847,10 @@ const Home = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${
+                      handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                      }`}
+                    }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -901,9 +879,10 @@ const Home = () => {
                 }}
               >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${
+                    handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                    }`}
+                  }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />

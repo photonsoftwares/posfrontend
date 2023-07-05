@@ -18,8 +18,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-    ? JSON.parse(localStorage.getItem("User_data"))
-    : {};
+  ? JSON.parse(localStorage.getItem("User_data"))
+  : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
 // console.log("SAAS DATA", saasId);
@@ -428,12 +428,7 @@ function* handleAddItemToStoreRequest(e) {
 function* handleSaveTransactionRequest(e) {
   // const { searchValue } = e.payload;
   console.log("E SAVE TRANSACTION", e);
-  // const { storeId } = e.payload;
-  // console.log("STORE ID", storeId);
-  // const { registerId, saasId, storeId } = JSON.parse(
-  //   localStorage.getItem("login_data")
-  // );
-  // console.log("data", registerId, saasId, storeId);
+
   const response = yield fetch(`${BASE_Url}/transaction/save-transaction`, {
     method: "POST",
     headers: {
@@ -443,7 +438,7 @@ function* handleSaveTransactionRequest(e) {
     body: JSON.stringify(e.payload),
   });
   const jsonData = yield response.json();
-  console.log("SAVE TRANSACTION DATA", jsonData);
+  // console.log("SAVE TRANSACTION DATA", jsonData);
   if (jsonData) {
     if (jsonData && jsonData.data) {
       const cartData = jsonData.data;
@@ -1269,29 +1264,29 @@ function* handleMemberEnrollmentRequest(e) {
 // Accruval Loyalty
 function* handleAccruvalRequest(e) {
   console.log("E PAYLOAD ACCURAVAL", e.payload);
-  const { data } = JSON.parse(localStorage.getItem("Loyalty_data"));
+  // const { data } = JSON.parse(localStorage.getItem("Loyalty_data"));
 
-  console.log("E PAYLOAD ACC SAAS", saasId);
-  console.log("E PAYLOAD ACC LOYALTY ID", data.loyalty_id);
-  console.log(
-    "E PAYLOAD URL",
-    `http://3.111.70.84:8091/v1/loyalty/issue/${saasId}/${data.loyalty_id}`
-  );
+  // console.log("E PAYLOAD ACC SAAS", saasId);
+  // console.log("E PAYLOAD ACC LOYALTY ID", data.loyalty_id);
+  // console.log(
+  //   "E PAYLOAD URL",
+  //   `http://3.111.70.84:8091/v1/loyalty/issue/${saasId}/${data.loyalty_id}`
+  // );
 
   // const { data } = JSON.parse(localStorage.getItem("Loyalty_data"));
-  const response = yield fetch(
-    `http://3.111.70.84:8091/v1/loyalty/issue/${saasId}/${data.loyalty_id}`,
-    {
-      // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(e.payload),
-    }
-  );
-  const jsonData = yield response.json();
-  console.log("JSONDATA ACC>", jsonData);
+  // const response = yield fetch(
+  //   `http://3.111.70.84:8091/v1/loyalty/issue/${saasId}/${data.loyalty_id}`,
+  //   {
+  //     // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(e.payload),
+  //   }
+  // );
+  // const jsonData = yield response.json();
+  // console.log("JSONDATA ACC>", jsonData);
   // if (jsonData) {
   //   if (jsonData.status === true) {
   //     yield put({

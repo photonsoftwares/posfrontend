@@ -6,6 +6,7 @@ const initialComponentPropsManagementState = {
   load: false,
   get_searched_data: [],
   get_QR_img: "",
+  show_cart_modal: false,
   cart_data: [],
   login_data: {},
   register_data: {},
@@ -22,6 +23,7 @@ const initialComponentPropsManagementState = {
   handle_hsn_codes: [],
   handle_link_user_data: {},
   save_product_id: "",
+  save_transaction_data: {},
   open_menu: false,
   email_notification: "",
   user_data: localStorage.getItem("User_data")
@@ -408,8 +410,13 @@ export const ComponentPropsManagement = createSlice({
     handleAccruvalResponse: (state, payload) => {
       console.log("RESPONSE", payload.payload);
     },
+
     handleEmptyCartData: (state, payload) => {
       state.cart_data = [];
+    },
+    handleShowModal: (state, payload) => {
+      console.log("handle modal state", payload);
+      state.show_cart_modal = payload.payload.bagModalIsOpne;
     },
   },
 });
@@ -418,6 +425,7 @@ export const ComponentPropsManagement = createSlice({
 
 export const {
   handleUploadPicRequest,
+  handleShowModal,
   handleAccruvalRequest,
   handleMemberEnrollmentResponse,
   handleEmailNotificationResponse,
