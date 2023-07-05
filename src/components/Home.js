@@ -19,6 +19,7 @@ import {
   handleSearchedDataRequest,
   handleSaveTransactionRequest,
   handleRecommendedDataRequest,
+  handleAccruvalRequest,
   handleEmailNotificationResponse,
 } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { Button } from "react-bootstrap";
@@ -36,6 +37,9 @@ import MyCart from "./my-cart/MyCart";
 import { HiCreditCard } from "react-icons/hi2";
 
 const Home = () => {
+  const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
+  // console.log("Loylty Home", loyalty_data);
+
   const [popoverIsOpen, setPopoverIsOpen] = useState(false);
   const dispatch = useDispatch();
   const [defaultPdfFile] = useState(pdfFile);
@@ -790,6 +794,40 @@ const Home = () => {
                         tenderId: "TENDER1",
                         tender: handleTenderAmount(),
                         cartItems: cartData,
+                      })
+                    );
+                    dispatch(
+                      handleAccruvalRequest({
+                        client_id: userData && userData.saasId,
+                        source_channel: "POS",
+                        register_id: "2002",
+                        total_invoice_amount: balanceDue,
+                        store_id: userData && userData.storeId,
+                        business_date: "2023-04-05",
+                        invoice_no: "8487021",
+                        source_app: "POS",
+                        concept_code: 1,
+                        source_function: "POST",
+                        country: loyalty_data && loyalty_data.data.country,
+                        reference_number: "8487021",
+                        territory_code:
+                          loyalty_data && loyalty_data.data.country,
+                        remarks: "GOOD",
+                        product: cartData,
+                        transaction_type: "PURCHASE",
+                        program_name: "campaign name",
+                        base_currency: loyalty_data.data.base_currency,
+                        tender: handleTenderAmount(),
+                        //  [
+                        //   {
+                        //     tender_name: "check",
+                        //     tender_value: 300,
+                        //   },
+                        //   {
+                        //     tender_name: "cash",
+                        //     tender_value: 300,
+                        //   },
+                        // ],
                       })
                     );
                   }}

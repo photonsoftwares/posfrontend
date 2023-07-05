@@ -1,12 +1,14 @@
 import { TextField } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
-import { handleLinkUserRequest } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-import { useDispatch } from "react-redux";
 import axios from "axios";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { BASE_Url } from "../../URL";
 
-const LinkCustomer = () => {
+const LinkLoyalityCustomer = () => {
+  const { saasId } = JSON.parse(localStorage.getItem("User_data"));
+  console.log("STORAGE DATA", saasId);
+
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
   const [userName, setUsername] = useState("");
@@ -14,17 +16,23 @@ const LinkCustomer = () => {
   const [err, setErr] = useState("");
   // const [dataRes, setDataRes] = useState({});
 
+  console.log(userName, userMobile);
   const handleSearch = (e) => {
     axios
-      .post(`${BASE_Url}/customer/search-customer`, {
+      .post(`http://3.111.70.84:8091/v1/loyalty/customer-details`, {
+        base_currency: "AED",
         mobile_number: e.target.value,
+        email_id: "",
+        customer_id: "",
+        client_id: saasId,
+        // mobile_number: e.target.value,
       })
       // .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        console.log(data.data.data.name);
-        setUsername(data.data.data.name);
-        setUserMobile(data.data.data.mobile_number);
+        console.log("DATA", data);
+        localStorage.setItem("Loyalty_data", JSON.stringify(data));
+        setUsername(data.data.customer_name);
+        setUserMobile(data.data.mobile_number);
       })
       .catch((err) => {
         console.log(err);
@@ -56,7 +64,7 @@ const LinkCustomer = () => {
       <div className="row d-flex justify-content-center">
         <div className="col-lg-5 col-md-10 col-sm-12 px-5">
           <form className="form-box" onSubmit={handleSubmit}>
-            <h2>Link Customer</h2>
+            <h2>Link Loyalty Customer</h2>
             <div>
               <TextField
                 size="small"
@@ -102,7 +110,7 @@ const LinkCustomer = () => {
                 <div>
                   {userMobile && userName ? (
                     <div className="mt-3">
-                      <button
+                      {/* <button
                         type="submit"
                         className="btn btn-primary"
                         style={{
@@ -134,7 +142,7 @@ const LinkCustomer = () => {
                         }}
                       >
                         Cancel
-                      </Link>
+                      </Link> */}
                     </div>
                   ) : (
                     ""
@@ -186,4 +194,4 @@ const LinkCustomer = () => {
   );
 };
 
-export default LinkCustomer;
+export default LinkLoyalityCustomer;

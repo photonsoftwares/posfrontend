@@ -400,6 +400,14 @@ export const ComponentPropsManagement = createSlice({
     handleMemberEnrollmentResponse: (state, payload) => {
       console.log("RESPONSE", payload.payload);
     },
+    // accruval Loyalty
+    handleAccruvalRequest: (state, payload) => {
+      // state.hsn_code_dropdown = payload.data
+      console.log("REQUEST", payload.payload);
+    },
+    handleAccruvalResponse: (state, payload) => {
+      console.log("RESPONSE", payload.payload);
+    },
     handleEmptyCartData: (state, payload) => {
       state.cart_data = [];
     },
@@ -410,6 +418,7 @@ export const ComponentPropsManagement = createSlice({
 
 export const {
   handleUploadPicRequest,
+  handleAccruvalRequest,
   handleMemberEnrollmentResponse,
   handleEmailNotificationResponse,
   handleEmailNotificationRequest,
