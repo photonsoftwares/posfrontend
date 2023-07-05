@@ -867,7 +867,7 @@ function* handleTodaySalesRequest(e) {
       },
 
       body: JSON.stringify({
-        today_sales: moment(date).format("Y-MM-D"),
+        today_sales: moment(date).format("Y-MM-DD"),
       }),
       // body: formData
       // body: e.payload

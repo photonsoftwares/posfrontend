@@ -20,9 +20,11 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
+import Expense from "./expense";
 
 const Main = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [expenseModalIsOpen, setExpenseModalIsOpen] = useState(false)
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const navigate = useNavigate();
@@ -66,7 +68,7 @@ const Main = () => {
       id: 6,
       label: "Expense",
       value: "expense",
-      icon: <GiExpense color="#979797" size="25" />,
+      icon: <GiExpense color="#6700ff" size="25" />,
       isActive: true,
     },
     {
@@ -228,6 +230,8 @@ const Main = () => {
                             navigate("/return");
                           } else if (item.value === "debit_note") {
                             navigate("/debit-note");
+                          } else if (item.value === "expense") {
+                            setExpenseModalIsOpen(!expenseModalIsOpen)
                           }
                         }}
                       >
@@ -371,9 +375,11 @@ const Main = () => {
           </div>
         </div>
       </div>
-      {/* </div> */}
-    </>
-  );
+      <Expense
+        expenseModalIsOpen={expenseModalIsOpen}
+        setExpenseModalIsOpen={setExpenseModalIsOpen}
+      />
+    </>);
 };
 
 export default Main;

@@ -22,6 +22,7 @@ import { BsCreditCardFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 const MyCart = ({
   show,
   cartData,
@@ -342,7 +343,6 @@ const MyCart = ({
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  console.log("re")
                   dispatch(handleDeleteCartItem(item))
                 }}
               // onClick={() => handelDeleteProduct(item)}
@@ -425,10 +425,7 @@ const MyCart = ({
               >
 
                 {parseInt(invoiceValue) !== 0 && (<>
-                  <div>
-                    &nbsp;
-                  </div>
-                  {/* <button
+                  <button
                     type="button"
                     style={{
                       backgroundColor: "rgb(169, 10, 10)",
@@ -442,7 +439,7 @@ const MyCart = ({
                     onClick={() => dispatch(handleEmptyCartData())}
                   >
                     Remove All Cart Items
-                  </button> */}
+                  </button>
 
                   <button
                     type="button"

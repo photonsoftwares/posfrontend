@@ -65,13 +65,13 @@ const Navbar = () => {
     localStorage.removeItem("User_data");
     navigate("/login");
   };
-  useEffect(() => {}, [handleLogout]);
+  useEffect(() => { }, [handleLogout]);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
       const allData = JSON.parse(localStorage.getItem("Store_data"));
       // console.log("STORE NAME", storeName);
-      setStoreName(allData.storeName);
+      setStoreName(allData?.storeName);
     }
   }, [storeName]);
 
@@ -188,7 +188,7 @@ const Navbar = () => {
             }}
           >
             {localStorage.getItem("User_data") &&
-            localStorage.getItem("Token") ? (
+              localStorage.getItem("Token") ? (
               <GrLogout
                 size={25}
                 style={{ cursor: "pointer" }}
