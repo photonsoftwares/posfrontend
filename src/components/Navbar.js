@@ -246,26 +246,35 @@ const Navbar = () => {
                             >
                               Link Loyalty
                             </DropdownItem>
-                            <DropdownItem
+                            {/* <DropdownItem
                               onClick={() => {
-                                navigate("/link-customer");
+                                // navigate("/link-customer");
+                                navigate("/member-enrolment");
                               }}
                             >
                               Link Customer
+                            </DropdownItem> */}
+                            <DropdownItem
+                              onClick={() => {
+                                // navigate("/link-customer");
+                                navigate("/member-enrollment");
+                              }}
+                            >
+                              Member Enrol
                             </DropdownItem>
                             <DropdownItem
                               onClick={() => {
-                                navigate("/loyality-dashboard");
+                                navigate("/link-loyality-customer");
                               }}
                             >
                               Loyality Dashboard
                             </DropdownItem>
                             <DropdownItem
                               onClick={() => {
-                                navigate("/member-enrollment");
+                                navigate("/member-point-redemption");
                               }}
                             >
-                              Member Enrollment
+                              Member Point Redemption
                             </DropdownItem>
                           </DropdownMenu>
                         </Dropdown>
