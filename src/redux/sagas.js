@@ -427,7 +427,7 @@ function* handleAddItemToStoreRequest(e) {
 // SAVE TRANSACTION
 function* handleSaveTransactionRequest(e) {
   // const { searchValue } = e.payload;
-  console.log("E SAVE TRANSACTION", e);
+  // console.log("E SAVE TRANSACTION", e);
 
   const response = yield fetch(`${BASE_Url}/transaction/save-transaction`, {
     method: "POST",
@@ -1274,19 +1274,20 @@ function* handleAccruvalRequest(e) {
   // );
 
   // const { data } = JSON.parse(localStorage.getItem("Loyalty_data"));
-  // const response = yield fetch(
-  //   `http://3.111.70.84:8091/v1/loyalty/issue/${saasId}/${data.loyalty_id}`,
-  //   {
-  //     // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(e.payload),
-  //   }
-  // );
-  // const jsonData = yield response.json();
-  // console.log("JSONDATA ACC>", jsonData);
+  const response = yield fetch(
+    // `http://3.111.70.84:8091/v1/loyalty/issue/${saasId}/${data.loyalty_id}`,
+    `http://3.111.70.84:8091/v1/loyalty/issue/8/80407237021438056AED`,
+    {
+      // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("JSONDATA ACC>", jsonData);
   // if (jsonData) {
   //   if (jsonData.status === true) {
   //     yield put({

@@ -113,7 +113,7 @@ const AddItem = () => {
         description: itemDesc,
         price: Number(itemPrice),
         // discount: Number(selectedOptionDiscount.value),
-        // tax: Number(selectedOptionTax.value),
+        tax: Number(taxPercentage),
         tax_code: Number(taxPercentage),
         status: "active",
         saas_id: saasId,
@@ -127,6 +127,7 @@ const AddItem = () => {
     setItemPrice("");
     setItemCode("");
     setItemDesc("");
+    setItemCategory("");
     setItemDesc("");
     setDepartment("");
     setSelectedOptionDiscount(null);
@@ -255,10 +256,43 @@ const AddItem = () => {
                 >
                   Upload Item Pic
                 </button>
+                <div className="">
+                  <button
+                    style={{
+                      backgroundColor: "#20b9e3",
+                      outline: "none",
+                      border: "none",
+                      fontSize: "20px",
+                      padding: "10px 20px",
+                      borderRadius: "10px",
+                      color: "#fff",
+                    }}
+                  >
+                    Save
+                  </button>
+                  <Link
+                    to="/"
+                    type="submit"
+                    // onClick={()=>}
+                    className="btn btn-primary"
+                    style={{
+                      backgroundColor: "#fc0202",
+                      outline: "none",
+                      border: "none",
+                      marginLeft: "20px",
+                      fontSize: "20px",
+                      padding: "10px 20px",
+                      borderRadius: "10px",
+                      color: "#fff",
+                    }}
+                  >
+                    Close
+                  </Link>
+                </div>
               </div>
             ) : (
               <form className="form-box" onSubmit={handleAddItem}>
-                <h2>Add Item</h2>
+                <h2>Add Item BHAI</h2>
                 <div
                   className="d-flex flex-col"
                   style={{ display: "flex", flexDirection: "column" }}
