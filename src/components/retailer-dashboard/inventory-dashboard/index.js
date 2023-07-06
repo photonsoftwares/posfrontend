@@ -30,9 +30,9 @@ const InventoryDashboard = () => {
                 </div>
             </Col>
 
-            <Col md={12} className='mb-4'>
+            {/* <Col md={12} className='mb-4'>
                 <SalesAndPurchaseStatistics />
-            </Col>
+            </Col> */}
 
             <Col md={12} className=''>
                 <div className='lkksi3'>
