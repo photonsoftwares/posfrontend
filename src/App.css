@@ -7,11 +7,16 @@ div.react-confirm-alert-overlay {
 }
 
 :root {
-  --primary: #22a699;
-  --primary1: #f2be22;
-  --primary2: #f29727;
-  --primary3: #22a699;
+  --primary: #27374D;
+  --primary1: #526D82;
+  --primary2: #9DB2BF;
+  --primary3: #DDE6ED;
 }
+
+/* mt-3 nav nav-tabs */
+/* .nav-item {
+  background-color: red !important;
+} */
 
 .app {
   max-width: 500px;

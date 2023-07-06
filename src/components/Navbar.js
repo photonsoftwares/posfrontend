@@ -25,7 +25,7 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
-  const { open_menu, cart_data } = useSelector(
+  const { open_menu, cart_data, show_cart_modal } = useSelector(
     (e) => e.ComponentPropsManagement
   );
   useEffect(() => {
@@ -71,7 +71,7 @@ const Navbar = () => {
     localStorage.removeItem("User_data");
     navigate("/login");
   };
-  useEffect(() => {}, [handleLogout]);
+  useEffect(() => { }, [handleLogout]);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -99,7 +99,7 @@ const Navbar = () => {
     //   }
     // }}
 
-    dispatch(handleShowModal({ bagModalIsOpne: true }));
+    dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
   };
 
   return (
@@ -219,7 +219,7 @@ const Navbar = () => {
               }}
             >
               {localStorage.getItem("User_data") &&
-              localStorage.getItem("Token") ? (
+                localStorage.getItem("Token") ? (
                 <GrLogout
                   size={25}
                   // style={{ cursor: "pointer", padding: 0, margin: 0 }}

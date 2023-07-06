@@ -5,6 +5,7 @@ import DataTable, { createTheme } from 'react-data-table-component';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { handleUploadItemRequest, handleUploadInventoryRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
+import moment from 'moment';
 
 const ProductUpload = () => {
     const [businessDate, setBusinessDate] = useState(new Date())
@@ -97,9 +98,11 @@ const ProductUpload = () => {
                     <div style={{ fontWeight: "bold" }}>
                         <Form>
                             <Row>
-                                <Col md={3}>
+                                <Col md={12}>
+
                                     <FormGroup>
-                                        <Label>
+                                        {`Business Date: ${moment(new Date()).format("DD-MMM-Y")}`}
+                                        {/* <Label>
                                             Business Date <span className="text-red"> * </span>
                                         </Label>
                                         <Flatpickr
@@ -110,9 +113,10 @@ const ProductUpload = () => {
                                             }}
                                             options={{ allowInput: true, dateFormat: "d-M-Y" }}
                                             value={businessDate}
+
                                             required={true}
                                             placeholder='Select Date'
-                                        />
+                                        /> */}
                                     </FormGroup>
                                 </Col>
 
