@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   handleOpneMenuRequest,
   handleShowModal,
+  handlecartCount,
 } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import {
   Dropdown,
@@ -23,24 +24,13 @@ import {
 import { BsHandbag } from "react-icons/bs";
 
 const Navbar = () => {
-  const getLocalItems = () => {
-    let list = localStorage.getItem("my-cart");
-    if (list) {
-      return JSON.parse(localStorage.getItem("my-cart"));
-    } else {
-      return [];
-    }
-    console.log("LIST", list);
-  };
-
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [cartData, setCartData] = useState(getLocalItems());
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const { open_menu, cart_data, show_cart_modal, product_count } = useSelector(
     (e) => e.ComponentPropsManagement
   );
-  console.log("CART COUNT", product_count);
+
 
   useEffect(() => {
     if (open_menu) {
@@ -49,6 +39,16 @@ const Navbar = () => {
   }, open_menu);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  useEffect(() => {
+    const el = JSON.parse(
+      localStorage.getItem("my-cart")
+    );
+    if (el) {
+      dispatch(handlecartCount(el.length))
+    } else {
+      dispatch(handlecartCount(0))
+    }
+  }, [])
   const TabsData = [
     {
       id: 1,
@@ -86,7 +86,7 @@ const Navbar = () => {
     localStorage.removeItem("User_data");
     navigate("/login");
   };
-  useEffect(() => {}, [handleLogout]);
+  useEffect(() => { }, [handleLogout]);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -106,14 +106,6 @@ const Navbar = () => {
     },
   ];
   const handleShowCart = () => {
-    // onClick={() => {
-    //   if (cartData && cartData.length > 0) {
-    //     setShow(true);
-    //   } else {
-    //     toast.error("Please add atleast one item in cart");
-    //   }
-    // }}
-
     dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
   };
 
@@ -216,7 +208,7 @@ const Navbar = () => {
             >
               <BsHandbag color="#000" fontSize={30} opacity={0.8} />
               <div style={{ position: "absolute", top: 8, right: 50 }}>
-                {String(cartCount)}
+                {cartCount}
               </div>
             </div>
           ) : (
@@ -238,7 +230,7 @@ const Navbar = () => {
               }}
             >
               {localStorage.getItem("User_data") &&
-              localStorage.getItem("Token") ? (
+                localStorage.getItem("Token") ? (
                 <GrLogout
                   size={25}
                   // style={{ cursor: "pointer", padding: 0, margin: 0 }}

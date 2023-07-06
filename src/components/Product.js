@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
 import God from "../assets/god.jpeg";
@@ -20,13 +20,25 @@ import { BASE_Url } from "../URL";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 
-const Product = ({ setSearchValue, data, setData, cartData, setCartData }) => {
+const Product = ({ setSearchValue, data, setData, cartData, setCartData, setUpdatecart, updatecart }) => {
   const { cart_data } = useSelector((e) => e.ComponentPropsManagement);
   const [myPrice, setMyPrice] = useState({ productId: "", price: "" });
   const [showButton, setShowButton] = useState(true);
   // const [qty, setQty] = useState(1);
   const dispatch = useDispatch();
   // console.log("PRODUCT CART DATA", item);
+
+  useEffect(() => {
+    const el = JSON.parse(
+      localStorage.getItem("my-cart")
+    );
+    if (el) {
+      dispatch(handlecartCount(el.length))
+    } else {
+      dispatch(handlecartCount(0))
+    }
+  }, [])
+
 
   // console.log("USER DATA", userData.userId);
   return (
@@ -106,7 +118,7 @@ const Product = ({ setSearchValue, data, setData, cartData, setCartData }) => {
                                 <BsFillCheckCircleFill
                                   color={
                                     item.new_price === "" ||
-                                    item.new_price === 0
+                                      item.new_price === 0
                                       ? "#979797"
                                       : "green"
                                   }
@@ -163,6 +175,33 @@ const Product = ({ setSearchValue, data, setData, cartData, setCartData }) => {
                     style={{ width: "100%", fontSize: "10px" }}
                     // className="btn btn-outline-primary"
                     onClick={() => {
+                      const el = JSON.parse(
+                        localStorage.getItem("my-cart")
+                      );
+                      if (el) {
+                        if (el.length > 0) {
+                          let flag = 0
+                          el.map(el1 => {
+                            if (el1.productId === item.productId) {
+                              el1.productQty = el1.productQty + 1
+                              flag = 1
+                            }
+                          })
+                          localStorage.setItem("my-cart", JSON.stringify(el))
+
+                          if (flag === 0) {
+                            localStorage.setItem("my-cart", JSON.stringify([...el, item]))
+                          }
+                          dispatch(handlecartCount([...el, item].length))
+                        } else {
+                          localStorage.setItem("my-cart", JSON.stringify([item]))
+                          dispatch(handlecartCount(1))
+                        }
+                      } else {
+                        localStorage.setItem("my-cart", JSON.stringify([item]))
+                        dispatch(handlecartCount(1))
+                      }
+                      setUpdatecart(!updatecart)
                       // if (Number(item.price) === 0) {
                       //   if (Number(item.new_price) !== 0) {
                       //     item.price = item.new_price;

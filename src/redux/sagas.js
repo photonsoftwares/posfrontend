@@ -16,8 +16,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-  ? JSON.parse(localStorage.getItem("User_data"))
-  : {};
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
 // console.log("SAAS DATA", saasId);
@@ -1346,47 +1346,51 @@ function* handleMemberEnrollmentRequest(e) {
 
 // Accruval Loyalty
 function* handleAccruvalRequest(e) {
-  console.log("E PAYLOAD ACCURAVAL", e.payload);
-  // const { data } = JSON.parse(localStorage.getItem("Loyalty_data"));
+  try {
+    console.log("E PAYLOAD ACCURAVAL", e.payload);
+    // const { data } = JSON.parse(localStorage.getItem("Loyalty_data"));
 
-  // console.log("E PAYLOAD ACC SAAS", saasId);
-  // console.log("E PAYLOAD ACC LOYALTY ID", data.loyalty_id);
-  // console.log(
-  //   "E PAYLOAD URL",
-  //   `http://3.111.70.84:8091/v1/loyalty/issue/${saasId}/${data.loyalty_id}`
-  // );
+    // console.log("E PAYLOAD ACC SAAS", saasId);
+    // console.log("E PAYLOAD ACC LOYALTY ID", data.loyalty_id);
+    // console.log(
+    //   "E PAYLOAD URL",
+    //   `http://3.111.70.84:8091/v1/loyalty/issue/${saasId}/${data.loyalty_id}`
+    // );
 
-  // const { data } = JSON.parse(localStorage.getItem("Loyalty_data"));
-  const response = yield fetch(
-    // `http://3.111.70.84:8091/v1/loyalty/issue/${saasId}/${data.loyalty_id}`,
-    `http://3.111.70.84:8091/v1/loyalty/issue/8/80407237021438056AED`,
-    {
-      // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(e.payload),
-    }
-  );
-  const jsonData = yield response.json();
-  console.log("JSONDATA ACC>", jsonData);
-  // if (jsonData) {
-  //   if (jsonData.status === true) {
-  //     yield put({
-  //       type: "ComponentPropsManagement/handleYesterdaySalesResponse",
-  //       data: jsonData,
-  //     });
-  //     return;
-  //   }
-  //   toast.error(jsonData.message);
-  //   yield put({
-  //     type: "ComponentPropsManagement/handleYesterdaySalesResponse",
-  //     data: null,
-  //   });
-  // } else {
-  //   toast.error("Something went wrong server side");
-  // }
+    // const { data } = JSON.parse(localStorage.getItem("Loyalty_data"));
+    const response = yield fetch(
+      // `http://3.111.70.84:8091/v1/loyalty/issue/${saasId}/${data.loyalty_id}`,
+      `http://3.111.70.84:8091/v1/loyalty/issue/8/80407237021438056AED`,
+      {
+        // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(e.payload),
+      }
+    );
+    const jsonData = yield response.json();
+    console.log("JSONDATA ACC>", jsonData);
+    // if (jsonData) {
+    //   if (jsonData.status === true) {
+    //     yield put({
+    //       type: "ComponentPropsManagement/handleYesterdaySalesResponse",
+    //       data: jsonData,
+    //     });
+    //     return;
+    //   }
+    //   toast.error(jsonData.message);
+    //   yield put({
+    //     type: "ComponentPropsManagement/handleYesterdaySalesResponse",
+    //     data: null,
+    //   });
+    // } else {
+    //   toast.error("Something went wrong server side");
+    // }
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 export function* helloSaga() {

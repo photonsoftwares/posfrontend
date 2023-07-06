@@ -431,8 +431,8 @@ const AddItem = () => {
                     Save
                   </button>
                   <Link
-                    to="/"
-                    type="submit"
+                    to="/home"
+                    // type="submit"
                     // onClick={()=>}
                     className="btn btn-primary"
                     style={{
