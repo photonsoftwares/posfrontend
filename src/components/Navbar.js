@@ -21,13 +21,27 @@ import {
   DropdownItem,
 } from "reactstrap";
 import { BsHandbag } from "react-icons/bs";
+
 const Navbar = () => {
+  const getLocalItems = () => {
+    let list = localStorage.getItem("my-cart");
+    if (list) {
+      return JSON.parse(localStorage.getItem("my-cart"));
+    } else {
+      return [];
+    }
+    console.log("LIST", list);
+  };
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [cartData, setCartData] = useState(getLocalItems());
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
-  const { open_menu, cart_data, show_cart_modal } = useSelector(
+  const { open_menu, cart_data, show_cart_modal, product_count } = useSelector(
     (e) => e.ComponentPropsManagement
   );
+  console.log("CART COUNT", product_count);
+
   useEffect(() => {
     if (open_menu) {
       setOpenMenu(open_menu);
@@ -56,6 +70,7 @@ const Navbar = () => {
   const [storeName, setStoreName] = useState("");
   const [value, setValue] = useState(0);
   const [tabs] = useState(TabsData);
+  const [cartCount, setCartCount] = useState(0);
   // const token = JSON.parse(localStorage.getItem("Token"));
   const data = localStorage.getItem("login_data");
 
@@ -71,7 +86,7 @@ const Navbar = () => {
     localStorage.removeItem("User_data");
     navigate("/login");
   };
-  useEffect(() => { }, [handleLogout]);
+  useEffect(() => {}, [handleLogout]);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -101,6 +116,10 @@ const Navbar = () => {
 
     dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
   };
+
+  useEffect(() => {
+    setCartCount(product_count);
+  }, [product_count]);
 
   return (
     <div
@@ -197,7 +216,7 @@ const Navbar = () => {
             >
               <BsHandbag color="#000" fontSize={30} opacity={0.8} />
               <div style={{ position: "absolute", top: 8, right: 50 }}>
-                {cart_data.length > 0 ? cart_data.length : ""}
+                {String(cartCount)}
               </div>
             </div>
           ) : (
@@ -219,7 +238,7 @@ const Navbar = () => {
               }}
             >
               {localStorage.getItem("User_data") &&
-                localStorage.getItem("Token") ? (
+              localStorage.getItem("Token") ? (
                 <GrLogout
                   size={25}
                   // style={{ cursor: "pointer", padding: 0, margin: 0 }}

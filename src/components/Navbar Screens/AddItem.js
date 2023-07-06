@@ -271,7 +271,7 @@ const AddItem = () => {
                     Save
                   </button>
                   <Link
-                    to="/"
+                    to="/home"
                     type="submit"
                     // onClick={()=>}
                     className="btn btn-primary"
@@ -292,7 +292,7 @@ const AddItem = () => {
               </div>
             ) : (
               <form className="form-box" onSubmit={handleAddItem}>
-                <h2>Add Item BHAI</h2>
+                <h2>Add Item</h2>
                 <div
                   className="d-flex flex-col"
                   style={{ display: "flex", flexDirection: "column" }}

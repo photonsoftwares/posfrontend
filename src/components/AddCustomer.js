@@ -22,6 +22,7 @@ const AddCustomer = () => {
   };
 
   const handleSubmit = (e) => {
+    const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
     e.preventDefault();
     // console.log("NAME", name);
     // console.log("MOBILE", mobile);
@@ -43,8 +44,8 @@ const AddCustomer = () => {
         gender: gender,
         occupation: occupation,
         income_level: 600000,
-        saas_id: "EEEE",
-        store_id: "Store1",
+        saas_id: saasId,
+        store_id: storeId,
       })
     );
     setName("");
