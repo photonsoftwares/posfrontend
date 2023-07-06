@@ -118,14 +118,14 @@ const Home = () => {
           source_app: "POS",
           concept_code: 1,
           source_function: "POST",
-          country: loyalty_data && loyalty_data.data.country,
+          country: loyalty_data && loyalty_data?.data?.country,
           reference_number: handle_saveTransaction_data.transaction_id + "",
-          territory_code: loyalty_data && loyalty_data.data.country,
+          territory_code: loyalty_data && loyalty_data?.data?.country,
           remarks: "GOOD",
           product: cartData,
           transaction_type: "PURCHASE",
           program_name: "campaign name",
-          base_currency: loyalty_data.data.base_currency,
+          base_currency: loyalty_data?.data?.base_currency,
           tender: handleTenderAmount(),
           //  [
           //   {
@@ -169,9 +169,9 @@ const Home = () => {
   }, [sumValue, totalDiscountVal]);
 
   useEffect(() => {
-    if (get_recommended_items && get_recommended_items.data) {
-      if (get_recommended_items.data.length > 0) {
-        const t1 = JSON.parse(JSON.stringify(get_recommended_items.data));
+    if (get_recommended_items && get_recommended_items?.data) {
+      if (get_recommended_items?.data.length > 0) {
+        const t1 = JSON.parse(JSON.stringify(get_recommended_items?.data));
         t1.map((item) => {
           item["new_price"] = item.price;
         });
@@ -191,7 +191,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // console.log("cartData", cartData);
+    console.log("cartData", cartData);
     const arr = [];
     let sum = 0;
     cartData?.map((el) => {
@@ -304,9 +304,9 @@ const Home = () => {
   const optimizedVoicefn = useCallback(debounce(handleVoiceSearch), []);
 
   useEffect(() => {
-    if (get_searched_data && get_searched_data.data) {
-      if (get_searched_data.data.length > 0) {
-        const t1 = JSON.parse(JSON.stringify(get_searched_data.data));
+    if (get_searched_data && get_searched_data?.data) {
+      if (get_searched_data?.data.length > 0) {
+        const t1 = JSON.parse(JSON.stringify(get_searched_data?.data));
         t1.map((item) => {
           item["new_price"] = item.price;
         });

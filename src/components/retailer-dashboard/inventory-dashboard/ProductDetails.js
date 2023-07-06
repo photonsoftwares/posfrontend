@@ -8,7 +8,7 @@ import { handleLowStockItemsRequest, handleLowStockItemListRequest } from "../..
 const ProductDetails = () => {
 
     const dispatch = useDispatch()
-    const { low_stock_items } = useSelector(state => state.ComponentPropsManagement)
+    const { low_stock_items, quantity_in_hand } = useSelector(state => state.ComponentPropsManagement)
     const [modalIsOpen, setModalIsOpen] = useState(false)
 
     const debounce = (func) => {
@@ -88,7 +88,7 @@ const ProductDetails = () => {
                             </tr> */}
                             <tr>
                                 <td>No of Items</td>
-                                <td style={{ fontWeight: "bold" }}>104</td>
+                                <td style={{ fontWeight: "bold" }}>{quantity_in_hand}</td>
                             </tr>
                         </tbody>
                     </Table>

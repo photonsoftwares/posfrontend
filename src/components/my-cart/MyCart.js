@@ -122,13 +122,20 @@ const MyCart = ({
     if (item.productQty === 1) {
       item.productQty = item.productQty = 1;
       item.new_price = item.price;
-      setCartData([...cartData]);
     } else {
       const q = item.productQty - 1;
       item.productQty = q;
       item.new_price = item.price * q;
-      setCartData([...cartData]);
     }
+    cartData.map(item => {
+      item.discount_value = ""
+      item.amount_value = ""
+      item.new_price = item.price * item.productQty
+    })
+    setDiscountPercentVal("")
+    setDiscountAmountVal('')
+    setTotalDiscountVal(0)
+    setCartData([...cartData]);
   };
 
   // console.log("cartData", cartData);
@@ -163,6 +170,40 @@ const MyCart = ({
       dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
     }
   };
+
+  const handleApplyClick = () => {
+    if (discountPercentVal) {
+      handleDiscountLarge(discountPercentVal);
+      const val1 = (sumValue * discountPercentVal) / 100;
+
+      setTotalDiscountVal(parseFloat(val1).toFixed(2));
+    } else if (discountAmountVal) {
+      handleDiscountAmountLarge(discountAmountVal);
+      setTotalDiscountVal(
+        parseFloat(discountAmountVal).toFixed(2)
+      );
+    } else {
+      setTotalDiscountVal(0);
+      handleDiscountAmountLarge(0);
+    }
+  }
+
+  const handlePlusSign = (item) => {
+    const q = item.productQty + 1
+    item.productQty = q
+    const newP = item.price * q;
+    item.new_price = newP;
+
+    cartData.map(item => {
+      item.discount_value = ""
+      item.amount_value = ""
+      item.new_price = item.price * item.productQty
+    })
+    setDiscountPercentVal("")
+    setDiscountAmountVal('')
+    setTotalDiscountVal(0)
+    setCartData([...cartData])
+  }
 
   return (
     <Modal
@@ -213,21 +254,38 @@ const MyCart = ({
                   <AiOutlineMinus
                     onClick={() => {
                       handleDec(item);
-                      // item.productQty = item.productQty - 1;
-                      // setCartData([...cartData]);
+
                     }}
                   />
 
                   {item.productQty}
                   <AiOutlinePlus
                     onClick={() => {
-                      const q = item.productQty + 1;
-                      item.productQty = q;
-                      const newP = item.price * q;
-                      item.new_price = newP;
-                      // item.price = newP
-                      // console.log("ITEM", item);
-                      setCartData([...cartData]);
+                      handlePlusSign(item)
+
+                      // if (discountPercentVal) {
+                      //   item.discount_value = discount_value;
+                      //   const price = Number(item.price) * Number(item.productQty);
+                      //   if (price !== 0) {
+                      //     const val = (sumValue * discount_value) / 100;
+                      //     const calculatedVal = (price * val) / sumValue;
+                      //     item.discount = parseFloat(calculatedVal).toFixed(2);
+                      //     item.new_price = price - calculatedVal;
+                      //   }
+                      // } else if (discountAmountVal) {
+                      //   const q = item.productQty + 1;
+                      //   item.amount_value = discountAmountVal;
+                      //   const price = item.price * q
+                      //   item.price = price
+                      //   if (price !== 0) {
+                      //     const calculatedVal = (price * discountAmountVal) / sumValue;
+                      //     // const calculatedVal = price - discountAmountVal;
+                      //     item.discount = parseFloat(calculatedVal).toFixed(2);
+                      //     item.new_price = price - calculatedVal;
+                      //   }
+                      // }
+
+                      // handleApplyClick()
                     }}
                   />
                 </div>
@@ -354,6 +412,10 @@ const MyCart = ({
                           item.discount_value = "";
                           handleDiscount(item, 0);
                         }
+
+                        setDiscountPercentVal("");
+                        setDiscountAmountVal("");
+                        setTotalDiscountVal(0)
                         // handleDiscount(item, "");
                       }}
                       value={item.discount_value}
@@ -377,6 +439,10 @@ const MyCart = ({
                           item.amount_value = "";
                           handleDiscountAmount(item, 0);
                         }
+
+                        setDiscountPercentVal("");
+                        setDiscountAmountVal("");
+                        setTotalDiscountVal(0)
                       }}
                       value={item.amount_value}
                     // disabled={percentOff.length > 0 ? true : false}
@@ -442,7 +508,10 @@ const MyCart = ({
                       item.discount_menu_is_open = !item.discount_menu_is_open;
                       item.amount_value = "";
                       item.discount_value = "";
-
+                      item.new_price = item.price * item.productQty
+                      setDiscountPercentVal("")
+                      setDiscountAmountVal('')
+                      setTotalDiscountVal(0)
                       setCartData([...cartData]);
                       // item.discount == !true ? setDiscount((state) => !state) : ""
                     }}
@@ -620,25 +689,12 @@ const MyCart = ({
                   <button
                     className="btn btn-sm btn-danger"
                     onClick={() => {
-                      if (discountPercentVal) {
-                        handleDiscountLarge(discountPercentVal);
-                        // cartData.map(item => {
-                        //   item.discount_value = discountPercentVal
-                        // })
-                        // { console.log("cartData", cartData) }
-                        // setCartData([...cartData])
-                        const val1 = (sumValue * discountPercentVal) / 100;
-
-                        setTotalDiscountVal(parseFloat(val1).toFixed(2));
-                      } else if (discountAmountVal) {
-                        handleDiscountAmountLarge(discountAmountVal);
-                        setTotalDiscountVal(
-                          parseFloat(discountAmountVal).toFixed(2)
-                        );
-                      } else {
-                        setTotalDiscountVal(0);
-                        handleDiscountAmountLarge(0);
-                      }
+                      cartData.map(item => {
+                        item.discount_value = ""
+                        item.amount_value = ""
+                      })
+                      setCartData([...cartData]);
+                      handleApplyClick()
                       setPopoverIsOpen(!popoverIsOpen);
                     }}
                   >
