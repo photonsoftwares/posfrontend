@@ -94,6 +94,54 @@ const Home = () => {
   const [addPrice, setAddPrice] = useState("");
   const [email, setEmail] = useState("");
 
+  // console.log("HANDLE SAVE TRANSACTION DATA", handle_saveTransaction_data);
+
+  useEffect(() => {
+    const date = new Date();
+
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    if (
+      handle_saveTransaction_data &&
+      handle_saveTransaction_data.transaction_id
+    ) {
+      dispatch(
+        handleAccruvalRequest({
+          client_id: userData && userData.saasId,
+          source_channel: "POS",
+          register_id: userData && userData.registerId,
+          total_invoice_amount: balanceDue,
+          store_id: userData && userData.storeId,
+          business_date: `${day}-${month}-${year}`,
+          invoice_no: handle_saveTransaction_data.transaction_id + "",
+          source_app: "POS",
+          concept_code: 1,
+          source_function: "POST",
+          country: loyalty_data && loyalty_data.data.country,
+          reference_number: handle_saveTransaction_data.transaction_id + "",
+          territory_code: loyalty_data && loyalty_data.data.country,
+          remarks: "GOOD",
+          product: cartData,
+          transaction_type: "PURCHASE",
+          program_name: "campaign name",
+          base_currency: loyalty_data.data.base_currency,
+          tender: handleTenderAmount(),
+          //  [
+          //   {
+          //     tender_name: "check",
+          //     tender_value: 300,
+          //   },
+          //   {
+          //     tender_name: "cash",
+          //     tender_value: 300,
+          //   },
+          // ],
+        })
+      );
+    }
+  }, [handle_saveTransaction_data]);
+
   useEffect(() => {
     setShow(show_cart_modal);
   }, [show_cart_modal]);
@@ -154,7 +202,7 @@ const Home = () => {
     arr?.map((el) => {
       sum = sum + el;
     });
-    console.log("SUM", sum);
+    // console.log("SUM", sum);
     // setBalanceDue(sum);
     setSumValue(sum);
     setAmount(sum);
