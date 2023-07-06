@@ -7,6 +7,7 @@ import {
   handleDeleteCartItem,
   handleShowModal,
   handleEmptyCartData,
+  handlecartCount,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { IoIosSearch } from "react-icons/io";
 import { BsHandbag, BsArrowRight } from "react-icons/bs";
@@ -46,10 +47,7 @@ const MyCart = ({
   setPopoverIsOpen,
   setDiscountPercentVal,
 }) => {
-
-  const {
-    show_cart_modal,
-  } = useSelector((e) => e.ComponentPropsManagement);
+  const { show_cart_modal } = useSelector((e) => e.ComponentPropsManagement);
   const dispatch = useDispatch();
   const handleDiscount = (item, discount_value) => {
     const price = Number(item.price) * Number(item.productQty);
@@ -127,14 +125,14 @@ const MyCart = ({
       item.productQty = q;
       item.new_price = item.price * q;
     }
-    cartData.map(item => {
-      item.discount_value = ""
-      item.amount_value = ""
-      item.new_price = item.price * item.productQty
-    })
-    setDiscountPercentVal("")
-    setDiscountAmountVal('')
-    setTotalDiscountVal(0)
+    cartData.map((item) => {
+      item.discount_value = "";
+      item.amount_value = "";
+      item.new_price = item.price * item.productQty;
+    });
+    setDiscountPercentVal("");
+    setDiscountAmountVal("");
+    setTotalDiscountVal(0);
     setCartData([...cartData]);
   };
 
@@ -148,8 +146,7 @@ const MyCart = ({
   };
 
   const confirmBack = () => {
-    if (cartData.length > 0) {
-
+    if (cartData?.length > 0) {
       confirmAlert({
         title: "Are you sure to exit",
         message: "Are you sure to do this.",
@@ -162,12 +159,33 @@ const MyCart = ({
           },
           {
             label: "No",
-            onClick: () => { },
+            onClick: () => {},
           },
         ],
       });
     } else {
       dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
+    }
+  };
+
+  const handleDeleteCartItem = (item) => {
+    const getData = JSON.parse(localStorage.getItem("my-cart"));
+    console.log(getData);
+    if (getData) {
+      if (getData.length > 0) {
+        if (getData.length > 1) {
+          const updateCart = getData.filter(
+            (el) => el.productId !== item.productId
+          );
+          localStorage.setItem("my-cart", JSON.stringify(updateCart));
+          setCartData(updateCart);
+          dispatch(handlecartCount(updateCart.length));
+        } else {
+          localStorage.setItem("my-cart", JSON.stringify([]));
+          setCartData([]);
+          dispatch(handlecartCount(0));
+        }
+      }
     }
   };
 
@@ -179,31 +197,29 @@ const MyCart = ({
       setTotalDiscountVal(parseFloat(val1).toFixed(2));
     } else if (discountAmountVal) {
       handleDiscountAmountLarge(discountAmountVal);
-      setTotalDiscountVal(
-        parseFloat(discountAmountVal).toFixed(2)
-      );
+      setTotalDiscountVal(parseFloat(discountAmountVal).toFixed(2));
     } else {
       setTotalDiscountVal(0);
       handleDiscountAmountLarge(0);
     }
-  }
+  };
 
   const handlePlusSign = (item) => {
-    const q = item.productQty + 1
-    item.productQty = q
+    const q = item.productQty + 1;
+    item.productQty = q;
     const newP = item.price * q;
     item.new_price = newP;
 
-    cartData.map(item => {
-      item.discount_value = ""
-      item.amount_value = ""
-      item.new_price = item.price * item.productQty
-    })
-    setDiscountPercentVal("")
-    setDiscountAmountVal('')
-    setTotalDiscountVal(0)
-    setCartData([...cartData])
-  }
+    cartData.map((item) => {
+      item.discount_value = "";
+      item.amount_value = "";
+      item.new_price = item.price * item.productQty;
+    });
+    setDiscountPercentVal("");
+    setDiscountAmountVal("");
+    setTotalDiscountVal(0);
+    setCartData([...cartData]);
+  };
 
   return (
     <Modal
@@ -254,14 +270,13 @@ const MyCart = ({
                   <AiOutlineMinus
                     onClick={() => {
                       handleDec(item);
-
                     }}
                   />
 
                   {item.productQty}
                   <AiOutlinePlus
                     onClick={() => {
-                      handlePlusSign(item)
+                      handlePlusSign(item);
 
                       // if (discountPercentVal) {
                       //   item.discount_value = discount_value;
@@ -322,7 +337,7 @@ const MyCart = ({
                               <BsFillCheckCircleFill
                                 color={
                                   item.zero_price === "" ||
-                                    item.zero_price === 0
+                                  item.zero_price === 0
                                     ? "#979797"
                                     : "green"
                                 }
@@ -415,7 +430,7 @@ const MyCart = ({
 
                         setDiscountPercentVal("");
                         setDiscountAmountVal("");
-                        setTotalDiscountVal(0)
+                        setTotalDiscountVal(0);
                         // handleDiscount(item, "");
                       }}
                       value={item.discount_value}
@@ -442,17 +457,17 @@ const MyCart = ({
 
                         setDiscountPercentVal("");
                         setDiscountAmountVal("");
-                        setTotalDiscountVal(0)
+                        setTotalDiscountVal(0);
                       }}
                       value={item.amount_value}
-                    // disabled={percentOff.length > 0 ? true : false}
-                    // value={amountOff}
-                    // onChange={(e) => setAmountOff(e.target.value)}
+                      // disabled={percentOff.length > 0 ? true : false}
+                      // value={amountOff}
+                      // onChange={(e) => setAmountOff(e.target.value)}
                     />
                     <div>
                       <button
                         className="btn btn-danger my-3"
-                      // onClick={() => handleDiscountOff(item)}
+                        // onClick={() => handleDiscountOff(item)}
                       >
                         Apply
                       </button>
@@ -485,9 +500,10 @@ const MyCart = ({
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  dispatch(handleDeleteCartItem(item));
+                  handleDeleteCartItem(item);
+                  // dispatch(handleDeleteCartItem(item));
                 }}
-              // onClick={() => handelDeleteProduct(item)}
+                // onClick={() => handelDeleteProduct(item)}
               >
                 Remove
               </p>
@@ -508,10 +524,10 @@ const MyCart = ({
                       item.discount_menu_is_open = !item.discount_menu_is_open;
                       item.amount_value = "";
                       item.discount_value = "";
-                      item.new_price = item.price * item.productQty
-                      setDiscountPercentVal("")
-                      setDiscountAmountVal('')
-                      setTotalDiscountVal(0)
+                      item.new_price = item.price * item.productQty;
+                      setDiscountPercentVal("");
+                      setDiscountAmountVal("");
+                      setTotalDiscountVal(0);
                       setCartData([...cartData]);
                       // item.discount == !true ? setDiscount((state) => !state) : ""
                     }}
@@ -560,57 +576,57 @@ const MyCart = ({
 
         {cartData?.filter((io) => io.discount_menu_is_open === true).length ===
           0 && (
-            <>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  flexWrap: "wrap",
-                  marginTop: "20px",
-                }}
-                id="pop112"
+          <>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                marginTop: "20px",
+              }}
+              id="pop112"
               // onClick={() => setPopoverIsOpen(!popoverIsOpen)}
-              >
-                {parseInt(invoiceValue) !== 0 && (
-                  <>
-                    <button
-                      type="button"
-                      style={{
-                        backgroundColor: "rgb(169, 10, 10)",
-                        border: "none",
-                        color: "white",
-                        fontWeight: "bold",
-                        marginBottom: "10px",
-                        padding: "6px 20px",
-                        borderRadius: "10px",
-                      }}
-                      id="pop112"
-                      onClick={() => dispatch(handleEmptyCartData())}
-                    >
-                      Remove All Cart Items
-                    </button>
+            >
+              {parseInt(invoiceValue) !== 0 && (
+                <>
+                  <button
+                    type="button"
+                    style={{
+                      backgroundColor: "rgb(169, 10, 10)",
+                      border: "none",
+                      color: "white",
+                      fontWeight: "bold",
+                      marginBottom: "10px",
+                      padding: "6px 20px",
+                      borderRadius: "10px",
+                    }}
+                    id="pop112"
+                    onClick={() => dispatch(handleEmptyCartData())}
+                  >
+                    Remove All Cart Items
+                  </button>
 
-                    <button
-                      type="button"
-                      style={{
-                        backgroundColor: "green",
-                        border: "none",
-                        color: "white",
-                        marginBottom: "10px",
-                        fontWeight: "bold",
-                        padding: "6px 20px",
-                        borderRadius: "10px",
-                      }}
-                      id="pop112"
-                      onClick={() => setPopoverIsOpen(!popoverIsOpen)}
-                    >
-                      Invoice Discount
-                    </button>
-                  </>
-                )}
-              </div>
-            </>
-          )}
+                  <button
+                    type="button"
+                    style={{
+                      backgroundColor: "green",
+                      border: "none",
+                      color: "white",
+                      marginBottom: "10px",
+                      fontWeight: "bold",
+                      padding: "6px 20px",
+                      borderRadius: "10px",
+                    }}
+                    id="pop112"
+                    onClick={() => setPopoverIsOpen(!popoverIsOpen)}
+                  >
+                    Invoice Discount
+                  </button>
+                </>
+              )}
+            </div>
+          </>
+        )}
 
         <Modal
           show={popoverIsOpen}
@@ -689,12 +705,12 @@ const MyCart = ({
                   <button
                     className="btn btn-sm btn-danger"
                     onClick={() => {
-                      cartData.map(item => {
-                        item.discount_value = ""
-                        item.amount_value = ""
-                      })
+                      cartData.map((item) => {
+                        item.discount_value = "";
+                        item.amount_value = "";
+                      });
                       setCartData([...cartData]);
-                      handleApplyClick()
+                      handleApplyClick();
                       setPopoverIsOpen(!popoverIsOpen);
                     }}
                   >
@@ -742,7 +758,7 @@ const MyCart = ({
             border: "none",
             fontSize: "20px",
           }}
-        // className="bg-primary"
+          // className="bg-primary"
         >
           {cartData && cartData.length > 0
             ? "Proceed to checkout"

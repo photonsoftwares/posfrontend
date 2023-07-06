@@ -11,6 +11,7 @@ import { SiContactlesspayment } from "react-icons/si";
 import { BsCreditCardFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
 import Modal from "react-bootstrap/Modal";
+
 import { useDispatch, useSelector } from "react-redux";
 import Product from "../components/Product";
 
@@ -21,6 +22,7 @@ import {
   handleRecommendedDataRequest,
   handleAccruvalRequest,
   handleShowModal,
+  handleItemsDataRequest,
   handleEmailNotificationResponse,
 } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { Button } from "react-bootstrap";
@@ -51,7 +53,7 @@ const Home = () => {
 
   const {
     get_searched_data,
-    cart_data,
+    // cart_data,
     get_QR_img,
     total_price,
     handle_saveTransaction_data,
@@ -67,6 +69,7 @@ const Home = () => {
   const [searchedData, setSearchedData] = useState([]);
   const [recommendedData, setRecommendedData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+  // const [cartData, setCartData] = useState(null);
   const [cartData, setCartData] = useState(null);
   const [percentOff, setPercentOff] = useState(1);
   const [amountOff, setAmountOff] = useState("");
@@ -94,7 +97,20 @@ const Home = () => {
   const [addPrice, setAddPrice] = useState("");
   const [email, setEmail] = useState("");
 
-  // console.log("HANDLE SAVE TRANSACTION DATA", handle_saveTransaction_data);
+  const data = localStorage.getItem("my-cart");
+
+  const getDataFromStorage = () => {
+    // console.log("LOCAL DATA", JSON.parse(localStorage.getItem("my-cart")));
+    console.log("LOCAL DATA", JSON.parse(data));
+    if (data) {
+      setCartData(JSON.parse(localStorage.getItem("my-cart")));
+    }
+  };
+  useEffect(() => {
+    getDataFromStorage();
+  }, []);
+
+  // console.log("CART*DATA", cartData);
 
   useEffect(() => {
     const date = new Date();
@@ -216,24 +232,25 @@ const Home = () => {
     }
   }, [get_QR_img]);
 
-  useEffect(() => {
-    if (cart_data) {
-      if (cart_data.length > 0) {
-        const t1 = JSON.parse(JSON.stringify(cart_data));
-        t1.map((item) => {
-          item["discount_menu_is_open"] = false;
-          item["discount_value"] = "";
-          item["amount_value"] = "";
-          item["new_price"] = Number(item.price) * Number(item.productQty);
-          item["zero_price"] = Number(item.price) * Number(item.productQty);
-        });
-        setCartData(t1);
-      } else {
-        setCartData([]);
-        setTotalDiscountVal(0);
-      }
-    }
-  }, [cart_data]);
+  // useEffect(() => {
+  //   if (cart_data) {
+  //     if (cart_data.length > 0) {
+  //       const t1 = JSON.parse(JSON.stringify(cart_data));
+  //       t1.map((item) => {
+  //         item["discount_menu_is_open"] = false;
+  //         item["discount_value"] = "";
+  //         item["amount_value"] = "";
+  //         item["new_price"] = Number(item.price) * Number(item.productQty);
+  //         item["zero_price"] = Number(item.price) * Number(item.productQty);
+  //       });
+  //       setCartData(t1);
+  //     }
+  //  else {
+  //   setCartData([]);
+  //   setTotalDiscountVal(0);
+  // }
+  // }
+  // }, [cart_data]);
   const optionArray = [
     {
       id: 1,
@@ -393,6 +410,8 @@ const Home = () => {
           <Product
             setSearchValue={setSearchValue}
             setData={setSearchedData}
+            cartData={cartData}
+            setCartData={setCartData}
             data={searchedData}
           />
         </>
@@ -403,6 +422,8 @@ const Home = () => {
           <Product
             setSearchValue={setSearchValue}
             data={recommendedData}
+            cartData={cartData}
+            setCartData={setCartData}
             setData={setRecommendedData}
           />
         </>
@@ -495,10 +516,10 @@ const Home = () => {
             opacity={0.9}
             // onClick={() => setSpechModal(true)}
             onClick={handleVoiceCommand}
-          // onClick={() => {
-          //   setVisibleVoiceCommand(true);
-          //   startListening;
-          // }}
+            // onClick={() => {
+            //   setVisibleVoiceCommand(true);
+            //   startListening;
+            // }}
           />
         </div>
       </div>
@@ -633,7 +654,7 @@ const Home = () => {
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-      // style={{ position: "relative" }}
+        // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -723,26 +744,28 @@ const Home = () => {
                                 }
                               }
                             }}
-                            className={`option-item ${optionTick.filter((io) => io.name === item.value)
-                              .length > 0 && ""
-                              }`}
+                            className={`option-item ${
+                              optionTick.filter((io) => io.name === item.value)
+                                .length > 0 && ""
+                            }`}
                             style={{
+                              width: "90%",
                               backgroundColor:
                                 item.name === "Cash"
                                   ? "#fed813"
                                   : item.name === "Paytm"
-                                    ? "#00B9F1"
-                                    : item.name === "Google Pay"
-                                      ? "#2DA94F"
-                                      : item.name === "Phone Pay"
-                                        ? "#5f259f"
-                                        : item.name === "UPI"
-                                          ? "#ff7909"
-                                          : item.name === "Credit Sale"
-                                            ? "#1741b2"
-                                            : item.name === "Loyalty"
-                                              ? "#c8030e"
-                                              : "silver",
+                                  ? "#00B9F1"
+                                  : item.name === "Google Pay"
+                                  ? "#2DA94F"
+                                  : item.name === "Phone Pay"
+                                  ? "#5f259f"
+                                  : item.name === "UPI"
+                                  ? "#ff7909"
+                                  : item.name === "Credit Sale"
+                                  ? "#1741b2"
+                                  : item.name === "Loyalty"
+                                  ? "#c8030e"
+                                  : "silver",
                             }}
                           >
                             <div style={{ position: "relative", top: "2px" }}>
@@ -750,22 +773,23 @@ const Home = () => {
                             </div>
                             <div
                               style={{
+                                fontSize: "10px",
                                 color:
                                   item.name === "Cash"
                                     ? "black"
                                     : item.name === "Paytm"
-                                      ? "black"
-                                      : item.name === "Google Pay"
-                                        ? "white"
-                                        : item.name === "Phone Pay"
-                                          ? "white"
-                                          : item.name === "UPI"
-                                            ? "white"
-                                            : item.name === "Credit Sale"
-                                              ? "#fff"
-                                              : item.name === "Loyalty"
-                                                ? "#fff"
-                                                : "black",
+                                    ? "black"
+                                    : item.name === "Google Pay"
+                                    ? "white"
+                                    : item.name === "Phone Pay"
+                                    ? "white"
+                                    : item.name === "UPI"
+                                    ? "white"
+                                    : item.name === "Credit Sale"
+                                    ? "#fff"
+                                    : item.name === "Loyalty"
+                                    ? "#fff"
+                                    : "black",
                               }}
                             >
                               {item.name}
@@ -895,9 +919,10 @@ const Home = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${
+                      handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                      }`}
+                    }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -926,9 +951,10 @@ const Home = () => {
                 }}
               >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${
+                    handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                    }`}
+                  }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />
@@ -985,7 +1011,6 @@ const Home = () => {
               dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
               setTimeout(() => {
                 window.location.reload();
-
               }, 500);
             }}
           >

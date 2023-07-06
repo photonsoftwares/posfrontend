@@ -16,8 +16,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-    ? JSON.parse(localStorage.getItem("User_data"))
-    : {};
+  ? JSON.parse(localStorage.getItem("User_data"))
+  : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
 // console.log("SAAS DATA", saasId);
@@ -852,18 +852,23 @@ function* handleTodaySalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${token}`)
   try {
-    const response = yield fetch(`${host}dashboard/today-sales/${saasId}/${moment(date).format("Y-MM-DD")}`, {
-      method: "GET",
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
+    const response = yield fetch(
+      `${host}dashboard/today-sales/${saasId}/${moment(date).format(
+        "Y-MM-DD"
+      )}`,
+      {
+        method: "GET",
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
 
-      // body: JSON.stringify({
-      //   today_sales: moment(date).format("Y-MM-DD"),
-      // }),
-      // body: formData
-      // body: e.payload
-    });
+        // body: JSON.stringify({
+        //   today_sales: moment(date).format("Y-MM-DD"),
+        // }),
+        // body: formData
+        // body: e.payload
+      }
+    );
     const jsonData = yield response.json();
     // console.log("jsonData", jsonData)
     if (jsonData) {
@@ -1165,7 +1170,7 @@ function* handleGetHsnCodeDropdownRequest(e) {
 function* handleSalesDashboardChartRequest(e) {
   try {
     const response = yield fetch(`${host}dashboard/last-six-month/${saasId}`, {
-      method: "GET"
+      method: "GET",
     });
     const jsonData = yield response.json();
     if (jsonData) {
@@ -1192,9 +1197,12 @@ function* handleSalesDashboardChartRequest(e) {
 
 function* handleSalesReportRequest(e) {
   try {
-    const response = yield fetch(`${host}tax/get-sales-report/${moment(new Date()).format("Y-MM-DD")}`, {
-      method: "GET"
-    });
+    const response = yield fetch(
+      `${host}tax/get-sales-report/${moment(new Date()).format("Y-MM-DD")}`,
+      {
+        method: "GET",
+      }
+    );
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
@@ -1221,7 +1229,7 @@ function* handleSalesReportRequest(e) {
 function* handleGstReportRequest(e) {
   try {
     const response = yield fetch(`${host}tax/get-hsn-list`, {
-      method: "GET"
+      method: "GET",
     });
     const jsonData = yield response.json();
     if (jsonData) {
@@ -1249,7 +1257,7 @@ function* handleGstReportRequest(e) {
 function* handleGstReportItemRequest(e) {
   try {
     const response = yield fetch(`${host}tax/get-hsn-item-list`, {
-      method: "GET"
+      method: "GET",
     });
     const jsonData = yield response.json();
     if (jsonData) {
@@ -1273,7 +1281,6 @@ function* handleGstReportItemRequest(e) {
     toast.error(err.message);
   }
 }
-
 
 // Create Row in Tax Master
 function* handleCreateTaxMasterRequest(e) {

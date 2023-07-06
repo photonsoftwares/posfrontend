@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { json } from "react-router-dom";
 // import { toast } from "react-toastify";
 // import { useHistory } from "react-router-dom";
 
 const initialComponentPropsManagementState = {
   load: false,
+  product_count: 0,
   get_searched_data: [],
   get_QR_img: "",
   show_cart_modal: false,
@@ -76,7 +78,7 @@ const initialComponentPropsManagementState = {
   sales_dashboard_chart_data: null,
   sales_report_table_data: [],
   gst_report_table_data: [],
-  gst_report_item_table_data: []
+  gst_report_item_table_data: [],
 };
 
 export const ComponentPropsManagement = createSlice({
@@ -152,6 +154,8 @@ export const ComponentPropsManagement = createSlice({
         });
       } else {
         state.cart_data = [...state.cart_data, payload.payload];
+        state.product_count = state.cart_data.length;
+        localStorage.setItem("my-cart", JSON.stringify(state.cart_data));
       }
       // console.log("ffg", find)
       // if (find >= 0) {
@@ -160,11 +164,17 @@ export const ComponentPropsManagement = createSlice({
       // }
     },
     // delete Data!
+
     handleDeleteCartItem: (state, payload) => {
-      state.cart_data = state.cart_data.filter(
+      console.log("REMOVE PAYLOAD", payload);
+      const updateCart = (state.cart_data = state.cart_data.filter(
         (el) => el.productId !== payload.payload.productId
-      );
-      console.log("state.cart_data", state.cart_data);
+      ));
+      localStorage.setItem("my-cart", JSON.stringify(updateCart));
+
+      state.product_count = state.cart_data.length - 1;
+
+      // console.log("state.cart_data", state.cart_data);
       state.load = false;
     },
     // Discount!
@@ -178,6 +188,12 @@ export const ComponentPropsManagement = createSlice({
     handleEmptyCartItem: (state, payload) => {
       console.log("EMPTY", payload);
       state.cart_data = [];
+    },
+    // MANAGE CART ITEM NUMBER
+    handlecartCount: (state, payload) => {
+      console.log("COUNT PAYLOD", payload.payload);
+
+      state.product_count = payload.payload;
     },
 
     // GET QR IMAGE
@@ -306,27 +322,27 @@ export const ComponentPropsManagement = createSlice({
       // state.handle_hsn_codes = payload.data;
     },
 
-    handleUploadItemRequest: (state, payload) => { },
+    handleUploadItemRequest: (state, payload) => {},
     handleUploadItemResponse: (state, payload) => {
       // state.flag = !state.flag
     },
-    handleUploadInventoryRequest: (state, payload) => { },
+    handleUploadInventoryRequest: (state, payload) => {},
     handleUploadInventoryResponse: (state, payload) => {
       // state.flag = !state.flag
     },
-    handleSalesOverviewRequest: (state, payload) => { },
+    handleSalesOverviewRequest: (state, payload) => {},
     handleSalesOverviewResponse: (state, payload) => {
       const data = payload?.data?.data;
       state.sales_overview_data = data;
       // state.flag = !state.flag
     },
-    handleLastWeekSalesRequest: (state, payload) => { },
+    handleLastWeekSalesRequest: (state, payload) => {},
     handleLastWeekSalesResponse: (state, payload) => {
       const data = payload?.data?.data;
       state.last_week_sales = data ? data : 0;
     },
 
-    handleLastMonthSalesRequest: (state, payload) => { },
+    handleLastMonthSalesRequest: (state, payload) => {},
     handleLastMonthSalesResponse: (state, payload) => {
       const data = payload?.data?.data;
       state.last_month_sales = data ? data : 0;
@@ -337,35 +353,35 @@ export const ComponentPropsManagement = createSlice({
     handleTodaySalesResponse: (state, payload) => {
       state.today_sales = payload.data.data ? payload.data.data : 0;
     },
-    handleNumberOfCustomerRequest: (state, payload) => { },
+    handleNumberOfCustomerRequest: (state, payload) => {},
     handleNumberOfCustomerResponse: (state, payload) => {
       state.number_of_customer = payload.data.data ? payload.data.data : 0;
     },
-    handleLowStockItemsRequest: (state, payload) => { },
+    handleLowStockItemsRequest: (state, payload) => {},
     handleLowStockItemsResponse: (state, payload) => {
       state.low_stock_items = payload.data.data ? payload.data.data : 0;
     },
-    handleQuantityInHandRequest: (state, payload) => { },
+    handleQuantityInHandRequest: (state, payload) => {},
     handleQuantityInHandResponse: (state, payload) => {
       state.quantity_in_hand = payload?.data?.data ? payload?.data?.data : 0;
     },
-    handleLastFourteenDaysSalesRequest: (state, payload) => { },
+    handleLastFourteenDaysSalesRequest: (state, payload) => {},
     handleLastFourteenDaysSalesResponse: (state, payload) => {
       state.last_fourteen_days = payload.data.data ? payload.data.data : 0;
     },
-    handleLastSixtyDaysSalesRequest: (state, payload) => { },
+    handleLastSixtyDaysSalesRequest: (state, payload) => {},
     handleLastSixtyDaysSalesResponse: (state, payload) => {
       state.last_sixty_days = payload.data.data ? payload.data.data : 0;
     },
-    handleYesterdaySalesRequest: (state, payload) => { },
+    handleYesterdaySalesRequest: (state, payload) => {},
     handleYesterdaySalesResponse: (state, payload) => {
       state.yesterday_sales = payload.data.data ? payload.data.data : 0;
     },
-    handleGstTypeDropdownRequest: (state, payload) => { },
+    handleGstTypeDropdownRequest: (state, payload) => {},
     handleGstTypeDropdownResponse: (state, payload) => {
       state.gst_type_dropdown = payload.data;
     },
-    handleGetHsnCodeDropdownRequest: (state, payload) => { },
+    handleGetHsnCodeDropdownRequest: (state, payload) => {},
     handleGetHsnCodeDropdownResponse: (state, payload) => {
       state.hsn_code_dropdown = payload.data;
     },
@@ -421,22 +437,19 @@ export const ComponentPropsManagement = createSlice({
       state.show_cart_modal = payload.payload.bagModalIsOpne;
     },
 
-    handleSalesReportRequest: (state, payload) => {
-    },
+    handleSalesReportRequest: (state, payload) => {},
     handleSalesReportResponse: (state, payload) => {
-      state.sales_report_table_data = payload.data ? payload.data : []
+      state.sales_report_table_data = payload.data ? payload.data : [];
     },
-    handleGstReportRequest: (state, payload) => {
-    },
+    handleGstReportRequest: (state, payload) => {},
     handleGstReportResponse: (state, payload) => {
-      state.gst_report_table_data = payload.data ? payload.data : []
+      state.gst_report_table_data = payload.data ? payload.data : [];
     },
-    handleGstReportItemRequest: (state, payload) => {
-    },
+    handleGstReportItemRequest: (state, payload) => {},
     handleGstReportItemResponse: (state, payload) => {
-      console.log("payload", payload)
-      state.gst_report_item_table_data = payload.data ? payload.data : []
-    }
+      console.log("payload", payload);
+      state.gst_report_item_table_data = payload.data ? payload.data : [];
+    },
   },
 });
 
@@ -444,6 +457,7 @@ export const ComponentPropsManagement = createSlice({
 
 export const {
   handleUploadPicRequest,
+  handlecartCount,
   handleShowModal,
   handleAccruvalRequest,
   handleMemberEnrollmentResponse,
