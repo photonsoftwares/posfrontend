@@ -27,7 +27,7 @@ const Master = () => {
 
     return (<>
 
-        <div className='container' style={{ backgroundColor: "var(--primary2)", padding: "30px" }}>
+        <div style={{ backgroundColor: "var(--primary2)", marginTop: "20px" }}>
             <Nav tabs>
                 {tabArray.map((item, index) => {
                     return (<>

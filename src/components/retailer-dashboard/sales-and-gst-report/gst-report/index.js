@@ -1,8 +1,9 @@
 import React from 'react'
 import DataTable from 'react-data-table-component';
-import { Button } from 'reactstrap';
+import { Button, Card, CardBody } from 'reactstrap';
 import { CSVLink } from "react-csv";
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 const GSTReport = () => {
     const { gst_report_table_data } = useSelector(state => state.ComponentPropsManagement)
@@ -12,10 +13,10 @@ const GSTReport = () => {
             name: 'HSN Code',
             selector: row => row.hsn_code,
         },
-        {
-            name: 'Business Date',
-            selector: row => row.business_date,
-        },
+        // {
+        //     name: 'Business Date',
+        //     selector: row => row.business_date,
+        // },
         {
             name: 'Tax',
             selector: row => row.taxable_value,
@@ -61,11 +62,16 @@ const GSTReport = () => {
     }, []);
 
     return (<>
+        <Card className='my-3'>
+            <CardBody>
+                {`GST Report | Last 30 Days (Business Date: ${moment(new Date()).format("DD-MMM-Y")})`}
+            </CardBody>
+        </Card>
         <DataTable
             columns={columns}
             responsive={true}
             data={gst_report_table_data}
-            title="GST Report"
+            // title={`GST Report | Last 30 Days (Business Date: ${moment(new Date()).format("DD-MMM-Y")})`}
             actions={actionsMemo}
         />
     </>)

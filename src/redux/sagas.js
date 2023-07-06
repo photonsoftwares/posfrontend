@@ -16,8 +16,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-  ? JSON.parse(localStorage.getItem("User_data"))
-  : {};
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
 // console.log("SAAS DATA", saasId);
@@ -737,7 +737,7 @@ function* handleSalesOverviewRequest(e) {
   // myHeaders.append("Authorization", `Bearer ${token}`)
   try {
     const response = yield fetch(
-      `${host}inventory-master/inventory-dashboard/${userId}`,
+      `${host}inventory-master/inventory-dashboard/${saasId}`,
       {
         method: "GET",
         // headers: myHeaders,
@@ -852,15 +852,15 @@ function* handleTodaySalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${token}`)
   try {
-    const response = yield fetch(`${host}dashboard/today-sales/${saasId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const response = yield fetch(`${host}dashboard/today-sales/${saasId}/${moment(date).format("Y-MM-DD")}`, {
+      method: "GET",
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
 
-      body: JSON.stringify({
-        today_sales: moment(date).format("Y-MM-DD"),
-      }),
+      // body: JSON.stringify({
+      //   today_sales: moment(date).format("Y-MM-DD"),
+      // }),
       // body: formData
       // body: e.payload
     });
@@ -977,7 +977,7 @@ function* handleQuantityInHandRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
   const response = yield fetch(
-    `${host}inventory-master/inventory-closing-stock/${userId}`,
+    `${host}inventory-master/no-of_items/${saasId}`,
     {
       method: "GET",
       // headers: myHeaders,

@@ -434,6 +434,7 @@ export const ComponentPropsManagement = createSlice({
     handleGstReportItemRequest: (state, payload) => {
     },
     handleGstReportItemResponse: (state, payload) => {
+      console.log("payload", payload)
       state.gst_report_item_table_data = payload.data ? payload.data : []
     }
   },
