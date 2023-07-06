@@ -21,12 +21,6 @@ function Home() {
     // ]
 
     const tabArray = [
-        // {
-        //     id: "1",
-        //     name: "Product Upload",
-        //     className: "active",
-        //     isActive: true
-        // },
         {
             id: "1",
             name: "Sales and GST Report",
@@ -35,18 +29,24 @@ function Home() {
         },
         {
             id: "2",
-            name: "Sales Dashboard",
+            name: "Product Upload",
             className: "active",
             isActive: true
         },
         {
             id: "3",
-            name: "Inventory Dashboard",
+            name: "Sales Dashboard",
             className: "active",
             isActive: true
         },
         {
             id: "4",
+            name: "Inventory Dashboard",
+            className: "active",
+            isActive: true
+        },
+        {
+            id: "5",
             name: "Master",
             className: "active",
             isActive: true
@@ -78,22 +78,23 @@ function Home() {
             </Nav>
             <TabContent activeTab={activeTab}>
 
-                {/* <TabPane tabId="1">
-                    <ProductUpload />
-                </TabPane> */}
-
                 <TabPane tabId="1">
                     <SalesAndGstReport />
                 </TabPane>
+
                 <TabPane tabId="2">
-                    <SalesDashboard />
+                    <ProductUpload />
                 </TabPane>
 
                 <TabPane tabId="3">
-                    <InventoryDashboard />
+                    <SalesDashboard />
                 </TabPane>
 
                 <TabPane tabId="4">
+                    <InventoryDashboard />
+                </TabPane>
+
+                <TabPane tabId="5">
                     <Master />
                 </TabPane>
             </TabContent>

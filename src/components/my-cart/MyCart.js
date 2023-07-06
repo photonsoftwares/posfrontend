@@ -5,6 +5,7 @@ import { Input, Label } from "reactstrap";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import {
   handleDeleteCartItem,
+  handleShowModal,
   handleEmptyCartData,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { IoIosSearch } from "react-icons/io";
@@ -45,7 +46,10 @@ const MyCart = ({
   setPopoverIsOpen,
   setDiscountPercentVal,
 }) => {
-  console.log("in product", show);
+
+  const {
+    show_cart_modal,
+  } = useSelector((e) => e.ComponentPropsManagement);
   const dispatch = useDispatch();
   const handleDiscount = (item, discount_value) => {
     const price = Number(item.price) * Number(item.productQty);
@@ -137,22 +141,27 @@ const MyCart = ({
   };
 
   const confirmBack = () => {
-    confirmAlert({
-      title: "Are you sure to exit",
-      message: "Are you sure to do this.",
-      buttons: [
-        {
-          label: "Yes",
-          onClick: () => {
-            setShow(false);
+    if (cartData.length > 0) {
+
+      confirmAlert({
+        title: "Are you sure to exit",
+        message: "Are you sure to do this.",
+        buttons: [
+          {
+            label: "Yes",
+            onClick: () => {
+              dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
+            },
           },
-        },
-        {
-          label: "No",
-          onClick: () => {},
-        },
-      ],
-    });
+          {
+            label: "No",
+            onClick: () => { },
+          },
+        ],
+      });
+    } else {
+      dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
+    }
   };
 
   return (
@@ -169,9 +178,6 @@ const MyCart = ({
               style={{ cursor: "pointer", marginRight: "5px" }}
               onClick={() => {
                 confirmBack();
-                // if (cartData?.length === 0) {
-
-                // }
               }}
             />{" "}
             My Basket
@@ -258,7 +264,7 @@ const MyCart = ({
                               <BsFillCheckCircleFill
                                 color={
                                   item.zero_price === "" ||
-                                  item.zero_price === 0
+                                    item.zero_price === 0
                                     ? "#979797"
                                     : "green"
                                 }
@@ -373,14 +379,14 @@ const MyCart = ({
                         }
                       }}
                       value={item.amount_value}
-                      // disabled={percentOff.length > 0 ? true : false}
-                      // value={amountOff}
-                      // onChange={(e) => setAmountOff(e.target.value)}
+                    // disabled={percentOff.length > 0 ? true : false}
+                    // value={amountOff}
+                    // onChange={(e) => setAmountOff(e.target.value)}
                     />
                     <div>
                       <button
                         className="btn btn-danger my-3"
-                        // onClick={() => handleDiscountOff(item)}
+                      // onClick={() => handleDiscountOff(item)}
                       >
                         Apply
                       </button>
@@ -415,7 +421,7 @@ const MyCart = ({
                 onClick={() => {
                   dispatch(handleDeleteCartItem(item));
                 }}
-                // onClick={() => handelDeleteProduct(item)}
+              // onClick={() => handelDeleteProduct(item)}
               >
                 Remove
               </p>
@@ -485,54 +491,57 @@ const MyCart = ({
 
         {cartData?.filter((io) => io.discount_menu_is_open === true).length ===
           0 && (
-          <>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginTop: "20px",
-              }}
-              id="pop112"
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  marginTop: "20px",
+                }}
+                id="pop112"
               // onClick={() => setPopoverIsOpen(!popoverIsOpen)}
-            >
-              {parseInt(invoiceValue) !== 0 && (
-                <>
-                  <button
-                    type="button"
-                    style={{
-                      backgroundColor: "rgb(169, 10, 10)",
-                      border: "none",
-                      color: "white",
-                      fontWeight: "bold",
-                      padding: "6px 20px",
-                      borderRadius: "10px",
-                    }}
-                    id="pop112"
-                    onClick={() => dispatch(handleEmptyCartData())}
-                  >
-                    Remove All Cart Items
-                  </button>
+              >
+                {parseInt(invoiceValue) !== 0 && (
+                  <>
+                    <button
+                      type="button"
+                      style={{
+                        backgroundColor: "rgb(169, 10, 10)",
+                        border: "none",
+                        color: "white",
+                        fontWeight: "bold",
+                        marginBottom: "10px",
+                        padding: "6px 20px",
+                        borderRadius: "10px",
+                      }}
+                      id="pop112"
+                      onClick={() => dispatch(handleEmptyCartData())}
+                    >
+                      Remove All Cart Items
+                    </button>
 
-                  <button
-                    type="button"
-                    style={{
-                      backgroundColor: "green",
-                      border: "none",
-                      color: "white",
-                      fontWeight: "bold",
-                      padding: "6px 20px",
-                      borderRadius: "10px",
-                    }}
-                    id="pop112"
-                    onClick={() => setPopoverIsOpen(!popoverIsOpen)}
-                  >
-                    Invoice Discount
-                  </button>
-                </>
-              )}
-            </div>
-          </>
-        )}
+                    <button
+                      type="button"
+                      style={{
+                        backgroundColor: "green",
+                        border: "none",
+                        color: "white",
+                        marginBottom: "10px",
+                        fontWeight: "bold",
+                        padding: "6px 20px",
+                        borderRadius: "10px",
+                      }}
+                      id="pop112"
+                      onClick={() => setPopoverIsOpen(!popoverIsOpen)}
+                    >
+                      Invoice Discount
+                    </button>
+                  </>
+                )}
+              </div>
+            </>
+          )}
 
         <Modal
           show={popoverIsOpen}
@@ -677,7 +686,7 @@ const MyCart = ({
             border: "none",
             fontSize: "20px",
           }}
-          // className="bg-primary"
+        // className="bg-primary"
         >
           {cartData && cartData.length > 0
             ? "Proceed to checkout"

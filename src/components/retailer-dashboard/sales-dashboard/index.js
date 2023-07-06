@@ -40,7 +40,7 @@ const SalesDashboard = () => {
         <div className="">
 
             <Row>
-                <Col md={12} className='mt-3'>
+                {/* <Col md={12} className='mt-3'>
                     <FormGroup>
                         <h3>
                             <b>
@@ -54,7 +54,7 @@ const SalesDashboard = () => {
                     <div style={{ fontSize: "20px" }}>
                         Sale -----------------------
                     </div>
-                </Col>
+                </Col> */}
 
                 <Col md={12} className='mt-4'>
                     <div className='d-flex justify-content-center'>

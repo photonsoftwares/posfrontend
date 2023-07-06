@@ -4,7 +4,7 @@ import SalesReport from './sales-report'
 import GSTReport from './gst-report'
 import GstReportItem from './gst-report-item'
 import { useDispatch } from 'react-redux'
-import { handleSalesReportRequest, handleGstReportRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
+import { handleSalesReportRequest, handleGstReportRequest, handleGstReportItemRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
 
 const SalesAndGstReport = () => {
     const dispatch = useDispatch()
@@ -46,6 +46,7 @@ const SalesAndGstReport = () => {
     const handleFunCall = () => {
         dispatch(handleSalesReportRequest())
         dispatch(handleGstReportRequest())
+        dispatch(handleGstReportItemRequest())
     }
 
     const optimizedFn = useCallback(debounce(handleFunCall), []);

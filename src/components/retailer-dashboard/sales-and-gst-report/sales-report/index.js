@@ -45,17 +45,17 @@ const SalesReport = () => {
             name: 'Invoice Number',
             selector: row => row.invoice_no,
         },
+        // {
+        //     name: 'Business Date',
+        //     selector: row => row.business_date,
+        // },
         {
-            name: 'Business Date',
-            selector: row => row.business_date,
+            name: 'Invoice Total',
+            selector: row => row.invoice_total,
         },
         {
             name: 'Tax Total',
             selector: row => row.tax_total,
-        },
-        {
-            name: 'Invoice Total',
-            selector: row => row.invoice_total,
         },
         {
             name: 'Pdf Name',
@@ -110,12 +110,16 @@ const SalesReport = () => {
     }, []);
 
     return (<>
-        {/* <div>Business Date: {moment(new Date()).format("DD-MMM-Y")}</div> */}
+        <Card className='my-3'>
+            <CardBody>
+                {`Sales Report (Business Date: ${moment(new Date()).format("DD-MMM-Y")})`}
+            </CardBody>
+        </Card>
         <DataTable
             columns={columns}
             responsive={true}
             data={sales_report_table_data}
-            title="Sales Report"
+            // title={`Sales Report (Business Date: ${moment(new Date()).format("DD-MMM-Y")})`}
             fixedHeader={true}
             fixedHeaderScrollHeight='500px'
             actions={actionsMemo}
