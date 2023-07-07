@@ -1012,6 +1012,7 @@ const Home = () => {
               // setSumValue(0);
               setSearchValue("");
               dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
+              localStorage.removeItem("my-cart")
               setTimeout(() => {
                 window.location.reload();
               }, 500);

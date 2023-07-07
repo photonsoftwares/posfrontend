@@ -36,6 +36,7 @@ const Login = () => {
     //   username,
     //   password,
     // };
+    localStorage.clear()
     dispatch(
       handleLoginRequest({
         user_name: username,

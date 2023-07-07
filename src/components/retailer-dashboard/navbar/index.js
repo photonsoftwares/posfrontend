@@ -42,11 +42,7 @@ const Navbar = (props) => {
                     </div> */}
                     <div className='my-auto mouse-pointer'
                         onClick={() => {
-                            // localStorage.removeItem("token")
-                            localStorage.removeItem("Token");
-                            localStorage.removeItem("login_data");
-                            localStorage.removeItem("Store_data");
-                            localStorage.removeItem("User_data");
+                            localStorage.clear()
                             window.location.replace("/")
                         }}
                     >
