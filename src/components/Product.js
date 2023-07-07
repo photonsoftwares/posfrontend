@@ -124,7 +124,7 @@ const Product = ({
                                 <BsFillCheckCircleFill
                                   color={
                                     item.new_price === "" ||
-                                    item.new_price === 0
+                                      item.new_price === 0
                                       ? "#979797"
                                       : "green"
                                   }
@@ -211,80 +211,9 @@ const Product = ({
                         localStorage.setItem("my-cart", JSON.stringify([item]));
                         dispatch(handlecartCount(1));
                       }
-                      setUpdatecart(!updatecart);
-                      // if (Number(item.price) === 0) {
-                      //   if (Number(item.new_price) !== 0) {
-                      //     item.price = item.new_price;
-                      //     setData([...data]);
-                      //     const el = JSON.parse(
-                      //       localStorage.getItem("my-cart")
-                      //     );
-                      //     if (data && data?.length > 0) {
-                      //       // const arr = [...data, item];
-                      //       // setCartData(arr);
-                      //       // localStorage.setItem(
-                      //       //   "my-cart",
-                      //       //   JSON.stringify(arr)
-                      //       // );
-                      //       // dispatch(handlecartCount(arr.length));
-                      //       //
-                      //       const a1 = el.filter(
-                      //         (io) => io.productId === item.productId
-                      //       );
-                      //       if (a1 && a1.length > 0) {
-                      //         data.map((item1) => {
-                      //           if (item1.productId === item.productId) {
-                      //             item1.productQty =
-                      //               Number(item.productQty) + 1;
-                      //           }
-                      //         });
-                      //         localStorage.setItem(
-                      //           "my-cart",
-                      //           JSON.stringify(data)
-                      //         );
-                      //       } else {
-                      //         const arr = [...data, item];
-                      //         setCartData(arr);
-                      //         localStorage.setItem(
-                      //           "my-cart",
-                      //           JSON.stringify(arr)
-                      //         );
-                      //         dispatch(handlecartCount(arr.length));
-                      //       }
-                      //       //
-                      //     } else {
-                      //       const arr = [item];
-                      //       setCartData(arr);
-                      //       localStorage.setItem(
-                      //         "my-cart",
-                      //         JSON.stringify(arr)
-                      //       );
-                      //       dispatch(handlecartCount(arr.length));
-                      //     }
-                      //     setShowButton(false);
-                      //     setSearchValue("");
-                      //   } else {
-                      //     toast.error("Price cannot be zero");
-                      //   }
-                      // } else if (Number(item.price) !== 0) {
-                      //   const data = JSON.parse(
-                      //     localStorage.getItem("my-cart")
-                      //   );
-                      //   if (data && data?.length > 0) {
-                      //     const arr = [...data, item];
-                      //     setCartData(arr);
-                      //     localStorage.setItem("my-cart", JSON.stringify(arr));
-                      //     dispatch(handlecartCount(arr.length));
-                      //   } else {
-                      //     const arr = [item];
-                      //     setCartData(arr);
-                      //     localStorage.setItem("my-cart", JSON.stringify(arr));
-                      //     dispatch(handlecartCount(arr.length));
-                      //   }
-                      //   // dispatch(handleAddCartData(item));
-                      //   setShowButton(false);
-                      //   setSearchValue("");
-                      // }
+
+                      setUpdatecart(!updatecart)
+                      setSearchValue("")
                     }}
                   >
                     <Button
@@ -296,7 +225,7 @@ const Product = ({
                         fontSize: "10px",
                         display: item.price === 0 ? "hidden" : "block",
                       }}
-                      // className="btn btn-outline-primary"
+                    // className="btn btn-outline-primary"
                     >
                       {/* {item.price === null || item.price === 0
                         ? null

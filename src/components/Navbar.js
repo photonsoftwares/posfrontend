@@ -80,10 +80,7 @@ const Navbar = () => {
   // console.log("ALL DATA", allData);
 
   const handleLogout = () => {
-    localStorage.removeItem("Token");
-    localStorage.removeItem("login_data");
-    localStorage.removeItem("Store_data");
-    localStorage.removeItem("User_data");
+    localStorage.clear()
     navigate("/login");
   };
   useEffect(() => { }, [handleLogout]);
