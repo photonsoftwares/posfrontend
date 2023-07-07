@@ -9,14 +9,14 @@ const LinkLoyalityCustomer = () => {
   const { saasId } = JSON.parse(localStorage.getItem("User_data"));
   console.log("STORAGE DATA", saasId);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
   const [userName, setUsername] = useState("");
   const [userMobile, setUserMobile] = useState("");
   const [err, setErr] = useState("");
   // const [dataRes, setDataRes] = useState({});
 
-  console.log(userName, userMobile);
+  // console.log(userName, userMobile);
   const handleSearch = (e) => {
     axios
       .post(`http://3.111.70.84:8091/v1/loyalty/customer-details`, {
