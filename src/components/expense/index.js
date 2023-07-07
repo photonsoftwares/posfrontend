@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap'
 import { HiOutlineArrowSmallLeft } from "react-icons/hi2"
 import Select, { useStateManager } from 'react-select'
-import { AiOutlinePlus } from "react-icons/ai"
+import { AiOutlineDelete, AiOutlinePlus } from "react-icons/ai"
 import Flatpickr from "react-flatpickr";
 import AddExpense from './AddExpense'
+import { BiEdit } from "react-icons/bi"
 
 const Expense = (props) => {
     const { expenseModalIsOpen, setExpenseModalIsOpen } = props
@@ -105,6 +106,29 @@ const Expense = (props) => {
                             </FormGroup>
                         </Col>
 
+                        <Col md={12}>
+                            <FormGroup>
+                                <div className='d-flex justify-content-between'>
+                                    <div>
+                                        <div>
+                                            Raw Meterial
+                                        </div>
+                                        <div>
+                                            ₹890
+                                        </div>
+                                    </div>
+                                    <div className='d-flex my-auto'>
+                                        <div className='me-3'>
+                                            <BiEdit color="blue" size={23} className='mouse-pointer' />
+                                        </div>
+                                        <div>
+                                            <AiOutlineDelete color="red" size={23} className='mouse-pointer' />
+                                        </div>
+                                    </div>
+                                </div>
+                            </FormGroup>
+                            {/* <hr /> */}
+                        </Col>
                         <Col md={12}>
                             <FormGroup>
                                 <Label>Expense Notes <span className="text-red"> * </span></Label>

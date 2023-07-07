@@ -24,7 +24,7 @@ import Expense from "./expense";
 
 const Main = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [expenseModalIsOpen, setExpenseModalIsOpen] = useState(false)
+  const [expenseModalIsOpen, setExpenseModalIsOpen] = useState(false);
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const navigate = useNavigate();
@@ -78,6 +78,7 @@ const Main = () => {
       icon: <GiStabbedNote color="#1facb8" size="25" />,
       isActive: true,
     },
+
     {
       id: 8,
       label: "BahiKhata",
@@ -231,7 +232,9 @@ const Main = () => {
                           } else if (item.value === "debit_note") {
                             navigate("/debit-note");
                           } else if (item.value === "expense") {
-                            setExpenseModalIsOpen(!expenseModalIsOpen)
+                            setExpenseModalIsOpen(!expenseModalIsOpen);
+                          } else if (item.value === "delivery_challan") {
+                            navigate("/delivery-challan");
                           }
                         }}
                       >
@@ -379,7 +382,8 @@ const Main = () => {
         expenseModalIsOpen={expenseModalIsOpen}
         setExpenseModalIsOpen={setExpenseModalIsOpen}
       />
-    </>);
+    </>
+  );
 };
 
 export default Main;

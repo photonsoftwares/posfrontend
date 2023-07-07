@@ -9,14 +9,14 @@ const LinkLoyalityCustomer = () => {
   const { saasId } = JSON.parse(localStorage.getItem("User_data"));
   console.log("STORAGE DATA", saasId);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
   const [userName, setUsername] = useState("");
   const [userMobile, setUserMobile] = useState("");
   const [err, setErr] = useState("");
   // const [dataRes, setDataRes] = useState({});
 
-  console.log(userName, userMobile);
+  // console.log(userName, userMobile);
   const handleSearch = (e) => {
     axios
       .post(`http://3.111.70.84:8091/v1/loyalty/customer-details`, {
@@ -64,7 +64,7 @@ const LinkLoyalityCustomer = () => {
       <div className="row d-flex justify-content-center">
         <div className="col-lg-5 col-md-10 col-sm-12 px-5">
           <form className="form-box" onSubmit={handleSubmit}>
-            <h2>Link Loyalty Customer</h2>
+            <h2>Link Loyalty</h2>
             <div>
               <TextField
                 size="small"

@@ -31,7 +31,6 @@ const Navbar = () => {
     (e) => e.ComponentPropsManagement
   );
 
-
   useEffect(() => {
     if (open_menu) {
       setOpenMenu(open_menu);
@@ -40,15 +39,13 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
-    const el = JSON.parse(
-      localStorage.getItem("my-cart")
-    );
+    const el = JSON.parse(localStorage.getItem("my-cart"));
     if (el) {
-      dispatch(handlecartCount(el.length))
+      dispatch(handlecartCount(el.length));
     } else {
-      dispatch(handlecartCount(0))
+      dispatch(handlecartCount(0));
     }
-  }, [])
+  }, []);
   const TabsData = [
     {
       id: 1,
@@ -80,10 +77,10 @@ const Navbar = () => {
   // console.log("ALL DATA", allData);
 
   const handleLogout = () => {
-    localStorage.clear()
+    localStorage.clear();
     navigate("/login");
   };
-  useEffect(() => { }, [handleLogout]);
+  useEffect(() => {}, [handleLogout]);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -162,7 +159,7 @@ const Navbar = () => {
         //  style={{ flexWrap: "nowrap" }}
         style={{ flex: 4 }}
       >
-        <p
+        <div
           style={{
             color: "#eee",
             fontWeight: "bolder",
@@ -175,7 +172,7 @@ const Navbar = () => {
           <p style={{ fontSize: "19px", padding: 0, margin: 0 }}>
             {localStorage.getItem("User_data") ? storeName : ""}
           </p>
-        </p>
+        </div>
       </div>
       <div
         style={{
@@ -227,7 +224,7 @@ const Navbar = () => {
               }}
             >
               {localStorage.getItem("User_data") &&
-                localStorage.getItem("Token") ? (
+              localStorage.getItem("Token") ? (
                 <GrLogout
                   size={25}
                   // style={{ cursor: "pointer", padding: 0, margin: 0 }}
@@ -281,13 +278,13 @@ const Navbar = () => {
                               </>
                             )}
                             <DropdownMenu>
-                              <DropdownItem
+                              {/* <DropdownItem
                                 onClick={() => {
                                   navigate("/add-party");
                                 }}
                               >
                                 Link Loyalty
-                              </DropdownItem>
+                              </DropdownItem> */}
                               <DropdownItem
                                 onClick={() => {
                                   // navigate("/link-customer");
