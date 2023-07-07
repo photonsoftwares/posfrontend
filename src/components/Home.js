@@ -97,6 +97,16 @@ const Home = () => {
   const [addPrice, setAddPrice] = useState("");
   const [email, setEmail] = useState("");
   const [updatecart, setUpdatecart] = useState(true);
+  const [storeName, setStoreName] = useState("");
+
+  useEffect(() => {
+    if (localStorage.getItem("Store_data")) {
+      const allData = JSON.parse(localStorage.getItem("Store_data"));
+      // console.log("STORE NAME", storeName);
+      setStoreName(allData?.storeName);
+    }
+  }, [storeName]);
+
   const getDataFromStorage = () => {
     try {
       const t1 = JSON.parse(localStorage.getItem("my-cart"));
@@ -560,76 +570,93 @@ const Home = () => {
               </>
             ))} */}
       </ul>
-      {/* <div
+      <div
         style={{
           position: "absolute",
           bottom: "0",
           backgroundColor: "#ffd700",
           width: "100%",
-          height: "100px",
+          height: "50px",
           borderRadius: "5px",
         }}
       >
-        {cart_data && (
+        {/* {cart_data && ( */}
+        <div
+          style={{
+            paddingLeft: "20px",
+            paddingRight: "20px",
+            display: "flex",
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "space-around",
+            color: "#fff",
+          }}
+        >
           <div
             style={{
-              paddingLeft: "20px",
-              paddingRight: "20px",
+              color: "#eee",
+              fontWeight: "bolder",
+              color: "#8f0707",
               display: "flex",
-              width: "100%",
               alignItems: "center",
-              justifyContent: "space-around",
-              color: "#fff",
+              justifyContent: "center",
             }}
           >
-            <div
-              style={{
-                fontWeight: "lighter",
-                color: "#fff",
-                position: "relative",
-                cursor: "pointer",
-              }}
-            >
-              <div style={{ margin: "5px 0px" }}>
-                <BsHandbag color="#000" fontSize={30} opacity={0.8} />
-              </div>
-              <h6
-                style={{
-                  fontSize: "15px",
-                  padding: 0,
-                  margin: 0,
-                  position: "absolute",
-                  color: "red",
-                  right: "11px",
-                  top: "16px",
-                }}
-              >
-                {cartData?.length}
-              </h6>
+            {/* <p style={{ fontSize: "19px", padding: 0, margin: 0 }}>
+              {localStorage.getItem("User_data") ? storeName : ""}
+            </p> */}
+            <p style={{ fontSize: "19px", padding: 0, margin: 0 }}>
+              Total Sales
+            </p>
+          </div>
+          <div
+            style={{
+              fontWeight: "lighter",
+              color: "#fff",
+              position: "relative",
+              cursor: "pointer",
+            }}
+          >
+            <div style={{ margin: "5px 0px" }}>
+              {/* <BsHandbag color="#000" fontSize={30} opacity={0.8} /> */}
             </div>
-            <h2
+            <h6
               style={{
+                fontSize: "15px",
                 padding: 0,
                 margin: 0,
-                fontWeight: "400",
-                color: "#000",
-                textDecoration: "none",
-                fontSize: "20px",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                if (cartData && cartData.length > 0) {
-                  setShow(true);
-                } else {
-                  toast.error("Please add atleast one item in cart");
-                }
+                position: "absolute",
+                color: "red",
+                right: "11px",
+                top: "16px",
               }}
             >
-              View Cart <BsArrowRight />
-            </h2>
+              {/* {cartData?.length} */}
+            </h6>
           </div>
-        )}
-      </div> */}
+          <h2
+            style={{
+              padding: 0,
+              margin: 0,
+              fontWeight: "400",
+              color: "#000",
+              textDecoration: "none",
+              fontSize: "20px",
+              cursor: "pointer",
+            }}
+            // onClick={() => {
+            //   if (cartData && cartData.length > 0) {
+            //     setShow(true);
+            //   } else {
+            //     toast.error("Please add atleast one item in cart");
+            //   }
+            // }}
+          >
+            {/* View Cart <BsArrowRight /> */}
+          </h2>
+        </div>
+        {/* )} */}
+      </div>
       {/* MY CART */}
       {show === true && (
         <MyCart
@@ -1012,7 +1039,7 @@ const Home = () => {
               // setSumValue(0);
               setSearchValue("");
               dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
-              localStorage.removeItem("my-cart")
+              localStorage.removeItem("my-cart");
               setTimeout(() => {
                 window.location.reload();
               }, 500);

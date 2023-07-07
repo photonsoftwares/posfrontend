@@ -369,7 +369,7 @@ const AddItem = () => {
                     required
                     rows={1}
                   />
-                  <TextField
+                  {/* <TextField
                     size="small"
                     type="text"
                     className="form-control my-2"
@@ -392,7 +392,7 @@ const AddItem = () => {
                     required
                     multiline
                     rows={1}
-                  />
+                  /> */}
                   <TextField
                     size="small"
                     type="text"
