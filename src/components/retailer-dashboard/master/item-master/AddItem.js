@@ -204,7 +204,7 @@ const AddItem = ({ addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen, row, s
       <ModalBody>
 
         <div className="row d-flex justify-content-center">
-          <div className="col-lg-5 col-md-10 col-sm-12">
+          <div className="">
             {/* {productId ? (
               <div>
                 <p>Upload Pic</p>
