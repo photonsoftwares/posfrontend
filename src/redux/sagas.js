@@ -16,8 +16,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-  ? JSON.parse(localStorage.getItem("User_data"))
-  : {};
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
 // console.log("SAAS DATA", saasId);
@@ -982,7 +982,7 @@ function* handleQuantityInHandRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
   const response = yield fetch(
-    `${host}inventory-master/no-of_items/${saasId}`,
+    `${host}inventory-master/closing-stock/${saasId}`,
     {
       method: "GET",
       // headers: myHeaders,
@@ -1000,6 +1000,35 @@ function* handleQuantityInHandRequest(e) {
     toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleQuantityInHandResponse",
+      data: null,
+    });
+  } else {
+    toast.error("Something went wrong server side");
+  }
+}
+
+function* handleNoOfItemRequest(e) {
+  // var myHeaders = new Headers();
+  // myHeaders.append("Authorization", `Bearer ${ token }`)
+  const response = yield fetch(
+    `${host}inventory-master/no-of-items/${saasId}`,
+    {
+      method: "GET",
+      // headers: myHeaders,
+    }
+  );
+  const jsonData = yield response.json();
+  if (jsonData) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleNoOfItemResponse",
+        data: jsonData,
+      });
+      return;
+    }
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleNoOfItemResponse",
       data: null,
     });
   } else {
@@ -1196,9 +1225,10 @@ function* handleSalesDashboardChartRequest(e) {
 }
 
 function* handleSalesReportRequest(e) {
+
   try {
     const response = yield fetch(
-      `${host}tax/get-sales-report/${moment(new Date()).format("Y-MM-DD")}`,
+      `${host}tax/get-sales-report/${e.payload}`,
       {
         method: "GET",
       }
@@ -1558,6 +1588,11 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleAccruvalRequest",
     handleAccruvalRequest
   );
+  yield takeEvery(
+    "ComponentPropsManagement/handleNoOfItemRequest",
+    handleNoOfItemRequest
+  );
+
 }
 
 // export function* incrementAsync() {
