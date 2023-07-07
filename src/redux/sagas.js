@@ -16,8 +16,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-    ? JSON.parse(localStorage.getItem("User_data"))
-    : {};
+  ? JSON.parse(localStorage.getItem("User_data"))
+  : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
 // console.log("SAAS DATA", saasId);
@@ -1389,7 +1389,7 @@ function* handleAccruvalRequest(e) {
     //   toast.error("Something went wrong server side");
     // }
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 }
 

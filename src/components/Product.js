@@ -20,7 +20,16 @@ import { BASE_Url } from "../URL";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 
-const Product = ({ setSearchValue, data, setData, cartData, setCartData, setUpdatecart, updatecart }) => {
+const Product = ({
+  setSearchValue,
+  data,
+  setData,
+  cartData,
+  setCartData,
+  setUpdatecart,
+  updatecart,
+}) => {
+  console.log("CART DATA CART", cartData);
   const { cart_data } = useSelector((e) => e.ComponentPropsManagement);
   const [myPrice, setMyPrice] = useState({ productId: "", price: "" });
   const [showButton, setShowButton] = useState(true);
@@ -29,16 +38,13 @@ const Product = ({ setSearchValue, data, setData, cartData, setCartData, setUpda
   // console.log("PRODUCT CART DATA", item);
 
   useEffect(() => {
-    const el = JSON.parse(
-      localStorage.getItem("my-cart")
-    );
+    const el = JSON.parse(localStorage.getItem("my-cart"));
     if (el) {
-      dispatch(handlecartCount(el.length))
+      dispatch(handlecartCount(el.length));
     } else {
-      dispatch(handlecartCount(0))
+      dispatch(handlecartCount(0));
     }
-  }, [])
-
+  }, []);
 
   // console.log("USER DATA", userData.userId);
   return (
@@ -118,7 +124,7 @@ const Product = ({ setSearchValue, data, setData, cartData, setCartData, setUpda
                                 <BsFillCheckCircleFill
                                   color={
                                     item.new_price === "" ||
-                                      item.new_price === 0
+                                    item.new_price === 0
                                       ? "#979797"
                                       : "green"
                                   }
@@ -169,39 +175,43 @@ const Product = ({ setSearchValue, data, setData, cartData, setCartData, setUpda
                     justifyContent: "flex-end",
                   }}
                 >
-                  <Button
-                    size="sm"
-                    variant="warning"
-                    style={{ width: "100%", fontSize: "10px" }}
-                    // className="btn btn-outline-primary"
+                  <div
+                    style={{
+                      display:
+                        item.price === 0 || item.price === 0 ? "none" : "block",
+                    }}
                     onClick={() => {
-                      const el = JSON.parse(
-                        localStorage.getItem("my-cart")
-                      );
+                      const el = JSON.parse(localStorage.getItem("my-cart"));
                       if (el) {
                         if (el.length > 0) {
-                          let flag = 0
-                          el.map(el1 => {
+                          let flag = 0;
+                          el.map((el1) => {
                             if (el1.productId === item.productId) {
-                              el1.productQty = el1.productQty + 1
-                              flag = 1
+                              el1.productQty = el1.productQty + 1;
+                              flag = 1;
                             }
-                          })
-                          localStorage.setItem("my-cart", JSON.stringify(el))
+                          });
+                          localStorage.setItem("my-cart", JSON.stringify(el));
 
                           if (flag === 0) {
-                            localStorage.setItem("my-cart", JSON.stringify([...el, item]))
+                            localStorage.setItem(
+                              "my-cart",
+                              JSON.stringify([...el, item])
+                            );
                           }
-                          dispatch(handlecartCount([...el, item].length))
+                          dispatch(handlecartCount([...el, item].length));
                         } else {
-                          localStorage.setItem("my-cart", JSON.stringify([item]))
-                          dispatch(handlecartCount(1))
+                          localStorage.setItem(
+                            "my-cart",
+                            JSON.stringify([item])
+                          );
+                          dispatch(handlecartCount(1));
                         }
                       } else {
-                        localStorage.setItem("my-cart", JSON.stringify([item]))
-                        dispatch(handlecartCount(1))
+                        localStorage.setItem("my-cart", JSON.stringify([item]));
+                        dispatch(handlecartCount(1));
                       }
-                      setUpdatecart(!updatecart)
+                      setUpdatecart(!updatecart);
                       // if (Number(item.price) === 0) {
                       //   if (Number(item.new_price) !== 0) {
                       //     item.price = item.new_price;
@@ -277,8 +287,23 @@ const Product = ({ setSearchValue, data, setData, cartData, setCartData, setUpda
                       // }
                     }}
                   >
-                    Add to Cart
-                  </Button>
+                    <Button
+                      size="sm"
+                      // variant={`${item.price === 0 ? "secondary" : "warning"}`}
+                      variant={`warning`}
+                      style={{
+                        width: "100%",
+                        fontSize: "10px",
+                        display: item.price === 0 ? "hidden" : "block",
+                      }}
+                      // className="btn btn-outline-primary"
+                    >
+                      {/* {item.price === null || item.price === 0
+                        ? null
+                        : "Add to Cart"} */}
+                      Add to cart
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -110,7 +110,7 @@ const AddItem = () => {
       handleAddItemToStoreRequest({
         item_name: itemName,
         item_code: Number(itemCode),
-        description: itemDesc,
+        description: itemName,
         price: Number(itemPrice),
         // discount: Number(selectedOptionDiscount.value),
         tax: Number(taxPercentage),
@@ -118,9 +118,8 @@ const AddItem = () => {
         status: "active",
         saas_id: saasId,
         store_id: storeId,
+        department: itemName,
         // promo_id: saasId,
-
-        department: itemCategory,
       })
     );
     setItemName("");
@@ -375,9 +374,9 @@ const AddItem = () => {
                     type="text"
                     className="form-control my-2"
                     id="customer-name"
-                    value={itemDesc}
                     required
-                    onChange={(e) => setItemDesc(e.target.value)}
+                    value={itemName}
+                    onChange={(e) => setItemName(e.target.value)}
                     label="Item Desc"
                     multiline
                     rows={3}
@@ -387,8 +386,8 @@ const AddItem = () => {
                     type="text"
                     className="form-control my-2"
                     id="customer-name"
-                    value={itemCategory}
-                    onChange={(e) => setItemCategory(e.target.value)}
+                    value={itemName}
+                    onChange={(e) => setItemName(e.target.value)}
                     label="Item Category"
                     required
                     multiline
