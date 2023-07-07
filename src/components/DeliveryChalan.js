@@ -13,14 +13,18 @@ import { GiBlackBook } from "react-icons/gi";
 import { Button } from "react-bootstrap";
 import { BiChevronRight } from "react-icons/bi";
 import { TextField } from "@mui/material";
+// import {
+//   handleDebitNoteRequest,
+//   handleGstTypeDropdownRequest,
+// } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import {
   handleDebitNoteRequest,
   handleGstTypeDropdownRequest,
-  handleTaxRatesRequest,
-} from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+  handleDeliveryNoteRequest,
+} from "../../src/redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch, useSelector } from "react-redux";
 
-const DebitNote = () => {
+const DeliveryChalan = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -128,11 +132,11 @@ const DebitNote = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(
-      handleDebitNoteRequest({
+      handleDeliveryNoteRequest({
         customer_party: customerName,
         charges: charges,
         amount: amount,
-        add_note: items,
+        add_chalan: items,
       })
     );
     setProductName("");
@@ -154,7 +158,7 @@ const DebitNote = () => {
             className="col-lg-5 col-md-10 col-sm-12 px-4"
             onSubmit={handleSubmit}
           >
-            <h2>Create Debit Note</h2>
+            <h2>Delivery challan</h2>
             <div className="d-flex justify-content-between bg-white">
               <div>
                 <p
@@ -472,4 +476,4 @@ const DebitNote = () => {
   );
 };
 
-export default DebitNote;
+export default DeliveryChalan;
