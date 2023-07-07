@@ -397,7 +397,6 @@ function* handleAddPurchaseRequest(e) {
   }
 }
 function* handleAddItemToStoreRequest(e) {
-  console.log("ADD ITEM E PAYLOAD", e.payload);
   const response = yield fetch(`${BASE_Url}/item/add-item`, {
     method: "POST",
     headers: {
@@ -416,6 +415,38 @@ function* handleAddItemToStoreRequest(e) {
       yield put({
         type: "ComponentPropsManagement/handleAddItemToStoreResponse",
         data: jsonData.data.productId,
+      });
+    } else {
+      toast.error(jsonData.message);
+    }
+  } else {
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleAddItemToStoreResponse",
+      data: "",
+    });
+  }
+}
+
+function* handleUpdateItemToStoreRequest(e) {
+  const response = yield fetch(`${BASE_Url}/item/update-item/${e.payload.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(e.payload.data),
+  });
+  const jsonData = yield response.json();
+  console.log("REGISTER JSONDATA", jsonData);
+  if (jsonData) {
+    if (jsonData && jsonData.data) {
+      // toast.success(jsonData.message);
+      // alert(jsonData.message);
+      // const cartData = jsonData.data;
+      toast.success(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleAddItemToStoreResponse",
+        data: jsonData.data.item_id,
       });
     } else {
       toast.error(jsonData.message);
@@ -1319,6 +1350,35 @@ function* handleGstReportItemRequest(e) {
   }
 }
 
+function* handleItemMasterListRequest(e) {
+  try {
+    const { currentPage } = e.payload
+    const response = yield fetch(`${host}item/get-item-list/${saasId}/${currentPage}`, {
+      method: "GET",
+    });
+    const jsonData = yield response.json();
+    if (jsonData) {
+      if (jsonData.status === true) {
+        // toast.success(jsonData.message)
+        yield put({
+          type: "ComponentPropsManagement/handleItemMasterListResponse",
+          data: { list: jsonData.data, totalCount: jsonData.count },
+        });
+        return;
+      }
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleItemMasterListResponse",
+        data: null,
+      });
+    } else {
+      toast.error("Something went wrong server side");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
 // Create Row in Tax Master
 function* handleCreateTaxMasterRequest(e) {
   try {
@@ -1436,6 +1496,11 @@ export function* helloSaga() {
     handleLoginRequest
   );
   yield takeEvery(
+    "ComponentPropsManagement/handleItemMasterListRequest",
+    handleItemMasterListRequest
+  );
+
+  yield takeEvery(
     "ComponentPropsManagement/handleSalesReportRequest",
     handleSalesReportRequest
   );
@@ -1466,6 +1531,11 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleAddItemToStoreRequest",
     handleAddItemToStoreRequest
   );
+  yield takeEvery(
+    "ComponentPropsManagement/handleUpdateItemToStoreRequest",
+    handleUpdateItemToStoreRequest
+  );
+
   yield takeEvery(
     "ComponentPropsManagement/handleHSNCODERequest",
     handleHSNCODERequest

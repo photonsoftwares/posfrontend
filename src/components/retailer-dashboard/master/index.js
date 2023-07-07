@@ -3,6 +3,7 @@ import { Button, CardText, Col, Nav, NavItem, NavLink, Row, TabContent, TabPane,
 import HSNMaster from './hsn-master'
 import SupplierMaster from './supplier-master'
 import TaxMaster from './tax-master';
+import ItemMaster from './item-master';
 
 const Master = () => {
     const [activeTab, setActiveTab] = useState("1")
@@ -10,16 +11,21 @@ const Master = () => {
     const tabArray = [
         {
             id: "1",
-            name: "Supplier Master",
+            name: "Item Master",
             className: "active"
         },
         {
             id: "2",
-            name: "Tax Master",
+            name: "Supplier Master",
             className: "active"
         },
         {
             id: "3",
+            name: "Tax Master",
+            className: "active"
+        },
+        {
+            id: "4",
             name: "HSN Master",
             className: "active"
         }
@@ -50,15 +56,19 @@ const Master = () => {
             <TabContent activeTab={activeTab}>
 
                 <TabPane tabId="1">
+                    <ItemMaster />
+                </TabPane>
+
+                <TabPane tabId="2">
                     <SupplierMaster />
                 </TabPane>
 
 
-                <TabPane tabId="2">
+                <TabPane tabId="3">
                     <TaxMaster />
                 </TabPane>
 
-                <TabPane tabId="3">
+                <TabPane tabId="4">
                     <HSNMaster />
                 </TabPane>
             </TabContent>
