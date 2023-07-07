@@ -291,7 +291,7 @@ const Navbar = () => {
                                   navigate("/member-enrollment");
                                 }}
                               >
-                                Member Enrol
+                                Member Enrollment
                               </DropdownItem>
                               <DropdownItem
                                 onClick={() => {
@@ -300,13 +300,13 @@ const Navbar = () => {
                               >
                                 Loyality Dashboard
                               </DropdownItem>
-                              <DropdownItem
+                              {/* <DropdownItem
                                 onClick={() => {
                                   navigate("/member-point-redemption");
                                 }}
                               >
                                 Member Point Redemption
-                              </DropdownItem>
+                              </DropdownItem> */}
                             </DropdownMenu>
                           </Dropdown>
                         </>
