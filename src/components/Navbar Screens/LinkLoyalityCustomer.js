@@ -64,7 +64,7 @@ const LinkLoyalityCustomer = () => {
       <div className="row d-flex justify-content-center">
         <div className="col-lg-5 col-md-10 col-sm-12 px-5">
           <form className="form-box" onSubmit={handleSubmit}>
-            <h2>Link Loyalty Customer</h2>
+            <h2>Link Loyalty</h2>
             <div>
               <TextField
                 size="small"

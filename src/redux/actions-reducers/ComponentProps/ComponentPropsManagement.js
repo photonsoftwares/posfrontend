@@ -79,7 +79,7 @@ const initialComponentPropsManagementState = {
   sales_report_table_data: [],
   gst_report_table_data: [],
   gst_report_item_table_data: [],
-  no_of_items: 0
+  no_of_items: 0,
 };
 
 export const ComponentPropsManagement = createSlice({
@@ -192,7 +192,7 @@ export const ComponentPropsManagement = createSlice({
     },
     // MANAGE CART ITEM NUMBER
     handlecartCount: (state, payload) => {
-      console.log("COUNT PAYLOD", payload.payload);
+      // console.log("COUNT PAYLOD", payload.payload);
 
       state.product_count = payload.payload;
     },
@@ -323,27 +323,27 @@ export const ComponentPropsManagement = createSlice({
       // state.handle_hsn_codes = payload.data;
     },
 
-    handleUploadItemRequest: (state, payload) => { },
+    handleUploadItemRequest: (state, payload) => {},
     handleUploadItemResponse: (state, payload) => {
       // state.flag = !state.flag
     },
-    handleUploadInventoryRequest: (state, payload) => { },
+    handleUploadInventoryRequest: (state, payload) => {},
     handleUploadInventoryResponse: (state, payload) => {
       // state.flag = !state.flag
     },
-    handleSalesOverviewRequest: (state, payload) => { },
+    handleSalesOverviewRequest: (state, payload) => {},
     handleSalesOverviewResponse: (state, payload) => {
       const data = payload?.data?.data;
       state.sales_overview_data = data;
       // state.flag = !state.flag
     },
-    handleLastWeekSalesRequest: (state, payload) => { },
+    handleLastWeekSalesRequest: (state, payload) => {},
     handleLastWeekSalesResponse: (state, payload) => {
       const data = payload?.data?.data;
       state.last_week_sales = data ? data : 0;
     },
 
-    handleLastMonthSalesRequest: (state, payload) => { },
+    handleLastMonthSalesRequest: (state, payload) => {},
     handleLastMonthSalesResponse: (state, payload) => {
       const data = payload?.data?.data;
       state.last_month_sales = data ? data : 0;
@@ -354,35 +354,35 @@ export const ComponentPropsManagement = createSlice({
     handleTodaySalesResponse: (state, payload) => {
       state.today_sales = payload.data.data ? payload.data.data : 0;
     },
-    handleNumberOfCustomerRequest: (state, payload) => { },
+    handleNumberOfCustomerRequest: (state, payload) => {},
     handleNumberOfCustomerResponse: (state, payload) => {
       state.number_of_customer = payload.data.data ? payload.data.data : 0;
     },
-    handleLowStockItemsRequest: (state, payload) => { },
+    handleLowStockItemsRequest: (state, payload) => {},
     handleLowStockItemsResponse: (state, payload) => {
       state.low_stock_items = payload.data.data ? payload.data.data : 0;
     },
-    handleQuantityInHandRequest: (state, payload) => { },
+    handleQuantityInHandRequest: (state, payload) => {},
     handleQuantityInHandResponse: (state, payload) => {
       state.quantity_in_hand = payload?.data?.data ? payload?.data?.data : 0;
     },
-    handleLastFourteenDaysSalesRequest: (state, payload) => { },
+    handleLastFourteenDaysSalesRequest: (state, payload) => {},
     handleLastFourteenDaysSalesResponse: (state, payload) => {
       state.last_fourteen_days = payload.data.data ? payload.data.data : 0;
     },
-    handleLastSixtyDaysSalesRequest: (state, payload) => { },
+    handleLastSixtyDaysSalesRequest: (state, payload) => {},
     handleLastSixtyDaysSalesResponse: (state, payload) => {
       state.last_sixty_days = payload.data.data ? payload.data.data : 0;
     },
-    handleYesterdaySalesRequest: (state, payload) => { },
+    handleYesterdaySalesRequest: (state, payload) => {},
     handleYesterdaySalesResponse: (state, payload) => {
       state.yesterday_sales = payload.data.data ? payload.data.data : 0;
     },
-    handleGstTypeDropdownRequest: (state, payload) => { },
+    handleGstTypeDropdownRequest: (state, payload) => {},
     handleGstTypeDropdownResponse: (state, payload) => {
       state.gst_type_dropdown = payload.data;
     },
-    handleGetHsnCodeDropdownRequest: (state, payload) => { },
+    handleGetHsnCodeDropdownRequest: (state, payload) => {},
     handleGetHsnCodeDropdownResponse: (state, payload) => {
       state.hsn_code_dropdown = payload.data;
     },
@@ -438,23 +438,33 @@ export const ComponentPropsManagement = createSlice({
       state.show_cart_modal = payload.payload.bagModalIsOpne;
     },
 
-    handleSalesReportRequest: (state, payload) => { },
+    handleSalesReportRequest: (state, payload) => {},
     handleSalesReportResponse: (state, payload) => {
       state.sales_report_table_data = payload.data ? payload.data : [];
     },
-    handleGstReportRequest: (state, payload) => { },
+    handleGstReportRequest: (state, payload) => {},
     handleGstReportResponse: (state, payload) => {
       state.gst_report_table_data = payload.data ? payload.data : [];
     },
-    handleGstReportItemRequest: (state, payload) => { },
+    handleGstReportItemRequest: (state, payload) => {},
     handleGstReportItemResponse: (state, payload) => {
       console.log("payload", payload);
       state.gst_report_item_table_data = payload.data ? payload.data : [];
     },
-    handleNoOfItemRequest: (state, payload) => { },
+    handleNoOfItemRequest: (state, payload) => {},
     handleNoOfItemResponse: (state, payload) => {
       state.no_of_items = payload?.data?.data ? payload?.data?.data : 0;
-    }
+    },
+    // Handle CREATE DEBIT NOTE
+    handleDebitNoteRequest: (state, payload) => {},
+    handleDebitNoteResponse: (state, payload) => {
+      state.no_of_items = payload?.data?.data ? payload?.data?.data : 0;
+    },
+    // Handle CREATE Delivery NOTE
+    handleDeliveryNoteRequest: (state, payload) => {},
+    handleDeliveryResponse: (state, payload) => {
+      state.no_of_items = payload?.data?.data ? payload?.data?.data : 0;
+    },
   },
 });
 
@@ -462,6 +472,8 @@ export const ComponentPropsManagement = createSlice({
 
 export const {
   handleUploadPicRequest,
+  handleDeliveryNoteRequest,
+  handleDebitNoteRequest,
   handlecartCount,
   handleShowModal,
   handleAccruvalRequest,

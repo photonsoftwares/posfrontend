@@ -33,6 +33,7 @@ import MemberEnrollment from "./components/Navbar Screens/MemberEnrollment";
 import LinkLoyalityCustomer from "./components/Navbar Screens/LinkLoyalityCustomer";
 import MembePointRedemption from "./components/Navbar Screens/MembePointRedemption";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import DeliveryChalan from "./components/DeliveryChalan";
 // import { Navbar } from "react-bootstrap";
 
 const App = () => {
@@ -113,6 +114,10 @@ const App = () => {
         <Route
           path="/debit-note"
           element={<ProtectedRoutingWhenLogin Component={DebitNote} />}
+        />
+        <Route
+          path="/delivery-challan"
+          element={<ProtectedRoutingWhenLogin Component={DeliveryChalan} />}
         />
         <Route
           path="/inventory-dashboard"

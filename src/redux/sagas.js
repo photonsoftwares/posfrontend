@@ -16,8 +16,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-    ? JSON.parse(localStorage.getItem("User_data"))
-    : {};
+  ? JSON.parse(localStorage.getItem("User_data"))
+  : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
 // console.log("SAAS DATA", saasId);
@@ -1232,14 +1232,10 @@ function* handleSalesDashboardChartRequest(e) {
 }
 
 function* handleSalesReportRequest(e) {
-
   try {
-    const response = yield fetch(
-      `${host}tax/get-sales-report/${e.payload}`,
-      {
-        method: "GET",
-      }
-    );
+    const response = yield fetch(`${host}tax/get-sales-report/${e.payload}`, {
+      method: "GET",
+    });
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
@@ -1429,6 +1425,72 @@ function* handleAccruvalRequest(e) {
     console.log(err);
   }
 }
+//
+function* handleDebitNoteRequest(e) {
+  console.log("E PAYLOAD", e);
+  try {
+    const response = yield fetch(
+      `http://3.111.70.84:8088/api/v1/Debit/create-debitnote`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(e.payload),
+      }
+    );
+    const jsonData = yield response.json();
+    console.log("Debit Note JSONDATA", jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleCreateTaxMasterResponse",
+          data: jsonData.data,
+        });
+      } else {
+        toast.error(jsonData.message);
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+// Delivery node
+function* handleDeliveryNoteRequest(e) {
+  console.log("E PAYLOAD", e);
+  try {
+    const response = yield fetch(
+      `http://3.111.70.84:8088/api/v1/Debit/create-debit-chalan`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(e.payload),
+      }
+    );
+    const jsonData = yield response.json();
+    console.log("Debit Note JSONDATA", jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleCreateTaxMasterResponse",
+          data: jsonData.data,
+        });
+      } else {
+        toast.error(jsonData.message);
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
 
 export function* helloSaga() {
   yield takeEvery(
@@ -1599,7 +1661,14 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleNoOfItemRequest",
     handleNoOfItemRequest
   );
-
+  yield takeEvery(
+    "ComponentPropsManagement/handleDebitNoteRequest",
+    handleDebitNoteRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleDeliveryNoteRequest",
+    handleDeliveryNoteRequest
+  );
 }
 
 // export function* incrementAsync() {

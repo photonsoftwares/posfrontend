@@ -278,13 +278,13 @@ const Navbar = () => {
                               </>
                             )}
                             <DropdownMenu>
-                              <DropdownItem
+                              {/* <DropdownItem
                                 onClick={() => {
                                   navigate("/add-party");
                                 }}
                               >
                                 Link Loyalty
-                              </DropdownItem>
+                              </DropdownItem> */}
                               <DropdownItem
                                 onClick={() => {
                                   // navigate("/link-customer");
