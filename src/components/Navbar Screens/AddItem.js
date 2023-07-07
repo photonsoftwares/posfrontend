@@ -75,10 +75,10 @@ const AddItem = () => {
   const [itemCode, setItemCode] = useState("");
   const [itemDesc, setItemDesc] = useState("");
   const [ItemTax, setItemTax] = useState("");
-  const [itemPrice, setItemPrice] = useState("0");
+  const [itemPrice, setItemPrice] = useState("");
   const [openCam, setOpenCam] = useState(false);
   const [productId, setProductId] = useState("");
-  const [taxPercentage, setTaxPercentage] = useState("0");
+  const [taxPercentage, setTaxPercentage] = useState("");
   const [itemCategory, setItemCategory] = useState("");
 
   // console.log("UPLOAD ITEM", uploadItem);
