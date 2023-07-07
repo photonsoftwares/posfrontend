@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import DataTable from 'react-data-table-component';
-import { Button, Card, CardBody } from 'reactstrap';
+import { Button, Card, CardBody, Col, Input, Label, Row } from 'reactstrap';
 import { host } from "../../../../URL";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { MdDelete, MdEdit } from "react-icons/md"
-import { handleItemMasterListRequest } from '../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
+import { handleItemMasterListRequest, handleSearchedDataRequest1 } from '../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
 import { toast } from 'react-toastify';
 import AddItem from './AddItem';
+import "./index.css"
 
 const ItemMaster = () => {
     const dispatch = useDispatch()
@@ -29,6 +30,7 @@ const ItemMaster = () => {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1)
     const [flag, setFlag] = useState(false)
+    const [searchVal, setSearchVal] = useState("")
 
     useEffect(() => {
         setLoading(true)
@@ -47,6 +49,13 @@ const ItemMaster = () => {
             name: 'Item Name',
             center: true,
             selector: row => row.item_name,
+            cell: row => {
+                return (<>
+                    <div style={{ fontWeight: "bolder" }}>
+                        {row.item_name}
+                    </div>
+                </>)
+            }
         },
         {
             name: 'Category',
@@ -126,7 +135,7 @@ const ItemMaster = () => {
                         <div className='me-2'>
                             <MdDelete
                                 size={22}
-                                color='var(--primary1)'
+                                color='red'
                                 className='mouse-pointer'
                                 onClick={() => handleDelete()}
                             />
@@ -155,12 +164,49 @@ const ItemMaster = () => {
             }
         }
     ]
+
+    const handleSearch = () => {
+        if (searchVal) {
+            dispatch(handleSearchedDataRequest1({ searchValue: searchVal }));
+        } else {
+            setFlag(!flag)
+        }
+    };
     // const data = []
     return (<>
+
+        <Card className='my-3'>
+            <CardBody>
+                <Row>
+                    <Col md={5}>
+
+                        <Input
+                            type='text'
+                            onChange={e => {
+                                setSearchVal(e.target.value)
+                            }}
+                            value={searchVal}
+                            placeholder='Search...'
+                        />
+                    </Col>
+                    <Col md={3}>
+                        <Button
+                            style={{ backgroundColor: "var(--primary1)" }}
+                            onClick={() => {
+                                handleSearch()
+                            }}
+                        >Search</Button>
+                    </Col>
+                </Row>
+            </CardBody>
+        </Card>
 
         <DataTable
             columns={columns}
             responsive={true}
+            // fixedHeader={true}
+            // fixedHeaderScrollHeight="300px"
+
             data={item_master_list ? item_master_list?.list : []}
             progressPending={loading}
             pagination

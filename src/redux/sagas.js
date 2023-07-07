@@ -158,6 +158,43 @@ function* handleSearchedDataRequest(e) {
   }
 }
 
+function* handleSearchedDataRequest1(e) {
+  // const navigate = useNavigate();
+  try {
+
+    const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+    const { searchValue } = e.payload;
+    const response = yield fetch(
+      `${BASE_Url}/search/get-result/${storeId}/${saasId}/${searchValue}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const jsonData = yield response.json();
+    if (jsonData) {
+      if (jsonData.status === true) {
+        yield put({
+          type: "ComponentPropsManagement/handleSearchedDataResponse1",
+          data: { list: jsonData.data, totalCount: 0 },
+        });
+        return;
+      }
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleSearchedDataResponse1",
+        data: null,
+      });
+    } else {
+      toast.error("Something went wrong server side");
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // HANDLE ADD ITEM SEARCH
 function* handleAddItemSearchRequest(e) {
   // const navigate = useNavigate();
@@ -1404,6 +1441,31 @@ function* handleCreateTaxMasterRequest(e) {
     toast.error(err.message);
   }
 }
+
+function* handleExpenseCategoryDropdownRequest(e) {
+  try {
+    const response = yield fetch(`${host}expense/get-all-category-name`, {
+      method: "GET",
+    });
+    const jsonData = yield response.json()
+    if (jsonData) {
+      if (jsonData.status === true) {
+        console.log("dx", jsonData)
+        // yield put({
+        //   type: "ComponentPropsManagement/handleCreateTaxMasterResponse",
+        //   data: jsonData.data,
+        // });
+      } else {
+        toast.error(jsonData.message);
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
 // Member Enrollment
 function* handleMemberEnrollmentRequest(e) {
   console.log("E PAYLOAD ENROLLMENT", e.payload);
@@ -1581,6 +1643,11 @@ export function* helloSaga() {
     handleRegisterRequest
   );
   yield takeEvery(
+    "ComponentPropsManagement/handleExpenseCategoryDropdownRequest",
+    handleExpenseCategoryDropdownRequest
+  );
+
+  yield takeEvery(
     "ComponentPropsManagement/handlePartyNameDataRequest",
     handlePartyNameDataRequest
   );
@@ -1605,6 +1672,10 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleSearchedDataRequest",
     handleSearchedDataRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleSearchedDataRequest1",
+    handleSearchedDataRequest1
   );
   yield takeEvery(
     "ComponentPropsManagement/handleRecommendedDataRequest",
