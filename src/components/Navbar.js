@@ -10,18 +10,28 @@ import { GrLogout } from "react-icons/gr";
 import { BiArrowBack, BiGroup } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { handleOpneMenuRequest } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+import {
+  handleOpneMenuRequest,
+  handleShowModal,
+  handlecartCount,
+} from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
+import { BsHandbag } from "react-icons/bs";
+
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
-  const { open_menu } = useSelector((e) => e.ComponentPropsManagement);
+  const { open_menu, cart_data, show_cart_modal, product_count } = useSelector(
+    (e) => e.ComponentPropsManagement
+  );
+
+
   useEffect(() => {
     if (open_menu) {
       setOpenMenu(open_menu);
@@ -29,6 +39,16 @@ const Navbar = () => {
   }, open_menu);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  useEffect(() => {
+    const el = JSON.parse(
+      localStorage.getItem("my-cart")
+    );
+    if (el) {
+      dispatch(handlecartCount(el.length))
+    } else {
+      dispatch(handlecartCount(0))
+    }
+  }, [])
   const TabsData = [
     {
       id: 1,
@@ -50,6 +70,7 @@ const Navbar = () => {
   const [storeName, setStoreName] = useState("");
   const [value, setValue] = useState(0);
   const [tabs] = useState(TabsData);
+  const [cartCount, setCartCount] = useState(0);
   // const token = JSON.parse(localStorage.getItem("Token"));
   const data = localStorage.getItem("login_data");
 
@@ -59,10 +80,7 @@ const Navbar = () => {
   // console.log("ALL DATA", allData);
 
   const handleLogout = () => {
-    localStorage.removeItem("Token");
-    localStorage.removeItem("login_data");
-    localStorage.removeItem("Store_data");
-    localStorage.removeItem("User_data");
+    localStorage.clear()
     navigate("/login");
   };
   useEffect(() => { }, [handleLogout]);
@@ -84,6 +102,14 @@ const Navbar = () => {
       isActive: true,
     },
   ];
+  const handleShowCart = () => {
+    dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
+  };
+
+  useEffect(() => {
+    setCartCount(product_count);
+  }, [product_count]);
+
   return (
     <div
       style={{
@@ -95,7 +121,7 @@ const Navbar = () => {
         flexDirection: "row",
         alignItems: "center",
         paddingLeft: "20px",
-        paddingRight: "20px",
+        // paddingRight: "20px",
         justifyContent: "space-between",
         position: "relative",
       }}
@@ -150,19 +176,11 @@ const Navbar = () => {
             {localStorage.getItem("User_data") ? storeName : ""}
           </p>
         </p>
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        ></div>
       </div>
       <div
-        className=""
         style={{
           display: "flex",
+          flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
           height: "50px",
@@ -176,122 +194,136 @@ const Navbar = () => {
           style={{
             display: "flex",
             flexDirection: "column",
-            // alignItems: "center",
-            justifyContent: "flex-end",
+            justifyContent: "center",
+            marginTop: 4,
           }}
         >
+          {localStorage.getItem("User_data") ? (
+            <div
+              style={{ position: "relative", cursor: "pointer" }}
+              onClick={() => handleShowCart()}
+            >
+              <BsHandbag color="#000" fontSize={30} opacity={0.8} />
+              <div style={{ position: "absolute", top: 8, right: 50 }}>
+                {cartCount}
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
           <div
             style={{
               display: "flex",
-              // alignItems: "center",
-              justifyContent: "flex-end",
-              cursor: "pointer",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            {localStorage.getItem("User_data") &&
-              localStorage.getItem("Token") ? (
-              <GrLogout
-                size={25}
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  handleLogout();
-                  setOpenMenu(false);
-                }}
-              />
-            ) : (
-              ""
-            )}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                cursor: "pointer",
+              }}
+            >
+              {localStorage.getItem("User_data") &&
+                localStorage.getItem("Token") ? (
+                <GrLogout
+                  size={25}
+                  // style={{ cursor: "pointer", padding: 0, margin: 0 }}
+                  onClick={() => {
+                    handleLogout();
+                    setOpenMenu(false);
+                  }}
+                />
+              ) : (
+                ""
+              )}
+            </div>
+            {footer_arr
+              .filter((io) => io.isActive === true)
+              .map((item, i) => {
+                return (
+                  <>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "column",
+                        margin: "10px",
+                        marginBottom: "20px",
+                        cursor: "pointer",
+                      }}
+                      key={i}
+                      onClick={() => {
+                        if (item.value === "product") {
+                          navigate("/add-item");
+                        }
+                      }}
+                    >
+                      {item.value === "parties" ? (
+                        <>
+                          <Dropdown
+                            isOpen={dropdownOpen}
+                            toggle={toggle}
+                            direction={"down"}
+                          >
+                            {location.pathname !== "/login" && (
+                              <>
+                                <DropdownToggle
+                                  style={{ textAlign: "center" }}
+                                  tag={"span"}
+                                >
+                                  <div>{item.icon}</div>
+                                  <div>{item.label}</div>
+                                </DropdownToggle>
+                              </>
+                            )}
+                            <DropdownMenu>
+                              <DropdownItem
+                                onClick={() => {
+                                  navigate("/add-party");
+                                }}
+                              >
+                                Link Loyalty
+                              </DropdownItem>
+                              <DropdownItem
+                                onClick={() => {
+                                  // navigate("/link-customer");
+                                  navigate("/member-enrollment");
+                                }}
+                              >
+                                Member Enrol
+                              </DropdownItem>
+                              <DropdownItem
+                                onClick={() => {
+                                  navigate("/link-loyality-customer");
+                                }}
+                              >
+                                Loyality Dashboard
+                              </DropdownItem>
+                              <DropdownItem
+                                onClick={() => {
+                                  navigate("/member-point-redemption");
+                                }}
+                              >
+                                Member Point Redemption
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </Dropdown>
+                        </>
+                      ) : (
+                        <>
+                          <div>{item.icon}</div>
+                          <div>{item.label}</div>
+                        </>
+                      )}
+                    </div>
+                  </>
+                );
+              })}
           </div>
-
-          {footer_arr
-            .filter((io) => io.isActive === true)
-            .map((item, i) => {
-              return (
-                <>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: "column",
-                      margin: "10px",
-                      marginBottom: "20px",
-                      cursor: "pointer",
-                    }}
-                    key={i}
-                    onClick={() => {
-                      if (item.value === "product") {
-                        navigate("/add-item");
-                      }
-                    }}
-                  >
-                    {item.value === "parties" ? (
-                      <>
-                        <Dropdown
-                          isOpen={dropdownOpen}
-                          toggle={toggle}
-                          direction={"down"}
-                        >
-                          {location.pathname !== "/login" && (<>
-                            <DropdownToggle
-                              style={{ textAlign: "center" }}
-                              tag={"span"}
-                            >
-                              <div>{item.icon}</div>
-                              <div>{item.label}</div>
-                            </DropdownToggle>
-                          </>)}
-                          <DropdownMenu>
-                            <DropdownItem
-                              onClick={() => {
-                                navigate("/add-party");
-                              }}
-                            >
-                              Link Loyalty
-                            </DropdownItem>
-                            {/* <DropdownItem
-                              onClick={() => {
-                                // navigate("/link-customer");
-                                navigate("/member-enrolment");
-                              }}
-                            >
-                              Link Customer
-                            </DropdownItem> */}
-                            <DropdownItem
-                              onClick={() => {
-                                // navigate("/link-customer");
-                                navigate("/member-enrollment");
-                              }}
-                            >
-                              Member Enrol
-                            </DropdownItem>
-                            <DropdownItem
-                              onClick={() => {
-                                navigate("/link-loyality-customer");
-                              }}
-                            >
-                              Loyality Dashboard
-                            </DropdownItem>
-                            <DropdownItem
-                              onClick={() => {
-                                navigate("/member-point-redemption");
-                              }}
-                            >
-                              Member Point Redemption
-                            </DropdownItem>
-                          </DropdownMenu>
-                        </Dropdown>
-                      </>
-                    ) : (
-                      <>
-                        <div>{item.icon}</div>
-                        <div>{item.label}</div>
-                      </>
-                    )}
-                  </div>
-                </>
-              );
-            })}
         </div>
       </div>
       <div className="nevbar-menu">
@@ -312,70 +344,8 @@ const Navbar = () => {
           >
             <div style={{ marginBottom: 0, paddingBottom: 0 }}>
               <div>
-                {/* <ul
-                  className="d-flex flex-row"
-                  style={{
-                    listStyle: "none",
-                    marginRight: "40px",
-                  }}
-                >
-                  {tabs.map((tab, index) => (
-                    <li
-                      key={tab.id}
-                      // className="border-bottom border border-danger"
-                      style={{
-                        border: "none",
-                        outline: "none",
-                        borderBottom: index === value && "2px solid red",
-                      }}
-                    >
-                      <button
-                        style={{ outline: "none", border: "none" }}
-                        onClick={() => setValue(index)}
-                        className={`btn mx-2`}
-                      >
-                        {tab.button}
-                      </button>
-                    </li>
-                  ))}
-                </ul> */}
                 <div>{component}</div>
               </div>
-              {/* <Link
-                to={"add-customer"}
-                style={{ textDecoration: "none", color: "#20b9e3" }}
-                onClick={() => setOpenMenu(false)}
-              >
-                <p>Add Customer</p>
-              </Link>
-              <Link
-                to={"add-item"}
-                style={{ textDecoration: "none", color: "#20b9e3" }}
-                onClick={() => setOpenMenu(false)}
-              >
-                <p>Add Item</p>
-              </Link>
-              <Link
-                to={"reconciliation-report"}
-                style={{ textDecoration: "none", color: "#20b9e3" }}
-                onClick={() => setOpenMenu(false)}
-              >
-                <p>Reconciliation Report</p>
-              </Link>
-              <Link
-                to={"sales-dashboard"}
-                style={{ textDecoration: "none", color: "#20b9e3" }}
-                onClick={() => setOpenMenu(false)}
-              >
-                <p>Sales Dashboard</p>
-              </Link>
-              <Link
-                to={"inventory-dashboard"}
-                style={{ textDecoration: "none", color: "#20b9e3" }}
-                onClick={() => setOpenMenu(false)}
-              >
-                <p>Inventory Dashboard</p>
-              </Link> */}
             </div>
           </div>
         ) : (

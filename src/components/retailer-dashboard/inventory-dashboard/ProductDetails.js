@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Card, CardBody, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import { Table } from 'reactstrap';
 import { HiOutlineArrowSmallLeft } from "react-icons/hi2"
-import { handleLowStockItemsRequest, handleLowStockItemListRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
+import { handleLowStockItemsRequest, handleLowStockItemListRequest, handleNoOfItemRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
 
 const ProductDetails = () => {
 
     const dispatch = useDispatch()
-    const { low_stock_items } = useSelector(state => state.ComponentPropsManagement)
+    const { low_stock_items, no_of_items } = useSelector(state => state.ComponentPropsManagement)
     const [modalIsOpen, setModalIsOpen] = useState(false)
 
     const debounce = (func) => {
@@ -26,6 +26,7 @@ const ProductDetails = () => {
     const handleFunCall = () => {
         dispatch(handleLowStockItemsRequest())
         dispatch(handleLowStockItemListRequest())
+        dispatch(handleNoOfItemRequest())
     }
 
     const optimizedFn = useCallback(debounce(handleFunCall), []);
@@ -88,7 +89,7 @@ const ProductDetails = () => {
                             </tr> */}
                             <tr>
                                 <td>No of Items</td>
-                                <td style={{ fontWeight: "bold" }}>104</td>
+                                <td style={{ fontWeight: "bold" }}>{no_of_items}</td>
                             </tr>
                         </tbody>
                     </Table>

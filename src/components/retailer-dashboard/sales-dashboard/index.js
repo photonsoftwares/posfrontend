@@ -40,7 +40,7 @@ const SalesDashboard = () => {
         <div className="">
 
             <Row>
-                <Col md={12} className='mt-3'>
+                {/* <Col md={12} className='mt-3'>
                     <FormGroup>
                         <h3>
                             <b>
@@ -54,7 +54,7 @@ const SalesDashboard = () => {
                     <div style={{ fontSize: "20px" }}>
                         Sale -----------------------
                     </div>
-                </Col>
+                </Col> */}
 
                 <Col md={12} className='mt-4'>
                     <div className='d-flex justify-content-center'>
@@ -62,9 +62,9 @@ const SalesDashboard = () => {
 
                             <div className='card-container-style' style={{ marginRight: "20px", minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
                                 <div className="d-flex justify-content-between">
-                                    <div className='me-4'>
+                                    <div className='me-4 h6'>
                                         {today_sales !== null && today_sales !== 0 && (<>
-                                            <BsArrowDown className='me-2' size={25} />
+                                            <BsArrowDown className='me-1' size={25} />
                                         </>)}
                                         Today's
                                     </div>
@@ -76,9 +76,9 @@ const SalesDashboard = () => {
 
                             <div className='card-container-style' style={{ marginRight: "20px", minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
                                 <div className="d-flex justify-content-between" >
-                                    <div className='me-4'>
+                                    <div className='me-4 h6'>
                                         {yesterday_sales !== null && yesterday_sales !== 0 && (<>
-                                            <BsArrowDown className='me-2' size={25} />
+                                            <BsArrowDown className='me-1' size={25} />
                                         </>)}
                                         Yesterdays's
                                     </div>
@@ -91,9 +91,9 @@ const SalesDashboard = () => {
 
                             <div className='card-container-style' style={{ minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
                                 <div className="d-flex justify-content-between">
-                                    <div className='me-4'>
+                                    <div className='me-4 h6'>
                                         {last_week_sales !== null && last_week_sales !== 0 && (<>
-                                            <BsArrowUp className='me-2' size={25} />
+                                            <BsArrowUp className='me-1' size={25} />
                                         </>)}
                                         Last Week
                                     </div>
@@ -113,11 +113,26 @@ const SalesDashboard = () => {
                 <Col md={12} >
                     <div className='d-flex justify-content-center'>
                         <div style={{ display: "flex", justifyContent: "flex-start", flexWrap: "wrap" }}>
+
+                            <div className='card-container-style' style={{ marginRight: "20px", minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
+                                <div className="d-flex justify-content-between">
+                                    <div className='me-4 h6'>
+                                        {last_fourteen_days !== null && last_fourteen_days !== 0 && (<>
+                                            <BsArrowUp className='me-1' size={25} />
+                                        </>)}
+                                        Last 14 Days
+                                    </div>
+                                    <div>
+                                        {last_fourteen_days}
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className='card-container-style' style={{ marginRight: "20px", minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
                                 <div className="d-flex justify-content-between" >
-                                    <div className='me-4'>
+                                    <div className='me-4 h6'>
                                         {last_month_sales !== null && last_month_sales !== 0 && (<>
-                                            <BsArrowDown size={25} className='me-2' />
+                                            <BsArrowDown size={25} className='me-1' />
                                         </>)}
                                         Last Month
                                     </div>
@@ -127,30 +142,18 @@ const SalesDashboard = () => {
                                 </div>
                             </div>
 
-                            <div className='card-container-style' style={{ marginRight: "20px", minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
-                                <div className="d-flex justify-content-between">
-                                    <div className='me-4'>
-                                        {last_fourteen_days !== null && last_fourteen_days !== 0 && (<>
-                                            <BsArrowUp className='me-2' size={25} />
-                                        </>)}
-                                        Last Fourteen Days
-                                    </div>
-                                    <div>
-                                        {last_fourteen_days}
-                                    </div>
-                                </div>
-                            </div>
+
 
                             <div className='card-container-style' style={{ minWidth: "300px", fontSize: "18px", fontWeight: "bold" }}>
 
                                 <div
                                     className="d-flex justify-content-between"
                                 >
-                                    <div className='me-4'>
+                                    <div className='me-4 h6'>
                                         {last_sixty_days !== null && last_sixty_days !== 0 && (<>
-                                            <BsArrowDown size={25} className='me-2' />
+                                            <BsArrowDown size={25} className='me-1' />
                                         </>)}
-                                        Last Sixty Days
+                                        Last 60 Days
                                     </div>
                                     <div>
                                         {last_sixty_days}

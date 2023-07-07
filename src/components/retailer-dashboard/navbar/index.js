@@ -7,14 +7,13 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
 const Navbar = (props) => {
     const navigate = useNavigate();
-    // const { setSidebarIsOpen, sidebarIsOpen } = props
+
     const { user_data } = useSelector(state => state.ComponentPropsManagement)
-    console.log("User_data", user_data)
     return (<>
         <div style={{
             // backgroundColor: "var(--primary)", 
             padding: "20px",
-            backgroundColor: "#198754"
+            backgroundColor: "var(--primary1)"
 
         }}>
             <div className="d-flex justify-content-between">
@@ -43,11 +42,7 @@ const Navbar = (props) => {
                     </div> */}
                     <div className='my-auto mouse-pointer'
                         onClick={() => {
-                            // localStorage.removeItem("token")
-                            localStorage.removeItem("Token");
-                            localStorage.removeItem("login_data");
-                            localStorage.removeItem("Store_data");
-                            localStorage.removeItem("User_data");
+                            localStorage.clear()
                             window.location.replace("/")
                         }}
                     >

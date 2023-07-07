@@ -110,23 +110,23 @@ const AddItem = () => {
       handleAddItemToStoreRequest({
         item_name: itemName,
         item_code: Number(itemCode),
-        description: itemDesc,
+        description: itemName,
         price: Number(itemPrice),
         // discount: Number(selectedOptionDiscount.value),
-        // tax: Number(selectedOptionTax.value),
+        tax: Number(taxPercentage),
         tax_code: Number(taxPercentage),
         status: "active",
         saas_id: saasId,
         store_id: storeId,
+        department: itemName,
         // promo_id: saasId,
-        sku: "SKU123",
-        department: itemCategory,
       })
     );
     setItemName("");
     setItemPrice("");
     setItemCode("");
     setItemDesc("");
+    setItemCategory("");
     setItemDesc("");
     setDepartment("");
     setSelectedOptionDiscount(null);
@@ -233,7 +233,7 @@ const AddItem = () => {
                       capture="environment"
                       onChange={(e) => handleCapture(e.target)}
                     />
-                    <label htmlFor="icon-button-file">
+                    {/* <label htmlFor="icon-button-file">
                       <IconButton
                         color="primary"
                         aria-label="upload picture"
@@ -241,7 +241,7 @@ const AddItem = () => {
                       >
                         <AiFillCamera size="large" color="red" />
                       </IconButton>
-                    </label>
+                    </label> */}
                   </Grid>
                 </Grid>
                 {/*  */}
@@ -255,6 +255,39 @@ const AddItem = () => {
                 >
                   Upload Item Pic
                 </button>
+                <div className="">
+                  <button
+                    style={{
+                      backgroundColor: "#20b9e3",
+                      outline: "none",
+                      border: "none",
+                      fontSize: "20px",
+                      padding: "10px 20px",
+                      borderRadius: "10px",
+                      color: "#fff",
+                    }}
+                  >
+                    Save
+                  </button>
+                  <Link
+                    to="/home"
+                    type="submit"
+                    // onClick={()=>}
+                    className="btn btn-primary"
+                    style={{
+                      backgroundColor: "#fc0202",
+                      outline: "none",
+                      border: "none",
+                      marginLeft: "20px",
+                      fontSize: "20px",
+                      padding: "10px 20px",
+                      borderRadius: "10px",
+                      color: "#fff",
+                    }}
+                  >
+                    Close
+                  </Link>
+                </div>
               </div>
             ) : (
               <form className="form-box" onSubmit={handleAddItem}>
@@ -329,10 +362,11 @@ const AddItem = () => {
                     type="text"
                     className="form-control my-2"
                     id="customer-name"
-                    value={itemDesc}
-                    onChange={(e) => setItemDesc(e.target.value)}
+                    value={itemName}
+                    onChange={(e) => setItemName(e.target.value)}
                     label="Item Name"
                     multiline
+                    required
                     rows={1}
                   />
                   <TextField
@@ -340,8 +374,9 @@ const AddItem = () => {
                     type="text"
                     className="form-control my-2"
                     id="customer-name"
-                    value={itemDesc}
-                    onChange={(e) => setItemDesc(e.target.value)}
+                    required
+                    value={itemName}
+                    onChange={(e) => setItemName(e.target.value)}
                     label="Item Desc"
                     multiline
                     rows={3}
@@ -351,9 +386,10 @@ const AddItem = () => {
                     type="text"
                     className="form-control my-2"
                     id="customer-name"
-                    value={itemCategory}
-                    onChange={(e) => setItemCategory(e.target.value)}
+                    value={itemName}
+                    onChange={(e) => setItemName(e.target.value)}
                     label="Item Category"
+                    required
                     multiline
                     rows={1}
                   />
@@ -363,6 +399,7 @@ const AddItem = () => {
                     className="form-control my-2"
                     id="customer-name"
                     value={itemPrice}
+                    required
                     onChange={(e) => setItemPrice(e.target.value)}
                     label="Item Price"
                   />
@@ -372,6 +409,7 @@ const AddItem = () => {
                     className="form-control my-2"
                     id="customer-name"
                     value={taxPercentage}
+                    required
                     onChange={(e) => setTaxPercentage(e.target.value)}
                     label="Tax Percentage"
                   />
@@ -392,8 +430,8 @@ const AddItem = () => {
                     Save
                   </button>
                   <Link
-                    to="/"
-                    type="submit"
+                    to="/home"
+                    // type="submit"
                     // onClick={()=>}
                     className="btn btn-primary"
                     style={{
