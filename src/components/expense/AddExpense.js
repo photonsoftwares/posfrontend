@@ -32,79 +32,44 @@ const AddExpense = (props) => {
                     <Row>
                         <Col md={12}>
                             <FormGroup>
-                                <Label>Select Category <span className="text-red"> * </span></Label>
-                                <Select
-                                    options={expense_category_dropdown}
-                                    required={true}
-                                    placeholder="Select Category"
-                                />
-                            </FormGroup>
-                        </Col>
-
-                        <Col md={12}>
-                            <FormGroup>
-                                <Label>Expense Date <span className="text-red"> * </span></Label>
-                                <Flatpickr
-                                    className='form-control'
-                                    onChange={e => {
-                                        // setEndDate(e[0])
-                                    }}
-                                    options={{ allowInput: true, dateFormat: "d-M-Y" }}
-                                    // value={endDate}
-                                    required={true}
-                                    placeholder='Select Date'
-                                />
-                            </FormGroup>
-                        </Col>
-
-
-                        <Col md={12}>
-                            <FormGroup>
-                                <Label>Payment Mode <span className="text-red"> * </span></Label>
-                                <div className='d-flex'>
-                                    <div className='me-4'>
-                                        <Input
-                                            type="radio"
-                                            className='me-2 mouse-pointer'
-                                            id='online-radio'
-                                            name='payment-mode'
-                                        />
-                                        <Label htmlFor="online-radio" className='mouse-pointer'>Online</Label>
-                                    </div>
-                                    <div className='me-4'>
-                                        <Input
-                                            type="radio"
-                                            className='me-2 mouse-pointer'
-                                            id="cheque-radio"
-                                            name='payment-mode'
-                                        />
-                                        <Label htmlFor='cheque-radio mouse-pointer'>Cheque</Label>
-                                    </div>
-                                    <div>
-                                        <Input
-                                            type="radio"
-                                            className='me-2'
-                                            id="cash-radio"
-                                            name='payment-mode'
-                                        />
-                                        <Label htmlFor='cash-radio'>Cash</Label>
-                                    </div>
-                                </div>
-                            </FormGroup>
-                        </Col>
-
-                        <Col md={12}>
-                            <FormGroup style={{ fontWeight: "bolder", color: "#0d6efd", cursor: "pointer" }}>
-                                <AiOutlinePlus /> Add Expenses
-                            </FormGroup>
-                        </Col>
-
-                        <Col md={12}>
-                            <FormGroup>
-                                <Label>Expense Notes <span className="text-red"> * </span></Label>
+                                <Label>Enter Name <span className="text-red"> * </span></Label>
                                 <Input
-                                    type='textarea'
-                                    rows={4}
+                                    type="text"
+                                    required={true}
+                                    placeholder='Enter Name'
+                                />
+                            </FormGroup>
+                        </Col>
+
+                        <Col md={12}>
+                            <FormGroup>
+                                <Label>Enter Quantity <span className="text-red"> * </span></Label>
+                                <Input
+                                    type="number"
+                                    required={true}
+                                    placeholder='Enter Quantity'
+                                />
+                            </FormGroup>
+                        </Col>
+
+                        <Col md={12}>
+                            <FormGroup>
+                                <Label>Enter Cost <span className="text-red"> * </span></Label>
+                                <Input
+                                    type="number"
+                                    required={true}
+                                    placeholder='Enter Cost'
+                                />
+                            </FormGroup>
+                        </Col>
+
+                        <Col md={12}>
+                            <FormGroup>
+                                <Label>Enter Amount <span className="text-red"> * </span></Label>
+                                <Input
+                                    type="number"
+                                    required={true}
+                                    placeholder='Enter Amount'
                                 />
                             </FormGroup>
                         </Col>
@@ -115,7 +80,7 @@ const AddExpense = (props) => {
                         type="button"
                         color='primary'
                     >
-                        Create
+                        Save
                     </Button>
                 </ModalFooter>
             </Form>
