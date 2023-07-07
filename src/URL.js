@@ -1,7 +1,7 @@
 export let BASE_Url = "";
 export let Email_Url = "";
 export let host = "";
-export const isDev = true;
+export const isDev = false;
 
 if (isDev === true) {
   BASE_Url = "http://3.111.70.84:8088/api/v1";

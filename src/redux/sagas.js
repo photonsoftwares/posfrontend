@@ -1,7 +1,7 @@
 import { put, takeEvery, all, retry } from "redux-saga/effects";
 import { BASE_Url, Email_Url, host } from "../URL";
 import { toast } from "react-toastify";
-
+import { confirmAlert } from "react-confirm-alert";
 import moment from "moment";
 // import { useNavigate } from "react-router-dom";
 
@@ -131,19 +131,26 @@ function* handleSearchedDataRequest(e) {
     }
   } else if (jsonData.status === false && jsonData.data == null) {
     // toast.error("NO ITEM FOUND, would you like to add this Item to Store.??");
-    const confirm = window.confirm(
-      "NO ITEM FOUND, would you like to add this Item to Store.??"
-    );
-    if (confirm) {
-      // return <Navigation />;
-      // navigate("/add-item");
-      // history.push("/add-item");
-      window.location.replace("/add-item");
-    } else {
-      // history.push("/");
-      window.location.replace("/home");
-      // navigate("/");
-    }
+
+    confirmAlert({
+      title: "NO ITEM FOUND",
+      message: "Would you like to add this Item to Store.??",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            window.location.replace("/add-item");
+          },
+        },
+        {
+          label: "No",
+          onClick: () => {
+            window.location.replace("/home");
+          },
+        },
+      ],
+    });
+
     yield put({
       type: "ComponentPropsManagement/handleSearchedDataResponse",
       // data: tempSearchArr,
