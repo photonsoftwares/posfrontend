@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Card, CardBody, Col, FormGroup, Nav, NavItem, NavLink, Row, TabContent, TabPane, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import { Card, CardBody, Col, FormGroup, Nav, NavItem, NavLink, Row, TabContent, TabPane, Button, Modal, ModalBody, ModalFooter, ModalHeader, Label } from 'reactstrap'
 import { BsArrowDown, BsArrowUp } from "react-icons/bs"
 import { useDispatch, useSelector } from 'react-redux'
 import { AiOutlineEye } from "react-icons/ai"
@@ -8,16 +8,42 @@ import { Viewer, Worker } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-import { handleLastWeekSalesRequest, handleLastMonthSalesRequest, handleLastSixtyDaysSalesRequest, handleTodaySalesRequest, handleLastFourteenDaysSalesRequest, handleYesterdaySalesRequest } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
+import { handleSalesReportRequest } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
 import moment from 'moment'
 import DataTable from 'react-data-table-component';
 import { CSVLink } from "react-csv";
-
+import Flatpickr from "react-flatpickr";
 
 const SalesReport = () => {
+    const dispatch = useDispatch()
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
     // const dispatch = useDispatch()
     const { sales_report_table_data } = useSelector(state => state.ComponentPropsManagement)
+    const [date, setDate] = useState(new Date())
+
+    const debounce = (func) => {
+        let timer;
+        return function (...args) {
+            const context = this;
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(() => {
+                timer = null;
+                func.apply(context, args);
+            }, 1000);
+        };
+    };
+
+    const handleFunCall = (date) => {
+        const t1 = moment(date).format("Y-MM-DD")
+        dispatch(handleSalesReportRequest(t1))
+    }
+
+    const optimizedFn = useCallback(debounce(handleFunCall), []);
+    useEffect(() => {
+        if (date) {
+            optimizedFn(date)
+        }
+    }, [date])
 
     // const debounce = (func) => {
     //     let timer;
@@ -137,6 +163,29 @@ const SalesReport = () => {
                 {`Sales Report (Business Date: ${moment(new Date()).format("DD-MMM-Y")})`}
             </CardBody>
         </Card>
+
+        <Card className='mb-3'>
+            <CardBody>
+                <Row>
+                    <Col md={4}>
+                        <FormGroup>
+                            <Label className='m-0 p-0'>Select Date <span className="text-red"> * </span></Label>
+                            <Flatpickr
+                                className='form-control'
+                                onChange={e => {
+                                    setDate(e[0])
+                                }}
+                                options={{ allowInput: true, dateFormat: "d-M-Y" }}
+                                value={date}
+                                required={true}
+                                placeholder='Select Date'
+                            />
+                        </FormGroup>
+                    </Col>
+                </Row>
+            </CardBody>
+        </Card>
+
         <DataTable
             columns={columns}
             responsive={true}

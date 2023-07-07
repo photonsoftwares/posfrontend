@@ -12,10 +12,14 @@ const GstReportItem = () => {
             name: 'HSN Code',
             selector: row => row.hsn_code,
         },
-        // {
-        //     name: 'Business Date',
-        //     selector: row => row.business_date,
-        // },
+        {
+            name: 'Total',
+            selector: row => row.total_value,
+        },
+        {
+            name: "Total Discount",
+            selector: row => row.total_discount
+        },
         {
             name: 'Tax',
             selector: row => row.tax_value,
@@ -48,14 +52,8 @@ const GstReportItem = () => {
             name: "Other Taxes",
             selector: row => row.other_taxes
         },
-        {
-            name: "Total Discount",
-            selector: row => row.total_discount
-        },
-        {
-            name: 'Total',
-            selector: row => row.total_value,
-        },
+
+
     ];
 
     const actionsMemo = React.useMemo(() => {

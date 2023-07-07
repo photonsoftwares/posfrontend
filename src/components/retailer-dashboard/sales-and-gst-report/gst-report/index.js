@@ -13,10 +13,10 @@ const GSTReport = () => {
             name: 'HSN Code',
             selector: row => row.hsn_code,
         },
-        // {
-        //     name: 'Business Date',
-        //     selector: row => row.business_date,
-        // },
+        {
+            name: 'Total',
+            selector: row => row.total_value,
+        },
         {
             name: 'Tax',
             selector: row => row.taxable_value,
@@ -45,10 +45,7 @@ const GSTReport = () => {
             name: 'Flood Cess',
             selector: row => row.flood_cess,
         },
-        {
-            name: 'Total',
-            selector: row => row.total_value,
-        },
+
     ];
 
     const actionsMemo = React.useMemo(() => {

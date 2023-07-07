@@ -44,7 +44,7 @@ const SalesAndGstReport = () => {
     };
 
     const handleFunCall = () => {
-        dispatch(handleSalesReportRequest())
+        // dispatch(handleSalesReportRequest())
         dispatch(handleGstReportRequest())
         dispatch(handleGstReportItemRequest())
     }
