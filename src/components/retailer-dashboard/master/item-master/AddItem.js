@@ -149,7 +149,7 @@ const AddItem = ({ addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen, row, s
 
   const handleCapture = (target) => {
     if (target.files) {
-      if (target.files.length !== 0) {
+      if (target.files?.length !== 0) {
         // const file = target.files[0];
         // const newUrl = URL.createObjectURL(file);
         // setSource(newUrl);

@@ -195,7 +195,7 @@ const Home = () => {
 
   useEffect(() => {
     if (get_recommended_items && get_recommended_items?.data) {
-      if (get_recommended_items?.data.length > 0) {
+      if (get_recommended_items?.data?.length > 0) {
         const t1 = JSON.parse(JSON.stringify(get_recommended_items?.data));
         t1.map((item) => {
           item["new_price"] = item.price;
@@ -243,7 +243,7 @@ const Home = () => {
 
   // useEffect(() => {
   //   if (cart_data) {
-  //     if (cart_data.length > 0) {
+  //     if (cart_data?.length > 0) {
   //       const t1 = JSON.parse(JSON.stringify(cart_data));
   //       t1.map((item) => {
   //         item["discount_menu_is_open"] = false;
@@ -331,7 +331,7 @@ const Home = () => {
 
   useEffect(() => {
     if (get_searched_data && get_searched_data?.data) {
-      if (get_searched_data?.data.length > 0) {
+      if (get_searched_data?.data?.length > 0) {
         const t1 = JSON.parse(JSON.stringify(get_searched_data?.data));
         t1.map((item) => {
           item["new_price"] = item.price;
@@ -354,16 +354,21 @@ const Home = () => {
     }
   }, [searchValue]);
 
-  const recognition = window.recognition;
-  recognition.addEventListener("result", (e) => {
-    const transcript = Array.from(e.results)
-      .map((result) => result[0])
-      .map((result) => result.transcript)
-      .join("");
+  let recognition = null
+  try {
+    recognition = window.recognition;
+    recognition.addEventListener("result", (e) => {
+      const transcript = Array.from(e.results)
+        .map((result) => result[0])
+        .map((result) => result.transcript)
+        .join("");
 
-    // document.getElementById("p").innerHTML = transcript;
-    setSearchValue(transcript);
-  });
+      // document.getElementById("p").innerHTML = transcript;
+      setSearchValue(transcript);
+    });
+  } catch (err) {
+    console.log(err)
+  }
 
   const handleVoiceCommand = () => {
     try {
@@ -382,7 +387,7 @@ const Home = () => {
   useEffect(() => {
     // console.log("optionTick", optionTick);
     let sum = 0;
-    if (optionTick && optionTick.length > 0) {
+    if (optionTick && optionTick?.length > 0) {
       optionTick.map((item) => {
         sum = sum + Number(item.amount);
       });
@@ -413,7 +418,7 @@ const Home = () => {
   };
 
   const RenderUi = () => {
-    if (searchedData && searchValue.length > 0) {
+    if (searchedData && searchValue?.length > 0) {
       return (
         <>
           <Product
@@ -427,7 +432,7 @@ const Home = () => {
           />
         </>
       );
-    } else if (recommendedData && recommendedData.length > 0) {
+    } else if (recommendedData && recommendedData?.length > 0) {
       return (
         <>
           <Product
@@ -445,7 +450,7 @@ const Home = () => {
   };
 
   const handleTenderAmount = () => {
-    if (optionTick.length > 0) {
+    if (optionTick?.length > 0) {
       const obj = {};
       optionTick.map((item) => {
         obj[item.name] = item.amount;
@@ -529,10 +534,10 @@ const Home = () => {
             opacity={0.9}
             // onClick={() => setSpechModal(true)}
             onClick={handleVoiceCommand}
-            // onClick={() => {
-            //   setVisibleVoiceCommand(true);
-            //   startListening;
-            // }}
+          // onClick={() => {
+          //   setVisibleVoiceCommand(true);
+          //   startListening;
+          // }}
           />
         </div>
       </div>
@@ -551,19 +556,19 @@ const Home = () => {
             fontWeight: "bold",
             padding: 0,
             margin: 0,
-            display: searchValue.length ? "none" : "block",
+            display: searchValue?.length ? "none" : "block",
           }}
         >
           Recommended Items
         </h5>
 
         <RenderUi />
-        {/* {searchedData && searchValue.length > 0
+        {/* {searchedData && searchValue?.length > 0
           ? searchedData.map((item, index) => (
               <Product item={item} key={index} />
             ))
           : recommendedData &&
-            recommendedData.length > 0 &&
+            recommendedData?.length > 0 &&
             recommendedData.map((item, index) => (
               <>
                 <Product item={item} key={index} />
@@ -644,13 +649,13 @@ const Home = () => {
               fontSize: "20px",
               cursor: "pointer",
             }}
-            // onClick={() => {
-            //   if (cartData && cartData.length > 0) {
-            //     setShow(true);
-            //   } else {
-            //     toast.error("Please add atleast one item in cart");
-            //   }
-            // }}
+          // onClick={() => {
+          //   if (cartData && cartData?.length > 0) {
+          //     setShow(true);
+          //   } else {
+          //     toast.error("Please add atleast one item in cart");
+          //   }
+          // }}
           >
             {/* View Cart <BsArrowRight /> */}
           </h2>
@@ -684,7 +689,7 @@ const Home = () => {
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-        // style={{ position: "relative" }}
+      // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -727,7 +732,7 @@ const Home = () => {
                           }
                         }
                       }}
-                      // disabled={optionTick.length > 0}
+                      // disabled={optionTick?.length > 0}
                       disabled={Number(optionTickSum) === Number(sumValue)}
                       value={amount}
                       required={true}
@@ -752,14 +757,14 @@ const Home = () => {
                         <div className="mb-2 d-flex px-0" key={item.id}>
                           <div
                             onClick={() => {
-                              if (optionTick.length === 0) {
+                              if (optionTick?.length === 0) {
                                 const obj = { ...item, amount };
                                 setOptionTick([...optionTick, obj]);
-                              } else if (optionTick.length > 0) {
+                              } else if (optionTick?.length > 0) {
                                 if (
                                   optionTick.filter(
                                     (io) => io.value === item.value
-                                  ).length > 0
+                                  )?.length > 0
                                 ) {
                                   setOptionTick(
                                     optionTick.filter(
@@ -774,28 +779,27 @@ const Home = () => {
                                 }
                               }
                             }}
-                            className={`option-item ${
-                              optionTick.filter((io) => io.name === item.value)
-                                .length > 0 && ""
-                            }`}
+                            className={`option-item ${optionTick.filter((io) => io.name === item.value)
+                              ?.length > 0 && ""
+                              }`}
                             style={{
                               width: "90%",
                               backgroundColor:
                                 item.name === "Cash"
                                   ? "#fed813"
                                   : item.name === "Paytm"
-                                  ? "#00B9F1"
-                                  : item.name === "Google Pay"
-                                  ? "#2DA94F"
-                                  : item.name === "Phone Pay"
-                                  ? "#5f259f"
-                                  : item.name === "UPI"
-                                  ? "#ff7909"
-                                  : item.name === "Credit Sale"
-                                  ? "#1741b2"
-                                  : item.name === "Loyalty"
-                                  ? "#c8030e"
-                                  : "silver",
+                                    ? "#00B9F1"
+                                    : item.name === "Google Pay"
+                                      ? "#2DA94F"
+                                      : item.name === "Phone Pay"
+                                        ? "#5f259f"
+                                        : item.name === "UPI"
+                                          ? "#ff7909"
+                                          : item.name === "Credit Sale"
+                                            ? "#1741b2"
+                                            : item.name === "Loyalty"
+                                              ? "#c8030e"
+                                              : "silver",
                             }}
                           >
                             <div style={{ position: "relative", top: "2px" }}>
@@ -808,18 +812,18 @@ const Home = () => {
                                   item.name === "Cash"
                                     ? "black"
                                     : item.name === "Paytm"
-                                    ? "black"
-                                    : item.name === "Google Pay"
-                                    ? "white"
-                                    : item.name === "Phone Pay"
-                                    ? "white"
-                                    : item.name === "UPI"
-                                    ? "white"
-                                    : item.name === "Credit Sale"
-                                    ? "#fff"
-                                    : item.name === "Loyalty"
-                                    ? "#fff"
-                                    : "black",
+                                      ? "black"
+                                      : item.name === "Google Pay"
+                                        ? "white"
+                                        : item.name === "Phone Pay"
+                                          ? "white"
+                                          : item.name === "UPI"
+                                            ? "white"
+                                            : item.name === "Credit Sale"
+                                              ? "#fff"
+                                              : item.name === "Loyalty"
+                                                ? "#fff"
+                                                : "black",
                               }}
                             >
                               {item.name}
@@ -840,7 +844,7 @@ const Home = () => {
                 }}
               >
                 <div className="calculated_amount-container">
-                  {optionTick && optionTick.length > 0 && (
+                  {optionTick && optionTick?.length > 0 && (
                     <>
                       {optionTick.map((item) => {
                         return (
@@ -949,10 +953,9 @@ const Home = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${
-                      handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                    }`}
+                      }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -981,10 +984,9 @@ const Home = () => {
                 }}
               >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${
-                    handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                  }`}
+                    }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />
