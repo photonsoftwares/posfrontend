@@ -15,9 +15,14 @@
 
 <body>
   <script>
-    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    window.recognition = new SpeechRecognition();
-    window.recognition.interimResults = true;
+    try {
+
+      window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      window.recognition = new SpeechRecognition();
+      window.recognition.interimResults = true;
+    } catch (err) {
+      console.log(err)
+    }
   </script>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>

@@ -1,5 +1,5 @@
   if (jsonData.status === true) {
-    if (jsonData.data && jsonData.data.length > 0) {
+    if (jsonData.data && jsonData.data?.length > 0) {
       // console.log("INSIDE", jsonData);
       const tempSearchArr = jsonData.data;
       tempSearchArr.map((el) => {

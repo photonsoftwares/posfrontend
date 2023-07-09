@@ -176,14 +176,14 @@ const MyCart = ({
     const getData = JSON.parse(localStorage.getItem("my-cart"));
     console.log(getData);
     if (getData) {
-      if (getData.length > 0) {
-        if (getData.length > 1) {
+      if (getData?.length > 0) {
+        if (getData?.length > 1) {
           const updateCart = getData.filter(
             (el) => el.productId !== item.productId
           );
           localStorage.setItem("my-cart", JSON.stringify(updateCart));
           setCartData(updateCart);
-          dispatch(handlecartCount(updateCart.length));
+          dispatch(handlecartCount(updateCart?.length));
         } else {
           localStorage.setItem("my-cart", JSON.stringify([]));
           setCartData([]);
@@ -413,7 +413,7 @@ const MyCart = ({
                       type="number"
                       className="me-3"
                       // ref={ref}
-                      // disabled={amountOff.length > 0 ? true : false}
+                      // disabled={amountOff?.length > 0 ? true : false}
                       disabled={item.amount_value}
                       // value={percentOff}
                       // onChange={(e) => setPercentOff(e.target.value)}
@@ -464,7 +464,7 @@ const MyCart = ({
                         setTotalDiscountVal(0);
                       }}
                       value={item.amount_value}
-                    // disabled={percentOff.length > 0 ? true : false}
+                    // disabled={percentOff?.length > 0 ? true : false}
                     // value={amountOff}
                     // onChange={(e) => setAmountOff(e.target.value)}
                     />
@@ -561,7 +561,7 @@ const MyCart = ({
             </div>
           </>
         )}
-        {cartData?.filter((io) => io.discount_menu_is_open === true).length ===
+        {cartData?.filter((io) => io.discount_menu_is_open === true)?.length ===
           0 &&
           totalDiscountVal !== 0 && (
             <>
@@ -578,7 +578,7 @@ const MyCart = ({
           )}
         {/* </div> */}
 
-        {cartData?.filter((io) => io.discount_menu_is_open === true).length ===
+        {cartData?.filter((io) => io.discount_menu_is_open === true)?.length ===
           0 && (
             <>
               <div
@@ -750,8 +750,8 @@ const MyCart = ({
       >
         <Button
           onClick={() => {
-            if (cartData.length > 0) {
-              if (cartData.filter((io) => io.price === 0).length === 0) {
+            if (cartData?.length > 0) {
+              if (cartData.filter((io) => io.price === 0)?.length === 0) {
                 setPaymentModal(true);
               } else {
                 toast.error("Item amount should not be zero");
@@ -768,7 +768,7 @@ const MyCart = ({
           }}
         // className="bg-primary"
         >
-          {cartData && cartData.length > 0
+          {cartData && cartData?.length > 0
             ? "Proceed to checkout"
             : "No Item here"}
           {/* Proceed to checkout */}

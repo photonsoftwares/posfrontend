@@ -40,7 +40,7 @@ const Product = ({
   useEffect(() => {
     const el = JSON.parse(localStorage.getItem("my-cart"));
     if (el) {
-      dispatch(handlecartCount(el.length));
+      dispatch(handlecartCount(el?.length));
     } else {
       dispatch(handlecartCount(0));
     }
@@ -183,7 +183,7 @@ const Product = ({
                     onClick={() => {
                       const el = JSON.parse(localStorage.getItem("my-cart"));
                       if (el) {
-                        if (el.length > 0) {
+                        if (el?.length > 0) {
                           let flag = 0;
                           el.map((el1) => {
                             if (el1.productId === item.productId) {
@@ -199,7 +199,7 @@ const Product = ({
                               JSON.stringify([...el, item])
                             );
                           }
-                          dispatch(handlecartCount([...el, item].length));
+                          dispatch(handlecartCount([...el, item]?.length));
                         } else {
                           localStorage.setItem(
                             "my-cart",
