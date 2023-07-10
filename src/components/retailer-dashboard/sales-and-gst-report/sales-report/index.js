@@ -157,6 +157,19 @@ const SalesReport = () => {
         </>)
     }, []);
 
+    const handleSum = (arr) => {
+        if (arr) {
+            if (arr.length > 0) {
+                let sum = 0
+                arr.map(item => {
+                    sum = sum + Number(item)
+                })
+                return sum
+            }
+        }
+        return 0
+    }
+
     return (<>
         <Card className='my-3'>
             <CardBody>
@@ -190,7 +203,7 @@ const SalesReport = () => {
             columns={columns}
             responsive={true}
             data={sales_report_table_data}
-            // title={`Sales Report (Business Date: ${moment(new Date()).format("DD-MMM-Y")})`}
+            title={`Invoice Total: ${handleSum(sales_report_table_data.map(io => io.invoice_total))}`}
             fixedHeader={true}
             fixedHeaderScrollHeight='500px'
             actions={actionsMemo}

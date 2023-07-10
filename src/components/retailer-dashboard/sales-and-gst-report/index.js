@@ -5,6 +5,7 @@ import GSTReport from './gst-report'
 import GstReportItem from './gst-report-item'
 import { useDispatch } from 'react-redux'
 import { handleSalesReportRequest, handleGstReportRequest, handleGstReportItemRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
+import TenderReport from './tender-report'
 
 const SalesAndGstReport = () => {
     const dispatch = useDispatch()
@@ -26,6 +27,12 @@ const SalesAndGstReport = () => {
         {
             id: "3",
             name: "GST Report Item",
+            className: "active",
+            isActive: true
+        },
+        {
+            id: "4",
+            name: "Tender Report",
             className: "active",
             isActive: true
         }
@@ -88,6 +95,10 @@ const SalesAndGstReport = () => {
 
             <TabPane tabId="3">
                 <GstReportItem />
+            </TabPane>
+
+            <TabPane tabId="4">
+                <TenderReport />
             </TabPane>
         </TabContent>
     </>)
