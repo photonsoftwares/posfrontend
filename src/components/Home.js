@@ -222,12 +222,13 @@ const Home = () => {
     cartData?.map((el) => {
       // const totalCart = Number(el.price) * Number(el.productQty);
       // arr.push(totalCart);
+      // const r =  el.new_price* el.productQty
       arr.push(el.new_price);
     });
     arr?.map((el) => {
       sum = sum + el;
     });
-    // console.log("SUM", sum);
+    console.log("SUM", sum);
     // setBalanceDue(sum);
     setSumValue(sum);
     setAmount(sum);
@@ -245,13 +246,13 @@ const Home = () => {
   //   if (cart_data) {
   //     if (cart_data?.length > 0) {
   //       const t1 = JSON.parse(JSON.stringify(cart_data));
-  //       t1.map((item) => {
-  //         item["discount_menu_is_open"] = false;
-  //         item["discount_value"] = "";
-  //         item["amount_value"] = "";
-  //         item["new_price"] = Number(item.price) * Number(item.productQty);
-  //         item["zero_price"] = Number(item.price) * Number(item.productQty);
-  //       });
+  // t1.map((item) => {
+  //   item["discount_menu_is_open"] = false;
+  //   item["discount_value"] = "";
+  //   item["amount_value"] = "";
+  //   item["new_price"] = Number(item.price) * Number(item.productQty);
+  //   item["zero_price"] = Number(item.price) * Number(item.productQty);
+  // });
   //       setCartData(t1);
   //     }
   //  else {
