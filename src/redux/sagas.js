@@ -20,7 +20,7 @@ const {
     : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
-// console.log("SAAS DATA", saasId);
+console.log("storeId", storeId);
 
 function* handleLoginRequest(e) {
   const response = yield fetch(`${BASE_Url}/auth/user-login`, {
@@ -1412,6 +1412,44 @@ function* handleItemMasterListRequest(e) {
   }
 }
 
+function* handleTenderReportRequest(e) {
+  try {
+    const { date } = e.payload
+    const response = yield fetch(`${host}reconciliation/get-total-amount`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "saas_id": saasId,
+        "store_id": storeId,
+        "business_date": moment(date).format("Y-MM-DD")
+      })
+    });
+    const jsonData = yield response.json();
+    if (jsonData) {
+      if (jsonData.status === true) {
+        // toast.success(jsonData.message)
+        yield put({
+          type: "ComponentPropsManagement/handleTenderReportResponse",
+          data: jsonData.data,
+        });
+        return;
+      }
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleTenderReportResponse",
+        data: null,
+      });
+    } else {
+      toast.error("Something went wrong server side");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
+
 // Create Row in Tax Master
 function* handleCreateTaxMasterRequest(e) {
   try {
@@ -1632,6 +1670,11 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleGstReportRequest",
     handleGstReportRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleTenderReportRequest",
+    handleTenderReportRequest
   );
 
   yield takeEvery(

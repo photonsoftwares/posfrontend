@@ -41,7 +41,7 @@ const initialComponentPropsManagementState = {
   last_fourteen_days: 0,
   last_sixty_days: 0,
   yesterday_sales: 0,
-
+  tender_report_data: [],
   state_dropdown: [
     { label: "Andhra Pradesh", value: "Andhra Pradesh" },
     { label: "Arunachal Pradesh", value: "Arunachal Pradesh" },
@@ -421,6 +421,11 @@ export const ComponentPropsManagement = createSlice({
     handleItemMasterListResponse: (state, payload) => {
       state.item_master_list = payload.data;
     },
+    handleTenderReportRequest: (state, payload) => { },
+    handleTenderReportResponse: (state, payload) => {
+      state.tender_report_data = payload.data ? [payload.data] : [];
+    },
+
     handleSearchedDataRequest1: (state, payload) => { },
     handleSearchedDataResponse1: (state, payload) => {
       state.item_master_list = payload.data
@@ -443,6 +448,7 @@ export const {
   handleShowModal,
   handleAccruvalRequest,
   handleMemberEnrollmentResponse,
+  handleTenderReportRequest,
   handleEmailNotificationResponse,
   handleEmailNotificationRequest,
   handleLoginRequest,
