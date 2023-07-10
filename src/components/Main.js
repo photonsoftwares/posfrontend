@@ -232,7 +232,7 @@ const Main = () => {
                           } else if (item.value === "debit_note") {
                             navigate("/debit-note");
                           } else if (item.value === "expense") {
-                            setExpenseModalIsOpen(!expenseModalIsOpen);
+                            // setExpenseModalIsOpen(!expenseModalIsOpen);
                           } else if (item.value === "delivery_challan") {
                             navigate("/delivery-challan");
                           }
