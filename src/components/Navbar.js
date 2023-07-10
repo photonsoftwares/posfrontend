@@ -41,7 +41,7 @@ const Navbar = () => {
   useEffect(() => {
     const el = JSON.parse(localStorage.getItem("my-cart"));
     if (el) {
-      dispatch(handlecartCount(el.length));
+      dispatch(handlecartCount(el?.length));
     } else {
       dispatch(handlecartCount(0));
     }
@@ -80,7 +80,7 @@ const Navbar = () => {
     localStorage.clear();
     navigate("/login");
   };
-  useEffect(() => {}, [handleLogout]);
+  useEffect(() => { }, [handleLogout]);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -224,7 +224,7 @@ const Navbar = () => {
               }}
             >
               {localStorage.getItem("User_data") &&
-              localStorage.getItem("Token") ? (
+                localStorage.getItem("Token") ? (
                 <GrLogout
                   size={25}
                   // style={{ cursor: "pointer", padding: 0, margin: 0 }}
@@ -291,7 +291,7 @@ const Navbar = () => {
                                   navigate("/member-enrollment");
                                 }}
                               >
-                                Member Enrol
+                                Member Enrollment
                               </DropdownItem>
                               <DropdownItem
                                 onClick={() => {
@@ -300,13 +300,13 @@ const Navbar = () => {
                               >
                                 Loyality Dashboard
                               </DropdownItem>
-                              <DropdownItem
+                              {/* <DropdownItem
                                 onClick={() => {
                                   navigate("/member-point-redemption");
                                 }}
                               >
                                 Member Point Redemption
-                              </DropdownItem>
+                              </DropdownItem> */}
                             </DropdownMenu>
                           </Dropdown>
                         </>

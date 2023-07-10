@@ -16,8 +16,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-  ? JSON.parse(localStorage.getItem("User_data"))
-  : {};
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
 // console.log("SAAS DATA", saasId);
@@ -114,7 +114,7 @@ function* handleSearchedDataRequest(e) {
 
   console.log("JSONDATA SEARCH", jsonData);
   if (jsonData.status === true) {
-    if (jsonData.data && jsonData.data.length > 0) {
+    if (jsonData.data && jsonData.data?.length > 0) {
       // console.log("INSIDE", jsonData);
       const tempSearchArr = jsonData.data;
       tempSearchArr.map((el) => {
@@ -284,7 +284,7 @@ function* handleRecommendedDataRequest() {
   const jsonData = yield response.json();
   // console.log("JSONDATA RECOMMENDED", jsonData);
   if (jsonData) {
-    if (jsonData.data && jsonData.data.length > 0) {
+    if (jsonData.data && jsonData.data?.length > 0) {
       // console.log("INSIDE", jsonData);
       const tempSearchArr = jsonData.data;
       tempSearchArr.map((el) => {

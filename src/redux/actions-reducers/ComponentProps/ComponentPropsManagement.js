@@ -138,7 +138,7 @@ export const ComponentPropsManagement = createSlice({
       const a1 = state.cart_data.filter(
         (io) => io.productId === payload.payload.productId
       );
-      if (a1 && a1.length > 0) {
+      if (a1 && a1?.length > 0) {
         state.cart_data.map((item) => {
           if (item.productId === payload.payload.productId) {
             item.productQty = Number(item.productQty) + 1;
@@ -146,7 +146,7 @@ export const ComponentPropsManagement = createSlice({
         });
       } else {
         state.cart_data = [...state.cart_data, payload.payload];
-        state.product_count = state.cart_data.length;
+        state.product_count = state.cart_data?.length;
         localStorage.setItem("my-cart", JSON.stringify(state.cart_data));
       }
 
@@ -163,7 +163,7 @@ export const ComponentPropsManagement = createSlice({
       ));
       localStorage.setItem("my-cart", JSON.stringify(updateCart));
 
-      state.product_count = state.cart_data.length - 1;
+      state.product_count = state.cart_data?.length - 1;
 
       state.load = false;
     },
