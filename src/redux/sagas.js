@@ -1301,7 +1301,7 @@ function* handleSalesDashboardChartRequest(e) {
 
 function* handleSalesReportRequest(e) {
   try {
-    const response = yield fetch(`${host}tax/get-sales-report/${e.payload}`, {
+    const response = yield fetch(`${host}tax/get-sales-report/${e.payload}/${storeId}/${saasId}`, {
       method: "GET",
     });
     const jsonData = yield response.json();
@@ -1449,7 +1449,69 @@ function* handleTenderReportRequest(e) {
   }
 }
 
+function* handleUpdateMoqRequest(e) {
+  try {
+    const response = yield fetch(`${host}moq/create-moq`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload)
+    });
+    const jsonData = yield response.json();
+    if (jsonData) {
+      if (jsonData.status === true) {
+        toast.success(jsonData.message)
+        yield put({
+          type: "ComponentPropsManagement/handleUpdateMoqResponse",
+          data: jsonData.data,
+        });
+        return;
+      }
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleUpdateMoqResponse",
+        data: null,
+      });
+    } else {
+      toast.error("Something went wrong server side");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
 
+function* handleUpdatePriceRequest(e) {
+  try {
+    const response = yield fetch(`${host}item-price/add-item-price`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload)
+    });
+    const jsonData = yield response.json();
+    if (jsonData) {
+      if (jsonData.status === true) {
+        toast.success(jsonData.message)
+        yield put({
+          type: "ComponentPropsManagement/handleUpdatePriceResponse",
+          data: jsonData.data,
+        });
+        return;
+      }
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleUpdatePriceResponse",
+        data: null,
+      });
+    } else {
+      toast.error("Something went wrong server side");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
 // Create Row in Tax Master
 function* handleCreateTaxMasterRequest(e) {
   try {
@@ -1698,6 +1760,14 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleRegisterUserRequest",
     handleRegisterUserRequest
   );
+  yield takeEvery(
+    "ComponentPropsManagement/handleUpdateMoqRequest",
+    handleUpdateMoqRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleUpdatePriceRequest",
+    handleUpdatePriceRequest
+  );
 
   yield takeEvery(
     "ComponentPropsManagement/handleAddItemToStoreRequest",
@@ -1805,6 +1875,11 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleLastSixtyDaysSalesRequest",
     handleLastSixtyDaysSalesRequest
   );
+  // yield takeEvery(
+  //   "ComponentPropsManagement/handleSearchedDataRequest2",
+  //   handleSearchedDataRequest2
+  // );
+
   yield takeEvery(
     "ComponentPropsManagement/handleYesterdaySalesRequest",
     handleYesterdaySalesRequest

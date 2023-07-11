@@ -286,3 +286,7 @@ input[type="file"] {
   border: 2px solid var(--primary2);
   color: white;
 }
+
+.rdt_TableHeader>div {
+  font-weight: bolder !important;
+}

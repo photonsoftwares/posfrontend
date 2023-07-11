@@ -80,6 +80,7 @@ const initialComponentPropsManagementState = {
   gst_report_table_data: [],
   gst_report_item_table_data: [],
   no_of_items: 0,
+  update_price_item_name_dropdown: []
 };
 
 export const ComponentPropsManagement = createSlice({
@@ -431,6 +432,23 @@ export const ComponentPropsManagement = createSlice({
       state.item_master_list = payload.data
     },
     handleExpenseCategoryDropdownRequest: (state, payload) => { },
+    handleUpdateMoqRequest: (state, payload) => { },
+    handleUpdateMoqResponse: (state, payload) => { },
+    handleUpdatePriceRequest: (state, payload) => { },
+    handleUpdatePriceResponse: (state, payload) => { },
+    // handleSearchedDataRequest2: (state, payload) => { },
+    // handleSearchedDataResponse2: (state, payload) => {
+    //   let arr = []
+    //   if (payload.data) {
+    //     if (payload.data.length > 0) {
+    //       payload.data.map(item => {
+    //         arr.push({ ...item, label: item.itemName, value: item.productId })
+    //       })
+    //     }
+    //   }
+    //   state.update_price_item_name_dropdown = arr
+    // },
+
     // handleSearchedDataResponse1: (state, payload) => {
     //   state.item_master_list = payload.data
     // },
@@ -448,6 +466,7 @@ export const {
   handleShowModal,
   handleAccruvalRequest,
   handleMemberEnrollmentResponse,
+  handleUpdatePriceRequest,
   handleTenderReportRequest,
   handleEmailNotificationResponse,
   handleEmailNotificationRequest,
@@ -458,6 +477,7 @@ export const {
   handleItemMasterListRequest,
   handleNoOfItemRequest,
   handleRegisterRequest,
+  handleUpdateMoqRequest,
   handleHSNCODERequest,
   handleCreateRowTaxMasterRequest,
   handleAddItemSearchRequest,
@@ -471,6 +491,7 @@ export const {
   handleSearchedDataRequest,
   handleCartTotal,
   handleSaveTransactionRequest,
+  // handleSearchedDataRequest2,
   handleAddCartData,
   handleDeleteCartItem,
   handleRecommendedDataRequest,
