@@ -29,7 +29,7 @@ const Product = ({
   setUpdatecart,
   updatecart,
 }) => {
-  console.log("CART DATA CART", cartData);
+  // console.log("CART DATA CART", cartData);
   const { cart_data } = useSelector((e) => e.ComponentPropsManagement);
   const [myPrice, setMyPrice] = useState({ productId: "", price: "" });
   const [showButton, setShowButton] = useState(true);
@@ -124,7 +124,7 @@ const Product = ({
                                 <BsFillCheckCircleFill
                                   color={
                                     item.new_price === "" ||
-                                      item.new_price === 0
+                                    item.new_price === 0
                                       ? "#979797"
                                       : "green"
                                   }
@@ -212,8 +212,8 @@ const Product = ({
                         dispatch(handlecartCount(1));
                       }
 
-                      setUpdatecart(!updatecart)
-                      setSearchValue("")
+                      setUpdatecart(!updatecart);
+                      setSearchValue("");
                     }}
                   >
                     <Button
@@ -225,7 +225,7 @@ const Product = ({
                         fontSize: "10px",
                         display: item.price === 0 ? "hidden" : "block",
                       }}
-                    // className="btn btn-outline-primary"
+                      // className="btn btn-outline-primary"
                     >
                       {/* {item.price === null || item.price === 0
                         ? null
