@@ -203,7 +203,7 @@ const SalesReport = () => {
             columns={columns}
             responsive={true}
             data={sales_report_table_data}
-            title={`Invoice Total: ${handleSum(sales_report_table_data.map(io => io.invoice_total))}`}
+            title={`Total Sales: ${parseFloat(handleSum(sales_report_table_data.map(io => io.invoice_total))).toFixed(2)}`}
             fixedHeader={true}
             fixedHeaderScrollHeight='500px'
             actions={actionsMemo}

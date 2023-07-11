@@ -10,6 +10,7 @@ import { BiEdit } from "react-icons/bi"
 const Expense = (props) => {
     const { expenseModalIsOpen, setExpenseModalIsOpen } = props
     const [addExpenseModalIsOpen, setAddExpenseModalIsOpen] = useState(false)
+    const [addExpenseArr, setAddExpenseArr] = useState([])
     const expense_category_dropdown = []
 
     const handleSubmit = (e) => {
@@ -153,6 +154,8 @@ const Expense = (props) => {
         <AddExpense
             addExpenseModalIsOpen={addExpenseModalIsOpen}
             setAddExpenseModalIsOpen={setAddExpenseModalIsOpen}
+            addExpenseArr={addExpenseArr}
+            setAddExpenseArr={setAddExpenseArr}
         />
     </>)
 }

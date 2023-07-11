@@ -53,6 +53,15 @@ const TenderReport = () => {
 
     const columns = [
         {
+            name: "Business Date",
+            center: true,
+            cell: row => {
+                return (<>
+                    {moment(date).format("D-MMM-Y")}
+                </>)
+            }
+        },
+        {
             name: 'Tender Name',
             center: true,
             selector: row => row.tender_name,
@@ -87,8 +96,7 @@ const TenderReport = () => {
     //     return 0
     // }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = (date) => {
         dispatch(handleTenderReportRequest({ date }))
     }
 
@@ -104,6 +112,7 @@ const TenderReport = () => {
                             <Flatpickr
                                 className='form-control'
                                 onChange={e => {
+                                    handleSubmit(e[0])
                                     setDate(e[0])
                                 }}
                                 options={{ allowInput: true, dateFormat: "d-M-Y" }}
@@ -113,14 +122,12 @@ const TenderReport = () => {
                             />
                             {/* </FormGroup> */}
                         </Col>
-                        <Col md={8}>
-                            {/* <FormGroup> */}
+                        {/* <Col md={8}>
                             <Label className='m-0 p-0'>&nbsp;</Label>
                             <div>
                                 <Button style={{ backgroundColor: "var(--primary1)", border: "1px solid var(--primary1)" }}>Save</Button>
                             </div>
-                            {/* </FormGroup> */}
-                        </Col>
+                        </Col> */}
                     </Row>
                 </Form>
             </CardBody>
@@ -130,7 +137,7 @@ const TenderReport = () => {
             columns={columns}
             responsive={true}
             data={tender_report_data}
-            title={`Tender Amount: ${tender_report_data?.length > 0 && tender_report_data[0]?.total_amount}`}
+            title={`Tender Amount: ${tender_report_data?.length > 0 ? parseFloat(Number(tender_report_data[0]?.total_amount)).toFixed(2) : 0}`}
         // fixedHeader={true}
         // fixedHeaderScrollHeight='500px'
         // actions={actionsMemo}
