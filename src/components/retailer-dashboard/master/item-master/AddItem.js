@@ -70,7 +70,7 @@ const AddItem = ({ addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen, row, s
   const [department, setDepartment] = useState("");
   const [itemCode, setItemCode] = useState("");
   const [itemDesc, setItemDesc] = useState("");
-  const [ItemTax, setItemTax] = useState("");
+  const [hsnCode, setHsnCode] = useState("")
   const [itemPrice, setItemPrice] = useState("0");
   const [openCam, setOpenCam] = useState(false);
   const [productId, setProductId] = useState("");
@@ -92,6 +92,7 @@ const AddItem = ({ addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen, row, s
       setItemPrice(row.price)
       setTaxPercentage(row.tax_percent)
       setItemCode(row.hsn_code)
+      setHsnCode(row.hsn_code)
     }
   }, [row])
 
@@ -180,7 +181,7 @@ const AddItem = ({ addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen, row, s
       saas_id: saasId,
       store_id: storeId,
       department: itemName,
-      hsn_code: row.hsn_code,
+      hsn_code: hsnCode,
       discount: row.discount,
     }
 
@@ -294,7 +295,6 @@ const AddItem = ({ addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen, row, s
                   size="small"
                   type="text"
                   className="form-control my-2"
-                  id="customer-name"
                   value={itemName}
                   onChange={(e) => setItemName(e.target.value)}
                   label="Item Name"
@@ -307,7 +307,6 @@ const AddItem = ({ addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen, row, s
                   size="small"
                   type="text"
                   className="form-control my-2"
-                  id="customer-name"
                   value={itemPrice}
                   required
                   onChange={(e) => setItemPrice(e.target.value)}
@@ -317,12 +316,22 @@ const AddItem = ({ addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen, row, s
                   size="small"
                   type="text"
                   className="form-control my-2"
-                  id="customer-name"
+                  value={hsnCode}
+                  required
+                  onChange={(e) => setHsnCode(e.target.value)}
+                  label="HSN Code"
+                />
+
+                <TextField
+                  size="small"
+                  type="text"
+                  className="form-control my-2"
                   value={taxPercentage}
                   required
                   onChange={(e) => setTaxPercentage(e.target.value)}
                   label="Tax Percentage"
                 />
+
               </div>
 
               <div className="">

@@ -290,3 +290,7 @@ input[type="file"] {
 .rdt_TableHeader>div {
   font-weight: bolder !important;
 }
+
+.modal-title {
+  width: 100% !important;
+}

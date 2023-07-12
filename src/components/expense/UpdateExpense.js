@@ -1,43 +1,53 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap'
 import { HiOutlineArrowSmallLeft } from "react-icons/hi2"
 import Select, { useStateManager } from 'react-select'
 import { AiOutlinePlus } from "react-icons/ai"
 import Flatpickr from "react-flatpickr";
 
-const AddExpense = (props) => {
-    const { addExpenseModalIsOpen, setAddExpenseModalIsOpen, addExpenseArr, setAddExpenseArr } = props
-    const [addExpenseState, setAddExpenseState] = useState({
+const UpdateExpense = (props) => {
+    const { updateExpenseModalIsOpen, setUpdateExpenseModalIsOpen, addExpenseArr, setAddExpenseArr, updateItem, setUpdateItem, setUpdateIndexNumber, updateIndexNumber } = props
+    const [updateExpenseState, setUpdateExpenseState] = useState({
         expense_name: "",
         quantity: "",
         cost: "",
         amount: ""
     })
 
+    useEffect(() => {
+        setUpdateExpenseState(JSON.parse(JSON.stringify(updateItem)))
+    }, [updateItem])
+
     const handleSubmit = (e) => {
         e.preventDefault()
-        setAddExpenseArr([...addExpenseArr, addExpenseState])
+        if (addExpenseArr.length > 1) {
+            let removed = addExpenseArr.splice(updateIndexNumber - 1, 1)
+            removed.splice(updateIndexNumber, 0, updateExpenseState)
+            setAddExpenseArr(removed)
+        } else {
+            setAddExpenseArr([...addExpenseArr, updateExpenseState])
+        }
         setTimeout(() => {
-            setAddExpenseState({
+            setUpdateExpenseState({
                 expense_name: "",
                 quantity: "",
                 cost: "",
                 amount: ""
             })
-            setAddExpenseModalIsOpen(!addExpenseModalIsOpen)
+            setUpdateExpenseModalIsOpen(!updateExpenseModalIsOpen)
         }, 500);
     }
 
     return (<>
         <Modal
-            isOpen={addExpenseModalIsOpen}
-            toggle={() => { setAddExpenseModalIsOpen(!addExpenseModalIsOpen) }}
+            isOpen={updateExpenseModalIsOpen}
+            toggle={() => { setUpdateExpenseModalIsOpen(!updateExpenseModalIsOpen) }}
         >
             <ModalHeader>
                 <HiOutlineArrowSmallLeft
                     className='mouse-pointer'
                     onClick={() => {
-                        setAddExpenseModalIsOpen(!addExpenseModalIsOpen)
+                        setUpdateExpenseModalIsOpen(!updateExpenseModalIsOpen)
                     }}
                 />&nbsp;
                 Add Expense
@@ -52,9 +62,9 @@ const AddExpense = (props) => {
                                     type="text"
                                     onChange={e => {
                                         const val = e.target.value
-                                        setAddExpenseState({ ...addExpenseState, expense_name: val })
+                                        setUpdateExpenseState({ ...updateExpenseState, expense_name: val })
                                     }}
-                                    value={addExpenseState.expense_name}
+                                    value={updateExpenseState.expense_name}
                                     required={true}
                                     placeholder='Enter Name'
                                 />
@@ -68,9 +78,9 @@ const AddExpense = (props) => {
                                     type="number"
                                     onChange={e => {
                                         const val = e.target.value
-                                        setAddExpenseState({ ...addExpenseState, quantity: val })
+                                        setUpdateExpenseState({ ...updateExpenseState, quantity: val })
                                     }}
-                                    value={addExpenseState.quantity}
+                                    value={updateExpenseState.quantity}
                                     required={true}
                                     placeholder='Enter Quantity'
                                 />
@@ -84,9 +94,9 @@ const AddExpense = (props) => {
                                     type="number"
                                     onChange={e => {
                                         const val = e.target.value
-                                        setAddExpenseState({ ...addExpenseState, cost: val })
+                                        setUpdateExpenseState({ ...updateExpenseState, cost: val })
                                     }}
-                                    value={addExpenseState.cost}
+                                    value={updateExpenseState.cost}
                                     required={true}
                                     placeholder='Enter Cost'
                                 />
@@ -100,9 +110,9 @@ const AddExpense = (props) => {
                                     type="number"
                                     onChange={e => {
                                         const val = e.target.value
-                                        setAddExpenseState({ ...addExpenseState, amount: val })
+                                        setUpdateExpenseState({ ...updateExpenseState, amount: val })
                                     }}
-                                    value={addExpenseState.amount}
+                                    value={updateExpenseState.amount}
                                     required={true}
                                     placeholder='Enter Amount'
                                 />
@@ -116,7 +126,7 @@ const AddExpense = (props) => {
                         color='primary'
 
                     >
-                        Save
+                        Update
                     </Button>
                 </ModalFooter>
             </Form>
@@ -124,4 +134,4 @@ const AddExpense = (props) => {
     </>)
 }
 
-export default AddExpense
+export default UpdateExpense
