@@ -26,13 +26,14 @@ import {
 import Expense from "./expense";
 import UpdateMoq from "./moq";
 import UpdatePrice from "./update-price";
+import ViewOrders from "./ViewOrders";
 
 const Main = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [expenseModalIsOpen, setExpenseModalIsOpen] = useState(false);
   const [updateMoqModalIsOpen, setUpdateMoqModalIsOpen] = useState(false)
   const [updatePriceModalIsOpen, setUpdatePriceModalIsOpen] = useState(false)
-
+  const [viewOrderModalIsOpen, setViewOrderModalIsOpen] = useState(false)
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const navigate = useNavigate();
   const create_transaction_arr = [
@@ -270,7 +271,7 @@ const Main = () => {
                           } else if (item.value === "debit_note") {
                             navigate("/debit-note");
                           } else if (item.value === "expense") {
-                            // setExpenseModalIsOpen(!expenseModalIsOpen);
+                            setExpenseModalIsOpen(!expenseModalIsOpen);
                           } else if (item.value === "delivery_challan") {
                             navigate("/delivery-challan");
                           }
@@ -326,6 +327,8 @@ const Main = () => {
                             setUpdateMoqModalIsOpen(!updateMoqModalIsOpen)
                           } else if (item.value === "update_price") {
                             setUpdatePriceModalIsOpen(!updatePriceModalIsOpen)
+                          } else if (item.value === "view_orders") {
+                            setViewOrderModalIsOpen(!viewOrderModalIsOpen)
                           }
                         }}
                       >
@@ -469,6 +472,11 @@ const Main = () => {
           </div>
         </div>
       </div>
+
+      <ViewOrders
+        viewOrderModalIsOpen={viewOrderModalIsOpen}
+        setViewOrderModalIsOpen={setViewOrderModalIsOpen}
+      />
 
       <UpdatePrice
         updatePriceModalIsOpen={updatePriceModalIsOpen}
