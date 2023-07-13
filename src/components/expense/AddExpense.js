@@ -6,11 +6,26 @@ import { AiOutlinePlus } from "react-icons/ai"
 import Flatpickr from "react-flatpickr";
 
 const AddExpense = (props) => {
-    const { addExpenseModalIsOpen, setAddExpenseModalIsOpen } = props
-
+    const { addExpenseModalIsOpen, setAddExpenseModalIsOpen, addExpenseArr, setAddExpenseArr } = props
+    const [addExpenseState, setAddExpenseState] = useState({
+        expense_name: "",
+        quantity: "",
+        cost: "",
+        amount: ""
+    })
     const expense_category_dropdown = []
     const handleSubmit = (e) => {
         e.preventDefault()
+        setAddExpenseArr([...addExpenseArr, addExpenseState])
+        setTimeout(() => {
+            setAddExpenseState({
+                expense_name: "",
+                quantity: "",
+                cost: "",
+                amount: ""
+            })
+            setAddExpenseModalIsOpen(!addExpenseModalIsOpen)
+        }, 500);
     }
 
     return (<>
@@ -35,6 +50,11 @@ const AddExpense = (props) => {
                                 <Label>Enter Name <span className="text-red"> * </span></Label>
                                 <Input
                                     type="text"
+                                    onChange={e => {
+                                        const val = e.target.value
+                                        setAddExpenseState({ ...addExpenseState, expense_name: val })
+                                    }}
+                                    value={addExpenseState.expense_name}
                                     required={true}
                                     placeholder='Enter Name'
                                 />
@@ -46,6 +66,11 @@ const AddExpense = (props) => {
                                 <Label>Enter Quantity <span className="text-red"> * </span></Label>
                                 <Input
                                     type="number"
+                                    onChange={e => {
+                                        const val = e.target.value
+                                        setAddExpenseState({ ...addExpenseState, quantity: val })
+                                    }}
+                                    value={addExpenseState.quantity}
                                     required={true}
                                     placeholder='Enter Quantity'
                                 />
@@ -57,6 +82,11 @@ const AddExpense = (props) => {
                                 <Label>Enter Cost <span className="text-red"> * </span></Label>
                                 <Input
                                     type="number"
+                                    onChange={e => {
+                                        const val = e.target.value
+                                        setAddExpenseState({ ...addExpenseState, cost: val })
+                                    }}
+                                    value={addExpenseState.cost}
                                     required={true}
                                     placeholder='Enter Cost'
                                 />
@@ -68,6 +98,11 @@ const AddExpense = (props) => {
                                 <Label>Enter Amount <span className="text-red"> * </span></Label>
                                 <Input
                                     type="number"
+                                    onChange={e => {
+                                        const val = e.target.value
+                                        setAddExpenseState({ ...addExpenseState, amount: val })
+                                    }}
+                                    value={addExpenseState.amount}
                                     required={true}
                                     placeholder='Enter Amount'
                                 />

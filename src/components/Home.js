@@ -24,7 +24,6 @@ import {
   handleShowModal,
   handleItemsDataRequest,
   handleEmailNotificationResponse,
-  handleRedeemPointRequest,
 } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { Button } from "react-bootstrap";
 import pdfFile from "../assets/PDF.pdf";
@@ -40,12 +39,10 @@ import { TextField } from "@mui/material";
 import MyCart from "./my-cart/MyCart";
 import { HiCreditCard } from "react-icons/hi2";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
-import { Loyalty } from "@material-ui/icons";
 
 const Home = () => {
-  // const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
-
-  // console.log("Loylty Home", loyalty_data.data.balance_amount);
+  const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
+  // console.log("Loylty Home", loyalty_data);
 
   const [popoverIsOpen, setPopoverIsOpen] = useState(false);
   const dispatch = useDispatch();
@@ -58,7 +55,6 @@ const Home = () => {
     get_searched_data,
     // cart_data,
     get_QR_img,
-    link_loyalty_detail,
     total_price,
     handle_saveTransaction_data,
     get_recommended_items,
@@ -69,30 +65,16 @@ const Home = () => {
     dispatch(handleRecommendedDataRequest());
   }, []);
 
-  console.log("LOYALITY DETAIL DATA", link_loyalty_detail);
-
-  const [validated, setValidated] = useState(false);
   const [searchedData, setSearchedData] = useState([]);
   const [recommendedData, setRecommendedData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  // const [cartData, setCartData] = useState(null);
   const [cartData, setCartData] = useState(null);
-  const [percentOff, setPercentOff] = useState(1);
-  const [amountOff, setAmountOff] = useState("");
   const [show, setShow] = useState(false);
-  const [speachModal, setSpechModal] = useState(false);
-  const [visibleVoiceCommand, setVisibleVoiceCommand] = useState(true);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [paymentModal, setPaymentModal] = useState(false);
   const [handleShowReceipt, setHandleShowReceipt] = useState(false);
-  const [handleShowQR, setHandleShowQR] = useState(false);
   const [handleOpenWhatsapp, setHandleOpenWhatsapp] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState([]);
   const [balanceDue, setBalanceDue] = useState(0);
   const [sumValue, setSumValue] = useState(0);
-  const [QR, setQR] = useState(null);
-  const [overDicount, setOverDiscount] = useState([]);
-  const [isIndividualDiscount, setIsIndividualDiscount] = useState(true);
   const [amount, setAmount] = useState("");
   const [optionTick, setOptionTick] = useState([]);
   const [optionTickSum, setOptionTickSum] = useState(0);
@@ -100,12 +82,10 @@ const Home = () => {
   const [discountAmountVal, setDiscountAmountVal] = useState("");
   const [totalDiscountVal, setTotalDiscountVal] = useState(0);
   const [invoiceValue, setInvoiceValue] = useState(0);
-  const [addPrice, setAddPrice] = useState("");
   const [email, setEmail] = useState("");
   const [updatecart, setUpdatecart] = useState(true);
   const [storeName, setStoreName] = useState("");
-  const [checkLoyalty, setcheckLoyalty] = useState(true);
-  const [loyalityRedemedValue, setLoyalityRedemedValue] = useState(0);
+  const [loyaltyAmount, setLoyaltyAmount] = useState(10000);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -127,7 +107,7 @@ const Home = () => {
     getDataFromStorage();
   }, [updatecart]);
 
-  // console.log("handle_saveTransaction_data", handle_saveTransaction_data);
+  // console.log("CART*DATA", cartData);
 
   useEffect(() => {
     const date = new Date();
@@ -135,108 +115,45 @@ const Home = () => {
     let day = date.getDate();
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
-
-    var MyDate = new Date();
-    var MyDateString;
-
-    // MyDate.setDate(MyDate.getDate());
-
-    // MyDateString =
-    //   ("0" + MyDate.getDate()).slice(-2) +
-    //   "/" +
-    //   ("0" + (MyDate.getMonth() + 1)).slice(-2) +
-    //   "/" +
-    //   MyDate.getFullYear();
-
-    if (checkLoyalty) {
-      if (link_loyalty_detail) {
-        if (
-          handle_saveTransaction_data &&
-          handle_saveTransaction_data.transaction_id
-        ) {
-          dispatch(
-            handleAccruvalRequest({
-              link_loyalty_detail,
-              client_id: userData && userData.saasId,
-              source_channel: "POS",
-              register_id: userData && userData.registerId,
-              // total_invoice_amount:
-              //   handle_saveTransaction_data &&
-              //   handle_saveTransaction_data.total_amount,
-              total_invoice_amount: Number(invoiceValue),
-              store_id: Number(userData && userData.storeId),
-              business_date: `${year}-${month < 10 ? "0" + month : month}-${
-                day < 10 ? "0" + day : day
-              }`,
-              // business_date: MyDateString,
-              invoice_no: handle_saveTransaction_data.transaction_id + "",
-              source_app: "POS",
-              concept_code: Number(1),
-              source_function: "POST",
-              // country: loyalty_data && loyalty_data?.data?.country.toUpperCase(),
-              country: link_loyalty_detail.country.toUpperCase(),
-              reference_number: handle_saveTransaction_data.transaction_id + "",
-              // territory_code: loyalty_data && loyalty_data?.data?.country,
-              territory_code: "INR",
-              remarks: "GOOD",
-              // product: cartData,
-              product: cartDataAcc(),
-              transaction_type: "PURCHASE",
-              program_name: "campaign name",
-              base_currency: link_loyalty_detail.base_currency,
-              // tender: [handleTenderAmount()],
-              tender: [handleTander2()],
-            })
-          );
-        }
-      }
-    } else {
+    if (
+      handle_saveTransaction_data &&
+      handle_saveTransaction_data.transaction_id
+    ) {
       dispatch(
-        handleRedeemPointRequest({
-          link_loyalty_detail,
-          // redeem_amount: link_loyalty_detail.balance_amount,
-          redeem_amount: 500,
-          bussiness_date: "2023-04-24",
-          invoice_number: handle_saveTransaction_data.transaction_id + "",
-          remarks: "",
+        handleAccruvalRequest({
+          client_id: userData && userData.saasId,
+          source_channel: "POS",
+          register_id: userData && userData.registerId,
+          total_invoice_amount: balanceDue,
+          store_id: userData && userData.storeId,
+          business_date: `${day}-${month}-${year}`,
+          invoice_no: handle_saveTransaction_data.transaction_id + "",
+          source_app: "POS",
+          concept_code: 1,
+          source_function: "POST",
+          country: loyalty_data && loyalty_data?.data?.country,
+          reference_number: handle_saveTransaction_data.transaction_id + "",
+          territory_code: loyalty_data && loyalty_data?.data?.country,
+          remarks: "GOOD",
+          product: cartData,
+          transaction_type: "PURCHASE",
+          program_name: "campaign name",
+          base_currency: loyalty_data?.data?.base_currency,
+          tender: handleTenderAmount(),
+          //  [
+          //   {
+          //     tender_name: "check",
+          //     tender_value: 300,
+          //   },
+          //   {
+          //     tender_name: "cash",
+          //     tender_value: 300,
+          //   },
+          // ],
         })
       );
     }
   }, [handle_saveTransaction_data]);
-
-  const cartDataAcc = () => {
-    if (cartData?.length > 0) {
-      let arr = [];
-      cartData.map((item) => {
-        console.log("ITEM", item);
-        // obj["product_name"] = item.category;
-        // obj["product_quantity"] = item.productQty;
-        // obj["product_amount"] = item.price;
-        // obj["product_non_sale_amount"] = "";
-        // obj["product_sale_amount"] = item.price;
-        // obj["product_discount_amount"] = 0;
-        // obj["qr_sale_flag"] = true;
-
-        arr.push({
-          product_name: item.category,
-          product_quantity: item.productQty,
-          product_amount: item.price,
-          product_non_sale_amount: item.discount == 0 ? item.price : "",
-          product_sale_amount:
-            item.discount > 0 ? item.price - item.discount : "",
-          product_discount_amount: Number(
-            item.discount > 0 ? item.discount : 0
-          ),
-          qr_sale_flag: true,
-        });
-      });
-      return arr;
-      // setSendValues(obj)
-    }
-    return [];
-  };
-
-  // cartDataAcc();
 
   useEffect(() => {
     setShow(show_cart_modal);
@@ -276,16 +193,6 @@ const Home = () => {
     }
   }, [get_recommended_items]);
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    setValidated(true);
-  };
-
   useEffect(() => {
     console.log("cartData", cartData);
     const arr = [];
@@ -293,12 +200,13 @@ const Home = () => {
     cartData?.map((el) => {
       // const totalCart = Number(el.price) * Number(el.productQty);
       // arr.push(totalCart);
+      // const r =  el.new_price* el.productQty
       arr.push(el.new_price);
     });
     arr?.map((el) => {
       sum = sum + el;
     });
-    // console.log("SUM", sum);
+    console.log("SUM", sum);
     // setBalanceDue(sum);
     setSumValue(sum);
     setAmount(sum);
@@ -306,23 +214,17 @@ const Home = () => {
     // =============================
   }, [cartData]);
 
-  useEffect(() => {
-    if (get_QR_img) {
-      setQR(get_QR_img);
-    }
-  }, [get_QR_img]);
-
   // useEffect(() => {
   //   if (cart_data) {
   //     if (cart_data?.length > 0) {
   //       const t1 = JSON.parse(JSON.stringify(cart_data));
-  //       t1.map((item) => {
-  //         item["discount_menu_is_open"] = false;
-  //         item["discount_value"] = "";
-  //         item["amount_value"] = "";
-  //         item["new_price"] = Number(item.price) * Number(item.productQty);
-  //         item["zero_price"] = Number(item.price) * Number(item.productQty);
-  //       });
+  // t1.map((item) => {
+  //   item["discount_menu_is_open"] = false;
+  //   item["discount_value"] = "";
+  //   item["amount_value"] = "";
+  //   item["new_price"] = Number(item.price) * Number(item.productQty);
+  //   item["zero_price"] = Number(item.price) * Number(item.productQty);
+  // });
   //       setCartData(t1);
   //     }
   //  else {
@@ -337,59 +239,48 @@ const Home = () => {
       name: "Cash",
       icon: <IoCashOutline size={25} />,
       value: "cash",
-      isActive: false,
     },
     {
       id: 2,
       name: "Paytm",
       icon: <SiPaytm size={25} />,
       value: "paytm",
-      isActive: false,
     },
     {
       id: 3,
       name: "Google Pay",
       icon: <FaGooglePay size={25} color="white" />,
       value: "googlepay",
-      isActive: false,
     },
     {
       id: 4,
       name: "Phone Pay",
       icon: <SiPhonepe size={25} color="white" />,
       value: "phonepay",
-      isActive: false,
     },
     {
       id: 5,
       name: "UPI",
       icon: <SiContactlesspayment size={25} color="white" />,
       value: "upi",
-      isActive: false,
     },
     {
       id: 6,
       name: "Card",
       icon: <BsCreditCardFill size={25} />,
       value: "card",
-      isActive: false,
     },
     {
       id: 7,
       name: "Credit Sale",
       icon: <FcSalesPerformance size={25} />,
       value: "credit_sale",
-      isActive: false,
     },
-
     {
       id: 8,
       name: "Loyalty",
-      cardValue: link_loyalty_detail.balance_amount,
-      // cardValue: 0,
-      icon: link_loyalty_detail.balance_amount,
+      icon: <RiMoneyDollarCircleFill color="#F1C40F" size={25} />,
       value: "loyalty",
-      isActive: link_loyalty_detail.balance_amount > 0 ? false : true,
     },
   ];
 
@@ -467,7 +358,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // console.log("optionTick", optionTick);
+    console.log("optionTick", optionTick);
     let sum = 0;
     if (optionTick && optionTick?.length > 0) {
       optionTick.map((item) => {
@@ -542,19 +433,6 @@ const Home = () => {
     }
     return {};
   };
-  const handleTander2 = () => {
-    if (optionTick?.length > 0) {
-      const obj = {};
-      optionTick.map((item) => {
-        // obj[item.name] = item.amount;
-        obj["tender_name"] = item.name.toLowerCase();
-        obj["tender_value"] = Number(item.amount);
-      });
-      return obj;
-      // setSendValues(obj)
-    }
-    return {};
-  };
 
   const handleNotifyEmail = (e) => {
     e.preventDefault();
@@ -570,11 +448,6 @@ const Home = () => {
     }
     setEmail("");
   };
-
-  // console.log("DISCOUNT AMOUNT", discountAmountVal);
-  // console.log("DISCOUNT PERCENT", discountPercentVal);
-  console.log("handleTenderAmount", handleTenderAmount());
-  // console.log("KEY", Object.keys(handleTenderAmount()));
   return (
     <div className="app">
       <div
@@ -851,14 +724,13 @@ const Home = () => {
                 }}
               >
                 <div className="option-item-container">
-                  {optionArray
-                    .filter((el) => el.isActive === false)
-                    .map((item, i) => {
-                      return (
-                        <>
-                          <div className="mb-2 d-flex px-0" key={item.id}>
-                            <div
-                              onClick={() => {
+                  {optionArray.map((item, i) => {
+                    return (
+                      <>
+                        <div className="mb-2 d-flex px-0" key={item.id}>
+                          <div
+                            onClick={() => {
+                              if (item.value !== "loyalty") {
                                 if (optionTick?.length === 0) {
                                   const obj = { ...item, amount };
                                   setOptionTick([...optionTick, obj]);
@@ -880,70 +752,98 @@ const Home = () => {
                                     }
                                   }
                                 }
-                                console.log(item);
-                                if (item.value === "loyalty") {
-                                  setcheckLoyalty(false);
-                                  setLoyalityRedemedValue(
-                                    sumValue - item.cardValue
-                                  );
+                              }
+                              if (item.value === "loyalty") {
+                                let newLoyaltyAmount = loyaltyAmount;
+                                if (loyaltyAmount > amount) {
+                                  newLoyaltyAmount = amount;
                                 }
-                              }}
-                              className={`option-item ${
-                                optionTick.filter(
-                                  (io) => io.name === item.value
-                                )?.length > 0 && ""
-                              }`}
+                                if (optionTick?.length === 0) {
+                                  const obj = {
+                                    ...item,
+                                    amount: newLoyaltyAmount,
+                                  };
+                                  setOptionTick([...optionTick, obj]);
+                                } else if (optionTick?.length > 0) {
+                                  if (
+                                    optionTick.filter(
+                                      (io) => io.value === item.value
+                                    )?.length > 0
+                                  ) {
+                                    setOptionTick(
+                                      optionTick.filter(
+                                        (io) => io.value !== item.value
+                                      )
+                                    );
+                                  } else {
+                                    if (Number(optionTickSum) <= sumValue) {
+                                      const obj = {
+                                        ...item,
+                                        amount: newLoyaltyAmount,
+                                      };
+                                      setOptionTick([...optionTick, obj]);
+                                    }
+                                  }
+                                }
+                                // const r1 = amount - loyaltyAmount
+                                // setAmount(r1)
+                              }
+                            }}
+                            className={`option-item ${
+                              optionTick.filter((io) => io.name === item.value)
+                                ?.length > 0 && ""
+                            }`}
+                            style={{
+                              width: "90%",
+                              backgroundColor:
+                                item.name === "Cash"
+                                  ? "#fed813"
+                                  : item.name === "Paytm"
+                                  ? "#00B9F1"
+                                  : item.name === "Google Pay"
+                                  ? "#2DA94F"
+                                  : item.name === "Phone Pay"
+                                  ? "#5f259f"
+                                  : item.name === "UPI"
+                                  ? "#ff7909"
+                                  : item.name === "Credit Sale"
+                                  ? "#1741b2"
+                                  : item.name === "Loyalty"
+                                  ? "#c8030e"
+                                  : "silver",
+                            }}
+                          >
+                            <div style={{ position: "relative", top: "2px" }}>
+                              {item.icon}
+                            </div>
+                            <div
                               style={{
-                                width: "90%",
-                                backgroundColor:
+                                fontSize: "10px",
+                                color:
                                   item.name === "Cash"
-                                    ? "#fed813"
+                                    ? "black"
                                     : item.name === "Paytm"
-                                    ? "#00B9F1"
+                                    ? "black"
                                     : item.name === "Google Pay"
-                                    ? "#2DA94F"
+                                    ? "white"
                                     : item.name === "Phone Pay"
-                                    ? "#5f259f"
+                                    ? "white"
                                     : item.name === "UPI"
-                                    ? "#ff7909"
+                                    ? "white"
                                     : item.name === "Credit Sale"
-                                    ? "#1741b2"
+                                    ? "#fff"
                                     : item.name === "Loyalty"
-                                    ? "#c8030e"
-                                    : "silver",
+                                    ? "#fff"
+                                    : "black",
                               }}
                             >
-                              <div style={{ position: "relative", top: "2px" }}>
-                                {item.icon}
-                              </div>
-                              <div
-                                style={{
-                                  fontSize: "10px",
-                                  color:
-                                    item.name === "Cash"
-                                      ? "black"
-                                      : item.name === "Paytm"
-                                      ? "black"
-                                      : item.name === "Google Pay"
-                                      ? "white"
-                                      : item.name === "Phone Pay"
-                                      ? "white"
-                                      : item.name === "UPI"
-                                      ? "white"
-                                      : item.name === "Credit Sale"
-                                      ? "#fff"
-                                      : item.name === "Loyalty"
-                                      ? "#fff"
-                                      : "black",
-                                }}
-                              >
-                                {item.name}
-                              </div>
+                              {item.name}
                             </div>
                           </div>
-                        </>
-                      );
-                    })}
+                        </div>
+                      </>
+                    );
+                  })}
                 </div>
               </div>
 

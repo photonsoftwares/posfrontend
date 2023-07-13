@@ -6,8 +6,11 @@ import { MdNoteAlt, MdOutlineHelp } from "react-icons/md";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { GiExpense, GiNotebook, GiStabbedNote } from "react-icons/gi";
 import { IoDocumentTextSharp } from "react-icons/io5";
-import { RiDashboardFill } from "react-icons/ri";
+import { RiPriceTag3Fill, RiEditCircleFill } from "react-icons/ri";
 import { SiHomeassistantcommunitystore } from "react-icons/si";
+import { MdEditSquare } from "react-icons/md"
+import { GrUpdate } from "react-icons/gr"
+import { TfiViewListAlt } from 'react-icons/tfi'
 import { AiFillHome, AiFillSetting } from "react-icons/ai";
 import { BiGroup, BiCube } from "react-icons/bi";
 import { RxDashboard } from "react-icons/rx";
@@ -21,10 +24,14 @@ import {
   DropdownItem,
 } from "reactstrap";
 import Expense from "./expense";
+import UpdateMoq from "./moq";
+import UpdatePrice from "./update-price";
 
 const Main = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [expenseModalIsOpen, setExpenseModalIsOpen] = useState(false);
+  const [updateMoqModalIsOpen, setUpdateMoqModalIsOpen] = useState(false)
+  const [updatePriceModalIsOpen, setUpdatePriceModalIsOpen] = useState(false)
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const navigate = useNavigate();
@@ -87,6 +94,37 @@ const Main = () => {
       isActive: true,
     },
   ];
+
+  const omni_channel_arr = [
+    {
+      id: 1,
+      label: "View orders",
+      value: "view_orders",
+      icon: <TfiViewListAlt size="25" color="#26cbaf" />,
+      isActive: true
+    },
+    {
+      id: 2,
+      label: "Update MOQ",
+      value: "update_moq",
+      icon: <RiEditCircleFill size="25" color="#a050fd" />,
+      isActive: true
+    },
+    {
+      id: 3,
+      label: "Update Price",
+      value: "update_price",
+      icon: <RiPriceTag3Fill size="25" color="#0405c3" />,
+      isActive: true
+    },
+    {
+      id: 4,
+      label: "Update UOM",
+      value: "update_uom",
+      icon: <MdEditSquare size="25" color="#19d413" />,
+      isActive: true
+    }
+  ]
 
   const feature_arr = [
     {
@@ -232,9 +270,62 @@ const Main = () => {
                           } else if (item.value === "debit_note") {
                             navigate("/debit-note");
                           } else if (item.value === "expense") {
-                            setExpenseModalIsOpen(!expenseModalIsOpen);
+                            // setExpenseModalIsOpen(!expenseModalIsOpen);
                           } else if (item.value === "delivery_challan") {
                             navigate("/delivery-challan");
+                          }
+                        }}
+                      >
+                        <div>{item.icon}</div>
+                        <div>{item.label}</div>
+                      </div>
+                    </>
+                  );
+                })}
+            </div>
+
+            <div
+              style={{
+                fontSize: "20px",
+                fontWeight: "900",
+                paddingLeft: "20px",
+                marginTop: "30px",
+              }}
+            >
+              Omni Channel Orders
+            </div>
+            <div
+              style={{
+                backgroundColor: "white",
+                margin: "20px",
+                borderRadius: "10px",
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                alignItems: "center",
+                userSelect: "none",
+              }}
+            >
+              {omni_channel_arr
+                .filter((io) => io.isActive === true)
+                .map((item) => {
+                  return (
+                    <>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "column",
+                          margin: "10px",
+                          marginBottom: "20px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          if (item.value === "update_moq") {
+                            setUpdateMoqModalIsOpen(!updateMoqModalIsOpen)
+                          } else if (item.value === "update_price") {
+                            setUpdatePriceModalIsOpen(!updatePriceModalIsOpen)
                           }
                         }}
                       >
@@ -378,6 +469,17 @@ const Main = () => {
           </div>
         </div>
       </div>
+
+      <UpdatePrice
+        updatePriceModalIsOpen={updatePriceModalIsOpen}
+        setUpdatePriceModalIsOpen={setUpdatePriceModalIsOpen}
+      />
+
+      <UpdateMoq
+        updateMoqModalIsOpen={updateMoqModalIsOpen}
+        setUpdateMoqModalIsOpen={setUpdateMoqModalIsOpen}
+      />
+
       <Expense
         expenseModalIsOpen={expenseModalIsOpen}
         setExpenseModalIsOpen={setExpenseModalIsOpen}

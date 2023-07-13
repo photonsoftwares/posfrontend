@@ -1,0 +1,40 @@
+{
+    "client_id": "4224",
+    "source_channel": "POS",
+    "register_id": "2002",
+    "total_invoice_amount": 600.00,
+    "store_id": 1002,
+    "business_date": "2023-04-05",
+    "invoice_no": "8487021",
+    "source_app": "POS",
+    "concept_code": 1,
+    "source_function": "POST",
+    "country": "DUBAI",
+    "reference_number": "8487021",
+    "territory_code": "UAE",
+    "remarks": "GOOD",
+    "product": [
+        {
+            "product_name": "T shirt",
+            "product_quantity": 1,
+            "product_amount": 300,
+            "product_non_sale_amount": "",
+            "product_sale_amount": 200,
+            "product_discount_amount": 50,
+            "qr_sale_flag": "true"
+        }
+    ],
+    "transaction_type": "PURCHASE",
+    "program_name": "campaign name",
+    "base_currency": "AED",
+    "tender": [
+        {
+            "tender_name": "check",
+            "tender_value": 300
+        },
+        {
+            "tender_name": "cash",
+            "tender_value": 300
+        }
+    ]
+}

@@ -78,7 +78,7 @@ const AddItem = ({ addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen, row, s
   const [itemCategory, setItemCategory] = useState("");
 
   // console.log("UPLOAD ITEM", uploadItem);
-  console.log("rr", row)
+  // console.log("rr", row)
   // useEffect(() => {
   //   if (item_id) {
   //     setProductId(item_id);

@@ -43,7 +43,7 @@ const initialComponentPropsManagementState = {
   handle_user_dropdown: [],
   last_sixty_days: 0,
   yesterday_sales: 0,
-
+  tender_report_data: [],
   state_dropdown: [
     { label: "Andhra Pradesh", value: "Andhra Pradesh" },
     { label: "Arunachal Pradesh", value: "Arunachal Pradesh" },
@@ -83,6 +83,7 @@ const initialComponentPropsManagementState = {
   gst_report_item_table_data: [],
   link_loyalty_detail: {},
   no_of_items: 0,
+  update_price_item_name_dropdown: [],
 };
 
 export const ComponentPropsManagement = createSlice({
@@ -446,7 +447,34 @@ export const ComponentPropsManagement = createSlice({
     handleRedeemPointResponse: (state, payload) => {
       // state.item_master_list = payload.data;
     },
+
+    handleTenderReportRequest: (state, payload) => {},
+    handleTenderReportResponse: (state, payload) => {
+      state.tender_report_data = payload.data ? [payload.data] : [];
+    },
+
+    handleSearchedDataRequest1: (state, payload) => {},
+    handleSearchedDataResponse1: (state, payload) => {
+      state.item_master_list = payload.data;
+    },
     handleExpenseCategoryDropdownRequest: (state, payload) => {},
+    handleUpdateMoqRequest: (state, payload) => {},
+    handleUpdateMoqResponse: (state, payload) => {},
+    handleUpdatePriceRequest: (state, payload) => {},
+    handleUpdatePriceResponse: (state, payload) => {},
+    // handleSearchedDataRequest2: (state, payload) => { },
+    // handleSearchedDataResponse2: (state, payload) => {
+    //   let arr = []
+    //   if (payload.data) {
+    //     if (payload.data.length > 0) {
+    //       payload.data.map(item => {
+    //         arr.push({ ...item, label: item.itemName, value: item.productId })
+    //       })
+    //     }
+    //   }
+    //   state.update_price_item_name_dropdown = arr
+    // },
+
     // handleSearchedDataResponse1: (state, payload) => {
     //   state.item_master_list = payload.data
     // },
@@ -466,6 +494,8 @@ export const {
   handleShowModal,
   handleAccruvalRequest,
   handleMemberEnrollmentResponse,
+  handleUpdatePriceRequest,
+  handleTenderReportRequest,
   handleEmailNotificationResponse,
   handleEmailNotificationRequest,
   handleLoginRequest,
@@ -475,6 +505,7 @@ export const {
   handleItemMasterListRequest,
   handleNoOfItemRequest,
   handleRegisterRequest,
+  handleUpdateMoqRequest,
   handleHSNCODERequest,
   handleCreateRowTaxMasterRequest,
   handleAddItemSearchRequest,
@@ -488,6 +519,7 @@ export const {
   handleSearchedDataRequest,
   handleCartTotal,
   handleSaveTransactionRequest,
+  // handleSearchedDataRequest2,
   handleAddCartData,
   handleDeleteCartItem,
   handleRecommendedDataRequest,
