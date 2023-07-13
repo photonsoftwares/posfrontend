@@ -109,7 +109,7 @@ const LinkLoyalityCustomer = () => {
             {searchValue && searchValue ? (
               <div>
                 <div className="d-flex align-items-center justify-content-between">
-                  <p style={{ padding: 0, margin: 0 }}>Customer Name</p>
+                  <p style={{ padding: 0, margin: 0 }}>Loyality Customer</p>
                   <p
                     style={{
                       fontWeight: "900",

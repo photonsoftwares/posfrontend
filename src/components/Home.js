@@ -53,7 +53,7 @@ const Home = () => {
 
   const {
     get_searched_data,
-    // cart_data,
+    link_loyalty_detail,
     get_QR_img,
     total_price,
     handle_saveTransaction_data,
@@ -64,6 +64,8 @@ const Home = () => {
   useEffect(() => {
     dispatch(handleRecommendedDataRequest());
   }, []);
+
+  console.log("ONLY RECOMMENDED", get_recommended_items);
 
   const [searchedData, setSearchedData] = useState([]);
   const [recommendedData, setRecommendedData] = useState([]);
@@ -106,8 +108,6 @@ const Home = () => {
   useEffect(() => {
     getDataFromStorage();
   }, [updatecart]);
-
-  // console.log("CART*DATA", cartData);
 
   useEffect(() => {
     const date = new Date();
@@ -566,7 +566,7 @@ const Home = () => {
             display: "flex",
             width: "100%",
             alignItems: "center",
-            justifyContent: "space-around",
+            justifyContent: "center",
             color: "#fff",
           }}
         >
@@ -577,15 +577,30 @@ const Home = () => {
               color: "#8f0707",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "space-around",
             }}
           >
-            {/* <p style={{ fontSize: "19px", padding: 0, margin: 0 }}>
-              {localStorage.getItem("User_data") ? storeName : ""}
-            </p> */}
-            <p style={{ fontSize: "19px", padding: 0, margin: 0 }}>
-              Total Sales
-            </p>
+            {link_loyalty_detail && link_loyalty_detail.customer_name ? (
+              <div
+                style={{
+                  color: "#eee",
+                  fontWeight: "bolder",
+                  color: "#8f0707",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                }}
+              >
+                <p style={{ padding: 0, margin: 0, marginRight: "30px" }}>
+                  Customer Name
+                </p>
+                <p style={{ padding: 0, margin: 0 }}>
+                  {link_loyalty_detail.customer_name}
+                </p>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
           <div
             style={{

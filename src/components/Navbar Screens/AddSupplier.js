@@ -5,11 +5,25 @@ import { Link } from "react-router-dom";
 import CreditAndBalance from "../AddParty/CreditAndBalance";
 import GSTAddress from "../AddParty/GSTAddress";
 import AdditionalFields from "../AddParty/AdditionalFields";
-import { handleOpneMenuRequest } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+import {
+  handleCreateSupplierRequest,
+  handleOpneMenuRequest,
+} from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch } from "react-redux";
 
 const AddSupplier = () => {
   const dispatch = useDispatch();
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const [partyName, setPartyName] = useState("");
+  const [gstIn, setGstIn] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [gstType, setGstType] = useState("");
+  const [state, setState] = useState("");
+  const [email, setEmail] = useState("");
+  const [billingAddress, setBillingAddress] = useState("");
+  const [openingBalance, setopeningBalance] = useState("");
+  const [creditLimitAmount, setCreditLimitAmount] = useState("");
+
   const TabsData = [
     {
       id: 1,
@@ -26,27 +40,44 @@ const AddSupplier = () => {
   const [tabs] = useState(TabsData);
 
   const { component } = tabs[value];
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // console.log(state, gstType);
+    dispatch(
+      handleCreateSupplierRequest({
+        saas_id: saasId,
+        party_name: partyName,
+        gstin: gstIn,
+        phone_number: phoneNumber,
+        gst_type: gstType.toUpperCase(),
+        state: state,
+        email: email,
+        billing_address: billingAddress,
+        opening_balance: openingBalance,
+        credit_limit_flag: false,
+        creditLimitAmount: creditLimitAmount,
+      })
+    );
+    setPartyName("");
+    setGstIn("");
+    setGstType("");
+    setPartyName("");
+    setPhoneNumber("");
+    setState("");
+    setEmail("");
+    setCreditLimitAmount("");
+    setopeningBalance("");
+    setBillingAddress("");
+    console.log(gstType.toUpperCase());
+  };
   return (
     <>
       <div className="container">
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-9 col-sm-12 px-5">
-            <form
-              className="form-box"
-              //  onSubmit={handleSubmit}
-            >
+            <form className="form-box" onSubmit={handleSubmit}>
               <h2>Add Supplier</h2>
-
-              <div
-                className=""
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100%",
-                  justifyContent: "space-between",
-                  //   justifyContent: "space-evenly",
-                }}
-              ></div>
 
               <TextField
                 type="text"
@@ -54,6 +85,8 @@ const AddSupplier = () => {
                 id="customer-name"
                 size="small"
                 required
+                value={partyName}
+                onChange={(e) => setPartyName(e.target.value)}
                 label="Party Name"
               />
               <TextField
@@ -62,7 +95,29 @@ const AddSupplier = () => {
                 id="customer-name"
                 size="small"
                 required
+                value={gstIn}
+                onChange={(e) => setGstIn(e.target.value)}
                 label="GSTIN"
+              />
+              <TextField
+                type="number"
+                className="form-control my-2"
+                id="customer-name"
+                size="small"
+                required
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                label="Phone Number"
+              />
+              <TextField
+                type="email"
+                className="form-control my-2"
+                id="customer-name"
+                size="small"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                label="Email"
               />
               <TextField
                 type="text"
@@ -70,70 +125,51 @@ const AddSupplier = () => {
                 id="customer-name"
                 size="small"
                 required
-                label="Phone Number"
+                value={billingAddress}
+                onChange={(e) => setBillingAddress(e.target.value)}
+                label="Billing Address"
               />
-              {/* <div style={{ width: "100%" }}>
-                <button
-                  className="btn btn-outline-primary"
-                  style={{ width: "100%" }}
-                >
-                  <AiOutlinePlusCircle />
-                  Add Item (Optional)
-                </button>
-              </div> */}
-              <div style={{ marginBottom: 0, paddingBottom: 0 }}>
-                <div style={{ width: "100%" }}>
-                  <ul
-                    className="d-flex flex-row"
-                    style={{
-                      listStyle: "none",
-                      flex: 1,
-                      marginRight: "40px",
-                    }}
-                  >
-                    {tabs.map((tab, index) => (
-                      <li
-                        key={tab.id}
-                        // className="border-bottom border border-danger"
-                        style={{
-                          border: "none",
-                          outline: "none",
-                          width: "100%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flex: 1,
-                          borderBottom: index === value && "2px solid red",
-                        }}
-                      >
-                        <button
-                          style={{
-                            outline: "none",
-                            border: "none",
-                            fontSize: "15px",
-                            width: "100%",
-                          }}
-                          onClick={() => setValue(index)}
-                          className={`btn mx-2`}
-                        >
-                          {tab.button}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                  <div
-                  // style={{
-                  //   display: "flex",
-                  //   flexDirection: "column",
-                  //   justifyContent: "center",
-                  //   width: "100%",
-                  //   alignItems: "center",
-                  // }}
-                  >
-                    {component}
-                  </div>
-                </div>
-              </div>
+              <TextField
+                type="number"
+                className="form-control my-2"
+                id="customer-name"
+                size="small"
+                required
+                value={openingBalance}
+                onChange={(e) => setopeningBalance(e.target.value)}
+                label="Opening Amount"
+              />
+              <TextField
+                type="number"
+                className="form-control my-2"
+                id="customer-name"
+                size="small"
+                required
+                value={creditLimitAmount}
+                onChange={(e) => setCreditLimitAmount(e.target.value)}
+                label="Credit Limit Amount"
+              />
+              <TextField
+                type="text"
+                className="form-control my-2"
+                id="customer-name"
+                size="small"
+                required
+                value={gstType}
+                onChange={(e) => setGstType(e.target.value)}
+                label="Gst Type"
+              />
+              <TextField
+                type="text"
+                className="form-control my-2"
+                id="customer-name"
+                size="small"
+                required
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                label="State"
+              />
+
               <div className="mt-3">
                 <button
                   type="submit"
