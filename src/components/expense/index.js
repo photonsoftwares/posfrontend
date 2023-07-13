@@ -228,10 +228,26 @@ const Expense = (props) => {
                 </ModalBody>
                 <ModalFooter>
                     <Button
+                        type="button"
+                        onClick={() => {
+                            setExpenseModalIsOpen(!expenseModalIsOpen)
+                        }}
+                        style={{
+                            backgroundColor: "#fc0202",
+                            border: "none"
+                        }}
+                    >
+                        Close
+                    </Button>
+
+                    <Button
                         type="submit"
                         color='primary'
+                        style={{
+                            border: "none"
+                        }}
                     >
-                        Create
+                        Save
                     </Button>
                 </ModalFooter>
             </Form>
