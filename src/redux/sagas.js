@@ -1300,9 +1300,12 @@ function* handleSalesDashboardChartRequest(e) {
 
 function* handleSalesReportRequest(e) {
   try {
-    const response = yield fetch(`${host}tax/get-sales-report/${e.payload}/${storeId}/${saasId}`, {
-      method: "GET",
-    });
+    const response = yield fetch(
+      `${host}tax/get-sales-report/${e.payload}/${storeId}/${saasId}`,
+      {
+        method: "GET",
+      }
+    );
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
@@ -1416,17 +1419,17 @@ function* handleItemMasterListRequest(e) {
 
 function* handleTenderReportRequest(e) {
   try {
-    const { date } = e.payload
+    const { date } = e.payload;
     const response = yield fetch(`${host}reconciliation/get-total-amount`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        "saas_id": saasId,
-        "store_id": storeId,
-        "business_date": moment(date).format("Y-MM-DD")
-      })
+        saas_id: saasId,
+        store_id: storeId,
+        business_date: moment(date).format("Y-MM-DD"),
+      }),
     });
     const jsonData = yield response.json();
     if (jsonData) {
@@ -1458,12 +1461,12 @@ function* handleUpdateMoqRequest(e) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(e.payload)
+      body: JSON.stringify(e.payload),
     });
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
-        toast.success(jsonData.message)
+        toast.success(jsonData.message);
         yield put({
           type: "ComponentPropsManagement/handleUpdateMoqResponse",
           data: jsonData.data,
@@ -1490,12 +1493,12 @@ function* handleUpdatePriceRequest(e) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(e.payload)
+      body: JSON.stringify(e.payload),
     });
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
-        toast.success(jsonData.message)
+        toast.success(jsonData.message);
         yield put({
           type: "ComponentPropsManagement/handleUpdatePriceResponse",
           data: jsonData.data,
@@ -1552,12 +1555,55 @@ function* handleExpenseCategoryDropdownRequest(e) {
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
-        console.log("dx", jsonData);
-        // yield put({
-        //   type: "ComponentPropsManagement/handleCreateTaxMasterResponse",
-        //   data: jsonData.data,
-        // });
+        if (jsonData.data && jsonData.data.length > 0) {
+          const arr = [];
+          jsonData.data.map((item) => {
+            arr.push({ label: item, value: item });
+          });
+          yield put({
+            type: "ComponentPropsManagement/handleExpenseCategoryDropdownResponse",
+            data: arr,
+          });
+          return;
+        }
+        yield put({
+          type: "ComponentPropsManagement/handleExpenseCategoryDropdownResponse",
+          data: [],
+        });
       } else {
+        toast.error(jsonData.message);
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
+function* handleExpenseCreateRequest(e) {
+  try {
+    const response = yield fetch(`${host}expense/create-expenses`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    });
+    const jsonData = yield response.json();
+    if (jsonData) {
+      if (jsonData.status === true) {
+        toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleExpenseCreateResponse",
+          data: jsonData.data,
+        });
+        return;
+      } else {
+        yield put({
+          type: "ComponentPropsManagement/handleExpenseCreateResponse",
+          data: null,
+        });
         toast.error(jsonData.message);
       }
     } else {
@@ -1878,6 +1924,11 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleSearchedDataRequest",
     handleSearchedDataRequest
   );
+  yield takeEvery(
+    "ComponentPropsManagement/handleExpenseCreateRequest",
+    handleExpenseCreateRequest
+  );
+
   yield takeEvery(
     "ComponentPropsManagement/handleSearchedDataRequest1",
     handleSearchedDataRequest1

@@ -83,6 +83,8 @@ const initialComponentPropsManagementState = {
   gst_report_item_table_data: [],
   link_loyalty_detail: {},
   no_of_items: 0,
+
+  expense_category_dropdown: [],
   update_price_item_name_dropdown: [],
 };
 
@@ -457,11 +459,18 @@ export const ComponentPropsManagement = createSlice({
     handleSearchedDataResponse1: (state, payload) => {
       state.item_master_list = payload.data;
     },
+
     handleExpenseCategoryDropdownRequest: (state, payload) => {},
+    handleExpenseCategoryDropdownResponse: (state, payload) => {
+      state.expense_category_dropdown = payload.data;
+    },
+    handleExpenseCreateRequest: (state, payload) => {},
+    handleExpenseCreateResponse: (state, payload) => {},
     handleUpdateMoqRequest: (state, payload) => {},
     handleUpdateMoqResponse: (state, payload) => {},
     handleUpdatePriceRequest: (state, payload) => {},
     handleUpdatePriceResponse: (state, payload) => {},
+
     // handleSearchedDataRequest2: (state, payload) => { },
     // handleSearchedDataResponse2: (state, payload) => {
     //   let arr = []
@@ -491,6 +500,7 @@ export const {
   handleDelGetUserRequest,
   handleDebitNoteRequest,
   handlecartCount,
+  handleExpenseCreateRequest,
   handleShowModal,
   handleAccruvalRequest,
   handleMemberEnrollmentResponse,
@@ -510,6 +520,7 @@ export const {
   handleCreateRowTaxMasterRequest,
   handleAddItemSearchRequest,
   handlePartyNameDataRequest,
+  handleExpenseCategoryDropdownRequest,
   handleAddPurchaseRequest,
   handleAddPartyRequest,
   handleGetUserData,
