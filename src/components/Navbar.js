@@ -80,7 +80,7 @@ const Navbar = () => {
     localStorage.clear();
     navigate("/login");
   };
-  useEffect(() => { }, [handleLogout]);
+  useEffect(() => {}, [handleLogout]);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -224,7 +224,7 @@ const Navbar = () => {
               }}
             >
               {localStorage.getItem("User_data") &&
-                localStorage.getItem("Token") ? (
+              localStorage.getItem("Token") ? (
                 <GrLogout
                   size={25}
                   // style={{ cursor: "pointer", padding: 0, margin: 0 }}
@@ -278,13 +278,13 @@ const Navbar = () => {
                               </>
                             )}
                             <DropdownMenu>
-                              {/* <DropdownItem
+                              <DropdownItem
                                 onClick={() => {
-                                  navigate("/add-party");
+                                  navigate("/link-customer");
                                 }}
                               >
-                                Link Loyalty
-                              </DropdownItem> */}
+                                Link Customer
+                              </DropdownItem>
                               <DropdownItem
                                 onClick={() => {
                                   // navigate("/link-customer");
@@ -298,7 +298,7 @@ const Navbar = () => {
                                   navigate("/link-loyality-customer");
                                 }}
                               >
-                                Loyality Dashboard
+                                Link Loyality
                               </DropdownItem>
                               {/* <DropdownItem
                                 onClick={() => {

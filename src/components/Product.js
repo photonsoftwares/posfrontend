@@ -29,7 +29,6 @@ const Product = ({
   setUpdatecart,
   updatecart,
 }) => {
-
   const { cart_data } = useSelector((e) => e.ComponentPropsManagement);
   const [myPrice, setMyPrice] = useState({ productId: "", price: "" });
   const [showButton, setShowButton] = useState(true);
@@ -124,7 +123,7 @@ const Product = ({
                                 <BsFillCheckCircleFill
                                   color={
                                     item.new_price === "" ||
-                                      item.new_price === 0
+                                    item.new_price === 0
                                       ? "#979797"
                                       : "green"
                                   }
@@ -194,8 +193,10 @@ const Product = ({
                                 item["discount_menu_is_open"] = false;
                                 item["discount_value"] = "";
                                 item["amount_value"] = "";
-                                item["new_price"] = Number(item.price) * Number(item.productQty);
-                                item["zero_price"] = Number(item.price) * Number(item.productQty);
+                                item["new_price"] =
+                                  Number(item.price) * Number(item.productQty);
+                                item["zero_price"] =
+                                  Number(item.price) * Number(item.productQty);
                                 localStorage.setItem(
                                   "my-cart",
                                   JSON.stringify([...el, item])
@@ -203,20 +204,24 @@ const Product = ({
                               }
                             }
                           });
-                          el.map(item => {
+                          el.map((item) => {
                             item["discount_menu_is_open"] = false;
                             item["discount_value"] = "";
                             item["amount_value"] = "";
-                            item["new_price"] = Number(item.price) * Number(item.productQty);
-                            item["zero_price"] = Number(item.price) * Number(item.productQty);
-                          })
+                            item["new_price"] =
+                              Number(item.price) * Number(item.productQty);
+                            item["zero_price"] =
+                              Number(item.price) * Number(item.productQty);
+                          });
                           localStorage.setItem("my-cart", JSON.stringify(el));
                           if (flag === 0) {
                             item["discount_menu_is_open"] = false;
                             item["discount_value"] = "";
                             item["amount_value"] = "";
-                            item["new_price"] = Number(item.price) * Number(item.productQty);
-                            item["zero_price"] = Number(item.price) * Number(item.productQty);
+                            item["new_price"] =
+                              Number(item.price) * Number(item.productQty);
+                            item["zero_price"] =
+                              Number(item.price) * Number(item.productQty);
                             localStorage.setItem(
                               "my-cart",
                               JSON.stringify([...el, item])
@@ -227,8 +232,10 @@ const Product = ({
                           item["discount_menu_is_open"] = false;
                           item["discount_value"] = "";
                           item["amount_value"] = "";
-                          item["new_price"] = Number(item.price) * Number(item.productQty);
-                          item["zero_price"] = Number(item.price) * Number(item.productQty);
+                          item["new_price"] =
+                            Number(item.price) * Number(item.productQty);
+                          item["zero_price"] =
+                            Number(item.price) * Number(item.productQty);
                           localStorage.setItem(
                             "my-cart",
                             JSON.stringify([item])
@@ -239,14 +246,16 @@ const Product = ({
                         item["discount_menu_is_open"] = false;
                         item["discount_value"] = "";
                         item["amount_value"] = "";
-                        item["new_price"] = Number(item.price) * Number(item.productQty);
-                        item["zero_price"] = Number(item.price) * Number(item.productQty);
+                        item["new_price"] =
+                          Number(item.price) * Number(item.productQty);
+                        item["zero_price"] =
+                          Number(item.price) * Number(item.productQty);
                         localStorage.setItem("my-cart", JSON.stringify([item]));
                         dispatch(handlecartCount(1));
                       }
 
-                      setUpdatecart(!updatecart)
-                      setSearchValue("")
+                      setUpdatecart(!updatecart);
+                      setSearchValue("");
                     }}
                   >
                     <Button

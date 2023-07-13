@@ -16,8 +16,8 @@ const {
   userId,
   userName,
 } = localStorage.getItem("User_data")
-    ? JSON.parse(localStorage.getItem("User_data"))
-    : {};
+  ? JSON.parse(localStorage.getItem("User_data"))
+  : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
 console.log("storeId", storeId);
@@ -161,7 +161,6 @@ function* handleSearchedDataRequest(e) {
 function* handleSearchedDataRequest1(e) {
   // const navigate = useNavigate();
   try {
-
     const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
     const { searchValue } = e.payload;
     const response = yield fetch(
@@ -191,7 +190,7 @@ function* handleSearchedDataRequest1(e) {
       toast.error("Something went wrong server side");
     }
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 }
 
@@ -511,7 +510,7 @@ function* handleSaveTransactionRequest(e) {
     body: JSON.stringify(e.payload),
   });
   const jsonData = yield response.json();
-  // console.log("SAVE TRANSACTION DATA", jsonData);
+  console.log("SAVE TRANSACTION DATA", jsonData);
   if (jsonData) {
     if (jsonData && jsonData.data) {
       const cartData = jsonData.data;
@@ -1301,9 +1300,12 @@ function* handleSalesDashboardChartRequest(e) {
 
 function* handleSalesReportRequest(e) {
   try {
-    const response = yield fetch(`${host}tax/get-sales-report/${e.payload}/${storeId}/${saasId}`, {
-      method: "GET",
-    });
+    const response = yield fetch(
+      `${host}tax/get-sales-report/${e.payload}/${storeId}/${saasId}`,
+      {
+        method: "GET",
+      }
+    );
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
@@ -1385,10 +1387,13 @@ function* handleGstReportItemRequest(e) {
 
 function* handleItemMasterListRequest(e) {
   try {
-    const { currentPage } = e.payload
-    const response = yield fetch(`${host}item/get-item-list/${saasId}/${currentPage}`, {
-      method: "GET",
-    });
+    const { currentPage } = e.payload;
+    const response = yield fetch(
+      `${host}item/get-item-list/${saasId}/${currentPage}`,
+      {
+        method: "GET",
+      }
+    );
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
@@ -1414,17 +1419,17 @@ function* handleItemMasterListRequest(e) {
 
 function* handleTenderReportRequest(e) {
   try {
-    const { date } = e.payload
+    const { date } = e.payload;
     const response = yield fetch(`${host}reconciliation/get-total-amount`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        "saas_id": saasId,
-        "store_id": storeId,
-        "business_date": moment(date).format("Y-MM-DD")
-      })
+        saas_id: saasId,
+        store_id: storeId,
+        business_date: moment(date).format("Y-MM-DD"),
+      }),
     });
     const jsonData = yield response.json();
     if (jsonData) {
@@ -1456,12 +1461,12 @@ function* handleUpdateMoqRequest(e) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(e.payload)
+      body: JSON.stringify(e.payload),
     });
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
-        toast.success(jsonData.message)
+        toast.success(jsonData.message);
         yield put({
           type: "ComponentPropsManagement/handleUpdateMoqResponse",
           data: jsonData.data,
@@ -1488,12 +1493,12 @@ function* handleUpdatePriceRequest(e) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(e.payload)
+      body: JSON.stringify(e.payload),
     });
     const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
-        toast.success(jsonData.message)
+        toast.success(jsonData.message);
         yield put({
           type: "ComponentPropsManagement/handleUpdatePriceResponse",
           data: jsonData.data,
@@ -1547,19 +1552,19 @@ function* handleExpenseCategoryDropdownRequest(e) {
     const response = yield fetch(`${host}expense/get-all-category-name`, {
       method: "GET",
     });
-    const jsonData = yield response.json()
+    const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
         if (jsonData.data && jsonData.data.length > 0) {
-          const arr = []
-          jsonData.data.map(item => {
-            arr.push({ label: item, value: item })
-          })
+          const arr = [];
+          jsonData.data.map((item) => {
+            arr.push({ label: item, value: item });
+          });
           yield put({
             type: "ComponentPropsManagement/handleExpenseCategoryDropdownResponse",
             data: arr,
           });
-          return
+          return;
         }
         yield put({
           type: "ComponentPropsManagement/handleExpenseCategoryDropdownResponse",
@@ -1585,7 +1590,7 @@ function* handleExpenseCreateRequest(e) {
       },
       body: JSON.stringify(e.payload),
     });
-    const jsonData = yield response.json()
+    const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
         toast.success(jsonData.message);
@@ -1593,7 +1598,7 @@ function* handleExpenseCreateRequest(e) {
           type: "ComponentPropsManagement/handleExpenseCreateResponse",
           data: jsonData.data,
         });
-        return
+        return;
       } else {
         yield put({
           type: "ComponentPropsManagement/handleExpenseCreateResponse",
@@ -1613,14 +1618,17 @@ function* handleExpenseCreateRequest(e) {
 function* handleMemberEnrollmentRequest(e) {
   console.log("E PAYLOAD ENROLLMENT", e.payload);
 
-  const response = yield fetch(`http://3.111.70.84:8091/v1/loyalty/customer`, {
-    // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(e.payload),
-  });
+  const response = yield fetch(
+    `http://3.111.70.84:8091/test/v1/loyalty/customer`,
+    {
+      // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    }
+  );
   const jsonData = yield response.json();
   console.log("JSONDATA MEMBER ENRL", jsonData);
   // if (jsonData) {
@@ -1644,21 +1652,14 @@ function* handleMemberEnrollmentRequest(e) {
 
 // Accruval Loyalty
 function* handleAccruvalRequest(e) {
+  // const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  console.log("ACC E", e);
   try {
     console.log("E PAYLOAD ACCURAVAL", e.payload);
-    // const { data } = JSON.parse(localStorage.getItem("Loyalty_data"));
 
-    // console.log("E PAYLOAD ACC SAAS", saasId);
-    // console.log("E PAYLOAD ACC LOYALTY ID", data.loyalty_id);
-    // console.log(
-    //   "E PAYLOAD URL",
-    //   `http://3.111.70.84:8091/v1/loyalty/issue/${saasId}/${data.loyalty_id}`
-    // );
-
-    // const { data } = JSON.parse(localStorage.getItem("Loyalty_data"));
     const response = yield fetch(
-      // `http://3.111.70.84:8091/v1/loyalty/issue/${saasId}/${data.loyalty_id}`,
-      `http://3.111.70.84:8091/v1/loyalty/issue/8/80407237021438056AED`,
+      `http://3.111.70.84:8091/test/v1/loyalty/issue/${saasId}/${e.payload.link_loyalty_detail.loyalty_id}`,
       {
         // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
         method: "POST",
@@ -1694,16 +1695,13 @@ function* handleAccruvalRequest(e) {
 function* handleDebitNoteRequest(e) {
   console.log("E PAYLOAD", e);
   try {
-    const response = yield fetch(
-      `http://3.111.70.84:8088/api/v1/Debit/create-debitnote`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(e.payload),
-      }
-    );
+    const response = yield fetch(`${BASE_Url}/Debit/create-debitnote`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    });
     const jsonData = yield response.json();
     console.log("Debit Note JSONDATA", jsonData);
     if (jsonData) {
@@ -1727,16 +1725,13 @@ function* handleDebitNoteRequest(e) {
 function* handleDeliveryNoteRequest(e) {
   console.log("E PAYLOAD", e);
   try {
-    const response = yield fetch(
-      `http://3.111.70.84:8088/api/v1/Debit/create-debit-chalan`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(e.payload),
-      }
-    );
+    const response = yield fetch(`${BASE_Url}/Debit/create-debit-chalan`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    });
     const jsonData = yield response.json();
     console.log("Debit Note JSONDATA", jsonData);
     if (jsonData) {
@@ -1752,6 +1747,106 @@ function* handleDeliveryNoteRequest(e) {
     } else {
       toast.error("Something went wrong");
     }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
+function* handleDelGetUserRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  console.log("E PAYLOAD USER DATA", e.payload);
+  const { searchValue } = e.payload;
+  try {
+    const response = yield fetch(
+      `http://3.111.70.84:8088/test/api/v1/customer/search-customer/${storeId}/EEEE/${searchValue}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify(e.payload),
+      }
+    );
+    const jsonData = yield response.json();
+    console.log("JSONDATA E USER", jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        const tempSearchArr = jsonData.data;
+        const arr = [];
+        tempSearchArr.map((el) => {
+          // arr.push({ label: el.taxCode + "@" + el.taxRate, ...el });
+          arr.push({ ...el, label: el.name, value: el.name });
+        });
+        // toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleDelGetUserResponse",
+          data: arr,
+        });
+      } else {
+        toast.error(jsonData.message);
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+// handleLinkLoyaltyRequest
+function* handleLinkLoyaltyRequest(e) {
+  console.log("SEARCH LINK MOBILE", e);
+  // const { mobile_number } = e.payload;
+  try {
+    const response = yield fetch(
+      `http://3.111.70.84:8091/test/v1/loyalty/customer-details`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(e.payload),
+      }
+    );
+    const jsonData = yield response.json();
+    console.log("JSONDATA E USER", jsonData);
+    if (jsonData) {
+      yield put({
+        type: "ComponentPropsManagement/handleLinkLoyaltyResponse",
+        data: jsonData,
+      });
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
+// handleRedeemPointRequest
+function* handleRedeemPointRequest(e) {
+  console.log("SEARCH LINK MOBILE", e);
+  // const { mobile_number } = e.payload;
+  try {
+    const response = yield fetch(
+      `http://3.111.70.84:8091/test/v1/loyalty/redeem-points/${e.payload.link_loyalty_detail.loyalty_id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(e.payload),
+      }
+    );
+    const jsonData = yield response.json();
+    console.log("JSONDATA E USER", jsonData);
+    //   if (jsonData) {
+    //     yield put({
+    //       type: "ComponentPropsManagement/handleLinkLoyaltyResponse",
+    //       data: jsonData,
+    //     });
+    //   } else {
+    //     toast.error("Something went wrong");
+    //   }
   } catch (err) {
     toast.error(err.message);
   }
@@ -1975,6 +2070,18 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleDeliveryNoteRequest",
     handleDeliveryNoteRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleDelGetUserRequest",
+    handleDelGetUserRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleLinkLoyaltyRequest",
+    handleLinkLoyaltyRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleRedeemPointRequest",
+    handleRedeemPointRequest
   );
 }
 

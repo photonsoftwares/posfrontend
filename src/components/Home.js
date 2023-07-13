@@ -85,7 +85,7 @@ const Home = () => {
   const [email, setEmail] = useState("");
   const [updatecart, setUpdatecart] = useState(true);
   const [storeName, setStoreName] = useState("");
-  const [loyaltyAmount, setLoyaltyAmount] = useState(10000)
+  const [loyaltyAmount, setLoyaltyAmount] = useState(10000);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -192,7 +192,6 @@ const Home = () => {
       }
     }
   }, [get_recommended_items]);
-
 
   useEffect(() => {
     console.log("cartData", cartData);
@@ -328,7 +327,7 @@ const Home = () => {
     }
   }, [searchValue]);
 
-  let recognition = null
+  let recognition = null;
   try {
     recognition = window.recognition;
     recognition.addEventListener("result", (e) => {
@@ -341,7 +340,7 @@ const Home = () => {
       setSearchValue(transcript);
     });
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 
   const handleVoiceCommand = () => {
@@ -508,10 +507,10 @@ const Home = () => {
             opacity={0.9}
             // onClick={() => setSpechModal(true)}
             onClick={handleVoiceCommand}
-          // onClick={() => {
-          //   setVisibleVoiceCommand(true);
-          //   startListening;
-          // }}
+            // onClick={() => {
+            //   setVisibleVoiceCommand(true);
+            //   startListening;
+            // }}
           />
         </div>
       </div>
@@ -623,13 +622,13 @@ const Home = () => {
               fontSize: "20px",
               cursor: "pointer",
             }}
-          // onClick={() => {
-          //   if (cartData && cartData?.length > 0) {
-          //     setShow(true);
-          //   } else {
-          //     toast.error("Please add atleast one item in cart");
-          //   }
-          // }}
+            // onClick={() => {
+            //   if (cartData && cartData?.length > 0) {
+            //     setShow(true);
+            //   } else {
+            //     toast.error("Please add atleast one item in cart");
+            //   }
+            // }}
           >
             {/* View Cart <BsArrowRight /> */}
           </h2>
@@ -663,7 +662,7 @@ const Home = () => {
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-      // style={{ position: "relative" }}
+        // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -754,13 +753,16 @@ const Home = () => {
                                   }
                                 }
                               }
-                              if (item.value === 'loyalty') {
-                                let newLoyaltyAmount = loyaltyAmount
+                              if (item.value === "loyalty") {
+                                let newLoyaltyAmount = loyaltyAmount;
                                 if (loyaltyAmount > amount) {
-                                  newLoyaltyAmount = amount
+                                  newLoyaltyAmount = amount;
                                 }
                                 if (optionTick?.length === 0) {
-                                  const obj = { ...item, amount: newLoyaltyAmount };
+                                  const obj = {
+                                    ...item,
+                                    amount: newLoyaltyAmount,
+                                  };
                                   setOptionTick([...optionTick, obj]);
                                 } else if (optionTick?.length > 0) {
                                   if (
@@ -775,7 +777,10 @@ const Home = () => {
                                     );
                                   } else {
                                     if (Number(optionTickSum) <= sumValue) {
-                                      const obj = { ...item, amount: newLoyaltyAmount };
+                                      const obj = {
+                                        ...item,
+                                        amount: newLoyaltyAmount,
+                                      };
                                       setOptionTick([...optionTick, obj]);
                                     }
                                   }
@@ -783,29 +788,29 @@ const Home = () => {
                                 // const r1 = amount - loyaltyAmount
                                 // setAmount(r1)
                               }
-
                             }}
-                            className={`option-item ${optionTick.filter((io) => io.name === item.value)
-                              ?.length > 0 && ""
-                              }`}
+                            className={`option-item ${
+                              optionTick.filter((io) => io.name === item.value)
+                                ?.length > 0 && ""
+                            }`}
                             style={{
                               width: "90%",
                               backgroundColor:
                                 item.name === "Cash"
                                   ? "#fed813"
                                   : item.name === "Paytm"
-                                    ? "#00B9F1"
-                                    : item.name === "Google Pay"
-                                      ? "#2DA94F"
-                                      : item.name === "Phone Pay"
-                                        ? "#5f259f"
-                                        : item.name === "UPI"
-                                          ? "#ff7909"
-                                          : item.name === "Credit Sale"
-                                            ? "#1741b2"
-                                            : item.name === "Loyalty"
-                                              ? "#c8030e"
-                                              : "silver",
+                                  ? "#00B9F1"
+                                  : item.name === "Google Pay"
+                                  ? "#2DA94F"
+                                  : item.name === "Phone Pay"
+                                  ? "#5f259f"
+                                  : item.name === "UPI"
+                                  ? "#ff7909"
+                                  : item.name === "Credit Sale"
+                                  ? "#1741b2"
+                                  : item.name === "Loyalty"
+                                  ? "#c8030e"
+                                  : "silver",
                             }}
                           >
                             <div style={{ position: "relative", top: "2px" }}>
@@ -818,18 +823,18 @@ const Home = () => {
                                   item.name === "Cash"
                                     ? "black"
                                     : item.name === "Paytm"
-                                      ? "black"
-                                      : item.name === "Google Pay"
-                                        ? "white"
-                                        : item.name === "Phone Pay"
-                                          ? "white"
-                                          : item.name === "UPI"
-                                            ? "white"
-                                            : item.name === "Credit Sale"
-                                              ? "#fff"
-                                              : item.name === "Loyalty"
-                                                ? "#fff"
-                                                : "black",
+                                    ? "black"
+                                    : item.name === "Google Pay"
+                                    ? "white"
+                                    : item.name === "Phone Pay"
+                                    ? "white"
+                                    : item.name === "UPI"
+                                    ? "white"
+                                    : item.name === "Credit Sale"
+                                    ? "#fff"
+                                    : item.name === "Loyalty"
+                                    ? "#fff"
+                                    : "black",
                               }}
                             >
                               {item.name}
@@ -959,9 +964,10 @@ const Home = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${
+                      handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                      }`}
+                    }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -990,9 +996,10 @@ const Home = () => {
                 }}
               >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${
+                    handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                    }`}
+                  }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />
