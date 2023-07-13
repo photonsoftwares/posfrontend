@@ -5,10 +5,10 @@ import Flatpickr from "react-flatpickr";
 import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
+import MyCart from './MyCart';
 
 const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
-    const [orderQty, setOrderQty] = useState(0)
-    const [orderValue, setOrderValue] = useState(0)
+    const [show, setShow] = useState(false);
     const a1 = [
         {
             "order_id": 4387,
@@ -81,26 +81,6 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
             "status": "order placed"
         }
     ]
-    useEffect(() => {
-        if (a1.length > 0) {
-            const t1 = a1.map(io => io.order_qty)
-            let sum = 0
-            t1.map(s => {
-                sum = sum + s
-            })
-            setOrderQty(sum)
-
-
-            const t2 = a1.map(io => io.order_value)
-            let sum1 = 0
-            t2.map(s => {
-                sum1 = sum1 + s
-            })
-            setOrderValue(sum1)
-        }
-    }, [a1])
-
-
 
     return (<>
         <Modal
@@ -111,7 +91,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
             <ModalHeader>
                 <div className='w-100'>
                     <div className="d-flex justify-content-between">
-                        <div>
+                        <div style={{ fontWeight: "bold" }}>
 
                             <HiOutlineArrowSmallLeft
                                 className='mouse-pointer'
@@ -119,7 +99,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
                                     setViewOrderModalIsOpen(!viewOrderModalIsOpen)
                                 }}
                             />&nbsp;
-                            View Orders
+                            Pending Orders
                         </div>
                         <div>
                             {/* <Button type='button' className='btn btn-sm' color='primary'>To Bill</Button> */}
@@ -131,7 +111,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
                 {/* <Row>
                     <Col md={12}>
                         <div className='table-responsive'>
-                            <table class="table text-center table-bordered">
+                            <table className="table text-center table-bordered">
                                 <thead>
                                     <tr>
                                         <th scope="col">Customer Name</th>
@@ -159,7 +139,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
 
                 </div>
                 <div className='table-responsive'>
-                    <table class="table text-center table-bordered">
+                    <table className="table text-center table-bordered">
                         <thead>
                             <tr>
                                 <th scope="col">Order Id</th>
@@ -183,7 +163,9 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
                                         <td>{item.order_value}</td>
                                         <td>{item.order_discount}</td>
                                         <td>
-                                            <Button type='button' className='btn btn-sm' color='primary'>To Bill</Button>
+                                            <Button type='button' className='btn btn-sm' color='primary'
+                                                onClick={() => setShow(true)}
+                                            >To Bill</Button>
                                         </td>
                                     </tr>
                                 </>)
@@ -196,6 +178,12 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
 
             </ModalFooter>
         </Modal>
+        {show === true && (<>
+            <MyCart
+                show={show}
+                setShow={setShow}
+            />
+        </>)}
     </>)
 }
 
