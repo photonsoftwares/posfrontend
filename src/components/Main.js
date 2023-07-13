@@ -26,7 +26,7 @@ import {
 import Expense from "./expense";
 import UpdateMoq from "./moq";
 import UpdatePrice from "./update-price";
-import ViewOrders from "./ViewOrders";
+import ViewOrders from "./PendingOrders";
 
 const Main = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -99,8 +99,8 @@ const Main = () => {
   const omni_channel_arr = [
     {
       id: 1,
-      label: "View orders",
-      value: "view_orders",
+      label: "Pending Orders",
+      value: "pending_orders",
       icon: <TfiViewListAlt size="25" color="#26cbaf" />,
       isActive: true
     },
@@ -327,7 +327,7 @@ const Main = () => {
                             setUpdateMoqModalIsOpen(!updateMoqModalIsOpen)
                           } else if (item.value === "update_price") {
                             setUpdatePriceModalIsOpen(!updatePriceModalIsOpen)
-                          } else if (item.value === "view_orders") {
+                          } else if (item.value === "pending_orders") {
                             setViewOrderModalIsOpen(!viewOrderModalIsOpen)
                           }
                         }}

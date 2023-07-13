@@ -23,29 +23,31 @@ const Return = () => {
           <div className="col-lg-5 col-md-9 col-sm-12 px-5">
             {/* <div className="d-flex justify-content-center">
               <div class="form-check form-check-inline">
+            <div className="d-flex justify-content-center">
+              <div className="form-check form-check-inline">
                 <input
-                  class="form-check-input"
+                  className="form-check-input"
                   type="radio"
                   name="inlineRadioOptions"
                   value={"Male"}
                   //   onChange={onOptionChange}
                   id="inlineRadio1"
-                  // value="option1"
+                // value="option1"
                 />
-                <label class="form-check-label" for="inlineRadio1">
+                <label className="form-check-label" for="inlineRadio1">
                   With Invoice
                 </label>
               </div>
-              <div class="form-check form-check-inline">
+              <div className="form-check form-check-inline">
                 <input
-                  class="form-check-input"
+                  className="form-check-input"
                   type="radio"
                   name="inlineRadioOptions"
                   id="inlineRadio2"
                   value={"Female"}
-                  //   onChange={onOptionChange}
+                //   onChange={onOptionChange}
                 />
-                <label class="form-check-label" for="inlineRadio2">
+                <label className="form-check-label" for="inlineRadio2">
                   With Invoice
                 </label>
               </div>
