@@ -142,7 +142,7 @@ const MemberEnrollment = () => {
     <section>
       <div className="container">
         <div className="row d-flex justify-content-center">
-          <div className="col-lg-5 col-md-10 col-sm-12 px-4">
+          <div className="col-lg-5 col-md-10 col-sm-12 px-5">
             <form className="form-box" onSubmit={handleSubmit}>
               <h2>Member Enrollment</h2>
               {/* <TextField
