@@ -80,6 +80,7 @@ const AddItem = () => {
   const [productId, setProductId] = useState("");
   const [taxPercentage, setTaxPercentage] = useState("");
   const [itemCategory, setItemCategory] = useState("");
+  const [purchasePrice, setPurchasePrice] = useState("");
 
   // console.log("UPLOAD ITEM", uploadItem);
 
@@ -164,50 +165,11 @@ const AddItem = () => {
     <section>
       <div className="container">
         <div className="row d-flex justify-content-center">
-          <div className="col-lg-5 col-md-10 col-sm-12 px-5">
+          <div className="col-lg-5 col-md-9 col-sm-12 px-5">
             {productId ? (
               <div>
                 <p>Upload Pic</p>
-                {/* <div style={{ display: "flex", flexDirection: "column" }}>
-                  <Webcam
-                    ref={webcamRef}
-                    audio={false}
-                    screenshotFormat="image/png"
-                    videoConstraints={videoConstraints}
-                    onUserMedia={onUserMedia}
-                    mirrored={true}
-                  />
 
-                  <div className="my-3">
-                    <button className="btn btn-primary" onClick={capturePhoto}>
-                      Capture
-                    </button>
-                    <button
-                      className="btn btn-primary mx-2"
-                      onClick={() => setUrl(null)}
-                    >
-                      Refresh
-                    </button>
-                  </div>
-                  {url && (
-                    <div style={{ MaxWidth: "200px" }}>
-                      <img
-                        src={url}
-                        style={{ height: "100px", width: "300px" }}
-                        alt="Pic"
-                      />
-                    </div>
-                  )}
-                </div> */}
-                {/* <input
-                  accept="image/*"
-                  id="icon-button-file"
-                  type="file"
-                  value={uploadItem}
-                  onChange={(e) => setUploadItem(e.target.value)}
-                  capture="environment"
-                /> */}
-                {/*  */}
                 <Grid container>
                   <Grid item xs={12}>
                     <h5>Capture your image</h5>
@@ -412,6 +374,16 @@ const AddItem = () => {
                     required
                     onChange={(e) => setTaxPercentage(e.target.value)}
                     label="Tax Percentage"
+                  />
+                  <TextField
+                    size="small"
+                    type="number"
+                    className="form-control my-2"
+                    id="customer-name"
+                    value={purchasePrice}
+                    required
+                    onChange={(e) => setPurchasePrice(e.target.value)}
+                    label="Purchase Price"
                   />
                 </div>
 

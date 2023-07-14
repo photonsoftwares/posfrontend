@@ -248,7 +248,6 @@ function* handlePartyNameDataRequest(e) {
     }
   );
   const jsonData = yield response.json();
-
   console.log("JSONDATA SEARCH PARTY NAME__", jsonData);
   if (jsonData.status === true) {
     if (jsonData) {
@@ -265,6 +264,45 @@ function* handlePartyNameDataRequest(e) {
       });
     }
   } else if (jsonData) {
+  }
+}
+
+// Add / Create Supplier
+function* handleCreateSupplierRequest(e) {
+  // const { searchValue } = e.payload;
+  console.log("PARTY NAME DATA E", e);
+  const response = yield fetch(
+    // `${BASE_Url}/search/get-result/Store1/AAAA/${searchValue}`,
+    `${BASE_Url}/supplier/create`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    }
+  );
+  const jsonData = yield response.json();
+  // console.log("JSONDATA SEARCH PARTY NAME__", jsonData);
+  if (jsonData.status === true) {
+    if (jsonData) {
+      if (jsonData && jsonData.data) {
+        toast.success(jsonData.message);
+        jsonData.message;
+        // yield put({
+        //   type: "ComponentPropsManagement/handlePartyNameDataResponse",
+        //   data: jsonData.data,
+        // });
+      }
+    } else {
+      toast.error(jsonData.message);
+      // yield put({
+      //   type: "ComponentPropsManagement/handlePartyNameDataResponse",
+      //   data: {},
+      // });
+    }
+  } else if (jsonData) {
+    toast.error(jsonData.message);
   }
 }
 function* handleRecommendedDataRequest() {
@@ -1238,14 +1276,8 @@ function* handleGstTypeDropdownRequest(e) {
 }
 
 function* handleGetHsnCodeDropdownRequest(e) {
-  // var myHeaders = new Headers();
-  // myHeaders.append("Content-Type", "application/json");
-  // myHeaders.append("Authorization", `Bearer ${ token }`)
   const response = yield fetch(`${host}tax/get-hsn-codes`, {
     method: "GET",
-    // headers: myHeaders,
-    // body: e.payload,
-    // redirect: 'follow'
   });
   const jsonData = yield response.json();
   if (jsonData) {
@@ -2021,6 +2053,35 @@ function* handleRedeemPointRequest(e) {
   }
 }
 
+// Search Invoice By Invoice No /Return
+function* handleSearchInvoiceRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const response = yield fetch(
+    `${host}transaction/search-invoice/${storeId}/${saasId}/${e.payload.searchValue}`,
+    {
+      method: "GET",
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("JSONDATA RETURN", jsonData);
+  if (jsonData) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleSearchInvoiceResponse",
+        data: jsonData.data,
+      });
+      return;
+    }
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleSearchInvoiceResponse",
+      data: [],
+    });
+  } else {
+    toast.error(jsonData.message);
+  }
+}
+
 export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleLoginRequest",
@@ -2272,6 +2333,14 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleRedeemPointRequest",
     handleRedeemPointRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleCreateSupplierRequest",
+    handleCreateSupplierRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleSearchInvoiceRequest",
+    handleSearchInvoiceRequest
   );
 }
 

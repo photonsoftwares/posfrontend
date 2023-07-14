@@ -1,18 +1,28 @@
 import { Select, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Badge, Button } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { handleSearchInvoiceRequest } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 
 const Return = () => {
-  //   const { storeName, saasId } = JSON.parse(localStorage.getItem("User_data"));
-  //   useEffect(() => {}, [storeName, saasId]);
+  const dispatch = useDispatch();
+
   const [searchItem, setSearchItem] = useState("");
-  //   console.log(searchItem);
+  const { get_return_invoice_data } = useSelector(
+    (e) => e.ComponentPropsManagement
+  );
+  const handleFetchInvoice = () => {
+    dispatch(handleSearchInvoiceRequest({ searchValue: searchItem }));
+  };
+  console.log("IN COMPONENT", get_return_invoice_data);
   return (
     <section>
       <div className="container">
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-9 col-sm-12 px-5">
+            {/* <div className="d-flex justify-content-center">
+              <div class="form-check form-check-inline">
             <div className="d-flex justify-content-center">
               <div className="form-check form-check-inline">
                 <input
@@ -41,7 +51,7 @@ const Return = () => {
                   With Invoice
                 </label>
               </div>
-            </div>
+            </div> */}
             <div
               style={{
                 display: "flex",
@@ -68,37 +78,39 @@ const Return = () => {
               <div
                 className="d-flex align-items-center justify-content-center"
                 style={{ flex: 1 }}
-                onClick={() => alert(searchItem)}
+                onClick={() => handleFetchInvoice()}
               >
                 <Button variant="warning">Go</Button>
               </div>
             </div>
-            <div className="d-flex flex-column align-items-center justify-content-center">
-              <div className="border p-3 bg-light" style={{ width: "100%" }}>
-                <div className="d-flex align-items-center justify-content-evenly">
-                  <Button variant="outline-dark" size="sm">
-                    Item Name
-                  </Button>
-                  <Button variant="outline-dark" size="sm">
-                    Item Qty
-                  </Button>
-                  <Button variant="outline-dark" size="sm">
-                    Item Price
-                  </Button>
-                </div>
-                <div className="d-flex align-items-center justify-content-evenly py-3">
-                  {/* <Button size="sm" variant="outline-dark">
-                    Calculate Return
-                  </Button> */}
-                  {/* <Button size="sm" variant="outline-dark">
-                    Calculate Amount
-                  </Button> */}
-                </div>
-              </div>
-              <Button size="sm" variant="outline-dark" className="mt-3">
-                Generate Credit Note
-              </Button>
-            </div>
+
+            {get_return_invoice_data && get_return_invoice_data.length > 0 ? (
+              <table
+                class="table table-striped table-hover"
+                style={{ width: "100%" }}
+              >
+                <thead className="">
+                  <tr>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Item Qty</th>
+                    <th scope="col">Item Price</th>
+                    <th scope="col">Return Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {get_return_invoice_data.map((el) => (
+                    <tr>
+                      <td>{el.itemName}</td>
+                      <td>{el.itemQty}</td>
+                      <td>{el.itemPrice}</td>
+                      <td>{el.itemPrice * el.itemQty}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
       </div>

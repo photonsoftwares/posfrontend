@@ -17,6 +17,7 @@ const initialComponentPropsManagementState = {
   total_price: 0,
   handle_saveTransaction_data: {},
   get_recommended_items: [],
+  get_return_invoice_data: [],
   handle_pdf_bill: "",
   handle_tax_rate: "",
   get_register_user: {},
@@ -470,6 +471,17 @@ export const ComponentPropsManagement = createSlice({
     handleSearchedDataResponse1: (state, payload) => {
       state.item_master_list = payload.data;
     },
+    // Add / Create Supplier
+    handleCreateSupplierRequest: (state, payload) => {},
+    handleCreateSupplierResponse: (state, payload) => {
+      // state.item_master_list = payload.data;
+    },
+    // Search Invoice By Invoice No /Return
+    handleSearchInvoiceRequest: (state, payload) => {},
+    handleSearchInvoiceResponse: (state, payload) => {
+      // console.log("Comming Payload", payload);
+      state.get_return_invoice_data = payload.data;
+    },
 
     handleExpenseCategoryDropdownRequest: (state, payload) => { },
     handleExpenseCategoryDropdownResponse: (state, payload) => {
@@ -521,6 +533,8 @@ export const ComponentPropsManagement = createSlice({
 
 export const {
   handleUploadPicRequest,
+  handleSearchInvoiceRequest,
+  handleCreateSupplierRequest,
   handleRedeemPointRequest,
   handleLinkLoyaltyRequest,
   handleDeliveryNoteRequest,
