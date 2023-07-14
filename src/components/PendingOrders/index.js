@@ -4,83 +4,30 @@ import { HiOutlineArrowSmallLeft } from "react-icons/hi2"
 import Flatpickr from "react-flatpickr";
 import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import MyCart from './MyCart';
+import { handleViewOrderPendingRequest } from '../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
 
 const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
     const [show, setShow] = useState(false);
-    const a1 = [
-        {
-            "order_id": 4387,
-            "order_date_time": "2023-07-11",
-            "order_date": "2023-07-11",
-            "customer_id": 123456789,
-            "customer_name": "ansh Doe",
-            "saas_id": "S1234",
-            "store_id": "STORE001",
-            "order_qty": 10,
-            "order_tax": 2.50,
-            "order_value": 100.00,
-            "order_discount": 10.00,
-            "status": "update done"
-        },
-        {
-            "order_id": 4442,
-            "order_date_time": "2023-07-11",
-            "order_date": "2023-07-11",
-            "customer_id": 123456789,
-            "customer_name": "rishabh Doe",
-            "saas_id": "S1234",
-            "store_id": "STORE001",
-            "order_qty": 10,
-            "order_tax": 2.50,
-            "order_value": 100.00,
-            "order_discount": 10.00,
-            "status": "true"
-        },
-        {
-            "order_id": 4501,
-            "order_date_time": "2023-07-11",
-            "order_date": "2023-07-11",
-            "customer_id": 123456789,
-            "customer_name": "rishabh Doe",
-            "saas_id": "S1234",
-            "store_id": "STORE001",
-            "order_qty": 10,
-            "order_tax": 2.50,
-            "order_value": 100.00,
-            "order_discount": 10.00,
-            "status": null
-        },
-        {
-            "order_id": 4502,
-            "order_date_time": "2023-07-11",
-            "order_date": "2023-07-11",
-            "customer_id": 123456789,
-            "customer_name": "rishabh Doe",
-            "saas_id": "S1234",
-            "store_id": "STORE001",
-            "order_qty": 10,
-            "order_tax": 2.50,
-            "order_value": 100.00,
-            "order_discount": 10.00,
-            "status": "order placed"
-        },
-        {
-            "order_id": 4513,
-            "order_date_time": "2023-07-11",
-            "order_date": "2023-07-11",
-            "customer_id": 123456789,
-            "customer_name": "rishabh Doe",
-            "saas_id": "S1234",
-            "store_id": "STORE001",
-            "order_qty": 10,
-            "order_tax": 2.50,
-            "order_value": 100.00,
-            "order_discount": 10.00,
-            "status": "order placed"
+    const [orderNumber, setOrderNumber] = useState("")
+
+    const { pending_order_data } = useSelector((e) => e.ComponentPropsManagement);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(handleViewOrderPendingRequest())
+
+    }, [])
+
+    useEffect(() => {
+        if (pending_order_data.length > 0) {
+            setOrderNumber(pending_order_data[0].order_id)
         }
-    ]
+    }, [pending_order_data])
+
+
 
     return (<>
         <Modal
@@ -153,7 +100,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {a1.map(item => {
+                            {pending_order_data.map(item => {
                                 return (<>
                                     <tr>
                                         <th scope="row">{item.order_id}</th>
@@ -182,6 +129,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
             <MyCart
                 show={show}
                 setShow={setShow}
+                orderNumber={orderNumber}
             />
         </>)}
     </>)
