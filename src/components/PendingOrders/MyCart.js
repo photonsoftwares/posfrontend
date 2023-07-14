@@ -25,59 +25,25 @@ import { TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import PaymentModal from "./PaymentModal";
-
-const obj = [
-  {
-    "item_name": "Item 1",
-    "item_qty": 2,
-    "item_price": 20.00,
-    "order_id": 4692,
-    "order_date": "2023-07-12",
-    "zero_price": "",
-    "new_price": "",
-    "item_id": "item001",
-    "saas_id": "saas123",
-    "store_id": "store456",
-    "bill_qty": 2,
-    "bill_price": 20.00,
-    "discount": "",
-    "discount_value": "",
-    "amount_value": "",
-    "discount_menu_is_open": false,
-    "bill_tax": 2.00,
-    "bill_net": 40.00,
-    "bill_amount": 42.00,
-    "status": "Pending"
-  },
-  {
-    "order_id": 4692,
-    "order_date": "2023-07-12",
-    "item_id": "item003",
-    "saas_id": "saas123",
-    "zero_price": "",
-    "new_price": "",
-    "discount": "",
-    "discount_value": "",
-    "amount_value": "",
-    "discount_menu_is_open": false,
-    "store_id": "store456",
-    "item_name": "Item 2",
-    "item_qty": 3,
-    "item_price": 15.00,
-    "bill_qty": 3,
-    "bill_price": 15.00,
-    "bill_tax": 1.50,
-    "bill_net": 45.00,
-    "bill_amount": 46.50,
-    "status": "Pending"
-  }
-]
+import { pendingOrderCartDataRequest } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 
 const MyCart = ({
   show,
   setShow,
+  orderNumber
 }) => {
-  const { show_cart_modal } = useSelector((e) => e.ComponentPropsManagement);
+  const { user_data, pending_order_cart_data } = useSelector((e) => e.ComponentPropsManagement);
+  const {
+    createdAt,
+    password,
+    registerId,
+    status,
+    saasId,
+    storeId,
+    storeName,
+    userId,
+    userName,
+  } = user_data
   const dispatch = useDispatch();
   const [invoiceValue, setInvoiceValue] = useState(0)
   const [sumValue, setSumValue] = useState(0)
@@ -94,6 +60,12 @@ const MyCart = ({
   const [optionTick, setOptionTick] = useState([]);
 
   useEffect(() => {
+    dispatch(pendingOrderCartDataRequest({ order_id: orderNumber }))
+  }, [])
+
+
+  useEffect(() => {
+    const obj = JSON.parse(JSON.stringify(pending_order_cart_data))
     obj.map(item => {
       item["discount_menu_is_open"] = false;
       item["discount_value"] = "";
@@ -101,9 +73,29 @@ const MyCart = ({
       item["discount"] = 0;
       item["new_price"] = Number(item.item_price) * Number(item.item_qty);
       item["zero_price"] = Number(item.item_price) * Number(item.item_qty);
+      item["itemName"] = item.item_name;
+      item["productId"] = item.item_id;
+      // item["productId"] = 739;
+      item["productName"] = item.item_name;
+      item["price"] = item.item_price;
+      item["sku"] = "SKU";
+      item["description"] = item.item_name;
+      item["tax"] = item.bill_tax;
+      item["department"] = "Dept2";
+      item["productQty"] = item.item_qty;
+      item["saasId"] = saasId;
+      item["storeId"] = storeId;
+      item["promoId"] = null;
+      item["category"] = item.item_name;
+      item["status"] = 'active';
+      item["taxPercent"] = 10;
+      item["imageName"] = null;
+      item["hsnCode"] = "0";
+      item["taxRate"] = 0;
+      item["taxCode"] = "0";
     })
     setCartData(obj)
-  }, [obj])
+  }, [pending_order_cart_data])
 
 
   useEffect(() => {
@@ -328,9 +320,9 @@ const MyCart = ({
                 confirmBack();
               }}
             />{" "}
-            My Basket
+            Customer Order
           </span>
-          ({cartData?.length} items)
+          ({orderNumber})
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>

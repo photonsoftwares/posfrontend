@@ -507,10 +507,10 @@ const Home = () => {
             opacity={0.9}
             // onClick={() => setSpechModal(true)}
             onClick={handleVoiceCommand}
-            // onClick={() => {
-            //   setVisibleVoiceCommand(true);
-            //   startListening;
-            // }}
+          // onClick={() => {
+          //   setVisibleVoiceCommand(true);
+          //   startListening;
+          // }}
           />
         </div>
       </div>
@@ -622,13 +622,13 @@ const Home = () => {
               fontSize: "20px",
               cursor: "pointer",
             }}
-            // onClick={() => {
-            //   if (cartData && cartData?.length > 0) {
-            //     setShow(true);
-            //   } else {
-            //     toast.error("Please add atleast one item in cart");
-            //   }
-            // }}
+          // onClick={() => {
+          //   if (cartData && cartData?.length > 0) {
+          //     setShow(true);
+          //   } else {
+          //     toast.error("Please add atleast one item in cart");
+          //   }
+          // }}
           >
             {/* View Cart <BsArrowRight /> */}
           </h2>
@@ -662,7 +662,7 @@ const Home = () => {
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-        // style={{ position: "relative" }}
+      // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -785,32 +785,29 @@ const Home = () => {
                                     }
                                   }
                                 }
-                                // const r1 = amount - loyaltyAmount
-                                // setAmount(r1)
                               }
                             }}
-                            className={`option-item ${
-                              optionTick.filter((io) => io.name === item.value)
+                            className={`option-item ${optionTick.filter((io) => io.name === item.value)
                                 ?.length > 0 && ""
-                            }`}
+                              }`}
                             style={{
                               width: "90%",
                               backgroundColor:
                                 item.name === "Cash"
                                   ? "#fed813"
                                   : item.name === "Paytm"
-                                  ? "#00B9F1"
-                                  : item.name === "Google Pay"
-                                  ? "#2DA94F"
-                                  : item.name === "Phone Pay"
-                                  ? "#5f259f"
-                                  : item.name === "UPI"
-                                  ? "#ff7909"
-                                  : item.name === "Credit Sale"
-                                  ? "#1741b2"
-                                  : item.name === "Loyalty"
-                                  ? "#c8030e"
-                                  : "silver",
+                                    ? "#00B9F1"
+                                    : item.name === "Google Pay"
+                                      ? "#2DA94F"
+                                      : item.name === "Phone Pay"
+                                        ? "#5f259f"
+                                        : item.name === "UPI"
+                                          ? "#ff7909"
+                                          : item.name === "Credit Sale"
+                                            ? "#1741b2"
+                                            : item.name === "Loyalty"
+                                              ? "#c8030e"
+                                              : "silver",
                             }}
                           >
                             <div style={{ position: "relative", top: "2px" }}>
@@ -823,18 +820,18 @@ const Home = () => {
                                   item.name === "Cash"
                                     ? "black"
                                     : item.name === "Paytm"
-                                    ? "black"
-                                    : item.name === "Google Pay"
-                                    ? "white"
-                                    : item.name === "Phone Pay"
-                                    ? "white"
-                                    : item.name === "UPI"
-                                    ? "white"
-                                    : item.name === "Credit Sale"
-                                    ? "#fff"
-                                    : item.name === "Loyalty"
-                                    ? "#fff"
-                                    : "black",
+                                      ? "black"
+                                      : item.name === "Google Pay"
+                                        ? "white"
+                                        : item.name === "Phone Pay"
+                                          ? "white"
+                                          : item.name === "UPI"
+                                            ? "white"
+                                            : item.name === "Credit Sale"
+                                              ? "#fff"
+                                              : item.name === "Loyalty"
+                                                ? "#fff"
+                                                : "black",
                               }}
                             >
                               {item.name}
@@ -964,10 +961,9 @@ const Home = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${
-                      handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                    }`}
+                      }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -996,10 +992,9 @@ const Home = () => {
                 }}
               >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${
-                    handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                  }`}
+                    }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />

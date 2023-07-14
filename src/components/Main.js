@@ -12,6 +12,7 @@ import { MdEditSquare } from "react-icons/md"
 import { GrUpdate } from "react-icons/gr"
 import { TfiViewListAlt } from 'react-icons/tfi'
 import { AiFillHome, AiFillSetting } from "react-icons/ai";
+import Bahikhata from "./Bahikhata";
 import { BiGroup, BiCube } from "react-icons/bi";
 import { RxDashboard } from "react-icons/rx";
 import { FaMoneyBillAlt } from "react-icons/fa";
@@ -27,12 +28,15 @@ import Expense from "./expense";
 import UpdateMoq from "./moq";
 import UpdatePrice from "./update-price";
 import ViewOrders from "./PendingOrders";
+import UOM from "./uom";
 
 const Main = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [expenseModalIsOpen, setExpenseModalIsOpen] = useState(false);
   const [updateMoqModalIsOpen, setUpdateMoqModalIsOpen] = useState(false)
   const [updatePriceModalIsOpen, setUpdatePriceModalIsOpen] = useState(false)
+  const [uomModalIsOpen, setUomModalIsOpen] = useState(false)
+  const [bahikhataModalIsOpen, setBahikhataModalIsOpen] = useState(false);
   const [viewOrderModalIsOpen, setViewOrderModalIsOpen] = useState(false)
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const navigate = useNavigate();
@@ -272,6 +276,8 @@ const Main = () => {
                             navigate("/debit-note");
                           } else if (item.value === "expense") {
                             setExpenseModalIsOpen(!expenseModalIsOpen);
+                          } else if (item.value === "bahikhata") {
+                            setBahikhataModalIsOpen(!bahikhataModalIsOpen)
                           } else if (item.value === "delivery_challan") {
                             navigate("/delivery-challan");
                           }
@@ -329,6 +335,8 @@ const Main = () => {
                             setUpdatePriceModalIsOpen(!updatePriceModalIsOpen)
                           } else if (item.value === "pending_orders") {
                             setViewOrderModalIsOpen(!viewOrderModalIsOpen)
+                          } else if (item.value === "update_uom") {
+                            setUomModalIsOpen(!uomModalIsOpen)
                           }
                         }}
                       >
@@ -491,6 +499,16 @@ const Main = () => {
       <Expense
         expenseModalIsOpen={expenseModalIsOpen}
         setExpenseModalIsOpen={setExpenseModalIsOpen}
+      />
+
+      <UOM
+        uomModalIsOpen={uomModalIsOpen}
+        setUomModalIsOpen={setUomModalIsOpen}
+      />
+
+      <Bahikhata
+        bahikhataModalIsOpen={bahikhataModalIsOpen}
+        setBahikhataModalIsOpen={setBahikhataModalIsOpen}
       />
     </>
   );
