@@ -1750,7 +1750,7 @@ function* handleBahikhataPartyDropdownRequest(e) {
 //..............create Bahikhata............................
 function* handleBahikhataCreateRequest(e) {
   try {
-    const response = yield fetch(`${host}/bahikhata/create-bahikhata`, {
+    const response = yield fetch(`${host}bahikhata/create-bahikhata`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

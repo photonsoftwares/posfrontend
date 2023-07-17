@@ -75,7 +75,6 @@ const MyCart = ({
       item["zero_price"] = Number(item.item_price) * Number(item.item_qty);
       item["itemName"] = item.item_name;
       item["productId"] = item.item_id;
-      // item["productId"] = 739;
       item["productName"] = item.item_name;
       item["price"] = item.item_price;
       item["sku"] = "SKU";
