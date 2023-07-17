@@ -49,7 +49,6 @@ const Bahikhata = (props) => {
                 payment_notes: ""
             })
 
-
             setAddBahikhataArr([])
             setBahikhataModalIsOpen(!bahikhataModalIsOpen)
         }, 500);

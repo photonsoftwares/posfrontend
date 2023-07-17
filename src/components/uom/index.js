@@ -33,11 +33,15 @@ const UOM = ({ uomModalIsOpen, setUomModalIsOpen }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                        </tr>
+                        {uom_list_data.map(item => {
+                            return (<>
+                                <tr>
+                                    <th scope="row">{item.id}</th>
+                                    <td>{item.uomname}</td>
+                                    <td>{item.saasId}</td>
+                                </tr>
+                            </>)
+                        })}
                     </tbody>
                 </Table>
             </ModalBody>
