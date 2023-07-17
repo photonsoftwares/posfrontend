@@ -12,6 +12,7 @@ import Home from "../Home";
 import moment from "moment";
 
 const MemberEnrollment = () => {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
   const dispatch = useDispatch();
   //   const [DOB, setDob] = useState(new Date());
   const [dob, setDob] = useState("");
@@ -46,8 +47,10 @@ const MemberEnrollment = () => {
   //     { value: "USD", label: "USD" },
   //     { value: "EUR", label: "EUR" },
   //   ];
-  const optionsForCity = [{ value: "Sharjah", label: "Sharjah" }];
-  const optionsForCountry = [{ value: "DUBAI", label: "Dubai" }];
+  const optionsForCity = [{ value: "delhi", label: "Delhi" }];
+
+  const optionsForCountry = [{ value: "india", label: "India" }];
+
   const optionsforSuffix = [
     { value: "Mr.", label: "Mr." },
     { value: "Mrs.", label: "Mrs." },
@@ -58,7 +61,9 @@ const MemberEnrollment = () => {
     { value: "single", label: "Single" },
     { value: "married", label: "Married" },
   ];
-  const optionsforLocationOption = [{ value: "Sahraj", label: "Sarjah" }];
+  const optionsforLocationOption = [
+    { value: "south-delhi", label: "South Delhi" },
+  ];
 
   const onOptionChange = (e) => {
     setGender(e.target.value);
@@ -96,7 +101,7 @@ const MemberEnrollment = () => {
     dispatch(
       handleMemberEnrollmentRequest({
         customer_id: "",
-        client_id: clientId,
+        client_id: saasId,
         base_currency: baseCurrecy,
         mobile_number: mobile,
         customer_name: customerName,
@@ -137,7 +142,7 @@ const MemberEnrollment = () => {
     <section>
       <div className="container">
         <div className="row d-flex justify-content-center">
-          <div className="col-lg-5 col-md-10 col-sm-12 px-4">
+          <div className="col-lg-5 col-md-10 col-sm-12 px-5">
             <form className="form-box" onSubmit={handleSubmit}>
               <h2>Member Enrollment</h2>
               {/* <TextField
@@ -148,7 +153,7 @@ const MemberEnrollment = () => {
                 label="Customer ID"
                 required
               /> */}
-              <TextField
+              {/* <TextField
                 size="small"
                 type="number"
                 className="form-control mt-2"
@@ -157,7 +162,7 @@ const MemberEnrollment = () => {
                 onChange={(e) => setClientId(e.target.value)}
                 label="Client ID"
                 required
-              />
+              /> */}
               <TextField
                 size="small"
                 type="text"
@@ -263,37 +268,37 @@ const MemberEnrollment = () => {
                 </div>
               </div>
               <div className="d-flex justify-content-center my-3">
-                <div class="form-check form-check-inline">
+                <div className="form-check form-check-inline">
                   <input
-                    class="form-check-input"
+                    className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions"
                     value={"Male"}
                     onChange={onOptionChange}
                     id="inlineRadio1"
-                    // value="option1"
+                  // value="option1"
                   />
-                  <label class="form-check-label" for="inlineRadio1">
+                  <label className="form-check-label" for="inlineRadio1">
                     Male
                   </label>
                 </div>
-                <div class="form-check form-check-inline">
+                <div className="form-check form-check-inline">
                   <input
-                    class="form-check-input"
+                    className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions"
                     id="inlineRadio2"
                     value={"Female"}
                     onChange={onOptionChange}
                   />
-                  <label class="form-check-label" for="inlineRadio2">
+                  <label className="form-check-label" for="inlineRadio2">
                     Female
                   </label>
                 </div>
               </div>
               <div
                 className="d-flex flex-row items-center justify-content-between mt-3"
-                // style={{ width: "100%" }}
+              // style={{ width: "100%" }}
               >
                 <p>Anniversary Date</p>
                 <div>

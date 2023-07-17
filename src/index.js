@@ -7,6 +7,9 @@ import { Provider } from "react-redux";
 import { store } from "../src/redux/store";
 import "react-toastify/dist/ReactToastify.css";
 import "flatpickr/dist/flatpickr.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "react-toggle/style.css" // for ES6 modules
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";

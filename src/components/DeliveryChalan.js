@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import AsyncSelect from "react-select/async";
 import Select from "react-select";
 import {
   AiFillInfoCircle,
@@ -20,9 +21,11 @@ import { TextField } from "@mui/material";
 import {
   handleDebitNoteRequest,
   handleGstTypeDropdownRequest,
+  handleDelGetUserRequest,
   handleDeliveryNoteRequest,
 } from "../../src/redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 const DeliveryChalan = () => {
   const dispatch = useDispatch();
@@ -35,7 +38,7 @@ const DeliveryChalan = () => {
     // console.log("GST COLLECTION", gst_type_dropdown);
     // dispatch(handleTaxRatesRequest());
   }, []);
-  const { gst_type_dropdown } = useSelector(
+  const { gst_type_dropdown, handle_user_dropdown } = useSelector(
     (state) => state.ComponentPropsManagement
   );
   const [selectedOptionSellPrice, setSelectedOptionSellPrice] = useState(null);
@@ -150,6 +153,32 @@ const DeliveryChalan = () => {
     setCustomerName("");
   };
 
+  // const handleGetUserSubmit = (e) => {
+  //   // dispatch(handleDelGetUserRequest({ data: e.target.value }));
+  // };
+
+  const loadOptions = (searchValue, callback) => {
+    const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+    axios
+      .get(
+        `http://3.111.70.84:8088/test/api/v1/customer/search-customer/${storeId}/EEEE/${searchValue}`
+      )
+      .then((data) => {
+        data.map((item) => {});
+      });
+    // if (searchValue) {
+    //   dispatch(handleDelGetUserRequest({ searchValue }));
+    // }
+    // const { label, value } = handle_user_dropdown;
+    // callback(label, value);
+  };
+
+  // console.log(handle_user_dropdown);
+
+  const handleChange = (selectedOption) => {
+    console.log("SELECTED OPTION", selectedOption);
+  };
+
   return (
     <section>
       <div className="container">
@@ -163,7 +192,7 @@ const DeliveryChalan = () => {
               <div>
                 <p
                   className="text-secondary mb-1"
-                  //   style={{ paddingBottom: 0, marginBottom: 0 }}
+                //   style={{ paddingBottom: 0, marginBottom: 0 }}
                 >
                   Debit Node#
                 </p>
@@ -200,7 +229,7 @@ const DeliveryChalan = () => {
               {openCustomer ? (
                 <div>
                   <div className="my-3">
-                    <TextField
+                    {/* <TextField
                       size="small"
                       type="text"
                       className="form-control mt-2"
@@ -209,7 +238,23 @@ const DeliveryChalan = () => {
                       required
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
-                    />
+                    /> */}
+                    <div>
+                      <AsyncSelect
+                        loadOptions={loadOptions}
+                        onChange={handleChange}
+                        // options={handle_user_dropdown}
+                        // onChange={(e) => {
+                        //   handleGetUserSubmit();
+                        //   // setCustomerName(e.value);
+                        // }}
+                        // value={handle_user_dropdown.filter(
+                        //   (io) => io.value === customerName
+                        // )}
+                        // required={true}
+                        // placeholder="Select Gst Type"
+                      />
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -232,24 +277,24 @@ const DeliveryChalan = () => {
               {addProduct ? (
                 <div>
                   <div className="">
-                    <div class="form-check form-check-inline">
+                    <div className="form-check form-check-inline">
                       <input
-                        class="form-check-TextField mx-2"
+                        className="form-check-TextField mx-2"
                         type="radio"
                         name="inlineRadioOptions"
                         value={"Type 1"}
                         required
                         onChange={onOptionChange}
                         id="inlineRadio4"
-                        // value="option1"
+                      // value="option1"
                       />
-                      <label class="form-check-label" for="inlineRadio4">
+                      <label className="form-check-label" for="inlineRadio4">
                         Product
                       </label>
                     </div>
-                    <div class="form-check form-check-inline">
+                    <div className="form-check form-check-inline">
                       <input
-                        class="form-check-TextField mx-2"
+                        className="form-check-TextField mx-2"
                         type="radio"
                         name="inlineRadioOptions"
                         id="inlineRadio5"
@@ -257,7 +302,7 @@ const DeliveryChalan = () => {
                         required
                         onChange={onOptionChange}
                       />
-                      <label class="form-check-label" for="inlineRadio5">
+                      <label className="form-check-label" for="inlineRadio5">
                         Service
                       </label>
                     </div>

@@ -5,14 +5,16 @@ import { host } from "../../../../URL";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { MdDelete, MdEdit } from "react-icons/md"
+import { MdDelete, MdEdit, MdPlaylistAdd } from "react-icons/md"
 import { handleItemMasterListRequest, handleSearchedDataRequest1 } from '../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
 import { toast } from 'react-toastify';
 import AddItem from './AddItem';
 import "./index.css"
+import { useNavigate } from 'react-router-dom';
 
 const ItemMaster = () => {
     const dispatch = useDispatch()
+    const navigate = useNavigate();
     const { item_master_list, user_data } = useSelector((e) => e.ComponentPropsManagement);
     const {
         createdAt,
@@ -67,11 +69,11 @@ const ItemMaster = () => {
             center: true,
             selector: row => row.description,
         },
-        {
-            name: 'Discount',
-            center: true,
-            selector: row => row.discount,
-        },
+        // {
+        //     name: 'Discount',
+        //     center: true,
+        //     selector: row => row.discount,
+        // },
         {
             name: 'Price',
             center: true,
@@ -87,21 +89,21 @@ const ItemMaster = () => {
             center: true,
             selector: row => row.tax,
         },
-        {
-            name: 'Tax Code',
-            center: true,
-            selector: row => row.tax_code,
-        },
-        {
-            name: 'Tax Percent',
-            center: true,
-            selector: row => row.tax_percent,
-        },
-        {
-            name: 'Tax Rate',
-            center: true,
-            selector: row => row.tax_rate,
-        },
+        // {
+        //     name: 'Tax Code',
+        //     center: true,
+        //     selector: row => row.tax_code,
+        // },
+        // {
+        //     name: 'Tax Percent',
+        //     center: true,
+        //     selector: row => row.tax_percent,
+        // },
+        // {
+        //     name: 'Tax Rate',
+        //     center: true,
+        //     selector: row => row.tax_rate,
+        // },
         {
             name: "Action",
             center: true,
@@ -132,6 +134,17 @@ const ItemMaster = () => {
 
                 return (<>
                     <div className='d-flex'>
+
+                        <div className='me-2'>
+                            <MdPlaylistAdd
+                                size={22}
+                                color='red'
+                                className='mouse-pointer'
+                                onClick={() => navigate("/add-item")}
+                            />
+                        </div>
+
+
                         <div className='me-2'>
                             <MdDelete
                                 size={22}

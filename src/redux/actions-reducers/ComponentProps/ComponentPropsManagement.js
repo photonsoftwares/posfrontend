@@ -11,11 +11,13 @@ const initialComponentPropsManagementState = {
   show_cart_modal: false,
   cart_data: [],
   login_data: {},
+  handel_redeem_point: {},
   register_data: {},
   total_quantity: 0,
   total_price: 0,
   handle_saveTransaction_data: {},
   get_recommended_items: [],
+  get_return_invoice_data: [],
   handle_pdf_bill: "",
   handle_tax_rate: "",
   get_register_user: {},
@@ -39,9 +41,10 @@ const initialComponentPropsManagementState = {
   quantity_in_hand: 0,
   today_sales: 0,
   last_fourteen_days: 0,
+  handle_user_dropdown: [],
   last_sixty_days: 0,
   yesterday_sales: 0,
-
+  tender_report_data: [],
   state_dropdown: [
     { label: "Andhra Pradesh", value: "Andhra Pradesh" },
     { label: "Arunachal Pradesh", value: "Arunachal Pradesh" },
@@ -79,7 +82,14 @@ const initialComponentPropsManagementState = {
   sales_report_table_data: [],
   gst_report_table_data: [],
   gst_report_item_table_data: [],
+  link_loyalty_detail: {},
   no_of_items: 0,
+  pending_order_data: [],
+  expense_category_dropdown: [],
+  uom_list_data: [],
+  update_price_item_name_dropdown: [],
+  pending_order_cart_data: [],
+  bahikhata_party_name_dropdown: []
 };
 
 export const ComponentPropsManagement = createSlice({
@@ -90,7 +100,15 @@ export const ComponentPropsManagement = createSlice({
     handleLoginRequest: (state, payload) => {
       state.load = true;
     },
-
+    handleBahikhataCreateRequest: (state, payload) => {
+    },
+    handleBahikhataPartyDropdownRequest: (state, payload) => {
+    },
+    handleBahikhataPartyDropdownResponse: (state, payload) => {
+      state.bahikhata_party_name_dropdown = payload.data;
+    },
+    handleBahikhataCreateResponse: (state, payload) => {
+    },
     handleLoginResponse: (state, payload) => {
       state.login_data = payload.data;
       state.load = false;
@@ -121,7 +139,7 @@ export const ComponentPropsManagement = createSlice({
     },
     handleSearchedDataResponse: (state, payload) => {
       state.get_searched_data = payload;
-      state.item_master_list = payload
+      state.item_master_list = payload;
       state.load = false;
     },
     // Add to Cart Data!
@@ -405,8 +423,6 @@ export const ComponentPropsManagement = createSlice({
     handleNoOfItemResponse: (state, payload) => {
       state.no_of_items = payload?.data?.data ? payload?.data?.data : 0;
     },
-    // <<<<<<< HEAD
-    // Handle CREATE DEBIT NOTE
     handleDebitNoteRequest: (state, payload) => { },
     handleDebitNoteResponse: (state, payload) => {
       state.no_of_items = payload?.data?.data ? payload?.data?.data : 0;
@@ -416,20 +432,100 @@ export const ComponentPropsManagement = createSlice({
     handleDeliveryResponse: (state, payload) => {
       state.no_of_items = payload?.data?.data ? payload?.data?.data : 0;
     },
+    // handleDelGetUserRequest
+    handleDelGetUserRequest: (state, payload) => { },
+    handleDelGetUserResponse: (state, payload) => {
+      // console.log("_*_*", payload.data);
+      state.handle_user_dropdown = payload.data;
+    },
 
     handleItemMasterListRequest: (state, payload) => { },
     handleItemMasterListResponse: (state, payload) => {
       state.item_master_list = payload.data;
     },
+    // HANDLE LINK LOYALTY
+    handleLinkLoyaltyRequest: (state, payload) => {
+      console.log("PAYLOAD LOYALTY REQ", payload);
+    },
+    handleLinkLoyaltyResponse: (state, payload) => {
+      console.log("PAYLOAD LOYALTY RES", payload);
+      state.link_loyalty_detail = payload.data;
+    },
+
     handleSearchedDataRequest1: (state, payload) => { },
     handleSearchedDataResponse1: (state, payload) => {
-      state.item_master_list = payload.data
+      state.item_master_list = payload.data;
     },
+    // Redeam Point
+    handleRedeemPointRequest: (state, payload) => { },
+    handleRedeemPointResponse: (state, payload) => {
+      // state.item_master_list = payload.data;
+    },
+
+    handleTenderReportRequest: (state, payload) => { },
+    handleTenderReportResponse: (state, payload) => {
+      state.tender_report_data = payload.data ? [payload.data] : [];
+    },
+
+    handleSearchedDataRequest1: (state, payload) => { },
+    handleSearchedDataResponse1: (state, payload) => {
+      state.item_master_list = payload.data;
+    },
+    // Add / Create Supplier
+    handleCreateSupplierRequest: (state, payload) => {},
+    handleCreateSupplierResponse: (state, payload) => {
+      // state.item_master_list = payload.data;
+    },
+    // Search Invoice By Invoice No /Return
+    handleSearchInvoiceRequest: (state, payload) => {},
+    handleSearchInvoiceResponse: (state, payload) => {
+      // console.log("Comming Payload", payload);
+      state.get_return_invoice_data = payload.data;
+    },
+
     handleExpenseCategoryDropdownRequest: (state, payload) => { },
+    handleExpenseCategoryDropdownResponse: (state, payload) => {
+      state.expense_category_dropdown = payload.data;
+    },
+    handleUomListRequest: (state, payload) => { },
+    handleUomListResponse: (state, payload) => {
+      state.uom_list_data = payload.data
+    },
+    handleExpenseCreateRequest: (state, payload) => { },
+    handleExpenseCreateResponse: (state, payload) => { },
+    handleUpdateMoqRequest: (state, payload) => { },
+    handleUpdateMoqResponse: (state, payload) => { },
+    handleUpdatePriceRequest: (state, payload) => { },
+    handleUpdatePriceResponse: (state, payload) => { },
+    handleViewOrderPendingRequest: (state, payload) => {
+
+    },
+    handleViewOrderPendingResponse: (state, payload) => {
+      state.pending_order_data = payload.data
+    },
+    pendingOrderCartDataRequest: (state, payload) => {
+
+    },
+    pendingOrderCartDataResponse: (state, payload) => {
+      state.pending_order_cart_data = payload.data
+    },
+
+    // handleSearchedDataRequest2: (state, payload) => { },
+    // handleSearchedDataResponse2: (state, payload) => {
+    //   let arr = []
+    //   if (payload.data) {
+    //     if (payload.data.length > 0) {
+    //       payload.data.map(item => {
+    //         arr.push({ ...item, label: item.itemName, value: item.productId })
+    //       })
+    //     }
+    //   }
+    //   state.update_price_item_name_dropdown = arr
+    // },
+
     // handleSearchedDataResponse1: (state, payload) => {
     //   state.item_master_list = payload.data
     // },
-
   },
 });
 
@@ -437,12 +533,20 @@ export const ComponentPropsManagement = createSlice({
 
 export const {
   handleUploadPicRequest,
+  handleSearchInvoiceRequest,
+  handleCreateSupplierRequest,
+  handleRedeemPointRequest,
+  handleLinkLoyaltyRequest,
   handleDeliveryNoteRequest,
+  handleDelGetUserRequest,
   handleDebitNoteRequest,
   handlecartCount,
+  handleExpenseCreateRequest,
   handleShowModal,
   handleAccruvalRequest,
   handleMemberEnrollmentResponse,
+  handleUpdatePriceRequest,
+  handleTenderReportRequest,
   handleEmailNotificationResponse,
   handleEmailNotificationRequest,
   handleLoginRequest,
@@ -452,12 +556,15 @@ export const {
   handleItemMasterListRequest,
   handleNoOfItemRequest,
   handleRegisterRequest,
+  handleUpdateMoqRequest,
   handleHSNCODERequest,
   handleCreateRowTaxMasterRequest,
   handleAddItemSearchRequest,
   handlePartyNameDataRequest,
+  handleExpenseCategoryDropdownRequest,
   handleAddPurchaseRequest,
   handleAddPartyRequest,
+  handleUomListRequest,
   handleGetUserData,
   handleTaxRatesRequest,
   handleAddItemToStoreRequest,
@@ -465,6 +572,7 @@ export const {
   handleSearchedDataRequest,
   handleCartTotal,
   handleSaveTransactionRequest,
+  handleViewOrderPendingRequest,
   handleAddCartData,
   handleDeleteCartItem,
   handleRecommendedDataRequest,
@@ -480,6 +588,9 @@ export const {
   handleUploadInventoryRequest,
   handleSalesOverviewRequest,
   handleLastWeekSalesRequest,
+  pendingOrderCartDataRequest,
+  handleBahikhataPartyDropdownRequest,
+  handleBahikhataCreateRequest,
   handleLastMonthSalesRequest,
   handleTodaySalesRequest,
   handleNumberOfCustomerRequest,

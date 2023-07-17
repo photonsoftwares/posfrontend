@@ -159,7 +159,7 @@ const DebitNote = () => {
               <div>
                 <p
                   className="text-secondary mb-1"
-                  //   style={{ paddingBottom: 0, marginBottom: 0 }}
+                //   style={{ paddingBottom: 0, marginBottom: 0 }}
                 >
                   Debit Node#
                 </p>
@@ -228,24 +228,24 @@ const DebitNote = () => {
               {addProduct ? (
                 <div>
                   <div className="">
-                    <div class="form-check form-check-inline">
+                    <div className="form-check form-check-inline">
                       <input
-                        class="form-check-TextField mx-2"
+                        className="form-check-TextField mx-2"
                         type="radio"
                         name="inlineRadioOptions"
                         value={"Type 1"}
                         required
                         onChange={onOptionChange}
                         id="inlineRadio4"
-                        // value="option1"
+                      // value="option1"
                       />
-                      <label class="form-check-label" for="inlineRadio4">
+                      <label className="form-check-label" for="inlineRadio4">
                         Product
                       </label>
                     </div>
-                    <div class="form-check form-check-inline">
+                    <div className="form-check form-check-inline">
                       <input
-                        class="form-check-TextField mx-2"
+                        className="form-check-TextField mx-2"
                         type="radio"
                         name="inlineRadioOptions"
                         id="inlineRadio5"
@@ -253,7 +253,7 @@ const DebitNote = () => {
                         required
                         onChange={onOptionChange}
                       />
-                      <label class="form-check-label" for="inlineRadio5">
+                      <label className="form-check-label" for="inlineRadio5">
                         Service
                       </label>
                     </div>

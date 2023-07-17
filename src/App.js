@@ -88,6 +88,10 @@ const App = () => {
           element={<ProtectedRoutingWhenLogin Component={LoyalityDashboard} />}
         />
         <Route
+          path="/link-customer"
+          element={<ProtectedRoutingWhenLogin Component={LinkCustomer} />}
+        />
+        <Route
           path="/member-enrollment"
           element={<ProtectedRoutingWhenLogin Component={MemberEnrollment} />}
         />

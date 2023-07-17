@@ -96,7 +96,7 @@ const Register = () => {
                 />
                 <div
                   className="d-flex flex-column"
-                  // style={{ borderBottom: "1px solid #000" }}
+                // style={{ borderBottom: "1px solid #000" }}
                 >
                   <TextField
                     size="small"
@@ -134,7 +134,7 @@ const Register = () => {
                   required
                   value={storeName}
                   onChange={(e) => setStoreName(e.target.value)}
-                  //   rows={3}
+                //   rows={3}
                 />
                 <TextField
                   size="small"
@@ -216,24 +216,24 @@ const Register = () => {
                     Taxable
                   </label>
                   <div className="d-flex flex-row align-items-center justify-content-center">
-                    <div class="form-check form-check-inline">
+                    <div className="form-check form-check-inline">
                       <input
-                        class="form-check-TextField mx-2"
+                        className="form-check-TextField mx-2"
                         type="radio"
                         name="inlineRadioOptions"
                         value={true}
                         required
                         onChange={onOptionChange}
                         id="inlineRadio4"
-                        // value="option1"
+                      // value="option1"
                       />
-                      <label class="form-check-label" for="inlineRadio4">
+                      <label className="form-check-label" for="inlineRadio4">
                         Yes
                       </label>
                     </div>
-                    <div class="form-check form-check-inline">
+                    <div className="form-check form-check-inline">
                       <input
-                        class="form-check-TextField mx-2"
+                        className="form-check-TextField mx-2"
                         type="radio"
                         name="inlineRadioOptions"
                         id="inlineRadio5"
@@ -241,7 +241,7 @@ const Register = () => {
                         required
                         onChange={onOptionChange}
                       />
-                      <label class="form-check-label" for="inlineRadio5">
+                      <label className="form-check-label" for="inlineRadio5">
                         No
                       </label>
                     </div>
@@ -275,24 +275,24 @@ const Register = () => {
                     Store Type
                   </label>
                   <div className="d-flex flex-row align-items-center justify-content-center">
-                    <div class="form-check form-check-inline">
+                    <div className="form-check form-check-inline">
                       <input
-                        class="form-check-TextField mx-2"
+                        className="form-check-TextField mx-2"
                         type="radio"
                         name="inlineRadioOptionsStore"
                         value={"medium"}
                         required
                         onChange={onOptionStoreChange}
                         id="inlineRadio2"
-                        // value="option1"
+                      // value="option1"
                       />
-                      <label class="form-check-label" for="inlineRadio2">
+                      <label className="form-check-label" for="inlineRadio2">
                         Medium
                       </label>
                     </div>
-                    <div class="form-check form-check-inline">
+                    <div className="form-check form-check-inline">
                       <input
-                        class="form-check-TextField mx-2"
+                        className="form-check-TextField mx-2"
                         type="radio"
                         name="inlineRadioOptionsStore"
                         id="inlineRadio3"
@@ -300,7 +300,7 @@ const Register = () => {
                         required
                         onChange={onOptionStoreChange}
                       />
-                      <label class="form-check-label" for="inlineRadio3">
+                      <label className="form-check-label" for="inlineRadio3">
                         Large
                       </label>
                     </div>

@@ -3,12 +3,6 @@ import { Button, Col, FormGroup, Row } from "reactstrap";
 import { Modal } from "react-bootstrap";
 import { Input, Label } from "reactstrap";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
-import {
-  handleDeleteCartItem,
-  handleShowModal,
-  handleEmptyCartData,
-  handlecartCount,
-} from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { IoIosSearch } from "react-icons/io";
 import { BsHandbag, BsArrowRight } from "react-icons/bs";
 import { FcSpeaker } from "react-icons/fc";
@@ -30,28 +24,134 @@ import { confirmAlert } from "react-confirm-alert"; // Import
 import { TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import PaymentModal from "./PaymentModal";
+import { pendingOrderCartDataRequest } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+
 const MyCart = ({
   show,
-  cartData,
-  invoiceValue,
-  popoverIsOpen,
-  discountAmountVal,
-  discountPercentVal,
-  totalDiscountVal,
   setShow,
-  setTotalDiscountVal,
-  setDiscountAmountVal,
-  sumValue,
-  setPaymentModal,
-  setCartData,
-  setPopoverIsOpen,
-  setDiscountPercentVal,
+  orderNumber
 }) => {
-  const { show_cart_modal } = useSelector((e) => e.ComponentPropsManagement);
+  const { user_data, pending_order_cart_data } = useSelector((e) => e.ComponentPropsManagement);
+  const {
+    createdAt,
+    password,
+    registerId,
+    status,
+    saasId,
+    storeId,
+    storeName,
+    userId,
+    userName,
+  } = user_data
   const dispatch = useDispatch();
+  const [invoiceValue, setInvoiceValue] = useState(0)
+  const [sumValue, setSumValue] = useState(0)
+  const [popoverIsOpen, setPopoverIsOpen] = useState(false)
+
+  const [discountPercentVal, setDiscountPercentVal] = useState("");
+  const [discountAmountVal, setDiscountAmountVal] = useState("");
+  const [totalDiscountVal, setTotalDiscountVal] = useState(0);
+  const [cartData, setCartData] = useState([])
+  const [paymentModalIsOpen, setPaymentModalIsOpen] = useState(false)
+  const [balanceDue, setBalanceDue] = useState(0);
+  const [amount, setAmount] = useState("");
+  const [optionTickSum, setOptionTickSum] = useState(0);
+  const [optionTick, setOptionTick] = useState([]);
+
+  useEffect(() => {
+    dispatch(pendingOrderCartDataRequest({ order_id: orderNumber }))
+  }, [])
+
+
+  useEffect(() => {
+    const obj = JSON.parse(JSON.stringify(pending_order_cart_data))
+    obj.map(item => {
+      item["discount_menu_is_open"] = false;
+      item["discount_value"] = "";
+      item["amount_value"] = "";
+      item["discount"] = 0;
+      item["new_price"] = Number(item.item_price) * Number(item.item_qty);
+      item["zero_price"] = Number(item.item_price) * Number(item.item_qty);
+      item["itemName"] = item.item_name;
+      item["productId"] = item.item_id;
+      item["productName"] = item.item_name;
+      item["price"] = item.item_price;
+      item["sku"] = "SKU";
+      item["description"] = item.item_name;
+      item["tax"] = item.bill_tax;
+      item["department"] = "Dept2";
+      item["productQty"] = item.item_qty;
+      item["saasId"] = saasId;
+      item["storeId"] = storeId;
+      item["promoId"] = null;
+      item["category"] = item.item_name;
+      item["status"] = 'active';
+      item["taxPercent"] = 10;
+      item["imageName"] = null;
+      item["hsnCode"] = "0";
+      item["taxRate"] = 0;
+      item["taxCode"] = "0";
+    })
+    setCartData(obj)
+  }, [pending_order_cart_data])
+
+
+  useEffect(() => {
+    setInvoiceValue(parseFloat(sumValue).toFixed(2));
+  }, [sumValue, totalDiscountVal]);
+
+  useEffect(() => {
+    if (
+      Number(optionTickSum) === Number(invoiceValue) &&
+      Number(invoiceValue) !== 0
+    ) {
+      setAmount(0);
+      setBalanceDue(0);
+    } else if (Number(optionTickSum) < Number(invoiceValue)) {
+      const balance_due = Number(invoiceValue) - Number(optionTickSum);
+      setBalanceDue(parseFloat(balance_due).toFixed(2));
+      setAmount(parseFloat(balance_due).toFixed(2));
+    }
+  }, [optionTickSum, invoiceValue]);
+
+  useEffect(() => {
+    let sum = 0;
+    if (optionTick && optionTick?.length > 0) {
+      optionTick.map((item) => {
+        sum = sum + Number(item.amount);
+      });
+    } else {
+      sum = 0;
+    }
+    setOptionTickSum(sum);
+  }, [optionTick]);
+
+  useEffect(() => {
+    if (cartData.length > 0) {
+      const t1 = []
+      cartData.map(item => {
+        const r1 = Number(item.new_price)
+        t1.push(parseFloat(r1).toFixed(2))
+      })
+      let sum = 0
+      t1.map(item => {
+        sum = sum + Number(item)
+      })
+      setSumValue(sum)
+      setAmount(sum);
+    } else {
+      setInvoiceValue(0)
+      setSumValue(0)
+      setDiscountPercentVal("")
+      setDiscountAmountVal("")
+      setTotalDiscountVal(0)
+    }
+  }, [cartData])
+
 
   const handleDiscount = (item, discount_value) => {
-    const price = Number(item.price) * Number(item.productQty);
+    const price = Number(item.item_price) * Number(item.item_qty);
     const calculatedVal = (price * discount_value) / 100;
     const t1 = price - calculatedVal;
     item.discount = parseFloat(calculatedVal).toFixed(2);
@@ -86,18 +186,13 @@ const MyCart = ({
     };
   }, []);
 
-  useEffect(() => { }, []);
-
   const handleDiscountLarge = (discount_value) => {
     cartData.map((item) => {
       item.discount_value = discount_value;
-      const price = Number(item.price) * Number(item.productQty);
+      const price = Number(item.item_price) * Number(item.item_qty);
       if (price !== 0) {
         const val = (sumValue * discount_value) / 100;
         const calculatedVal = (price * val) / sumValue;
-        // const calculatedVal = (price * discount_value) / 100;
-        // const t1 = price - calculatedVal;
-        // item.new_price = t1;
         item.discount = parseFloat(calculatedVal).toFixed(2);
         item.new_price = price - calculatedVal;
       }
@@ -108,10 +203,9 @@ const MyCart = ({
   const handleDiscountAmountLarge = (discountAmountVal) => {
     cartData.map((item) => {
       item.amount_value = discountAmountVal;
-      const price = Number(item.price) * Number(item.productQty);
+      const price = Number(item.item_price) * Number(item.item_qty);
       if (price !== 0) {
         const calculatedVal = (price * discountAmountVal) / sumValue;
-        // const calculatedVal = price - discountAmountVal;
         item.discount = parseFloat(calculatedVal).toFixed(2);
         item.new_price = price - calculatedVal;
       }
@@ -120,18 +214,18 @@ const MyCart = ({
   };
 
   const handleDec = (item) => {
-    if (item.productQty === 1) {
-      item.productQty = item.productQty = 1;
-      item.new_price = item.price;
+    if (item.item_qty === 1) {
+      item.item_qty = item.item_qty = 1;
+      item.new_price = item.item_price;
     } else {
-      const q = item.productQty - 1;
-      item.productQty = q;
-      item.new_price = item.price * q;
+      const q = item.item_qty - 1;
+      item.item_qty = q;
+      item.new_price = item.item_price * q;
     }
     cartData.map((item) => {
       item.discount_value = "";
       item.amount_value = "";
-      item.new_price = item.price * item.productQty;
+      item.new_price = item.item_price * item.item_qty;
     });
     setDiscountPercentVal("");
     setDiscountAmountVal("");
@@ -139,9 +233,8 @@ const MyCart = ({
     setCartData([...cartData]);
   };
 
-  // console.log("cartData", cartData);
   const handleDiscountAmount = (item, amount_value) => {
-    const price = Number(item.price) * Number(item.productQty);
+    const price = Number(item.item_price) * Number(item.item_qty);
     const calculatedVal = price - amount_value;
     item.discount = parseFloat(amount_value).toFixed(2);
     item.new_price = calculatedVal;
@@ -157,7 +250,7 @@ const MyCart = ({
           {
             label: "Yes",
             onClick: () => {
-              dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
+              setShow(!show)
             },
           },
           {
@@ -167,30 +260,16 @@ const MyCart = ({
         ],
       });
     } else {
-      dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
+      setShow(!show)
     }
   };
 
   const handleDeleteCartItem = (item) => {
-    const getData = JSON.parse(localStorage.getItem("my-cart"));
-    console.log(getData);
-    if (getData) {
-      if (getData?.length > 0) {
-        if (getData?.length > 1) {
-          const updateCart = getData.filter(
-            (el) => el.productId !== item.productId
-          );
-          localStorage.setItem("my-cart", JSON.stringify(updateCart));
-          setCartData(updateCart);
-          dispatch(handlecartCount(updateCart?.length));
-        } else {
-          localStorage.setItem("my-cart", JSON.stringify([]));
-          setCartData([]);
-          dispatch(handlecartCount(0));
-        }
-      }
-    }
-  };
+    const updateCart = cartData.filter(
+      (el) => el.item_id !== item.item_id
+    );
+    setCartData(updateCart);
+  }
 
   const handleApplyClick = () => {
     if (discountPercentVal) {
@@ -208,15 +287,15 @@ const MyCart = ({
   };
 
   const handlePlusSign = (item) => {
-    const q = item.productQty + 1;
-    item.productQty = q;
-    const newP = item.price * q;
+    const q = item.item_qty + 1;
+    item.item_qty = q;
+    const newP = item.item_price * q;
     item.new_price = newP;
 
     cartData.map((item) => {
       item.discount_value = "";
       item.amount_value = "";
-      item.new_price = item.price * item.productQty;
+      item.new_price = item.item_price * item.item_qty;
     });
     setDiscountPercentVal("");
     setDiscountAmountVal("");
@@ -224,7 +303,7 @@ const MyCart = ({
     setCartData([...cartData]);
   };
 
-  return (
+  return (<>
     <Modal
       show={show}
       size="lg"
@@ -240,24 +319,22 @@ const MyCart = ({
                 confirmBack();
               }}
             />{" "}
-            My Basket
+            Customer Order
           </span>
-          ({cartData?.length} items)
+          ({orderNumber})
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {cartData?.map((item) => (
           <div
-            // className="cart_container"
             style={{
               display: "flex",
               flexDirection: "column",
-              // padding: "10px",
               border: "1px solid #e7e7e7",
               marginBottom: "10px",
             }}
           >
-            <h1>{item.itemName}</h1>
+            <h1>{item.item_name}</h1>
             <div className="cart_product">
               <div style={{ height: "50px" }} className="cart_column">
                 <div
@@ -276,40 +353,16 @@ const MyCart = ({
                     }}
                   />
 
-                  {item.productQty}
+                  {item.item_qty}
                   <AiOutlinePlus
                     onClick={() => {
                       handlePlusSign(item);
-
-                      // if (discountPercentVal) {
-                      //   item.discount_value = discount_value;
-                      //   const price = Number(item.price) * Number(item.productQty);
-                      //   if (price !== 0) {
-                      //     const val = (sumValue * discount_value) / 100;
-                      //     const calculatedVal = (price * val) / sumValue;
-                      //     item.discount = parseFloat(calculatedVal).toFixed(2);
-                      //     item.new_price = price - calculatedVal;
-                      //   }
-                      // } else if (discountAmountVal) {
-                      //   const q = item.productQty + 1;
-                      //   item.amount_value = discountAmountVal;
-                      //   const price = item.price * q
-                      //   item.price = price
-                      //   if (price !== 0) {
-                      //     const calculatedVal = (price * discountAmountVal) / sumValue;
-                      //     // const calculatedVal = price - discountAmountVal;
-                      //     item.discount = parseFloat(calculatedVal).toFixed(2);
-                      //     item.new_price = price - calculatedVal;
-                      //   }
-                      // }
-
-                      // handleApplyClick()
                     }}
                   />
                 </div>
               </div>
               <div style={{ flex: 1, marginLeft: "20px" }}>
-                {Number(item.price) * Number(item.productQty) === 0 ? (
+                {Number(item.item_price) * Number(item.item_qty) === 0 ? (
                   <>
                     <FormControl
                       sx={{ m: 1, width: "25ch" }}
@@ -321,7 +374,7 @@ const MyCart = ({
                         size="small"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
-                            item.price = item.zero_price;
+                            item.item_price = item.zero_price;
                             item.new_price = item.zero_price;
                             setCartData([...cartData]);
                           }
@@ -329,9 +382,8 @@ const MyCart = ({
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
-                              // aria-label="toggle password visibility"
                               onClick={() => {
-                                item.price = item.zero_price;
+                                item.item_price = item.zero_price;
                                 item.new_price = item.zero_price;
                                 setCartData([...cartData]);
                               }}
@@ -366,13 +418,11 @@ const MyCart = ({
                   </>
                 ) : (
                   <>
-                    <div>{item.price * item.productQty}</div>
+                    <div>{item.item_price * item.item_qty}</div>
                     <div>
                       <div
                         style={{
                           fontSize: "10px",
-                          // display: "flex",
-                          // justifyContent: "center",
                           marginRight: "30px",
                         }}
                       >
@@ -381,21 +431,19 @@ const MyCart = ({
                             <span
                               style={{ textDecorationLine: "line-through" }}
                             >
-                              {item.price * item.productQty}
+                              {item.item_price * item.item_qty}
                             </span>{" "}
                             / {parseFloat(item.new_price).toFixed(2)}
                           </>
                         ) : (
-                          <>{/* // <>{item.price * item.productQty}</> */}</>
+                          <>{/* // <>{item.item_price * item.item_qty}</> */}</>
                         )}
                       </div>
                     </div>
                   </>
                 )}
               </div>
-              {/*  */}
             </div>
-            {/* {item.discount ? ( */}
             {item.discount_menu_is_open === true && (
               <>
                 <div className="d-flex flex-sm-row">
@@ -411,11 +459,7 @@ const MyCart = ({
                       label="Percent Off"
                       type="number"
                       className="me-3"
-                      // ref={ref}
-                      // disabled={amountOff?.length > 0 ? true : false}
                       disabled={item.amount_value}
-                      // value={percentOff}
-                      // onChange={(e) => setPercentOff(e.target.value)}
                       onChange={(e) => {
                         const val = Number(e.target.value);
                         if (val) {
@@ -463,38 +507,19 @@ const MyCart = ({
                         setTotalDiscountVal(0);
                       }}
                       value={item.amount_value}
-                    // disabled={percentOff?.length > 0 ? true : false}
-                    // value={amountOff}
-                    // onChange={(e) => setAmountOff(e.target.value)}
                     />
                     <div>
                       <button
                         className="btn btn-danger my-3"
-                      // onClick={() => handleDiscountOff(item)}
                       >
                         Apply
                       </button>
-                      {/* {console.log("cartData", cartData)} */}
-                      {/* <div style={{ fontSize: "10px" }}>
-                        {item.discount_value || item.amount_value ? (
-                          <>
-                            <span
-                              style={{ textDecorationLine: "line-through" }}
-                            >
-                              {item.price * item.productQty}
-                            </span>{" "}
-                            / {parseFloat(item.new_price).toFixed(2)}
-                          </>
-                        ) : (
-                          <>{item.price * item.productQty}</>
-                        )}
-                      </div> */}
                     </div>
                   </div>
                 </div>
               </>
             )}
-            {/* {console.log("ITEM", item)} */}
+
             <div style={{ display: "flex", flexDirection: "row" }}>
               <p
                 style={{
@@ -504,9 +529,7 @@ const MyCart = ({
                 }}
                 onClick={() => {
                   handleDeleteCartItem(item);
-                  // dispatch(handleDeleteCartItem(item));
                 }}
-              // onClick={() => handelDeleteProduct(item)}
               >
                 Remove
               </p>
@@ -518,21 +541,15 @@ const MyCart = ({
                       fontWeight: "600",
                       cursor: "pointer",
                     }}
-                    // onClick={() => {
-                    //   item.discount = !item.discount;
-                    //   setCartData([...cartData]);
-                    //   // setDiscount((state) => !state);
-                    // }}
                     onClick={() => {
                       item.discount_menu_is_open = !item.discount_menu_is_open;
                       item.amount_value = "";
                       item.discount_value = "";
-                      item.new_price = item.price * item.productQty;
+                      item.new_price = item.item_price * item.item_qty;
                       setDiscountPercentVal("");
                       setDiscountAmountVal("");
                       setTotalDiscountVal(0);
                       setCartData([...cartData]);
-                      // item.discount == !true ? setDiscount((state) => !state) : ""
                     }}
                     className="mx-4"
                   >
@@ -575,8 +592,6 @@ const MyCart = ({
               </div>
             </>
           )}
-        {/* </div> */}
-
         {cartData?.filter((io) => io.discount_menu_is_open === true)?.length ===
           0 && (
             <>
@@ -588,7 +603,6 @@ const MyCart = ({
                   marginTop: "20px",
                 }}
                 id="pop112"
-              // onClick={() => setPopoverIsOpen(!popoverIsOpen)}
               >
                 {parseInt(invoiceValue) !== 0 && (
                   <>
@@ -606,8 +620,8 @@ const MyCart = ({
                       id="pop112"
 
                       onClick={() => {
-                        localStorage.removeItem("my-cart")
                         setCartData([])
+
                       }}
                     >
                       Remove All Cart Items
@@ -649,7 +663,6 @@ const MyCart = ({
               <span style={{ fontWeight: "900", marginRight: "10px" }}>
                 Invoice Discount
               </span>
-              {/* ({cartData?.length} items) */}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -673,7 +686,6 @@ const MyCart = ({
                       } else {
                         setDiscountPercentVal("");
                       }
-                      // handleDiscount(item, val);
                     }}
                     value={discountPercentVal}
                     placeholder="Percent Value"
@@ -700,7 +712,6 @@ const MyCart = ({
                       } else {
                         setDiscountAmountVal("");
                       }
-                      // handleDiscountAmount(item, val);
                     }}
                     value={discountAmountVal}
                     placeholder="Amount Value"
@@ -728,17 +739,6 @@ const MyCart = ({
             </Row>
           </Modal.Body>
         </Modal>
-        {/* <Popover placement="bottom" isOpen={popoverIsOpen} target="pop112" toggle={() => setPopoverIsOpen(!popoverIsOpen)}>
-      <PopoverHeader>Invoice Discount</PopoverHeader>
-      <PopoverBody>
-        <div>
-          <Input
-            type="text"
-            id="aaa"
-          />
-        </div>
-      </PopoverBody>
-    </Popover> */}
       </Modal.Body>
       <Modal.Footer
         style={{
@@ -750,13 +750,13 @@ const MyCart = ({
         <Button
           onClick={() => {
             if (cartData?.length > 0) {
-              if (cartData.filter((io) => io.price === 0)?.length === 0) {
-                setPaymentModal(true);
+              if (cartData.filter((io) => io.item_price === 0)?.length === 0) {
+                setPaymentModalIsOpen(true);
               } else {
                 toast.error("Item amount should not be zero");
               }
             } else {
-              setPaymentModal(false);
+              setPaymentModalIsOpen(false);
             }
           }}
           style={{
@@ -765,16 +765,31 @@ const MyCart = ({
             border: "none",
             fontSize: "20px",
           }}
-        // className="bg-primary"
         >
           {cartData && cartData?.length > 0
             ? "Proceed to checkout"
             : "No Item here"}
-          {/* Proceed to checkout */}
         </Button>
       </Modal.Footer>
     </Modal>
-  );
+
+    <PaymentModal
+      setPaymentModalIsOpen={setPaymentModalIsOpen}
+      paymentModalIsOpen={paymentModalIsOpen}
+      invoiceValue={invoiceValue}
+      sumValue={sumValue}
+      amount={amount}
+      setAmount={setAmount}
+      setBalanceDue={setBalanceDue}
+      balanceDue={balanceDue}
+      optionTickSum={optionTickSum}
+      setOptionTickSum={setOptionTickSum}
+      setOptionTick={setOptionTick}
+      optionTick={optionTick}
+      cartData={cartData}
+      setCartData={setCartData}
+    />
+  </>);
 };
 
 export default MyCart;

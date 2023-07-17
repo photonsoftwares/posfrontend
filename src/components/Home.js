@@ -53,7 +53,7 @@ const Home = () => {
 
   const {
     get_searched_data,
-    // cart_data,
+    link_loyalty_detail,
     get_QR_img,
     total_price,
     handle_saveTransaction_data,
@@ -65,28 +65,18 @@ const Home = () => {
     dispatch(handleRecommendedDataRequest());
   }, []);
 
-  const [validated, setValidated] = useState(false);
+  console.log("ONLY RECOMMENDED", get_recommended_items);
+
   const [searchedData, setSearchedData] = useState([]);
   const [recommendedData, setRecommendedData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  // const [cartData, setCartData] = useState(null);
   const [cartData, setCartData] = useState(null);
-  const [percentOff, setPercentOff] = useState(1);
-  const [amountOff, setAmountOff] = useState("");
   const [show, setShow] = useState(false);
-  const [speachModal, setSpechModal] = useState(false);
-  const [visibleVoiceCommand, setVisibleVoiceCommand] = useState(true);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [paymentModal, setPaymentModal] = useState(false);
   const [handleShowReceipt, setHandleShowReceipt] = useState(false);
-  const [handleShowQR, setHandleShowQR] = useState(false);
   const [handleOpenWhatsapp, setHandleOpenWhatsapp] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState([]);
   const [balanceDue, setBalanceDue] = useState(0);
   const [sumValue, setSumValue] = useState(0);
-  const [QR, setQR] = useState(null);
-  const [overDicount, setOverDiscount] = useState([]);
-  const [isIndividualDiscount, setIsIndividualDiscount] = useState(true);
   const [amount, setAmount] = useState("");
   const [optionTick, setOptionTick] = useState([]);
   const [optionTickSum, setOptionTickSum] = useState(0);
@@ -94,10 +84,10 @@ const Home = () => {
   const [discountAmountVal, setDiscountAmountVal] = useState("");
   const [totalDiscountVal, setTotalDiscountVal] = useState(0);
   const [invoiceValue, setInvoiceValue] = useState(0);
-  const [addPrice, setAddPrice] = useState("");
   const [email, setEmail] = useState("");
   const [updatecart, setUpdatecart] = useState(true);
   const [storeName, setStoreName] = useState("");
+  const [loyaltyAmount, setLoyaltyAmount] = useState(10000);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -118,8 +108,6 @@ const Home = () => {
   useEffect(() => {
     getDataFromStorage();
   }, [updatecart]);
-
-  // console.log("CART*DATA", cartData);
 
   useEffect(() => {
     const date = new Date();
@@ -205,16 +193,6 @@ const Home = () => {
     }
   }, [get_recommended_items]);
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    setValidated(true);
-  };
-
   useEffect(() => {
     console.log("cartData", cartData);
     const arr = [];
@@ -235,12 +213,6 @@ const Home = () => {
 
     // =============================
   }, [cartData]);
-
-  useEffect(() => {
-    if (get_QR_img) {
-      setQR(get_QR_img);
-    }
-  }, [get_QR_img]);
 
   // useEffect(() => {
   //   if (cart_data) {
@@ -302,13 +274,13 @@ const Home = () => {
       id: 7,
       name: "Credit Sale",
       icon: <FcSalesPerformance size={25} />,
-      value: "card",
+      value: "credit_sale",
     },
     {
       id: 8,
       name: "Loyalty",
       icon: <RiMoneyDollarCircleFill color="#F1C40F" size={25} />,
-      value: "card",
+      value: "loyalty",
     },
   ];
 
@@ -355,7 +327,7 @@ const Home = () => {
     }
   }, [searchValue]);
 
-  let recognition = null
+  let recognition = null;
   try {
     recognition = window.recognition;
     recognition.addEventListener("result", (e) => {
@@ -368,7 +340,7 @@ const Home = () => {
       setSearchValue(transcript);
     });
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 
   const handleVoiceCommand = () => {
@@ -386,7 +358,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // console.log("optionTick", optionTick);
+    console.log("optionTick", optionTick);
     let sum = 0;
     if (optionTick && optionTick?.length > 0) {
       optionTick.map((item) => {
@@ -594,7 +566,7 @@ const Home = () => {
             display: "flex",
             width: "100%",
             alignItems: "center",
-            justifyContent: "space-around",
+            justifyContent: "center",
             color: "#fff",
           }}
         >
@@ -605,15 +577,30 @@ const Home = () => {
               color: "#8f0707",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "space-around",
             }}
           >
-            {/* <p style={{ fontSize: "19px", padding: 0, margin: 0 }}>
-              {localStorage.getItem("User_data") ? storeName : ""}
-            </p> */}
-            <p style={{ fontSize: "19px", padding: 0, margin: 0 }}>
-              Total Sales
-            </p>
+            {link_loyalty_detail && link_loyalty_detail.customer_name ? (
+              <div
+                style={{
+                  color: "#eee",
+                  fontWeight: "bolder",
+                  color: "#8f0707",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                }}
+              >
+                <p style={{ padding: 0, margin: 0, marginRight: "30px" }}>
+                  Customer Name
+                </p>
+                <p style={{ padding: 0, margin: 0 }}>
+                  {link_loyalty_detail.customer_name}
+                </p>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
           <div
             style={{
@@ -758,30 +745,65 @@ const Home = () => {
                         <div className="mb-2 d-flex px-0" key={item.id}>
                           <div
                             onClick={() => {
-                              if (optionTick?.length === 0) {
-                                const obj = { ...item, amount };
-                                setOptionTick([...optionTick, obj]);
-                              } else if (optionTick?.length > 0) {
-                                if (
-                                  optionTick.filter(
-                                    (io) => io.value === item.value
-                                  )?.length > 0
-                                ) {
-                                  setOptionTick(
+                              if (item.value !== "loyalty") {
+                                if (optionTick?.length === 0) {
+                                  const obj = { ...item, amount };
+                                  setOptionTick([...optionTick, obj]);
+                                } else if (optionTick?.length > 0) {
+                                  if (
                                     optionTick.filter(
-                                      (io) => io.value !== item.value
-                                    )
-                                  );
-                                } else {
-                                  if (Number(optionTickSum) <= sumValue) {
-                                    const obj = { ...item, amount };
-                                    setOptionTick([...optionTick, obj]);
+                                      (io) => io.value === item.value
+                                    )?.length > 0
+                                  ) {
+                                    setOptionTick(
+                                      optionTick.filter(
+                                        (io) => io.value !== item.value
+                                      )
+                                    );
+                                  } else {
+                                    if (Number(optionTickSum) <= sumValue) {
+                                      const obj = { ...item, amount };
+                                      setOptionTick([...optionTick, obj]);
+                                    }
+                                  }
+                                }
+                              }
+                              if (item.value === "loyalty") {
+                                let newLoyaltyAmount = loyaltyAmount;
+                                if (loyaltyAmount > amount) {
+                                  newLoyaltyAmount = amount;
+                                }
+                                if (optionTick?.length === 0) {
+                                  const obj = {
+                                    ...item,
+                                    amount: newLoyaltyAmount,
+                                  };
+                                  setOptionTick([...optionTick, obj]);
+                                } else if (optionTick?.length > 0) {
+                                  if (
+                                    optionTick.filter(
+                                      (io) => io.value === item.value
+                                    )?.length > 0
+                                  ) {
+                                    setOptionTick(
+                                      optionTick.filter(
+                                        (io) => io.value !== item.value
+                                      )
+                                    );
+                                  } else {
+                                    if (Number(optionTickSum) <= sumValue) {
+                                      const obj = {
+                                        ...item,
+                                        amount: newLoyaltyAmount,
+                                      };
+                                      setOptionTick([...optionTick, obj]);
+                                    }
                                   }
                                 }
                               }
                             }}
                             className={`option-item ${optionTick.filter((io) => io.name === item.value)
-                              ?.length > 0 && ""
+                                ?.length > 0 && ""
                               }`}
                             style={{
                               width: "90%",
