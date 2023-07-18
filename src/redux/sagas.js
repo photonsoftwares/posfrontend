@@ -1,5 +1,5 @@
 import { put, takeEvery, all, retry } from "redux-saga/effects";
-import { BASE_Url, Email_Url, host } from "../URL";
+import { BASE_Url, Email_Url, host, LOYALTY_BASE_URL } from "../URL";
 import { toast } from "react-toastify";
 import { confirmAlert } from "react-confirm-alert";
 import moment from "moment";
@@ -1650,17 +1650,14 @@ function* handleExpenseCreateRequest(e) {
 function* handleMemberEnrollmentRequest(e) {
   console.log("E PAYLOAD ENROLLMENT", e.payload);
 
-  const response = yield fetch(
-    `http://3.111.70.84:8091/test/v1/loyalty/customer`,
-    {
-      // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(e.payload),
-    }
-  );
+  const response = yield fetch(`${BASE_Url}loyalty/customer`, {
+    // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(e.payload),
+  });
   const jsonData = yield response.json();
   console.log("JSONDATA MEMBER ENRL", jsonData);
   // if (jsonData) {
@@ -1691,7 +1688,7 @@ function* handleAccruvalRequest(e) {
     console.log("E PAYLOAD ACCURAVAL", e.payload);
 
     const response = yield fetch(
-      `http://3.111.70.84:8091/test/v1/loyalty/issue/${saasId}/${e.payload.link_loyalty_detail.loyalty_id}`,
+      `${LOYALTY_BASE_URL}/loyalty/issue/${saasId}/${e.payload.link_loyalty_detail.loyalty_id}`,
       {
         // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
         method: "POST",
@@ -1702,7 +1699,7 @@ function* handleAccruvalRequest(e) {
       }
     );
     const jsonData = yield response.json();
-    console.log("JSONDATA ACC>", jsonData);
+    // console.log("JSONDATA ACC>", jsonData);
     // if (jsonData) {
     //   if (jsonData.status === true) {
     //     yield put({
@@ -1790,7 +1787,7 @@ function* handleDelGetUserRequest(e) {
   const { searchValue } = e.payload;
   try {
     const response = yield fetch(
-      `http://3.111.70.84:8088/test/api/v1/customer/search-customer/${storeId}/EEEE/${searchValue}`,
+      `${BASE_Url}/customer/search-customer/${storeId}/EEEE/${searchValue}`,
       {
         method: "GET",
         headers: {
@@ -1810,6 +1807,7 @@ function* handleDelGetUserRequest(e) {
           arr.push({ ...el, label: el.name, value: el.name });
         });
         // toast.success(jsonData.message);
+        // console.log("ARR", arr);
         yield put({
           type: "ComponentPropsManagement/handleDelGetUserResponse",
           data: arr,
@@ -1824,13 +1822,47 @@ function* handleDelGetUserRequest(e) {
     toast.error(err.message);
   }
 }
+
+// Handle GetParty Name
+function* handleGetPatyNameRequest(e) {
+  const response = yield fetch(
+    `http://3.111.70.84:8088/test/api/v1/bahikhata/get-party-name`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ effective_from, end_date, tax_desc, hsn_code }),
+    }
+  );
+  const jsonData = yield response.json();
+
+  if (jsonData) {
+    if (jsonData && jsonData.data) {
+      const arr = [];
+      jsonData.data.map((item) => {
+        arr.push({ label: item, value: item });
+      });
+      yield put({
+        type: "ComponentPropsManagement/handleGetPatyNameResponse",
+        data: arr,
+      });
+    }
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleBahikhataPartyDropdownResponse",
+      data: [],
+    });
+  }
+}
 // handleLinkLoyaltyRequest
 function* handleLinkLoyaltyRequest(e) {
   console.log("SEARCH LINK MOBILE", e);
   // const { mobile_number } = e.payload;
   try {
     const response = yield fetch(
-      `http://3.111.70.84:8091/test/v1/loyalty/customer-details`,
+      // `${LOYALTY_BASE_URL}/loyalty/customer-details`,
+      `${LOYALTY_BASE_URL}/loyalty/customer-details`,
       {
         method: "POST",
         headers: {
@@ -1847,10 +1879,40 @@ function* handleLinkLoyaltyRequest(e) {
         data: jsonData,
       });
     } else {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
+  }
+}
+function* handleLinkCustomerRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+
+  console.log("SEARCH LINK MOBILE", e);
+  // const { mobile_number } = e.payload;
+  try {
+    const response = yield fetch(
+      `${BASE_Url}/customer/search-customer/${storeId}/${saasId}/${e.payload.name}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify(e.payload),
+      }
+    );
+    const jsonData = yield response.json();
+    console.log("JSONDATA LINK CUSTOMER", jsonData);
+    // if (jsonData) {
+    //   yield put({
+    //     type: "ComponentPropsManagement/handleLinkLoyaltyResponse",
+    //     data: jsonData,
+    //   });
+    // } else {
+    //   // toast.error("Something went wrong");
+    // }
+  } catch (err) {
+    // toast.error(err.message);
   }
 }
 
@@ -1860,7 +1922,7 @@ function* handleRedeemPointRequest(e) {
   // const { mobile_number } = e.payload;
   try {
     const response = yield fetch(
-      `http://3.111.70.84:8091/test/v1/loyalty/redeem-points/${e.payload.link_loyalty_detail.loyalty_id}`,
+      `${LOYALTY_BASE_URL}/loyalty/redeem-points/${e.payload.link_loyalty_detail.loyalty_id}`,
       {
         method: "POST",
         headers: {
@@ -2151,6 +2213,14 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleSearchInvoiceRequest",
     handleSearchInvoiceRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleGetPatyNameRequest",
+    handleGetPatyNameRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleLinkCustomerRequest",
+    handleLinkCustomerRequest
   );
 }
 

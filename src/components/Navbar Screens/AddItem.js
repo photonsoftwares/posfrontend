@@ -253,7 +253,7 @@ const AddItem = () => {
               </div>
             ) : (
               <form className="form-box" onSubmit={handleAddItem}>
-                <h2>Add Item</h2>
+                <h4>Add Item</h4>
                 <div
                   className="d-flex flex-col"
                   style={{ display: "flex", flexDirection: "column" }}
@@ -390,7 +390,7 @@ const AddItem = () => {
                 <div className="">
                   <button
                     style={{
-                      backgroundColor: "#20b9e3",
+                      backgroundColor: "yellowgreen",
                       outline: "none",
                       border: "none",
                       fontSize: "20px",
@@ -402,12 +402,12 @@ const AddItem = () => {
                     Save
                   </button>
                   <Link
-                    to="/home"
-                    // type="submit"
+                    to="/"
+                    type="submit"
                     // onClick={()=>}
                     className="btn btn-primary"
                     style={{
-                      backgroundColor: "#fc0202",
+                      backgroundColor: "gray",
                       outline: "none",
                       border: "none",
                       marginLeft: "20px",

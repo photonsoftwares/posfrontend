@@ -10,6 +10,7 @@ const initialComponentPropsManagementState = {
   get_QR_img: "",
   show_cart_modal: false,
   cart_data: [],
+  get_party_name: [],
   login_data: {},
   handel_redeem_point: {},
   register_data: {},
@@ -28,6 +29,7 @@ const initialComponentPropsManagementState = {
   handle_link_user_data: {},
   save_product_id: "",
   save_transaction_data: {},
+  search_customer_data: {},
   open_menu: false,
   email_notification: "",
   user_data: localStorage.getItem("User_data")
@@ -455,6 +457,19 @@ export const ComponentPropsManagement = createSlice({
     handleTenderReportResponse: (state, payload) => {
       state.tender_report_data = payload.data ? [payload.data] : [];
     },
+    // Handle GetParty Name
+    handleGetPatyNameRequest: (state, payload) => {
+      console.log(payload);
+    },
+    handleGetPatyNameResponse: (state, payload) => {
+      console.log(payload);
+      state.get_party_name = payload.data;
+    },
+    // LINK CUSTOMER
+    handleLinkCustomerRequest: (state, payload) => {},
+    handleLinkCustomerResponse: (state, payload) => {
+      state.tender_report_data = payload.data ? [payload.data] : [];
+    },
 
     handleSearchedDataRequest1: (state, payload) => {},
     handleSearchedDataResponse1: (state, payload) => {
@@ -482,6 +497,11 @@ export const ComponentPropsManagement = createSlice({
     handleUpdateMoqResponse: (state, payload) => {},
     handleUpdatePriceRequest: (state, payload) => {},
     handleUpdatePriceResponse: (state, payload) => {},
+    // Handle Save Search CustomerData
+    handleSaveSearchCustomerData: (state, payload) => {
+      console.log("-|-|-", payload);
+      state.search_customer_data = payload.payload.e;
+    },
 
     // handleSearchedDataRequest2: (state, payload) => { },
     // handleSearchedDataResponse2: (state, payload) => {
@@ -509,6 +529,7 @@ export const {
   handleSearchInvoiceRequest,
   handleCreateSupplierRequest,
   handleRedeemPointRequest,
+  handleSaveSearchCustomerData,
   handleLinkLoyaltyRequest,
   handleDeliveryNoteRequest,
   handleDelGetUserRequest,
@@ -559,7 +580,9 @@ export const {
   handleUploadItemRequest,
   handleUploadInventoryRequest,
   handleSalesOverviewRequest,
+  handleLinkCustomerRequest,
   handleLastWeekSalesRequest,
+  handleGetPatyNameRequest,
   handleLastMonthSalesRequest,
   handleTodaySalesRequest,
   handleNumberOfCustomerRequest,

@@ -26,9 +26,11 @@ import {
 } from "../../src/redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { BASE_Url } from "../URL";
 
 const DeliveryChalan = () => {
   const dispatch = useDispatch();
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
 
   useEffect(() => {
     dispatch(handleGstTypeDropdownRequest());
@@ -58,6 +60,8 @@ const DeliveryChalan = () => {
   const [purchaseTax, setPurchaseTax] = useState("");
   const [priceTax, setPriceTax] = useState("");
   const [selectedOptionGST, setSelectedOptionGST] = useState(null);
+  const [itemObj, setItemObj] = useState({});
+  const [defaultItemData, setDefaultItemData] = useState([]);
 
   // console.log(selectedOptionCustomer);
   // console.log(selectedOptionSellPrice);
@@ -87,6 +91,17 @@ const DeliveryChalan = () => {
   //   { value: "Tax A", label: "Tax A" },
   //   { value: "Tax B", label: "Tax B" },
   // ];
+
+  const [updatePriceState, setUpdatePriceState] = useState({
+    item_name: "",
+    item_price: "",
+    previous_price: "",
+    effective_date: "",
+    valid_upto: "",
+  });
+
+  console.log("updatePriceState.item_name", updatePriceState.item_name);
+
   const optionsforUnit = [
     { value: "1", label: "1" },
     { value: "2", label: "2" },
@@ -136,7 +151,7 @@ const DeliveryChalan = () => {
     e.preventDefault();
     dispatch(
       handleDeliveryNoteRequest({
-        customer_party: customerName,
+        customer_party: updatePriceState.item_name,
         charges: charges,
         amount: amount,
         add_chalan: items,
@@ -153,25 +168,74 @@ const DeliveryChalan = () => {
     setCustomerName("");
   };
 
-  // const handleGetUserSubmit = (e) => {
-  //   // dispatch(handleDelGetUserRequest({ data: e.target.value }));
-  // };
-
-  const loadOptions = (searchValue, callback) => {
-    const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
-    axios
-      .get(
-        `http://3.111.70.84:8088/test/api/v1/customer/search-customer/${storeId}/EEEE/${searchValue}`
-      )
-      .then((data) => {
-        data.map((item) => {});
-      });
-    // if (searchValue) {
-    //   dispatch(handleDelGetUserRequest({ searchValue }));
-    // }
-    // const { label, value } = handle_user_dropdown;
-    // callback(label, value);
+  const handleItemFilter = async (inputValue) => {
+    try {
+      const response = await fetch(
+        `${BASE_Url}/customer/search-customer/${storeId}/EEEE/${inputValue}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const jsonData = await response.json();
+      // console.log("IN DELIVERY", jsonData);
+      if (jsonData) {
+        if (jsonData.status === true) {
+          const d1 = jsonData.data;
+          if (d1) {
+            if (d1.length > 0) {
+              const arr = [];
+              d1.map((item) => {
+                arr.push({
+                  ...item,
+                  label: item.name,
+                  value: item.name,
+                });
+              });
+              return arr;
+            }
+          }
+          return [];
+        }
+        toast.error(jsonData.message);
+      } else {
+        toast.error("Something went wrong server side");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  const loadOptions = (inputValue) => {
+    if (inputValue.length > 0) {
+      return new Promise((resolve, reject) => {
+        resolve(handleItemFilter(inputValue));
+      });
+    } else {
+      // return new Promise((resolve, reject) => {
+      //     resolve(handleRecommendedDataRequest(inputValue));
+      // });
+    }
+  };
+
+  // const loadOptions = (searchValue, callback) => {
+  //   const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  //   axios
+  //     .get(
+  //       `http://3.111.70.84:8088/test/api/v1/customer/search-customer/${storeId}/EEEE/${searchValue}`
+  //     )
+  //     .then((data) => {
+  //       // data.map((item) => {});
+  //       console.log(data);
+  //     });
+  //   // if (searchValue) {
+  //   //   dispatch(handleDelGetUserRequest({ searchValue }));
+  //   // }
+  //   // const { label, value } = handle_user_dropdown;
+  //   // callback(label, value);
+  // };
 
   // console.log(handle_user_dropdown);
 
@@ -184,15 +248,15 @@ const DeliveryChalan = () => {
       <div className="container">
         <div className="row d-flex justify-content-center">
           <form
-            className="col-lg-5 col-md-10 col-sm-12 px-4"
+            className="col-lg-5 col-md-10 col-sm-12 px-5"
             onSubmit={handleSubmit}
           >
-            <h2>Delivery challan</h2>
+            <h4>Delivery challan</h4>
             <div className="d-flex justify-content-between bg-white">
               <div>
                 <p
                   className="text-secondary mb-1"
-                //   style={{ paddingBottom: 0, marginBottom: 0 }}
+                  //   style={{ paddingBottom: 0, marginBottom: 0 }}
                 >
                   Debit Node#
                 </p>
@@ -241,18 +305,21 @@ const DeliveryChalan = () => {
                     /> */}
                     <div>
                       <AsyncSelect
+                        cacheOptions
                         loadOptions={loadOptions}
-                        onChange={handleChange}
-                        // options={handle_user_dropdown}
-                        // onChange={(e) => {
-                        //   handleGetUserSubmit();
-                        //   // setCustomerName(e.value);
-                        // }}
-                        // value={handle_user_dropdown.filter(
-                        //   (io) => io.value === customerName
-                        // )}
-                        // required={true}
-                        // placeholder="Select Gst Type"
+                        isSearchable={true}
+                        defaultOptions={defaultItemData}
+                        onChange={(e) => {
+                          const val = e.label;
+                          setItemObj(e);
+                          setUpdatePriceState({
+                            ...updatePriceState,
+                            item_name: val,
+                          });
+                        }}
+                        // value={updatePriceState.item_name}
+                        required={true}
+                        placeholder="Select Item"
                       />
                     </div>
                   </div>
@@ -286,7 +353,7 @@ const DeliveryChalan = () => {
                         required
                         onChange={onOptionChange}
                         id="inlineRadio4"
-                      // value="option1"
+                        // value="option1"
                       />
                       <label className="form-check-label" for="inlineRadio4">
                         Product
@@ -456,29 +523,6 @@ const DeliveryChalan = () => {
             </div>
 
             <div className="rounded">
-              <p className="d-flex align-items-center fw-bold fs-5 text-secondary">
-                <BsBank2 className="mx-2" />
-                Enter Bank Details
-              </p>
-              <p className="d-flex align-items-center fw-bold fs-5 text-secondary">
-                <AiOutlineEdit className="mx-2" />
-                Select Signature
-              </p>
-              <p className="d-flex align-items-center fw-bold fs-5 text-secondary">
-                <PiBookOpenLight className="mx-2" />
-                Add Notes
-              </p>
-              <p className="d-flex align-items-center fw-bold fs-5 text-secondary">
-                <GiBlackBook className="mx-2" />
-                Add Tearms
-              </p>
-              <div className="d-flex align-items-center justify-content-between">
-                <p className="d-flex align-items-center fw-bold fs-5 text-secondary">
-                  <AiOutlinePercentage className="mx-2" />
-                  Extra Discount
-                </p>
-                {/* <p className="text-danger fw-bold">-0</p> */}
-              </div>
               {/*  */}
               <div className="d-flex align-items-center justify-content-between">
                 <TextField
@@ -505,13 +549,40 @@ const DeliveryChalan = () => {
                 />
               </div>
               {/*  */}
-              <div className="d-flex align-items-center justify-content-between bg-white my-2">
-                <div>
-                  <Button type="submit">
-                    Create
-                    <BiChevronRight />
-                  </Button>
-                </div>
+              <div className="mt-3">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{
+                    backgroundColor: "yellowgreen",
+                    outline: "none",
+                    border: "none",
+                    fontSize: "20px",
+                    padding: "10px 20px",
+                    borderRadius: "10px",
+                    color: "#fff",
+                  }}
+                >
+                  Save
+                </button>
+                <Link
+                  to="/"
+                  type="submit"
+                  // onClick={() => dispatch(handleOpneMenuRequest(false))}
+                  className="btn btn-primary"
+                  style={{
+                    backgroundColor: "gray",
+                    outline: "none",
+                    border: "none",
+                    marginLeft: "20px",
+                    fontSize: "20px",
+                    padding: "10px 20px",
+                    borderRadius: "10px",
+                    color: "#fff",
+                  }}
+                >
+                  Close
+                </Link>
               </div>
             </div>
           </form>

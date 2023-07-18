@@ -62,7 +62,7 @@ const AddCustomer = () => {
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-10 col-sm-12">
             <form className="form-box" onSubmit={handleSubmit}>
-              <h2>Add Customer</h2>
+              <h4>Add Customer*</h4>
               <input
                 type="text"
                 className="form-control my-4"
@@ -93,7 +93,7 @@ const AddCustomer = () => {
 
               <div
                 className="my-4 d-flex flex-column items-center justify-content-center"
-              // style={{ width: "100%" }}
+                // style={{ width: "100%" }}
               >
                 <p>Date of Birth</p>
                 <ReactDatePicker
@@ -128,7 +128,7 @@ const AddCustomer = () => {
                     value={"Male"}
                     onChange={onOptionChange}
                     id="inlineRadio1"
-                  // value="option1"
+                    // value="option1"
                   />
                   <label className="form-check-label" for="inlineRadio1">
                     Male
