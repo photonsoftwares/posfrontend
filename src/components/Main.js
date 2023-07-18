@@ -8,11 +8,10 @@ import { GiExpense, GiNotebook, GiStabbedNote } from "react-icons/gi";
 import { IoDocumentTextSharp } from "react-icons/io5";
 import { RiPriceTag3Fill, RiEditCircleFill } from "react-icons/ri";
 import { SiHomeassistantcommunitystore } from "react-icons/si";
-import { MdEditSquare } from "react-icons/md"
-import { GrUpdate } from "react-icons/gr"
-import { TfiViewListAlt } from 'react-icons/tfi'
+import { MdEditSquare } from "react-icons/md";
+import { GrUpdate } from "react-icons/gr";
+import { TfiViewListAlt } from "react-icons/tfi";
 import { AiFillHome, AiFillSetting } from "react-icons/ai";
-import Bahikhata from "./Bahikhata";
 import { BiGroup, BiCube } from "react-icons/bi";
 import { RxDashboard } from "react-icons/rx";
 import { FaMoneyBillAlt } from "react-icons/fa";
@@ -28,16 +27,13 @@ import Expense from "./expense";
 import UpdateMoq from "./moq";
 import UpdatePrice from "./update-price";
 import ViewOrders from "./PendingOrders";
-import UOM from "./uom";
 
 const Main = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [expenseModalIsOpen, setExpenseModalIsOpen] = useState(false);
-  const [updateMoqModalIsOpen, setUpdateMoqModalIsOpen] = useState(false)
-  const [updatePriceModalIsOpen, setUpdatePriceModalIsOpen] = useState(false)
-  const [uomModalIsOpen, setUomModalIsOpen] = useState(false)
-  const [bahikhataModalIsOpen, setBahikhataModalIsOpen] = useState(false);
-  const [viewOrderModalIsOpen, setViewOrderModalIsOpen] = useState(false)
+  const [updateMoqModalIsOpen, setUpdateMoqModalIsOpen] = useState(false);
+  const [updatePriceModalIsOpen, setUpdatePriceModalIsOpen] = useState(false);
+  const [viewOrderModalIsOpen, setViewOrderModalIsOpen] = useState(false);
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const navigate = useNavigate();
   const create_transaction_arr = [
@@ -106,30 +102,30 @@ const Main = () => {
       label: "Pending Orders",
       value: "pending_orders",
       icon: <TfiViewListAlt size="25" color="#26cbaf" />,
-      isActive: true
+      isActive: true,
     },
     {
       id: 2,
       label: "Update MOQ",
       value: "update_moq",
       icon: <RiEditCircleFill size="25" color="#a050fd" />,
-      isActive: true
+      isActive: true,
     },
     {
       id: 3,
       label: "Update Price",
       value: "update_price",
       icon: <RiPriceTag3Fill size="25" color="#0405c3" />,
-      isActive: true
+      isActive: true,
     },
     {
       id: 4,
       label: "Update UOM",
       value: "update_uom",
       icon: <MdEditSquare size="25" color="#19d413" />,
-      isActive: true
-    }
-  ]
+      isActive: true,
+    },
+  ];
 
   const feature_arr = [
     {
@@ -220,19 +216,20 @@ const Main = () => {
       >
         <div
           style={{
-            backgroundColor: "#ffd700",
+            backgroundColor: "#ffc544",
             width: "100%",
             // height: "85vh",
-            maxWidth: "500px",
+            maxWidth: "1200px",
             border: "1px solid black",
           }}
         >
           <div style={{ height: "75vh", overflow: "auto" }}>
             <div
               style={{
-                fontSize: "20px",
+                fontSize: "25px",
                 fontWeight: "900",
                 paddingLeft: "20px",
+                color: "#230D4D",
               }}
             >
               Create Transactions
@@ -264,6 +261,7 @@ const Main = () => {
                           margin: "10px",
                           marginBottom: "20px",
                           cursor: "pointer",
+                          color: "#3d2b2b",
                         }}
                         onClick={() => {
                           if (item.value === "retail_billing") {
@@ -276,8 +274,6 @@ const Main = () => {
                             navigate("/debit-note");
                           } else if (item.value === "expense") {
                             setExpenseModalIsOpen(!expenseModalIsOpen);
-                          } else if (item.value === "bahikhata") {
-                            setBahikhataModalIsOpen(!bahikhataModalIsOpen)
                           } else if (item.value === "delivery_challan") {
                             navigate("/delivery-challan");
                           }
@@ -293,10 +289,11 @@ const Main = () => {
 
             <div
               style={{
-                fontSize: "20px",
+                fontSize: "25px",
                 fontWeight: "900",
                 paddingLeft: "20px",
                 marginTop: "30px",
+                color: "#230D4D",
               }}
             >
               Omni Channel Orders
@@ -327,16 +324,15 @@ const Main = () => {
                           margin: "10px",
                           marginBottom: "20px",
                           cursor: "pointer",
+                          color: "#3d2b2b",
                         }}
                         onClick={() => {
                           if (item.value === "update_moq") {
-                            setUpdateMoqModalIsOpen(!updateMoqModalIsOpen)
+                            setUpdateMoqModalIsOpen(!updateMoqModalIsOpen);
                           } else if (item.value === "update_price") {
-                            setUpdatePriceModalIsOpen(!updatePriceModalIsOpen)
+                            setUpdatePriceModalIsOpen(!updatePriceModalIsOpen);
                           } else if (item.value === "pending_orders") {
-                            setViewOrderModalIsOpen(!viewOrderModalIsOpen)
-                          } else if (item.value === "update_uom") {
-                            setUomModalIsOpen(!uomModalIsOpen)
+                            setViewOrderModalIsOpen(!viewOrderModalIsOpen);
                           }
                         }}
                       >
@@ -350,10 +346,11 @@ const Main = () => {
 
             <div
               style={{
-                fontSize: "20px",
+                fontSize: "25px",
                 fontWeight: "900",
                 paddingLeft: "20px",
                 marginTop: "30px",
+                color: "#230D4D",
               }}
             >
               Features
@@ -384,6 +381,7 @@ const Main = () => {
                           margin: "10px",
                           marginBottom: "20px",
                           cursor: "pointer",
+                          color: "#3d2b2b",
                         }}
                         onClick={() => {
                           if (item.value === "dashboard") {
@@ -427,6 +425,7 @@ const Main = () => {
                           margin: "10px",
                           marginBottom: "20px",
                           cursor: "pointer",
+                          // color: "#7a7272",
                         }}
                         onClick={() => {
                           if (item.value === "product") {
@@ -499,16 +498,6 @@ const Main = () => {
       <Expense
         expenseModalIsOpen={expenseModalIsOpen}
         setExpenseModalIsOpen={setExpenseModalIsOpen}
-      />
-
-      <UOM
-        uomModalIsOpen={uomModalIsOpen}
-        setUomModalIsOpen={setUomModalIsOpen}
-      />
-
-      <Bahikhata
-        bahikhataModalIsOpen={bahikhataModalIsOpen}
-        setBahikhataModalIsOpen={setBahikhataModalIsOpen}
       />
     </>
   );

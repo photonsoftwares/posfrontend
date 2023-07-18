@@ -17,6 +17,7 @@ const LinkLoyalityCustomer = () => {
   const [searchValue, setSearchValue] = useState("");
   const [userName, setUsername] = useState("");
   const [userMobile, setUserMobile] = useState("");
+  const [loyltyAmount, setLoyltyAmount] = useState("");
   const [err, setErr] = useState("");
   // const [dataRes, setDataRes] = useState({});
 
@@ -32,6 +33,7 @@ const LinkLoyalityCustomer = () => {
       // setUserMobile(data.data.mobile_number);
       setUsername(link_loyalty_detail.customer_name);
       setUserMobile(link_loyalty_detail.email_id);
+      setLoyltyAmount(link_loyalty_detail.balance_amount);
     }
   }, [link_loyalty_detail]);
   // console.log(userName, userMobile);
@@ -91,7 +93,7 @@ const LinkLoyalityCustomer = () => {
       <div className="row d-flex justify-content-center">
         <div className="col-lg-5 col-md-10 col-sm-12 px-5">
           <form className="form-box" onSubmit={handleSubmit}>
-            <h2>Link Loyalty</h2>
+            <h4>Link Loyalty</h4>
             <div>
               <TextField
                 size="small"
@@ -134,57 +136,33 @@ const LinkLoyalityCustomer = () => {
                     {userMobile}
                   </p>
                 </div>
+                <div className="d-flex align-items-center justify-content-between my-3">
+                  <p style={{ padding: 0, margin: 0 }}>Loyalty Amount</p>
+                  <p
+                    style={{
+                      fontWeight: "900",
+                      padding: 0,
+                      margin: 0,
+                      // fontSize: "20px",
+                    }}
+                  >
+                    {loyltyAmount}
+                  </p>
+                </div>
                 <div>
-                  {userMobile && userName ? (
-                    <div className="mt-3">
-                      {/* <button
-                        type="submit"
-                        className="btn btn-primary"
-                        style={{
-                          backgroundColor: "#fc0202",
-                          outline: "none",
-                          border: "none",
-                          fontSize: "20px",
-                          padding: "10px 20px",
-                          borderRadius: "10px",
-                          color: "#fff",
-                        }}
-                      >
-                        Link
-                      </button>
-                      <Link
-                        to="/"
-                        type="submit"
-                        // onClick={()=>}
-                        className="btn btn-primary"
-                        style={{
-                          backgroundColor: "gray",
-                          outline: "none",
-                          border: "none",
-                          marginLeft: "20px",
-                          fontSize: "20px",
-                          padding: "10px 20px",
-                          borderRadius: "10px",
-                          color: "#fff",
-                        }}
-                      >
-                        Cancel
-                      </Link> */}
-                    </div>
-                  ) : (
-                    ""
-                  )}
+                  {userMobile && userName ? <div className="mt-3"></div> : ""}
                 </div>
               </div>
             ) : (
               err
             )}
             <div className="mt-3">
-              <button
+              <Link
+                to={"/home"}
                 type="submit"
                 className="btn btn-primary"
                 style={{
-                  backgroundColor: "#fc0202",
+                  // backgroundColor: "yellowgreen",
                   outline: "none",
                   border: "none",
                   fontSize: "20px",
@@ -193,9 +171,9 @@ const LinkLoyalityCustomer = () => {
                   color: "#fff",
                 }}
               >
-                Save
-              </button>
-              <Link
+                Home
+              </Link>
+              {/* <Link
                 to="/"
                 type="submit"
                 // onClick={()=>}
@@ -212,7 +190,7 @@ const LinkLoyalityCustomer = () => {
                 }}
               >
                 Close
-              </Link>
+              </Link> */}
             </div>
           </form>
         </div>

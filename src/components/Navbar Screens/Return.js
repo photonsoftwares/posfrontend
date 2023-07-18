@@ -85,29 +85,34 @@ const Return = () => {
             </div>
 
             {get_return_invoice_data && get_return_invoice_data.length > 0 ? (
-              <table
-                class="table table-striped table-hover"
-                style={{ width: "100%" }}
-              >
-                <thead className="">
-                  <tr>
-                    <th scope="col">Item Name</th>
-                    <th scope="col">Item Qty</th>
-                    <th scope="col">Item Price</th>
-                    <th scope="col">Return Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {get_return_invoice_data.map((el) => (
+              <>
+                <table
+                  class="table table-striped table-hover"
+                  style={{ width: "100%" }}
+                >
+                  <thead className="">
                     <tr>
-                      <td>{el.itemName}</td>
-                      <td>{el.itemQty}</td>
-                      <td>{el.itemPrice}</td>
-                      <td>{el.itemPrice * el.itemQty}</td>
+                      <th scope="col">Item Name</th>
+                      <th scope="col">Item Qty</th>
+                      <th scope="col">Item Price</th>
+                      <th scope="col">Return Value</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {get_return_invoice_data.map((el) => (
+                      <tr>
+                        <td>{el.itemName}</td>
+                        <td>{el.itemQty}</td>
+                        <td>{el.itemPrice}</td>
+                        <td>{el.itemPrice * el.itemQty}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div>
+                  <Button>Generate Credit Bill</Button>
+                </div>
+              </>
             ) : (
               <div></div>
             )}
