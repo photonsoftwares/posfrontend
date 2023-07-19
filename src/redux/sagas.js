@@ -94,6 +94,72 @@ function* handleRegisterRequest(e) {
   }
 }
 
+
+//get Bahikhata
+function* handleBahikhataPartyDropdownRequest(e) {
+  const response = yield fetch(`${BASE_Url}/bahikhata/get-party-name`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // body: JSON.stringify({ effective_from, end_date, tax_desc, hsn_code }),
+  });
+  const jsonData = yield response.json();
+
+  if (jsonData) {
+    if (jsonData && jsonData.data) {
+      const arr = []
+      jsonData.data.map((item) => {
+        arr.push({ label: item, value: item })
+      })
+      yield put({
+        type: "ComponentPropsManagement/handleBahikhataPartyDropdownResponse",
+        data: arr
+      });
+    }
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleBahikhataPartyDropdownResponse",
+      data: [],
+    });
+  }
+
+}
+
+//..............create Bahikhata............................
+function* handleBahikhataCreateRequest(e) {
+  try {
+    const response = yield fetch(`${host}/bahikhata/create-bahikhata`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    });
+    const jsonData = yield response.json()
+    if (jsonData) {
+      if (jsonData.status === true) {
+        toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleBahikhataCreateResponse",
+          data: jsonData.data,
+        });
+        return
+      } else {
+        yield put({
+          type: "ComponentPropsManagement/handleBahikhataCreateResponse",
+          data: null,
+        });
+        toast.error(jsonData.message);
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
 function* handleSearchedDataRequest(e) {
   // const navigate = useNavigate();
   const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
@@ -1979,6 +2045,14 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleLoginRequest",
     handleLoginRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleBahikhataCreateRequest",
+    handleBahikhataCreateRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleBahikhataPartyDropdownRequest",
+    handleBahikhataPartyDropdownRequest
   );
   yield takeEvery(
     "ComponentPropsManagement/handleItemMasterListRequest",

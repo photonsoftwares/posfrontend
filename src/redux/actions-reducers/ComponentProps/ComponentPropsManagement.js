@@ -89,6 +89,7 @@ const initialComponentPropsManagementState = {
 
   expense_category_dropdown: [],
   update_price_item_name_dropdown: [],
+  bahikhata_party_name_dropdown: []
 };
 
 export const ComponentPropsManagement = createSlice({
@@ -98,6 +99,16 @@ export const ComponentPropsManagement = createSlice({
     // Login User
     handleLoginRequest: (state, payload) => {
       state.load = true;
+    },
+    handleBahikhataCreateRequest: (state, payload) => {
+    },
+    handleBahikhataCreateResponse: (state, payload) => {
+    },
+    
+    handleBahikhataPartyDropdownRequest: (state, payload) => {
+    },
+    handleBahikhataPartyDropdownResponse: (state, payload) => {
+      state.bahikhata_party_name_dropdown = payload.data;
     },
 
     handleLoginResponse: (state, payload) => {
@@ -525,6 +536,8 @@ export const ComponentPropsManagement = createSlice({
 // Action creators are generated for each case reducer function
 
 export const {
+  handleBahikhataPartyDropdownRequest,
+  handleBahikhataCreateRequest,
   handleUploadPicRequest,
   handleSearchInvoiceRequest,
   handleCreateSupplierRequest,

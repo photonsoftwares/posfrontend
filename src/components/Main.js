@@ -24,6 +24,7 @@ import {
   DropdownItem,
 } from "reactstrap";
 import Expense from "./expense";
+import Bahikhata from "./Bahikhata";
 import UpdateMoq from "./moq";
 import UpdatePrice from "./update-price";
 import ViewOrders from "./PendingOrders";
@@ -31,6 +32,7 @@ import ViewOrders from "./PendingOrders";
 const Main = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [expenseModalIsOpen, setExpenseModalIsOpen] = useState(false);
+  const [bahikhataModalIsOpen, setBahikhataModalIsOpen] = useState(false);
   const [updateMoqModalIsOpen, setUpdateMoqModalIsOpen] = useState(false);
   const [updatePriceModalIsOpen, setUpdatePriceModalIsOpen] = useState(false);
   const [viewOrderModalIsOpen, setViewOrderModalIsOpen] = useState(false);
@@ -89,7 +91,7 @@ const Main = () => {
 
     {
       id: 8,
-      label: "BahiKhata",
+      label: "Bahikhata",
       value: "bahikhata",
       icon: <GiNotebook color="#ffc107" size="25" />,
       isActive: true,
@@ -274,7 +276,11 @@ const Main = () => {
                             navigate("/debit-note");
                           } else if (item.value === "expense") {
                             setExpenseModalIsOpen(!expenseModalIsOpen);
-                          } else if (item.value === "delivery_challan") {
+                          }
+                            else if (item.value === "bahikhata") {
+                              setBahikhataModalIsOpen(!bahikhataModalIsOpen);
+                            } 
+                          else if (item.value === "delivery_challan") {
                             navigate("/delivery-challan");
                           }
                         }}
@@ -331,7 +337,8 @@ const Main = () => {
                             setUpdateMoqModalIsOpen(!updateMoqModalIsOpen);
                           } else if (item.value === "update_price") {
                             setUpdatePriceModalIsOpen(!updatePriceModalIsOpen);
-                          } else if (item.value === "pending_orders") {
+                          }
+                           else if (item.value === "pending_orders") {
                             setViewOrderModalIsOpen(!viewOrderModalIsOpen);
                           }
                         }}
@@ -499,6 +506,11 @@ const Main = () => {
         expenseModalIsOpen={expenseModalIsOpen}
         setExpenseModalIsOpen={setExpenseModalIsOpen}
       />
+       <Bahikhata
+        bahikhataModalIsOpen={bahikhataModalIsOpen}
+        setBahikhataModalIsOpen={setBahikhataModalIsOpen}
+      />
+
     </>
   );
 };
