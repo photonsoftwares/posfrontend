@@ -97,10 +97,10 @@ const Master = () => {
                     <TabPane tabId= "6">
                     <UserMaster/>
                     </TabPane>
-{/* 
+
                     <TabPane tabId= "7">
                     <StoreMaster/>
-                    </TabPane> */}
+                    </TabPane>
             </TabContent>
         </div>
 
