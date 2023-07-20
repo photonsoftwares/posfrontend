@@ -4,6 +4,7 @@ import HSNMaster from './hsn-master'
 import SupplierMaster from './supplier-master'
 import TaxMaster from './tax-master';
 import ItemMaster from './item-master';
+import UserMaster from './user-master';
 
 const Master = () => {
     const [activeTab, setActiveTab] = useState("1")
@@ -27,6 +28,11 @@ const Master = () => {
         {
             id: "4",
             name: "HSN Master",
+            className: "active"
+        },
+        {
+            id: "5",
+            name: "User Master",
             className: "active"
         }
     ]
@@ -70,6 +76,10 @@ const Master = () => {
 
                 <TabPane tabId="4">
                     <HSNMaster />
+                </TabPane>
+
+                <TabPane tabId="5">
+                    <UserMaster />
                 </TabPane>
             </TabContent>
         </div>
