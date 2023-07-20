@@ -627,6 +627,8 @@ const Home = () => {
     setEmail("");
   };
 
+  console.log("HOME CARTDATA", cartData);
+
   // console.log("DISCOUNT AMOUNT", discountAmountVal);
   // console.log("OPTION TICK", optionTick);
   console.log("TENDER 3", handleTander3());

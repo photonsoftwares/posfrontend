@@ -1645,6 +1645,93 @@ function* handleExpenseCreateRequest(e) {
     toast.error(err.message);
   }
 }
+// --------------
+
+function* pendingOrderCartDataRequest(e) {
+  const { order_id } = e.payload;
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  console.log("E ORDER=>", e);
+  console.log("E FOR ORDER ID", e);
+  try {
+    const { order_id } = e.payload;
+    const response = yield fetch(
+      // `${host}order/view-order-detail/${storeId}/${saasId}${order_id}`,
+      `http://3.111.70.84:8088/test/api/v1/order/view-order-detail/${storeId}/${saasId}/${order_id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify(e.payload),
+      }
+    );
+    const jsonData = yield response.json();
+    console.log("ORDER DATA EE", jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        yield put({
+          type: "ComponentPropsManagement/pendingOrderCartDataResponse",
+          data: jsonData.data,
+        });
+        return;
+      } else {
+        yield put({
+          type: "ComponentPropsManagement/pendingOrderCartDataResponse",
+          data: null,
+        });
+        toast.error(jsonData.message);
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
+//
+
+function* handleViewOrderPendingRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  try {
+    const date = new Date();
+    const response = yield fetch(
+      `${host}order/view-order/${moment(date).format("Y-MM-DD")}/${saasId}`,
+      // `${host}order/view-order/2023-07-19/${saasId}`,
+      {
+        // const response = yield fetch(`${host}order/view-order/2023-07-13/saas123`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify(e.payload),
+      }
+    );
+    const jsonData = yield response.json();
+    // console.log("ALL LIST ORDERS", jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        yield put({
+          type: "ComponentPropsManagement/handleViewOrderPendingResponse",
+          data: jsonData.data,
+        });
+        return;
+      } else {
+        yield put({
+          type: "ComponentPropsManagement/handleViewOrderPendingResponse",
+          data: null,
+        });
+        toast.error(jsonData.message);
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
+// --------------
 
 // Member Enrollment
 function* handleMemberEnrollmentRequest(e) {
@@ -1975,6 +2062,148 @@ function* handleSearchInvoiceRequest(e) {
   }
 }
 
+// View Order Request
+function* handleViewOrderRequest(e) {
+  // console.log("ORDER ID SAGA", e);
+  const { order_id } = e.payload.item;
+  // console.log("customer_id SAGA", order_id);
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const response = yield fetch(
+    `${BASE_Url}/order/view-order-detail/${storeId}/${saasId}/${order_id}`,
+    {
+      method: "GET",
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("JSONDATA VIEW ORDER", jsonData.data);
+  if (jsonData) {
+    const arr = jsonData.data;
+    arr.map((el) => {
+      el["discount"] = 0;
+      el["sku"] = "SKU";
+      el["description"] = "description";
+      el["tax"] = 0.0;
+      el["department"] = "Dept2";
+      el["promoId"] = "123";
+      el["discount_menu_is_open"] = false;
+      el["discount_value"] = 0;
+      // item["discount_menu_is_open"] = false;
+    });
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleViewOrderResponse",
+        // data: jsonData.data,
+        data: arr,
+      });
+      return;
+    }
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleViewOrderResponse",
+      data: [],
+    });
+  } else {
+    toast.error(jsonData.message);
+  }
+}
+
+// View order By orderDate and saasId
+function* handleViewOrderBySaasIdAndOrderIdRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const response = yield fetch(
+    `${BASE_Url}/order/view-order/2023-07-14/${saasId}`,
+    {
+      method: "GET",
+    }
+  );
+  const jsonData = yield response.json();
+  // console.log("View order By orderDate and saasId", jsonData.data);
+  if (jsonData) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleViewOrderBySaasIdAndOrderIdResponse",
+        data: jsonData.data,
+      });
+      return;
+    }
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleViewOrderBySaasIdAndOrderIdResponse",
+      data: [],
+    });
+  } else {
+    toast.error(jsonData.message);
+  }
+}
+
+// Invoiced
+function* updateInvoicedRequest(e) {
+  console.log("in saga update invoice E", e);
+  const { order_id, status } = e.payload;
+  console.log(order_id);
+  console.log(status);
+  try {
+    const response = yield fetch(
+      `${BASE_Url}/order/update/order/master/${order_id}`,
+      // `${BASE_Url}order/update/order/master/${e.payload.order_id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(e.payload),
+      }
+    );
+    const jsonData = yield response.json();
+    console.log("order Update JSONDATA", jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleCreateTaxMasterResponse",
+          data: jsonData.data,
+        });
+      } else {
+        toast.error(jsonData.message);
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
+// Create OrderMaster
+function* handleCreateOrderRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const response = yield fetch(`${BASE_Url}/order/create/order/master`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(e.payload),
+  });
+  const jsonData = yield response.json();
+  console.log("JSONDATA Create OrderMaster", jsonData);
+  // if (jsonData) {
+  //   if (jsonData.status === true) {
+  //     yield put({
+  //       type: "ComponentPropsManagement/handleCreateOrderResponse",
+  //       data: jsonData.data,
+  //     });
+  //     return;
+  //   }
+  //   toast.error(jsonData.message);
+  //   yield put({
+  //     type: "ComponentPropsManagement/handleCreateOrderResponse",
+  //     data: [],
+  //   });
+  // } else {
+  //   toast.error(jsonData.message);
+  // }
+}
+
 export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleLoginRequest",
@@ -2219,8 +2448,32 @@ export function* helloSaga() {
     handleGetPatyNameRequest
   );
   yield takeEvery(
+    "ComponentPropsManagement/handleViewOrderRequest",
+    handleViewOrderRequest
+  );
+  yield takeEvery(
     "ComponentPropsManagement/handleLinkCustomerRequest",
     handleLinkCustomerRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleCreateOrderRequest",
+    handleCreateOrderRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleViewOrderBySaasIdAndOrderIdRequest",
+    handleViewOrderBySaasIdAndOrderIdRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/pendingOrderCartDataRequest",
+    pendingOrderCartDataRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleViewOrderPendingRequest",
+    handleViewOrderPendingRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/updateInvoicedRequest",
+    updateInvoicedRequest
   );
 }
 
