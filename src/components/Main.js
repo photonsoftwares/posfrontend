@@ -41,7 +41,7 @@ const Main = () => {
   const create_transaction_arr = [
     {
       id: 1,
-      label: "Retail Billing",
+      label: "Invoice",
       value: "retail_billing",
       icon: <FaReceipt color="blue" size="25" />,
       isActive: true,
@@ -62,14 +62,14 @@ const Main = () => {
     },
     {
       id: 4,
-      label: "Return/Credit Note",
+      label:"Return",
       value: "return_credit_note",
       icon: <MdNoteAlt color="red" size="25" />,
       isActive: true,
     },
     {
       id: 5,
-      label: "Delivery Challan",
+      label: "Delivery",  
       value: "delivery_challan",
       icon: <CiDeliveryTruck color="#979797" size="25" />,
       isActive: true,
@@ -83,7 +83,7 @@ const Main = () => {
     },
     {
       id: 7,
-      label: "Debit Note",
+      label:"Debit",
       value: "debit_note",
       icon: <GiStabbedNote color="#1facb8" size="25" />,
       isActive: true,
@@ -101,28 +101,28 @@ const Main = () => {
   const omni_channel_arr = [
     {
       id: 1,
-      label: "Pending Orders",
+      label: "View Order",
       value: "pending_orders",
       icon: <TfiViewListAlt size="25" color="#26cbaf" />,
       isActive: true,
     },
     {
       id: 2,
-      label: "Update MOQ",
+      label: "MOQ",
       value: "update_moq",
       icon: <RiEditCircleFill size="25" color="#a050fd" />,
       isActive: true,
     },
     {
       id: 3,
-      label: "Update Price",
+      label: "Price",
       value: "update_price",
       icon: <RiPriceTag3Fill size="25" color="#0405c3" />,
       isActive: true,
     },
     {
       id: 4,
-      label: "Update UOM",
+      label: "UOM",
       value: "update_uom",
       icon: <MdEditSquare size="25" color="#19d413" />,
       isActive: true,
@@ -132,14 +132,14 @@ const Main = () => {
   const feature_arr = [
     {
       id: 1,
-      label: "Invoice Template",
+      label: "Templates",
       value: "invoice_template",
       icon: <FaFileInvoice color="#41d796" size="25" />,
       isActive: true,
     },
     {
       id: 2,
-      label: "Document Settings",
+      label: "Settings",
       value: "document_settings",
       icon: <AiFillSetting color="#495057" size="25" />,
       isActive: true,
@@ -153,7 +153,7 @@ const Main = () => {
     },
     {
       id: 4,
-      label: "Online Store",
+      label: "Store",
       value: "online_store",
       icon: <SiHomeassistantcommunitystore color="#dc3545" size="25" />,
       isActive: true,
@@ -182,13 +182,13 @@ const Main = () => {
       icon: <BiGroup color="#ff4949" size="25" />,
       isActive: true,
     },
-    {
-      id: 3,
-      label: "Online Store",
-      value: "online_store",
-      icon: <SiHomeassistantcommunitystore color="#17a2b8" size="25" />,
-      isActive: true,
-    },
+    // {
+    //   id: 3,
+    //   label: "Online Store",
+    //   value: "online_store",
+    //   icon: <SiHomeassistantcommunitystore color="#17a2b8" size="25" />,
+    //   isActive: true,
+    // },
     {
       id: 4,
       label: "Product",
@@ -220,7 +220,7 @@ const Main = () => {
           style={{
             backgroundColor: "#ffc544",
             width: "100%",
-            // height: "85vh",
+          
             maxWidth: "1200px",
             border: "1px solid black",
           }}
@@ -280,7 +280,7 @@ const Main = () => {
                             else if (item.value === "bahikhata") {
                               setBahikhataModalIsOpen(!bahikhataModalIsOpen);
                             } 
-                          else if (item.value === "delivery_challan") {
+                           else if (item.value === "delivery_challan") {
                             navigate("/delivery-challan");
                           }
                         }}
@@ -432,7 +432,7 @@ const Main = () => {
                           margin: "10px",
                           marginBottom: "20px",
                           cursor: "pointer",
-                          // color: "#7a7272",
+                          
                         }}
                         onClick={() => {
                           if (item.value === "product") {

@@ -21,7 +21,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
             "order_qty": 10,
             "order_tax": 2.50,
             "order_value": 100.00,
-            "order_discount": 10.00,
+           // "order_discount": 10.00,
             "status": "update done"
         },
         {
@@ -35,7 +35,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
             "order_qty": 10,
             "order_tax": 2.50,
             "order_value": 100.00,
-            "order_discount": 10.00,
+           // "order_discount": 10.00,
             "status": "true"
         },
         {
@@ -49,7 +49,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
             "order_qty": 10,
             "order_tax": 2.50,
             "order_value": 100.00,
-            "order_discount": 10.00,
+            //"order_discount": 10.00,
             "status": null
         },
         {
@@ -63,7 +63,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
             "order_qty": 10,
             "order_tax": 2.50,
             "order_value": 100.00,
-            "order_discount": 10.00,
+            // "order_discount": 10.00,
             "status": "order placed"
         },
         {
@@ -77,7 +77,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
             "order_qty": 10,
             "order_tax": 2.50,
             "order_value": 100.00,
-            "order_discount": 10.00,
+            // "order_discount": 10.00,
             "status": "order placed"
         }
     ]
@@ -142,12 +142,12 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
                     <table className="table text-center table-bordered">
                         <thead>
                             <tr>
-                                <th scope="col">Order Id</th>
-                                <th scope="col">Order Date</th>
-                                <th scope="col">Customer Name</th>
-                                <th scope="col">Order Quantity</th>
-                                <th scope="col">Order Value</th>
-                                <th scope="col">Order Discount</th>
+                                <th scope="col">Id</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Value</th>
+                                {/* <th scope="col">Discount</th> */}
                                 <th scope="col">Action</th>
 
                             </tr>
@@ -161,7 +161,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
                                         <td>{item.customer_name}</td>
                                         <td>{item.order_qty}</td>
                                         <td>{item.order_value}</td>
-                                        <td>{item.order_discount}</td>
+                                        {/* <td>{item.order_discount}</td> */}
                                         <td>
                                             <Button type='button' className='btn btn-sm' color='primary'
                                                 onClick={() => setShow(true)}

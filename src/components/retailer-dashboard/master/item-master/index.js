@@ -138,7 +138,7 @@ const ItemMaster = () => {
                         <div className='me-2'>
                             <MdPlaylistAdd
                                 size={22}
-                                color='red'
+                                color='green'
                                 className='mouse-pointer'
                                 onClick={() => navigate("/add-item")}
                             />

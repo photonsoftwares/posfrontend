@@ -111,10 +111,14 @@ const AddExpense = (props) => {
                     </Row>
                 </ModalBody>
                 <ModalFooter>
-                    <Button
+                <Button
                         type="submit"
-                        color='primary'
 
+                        
+                        style={{
+                            border: "none",
+                            backgroundColor:"#9ADC32"
+                        }}
                     >
                         Save
                     </Button>
