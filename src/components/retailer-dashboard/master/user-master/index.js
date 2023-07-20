@@ -15,38 +15,20 @@ import {
   TabContent,
   TabPane,
 } from "reactstrap";
-// we are not using it
-// import GSTandAddress from "./gst-and-address";
-// import CreditAndBalance from "./credit-and-balance";
+
 import Select from "react-select";
 import Flatpickr from "react-flatpickr";
 import { AiFillInfoCircle } from "react-icons/ai";
 import Toggle from "react-toggle";
-// import {
-//   handleGstTypeDropdownRequest,
-//   handleAddPartyRequest,
-// } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+
 import { useDispatch, useSelector } from "react-redux";
 const UserMaster = () => {
   const dispatch = useDispatch();
-  // const { user_data, state_dropdown, gst_type_dropdown } = useSelector(
+  
     const { user_data, state_dropdown } = useSelector(
     (state) => state.ComponentPropsManagement
   );
-  // console.log(gst_type_dropdown);
-  // const [limitFlag, setLimitFlag] = useState(false);
-  // // const [activeTab, setActiveTab] = useState("1")
-  // const [partyName, setPartyName] = useState("");
-  // const [gstin, setGstin] = useState("");
-  // const [phone, setPhone] = useState("");
-  // const [gstType, setGstType] = useState("");
-  // const [state, setState] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [openingBalance, setOpeningBalance] = useState("");
-  // const [creditLimitAmount, setCreditLimitAmount] = useState("");
-  // const [billingAddress, setBillingAddress] = useState("");
-
-  // console.log(gst_type_dropdown);
+  
   const [userName, setUserName] = useState(false);
   const [password, setPassword] = useState("");
   const [storeName, setStoreName] = useState("");
@@ -59,36 +41,6 @@ const UserMaster = () => {
   const [status, setStatus] = useState("");
   const [createdAt, setCreatedAt] = useState("");
   const [expiration, setExpiration] = useState("");
-
-  // const tabArray = [
-  //     {
-  //         id: "1",
-  //         name: "GST & Address",
-  //         className: "active"
-  //     },
-  //     {
-  //         id: "2",
-  //         name: "Credit & Balance",
-  //         className: "active"
-  //     }
-  // ]
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const obj = {
-  //     saas_id: user_data.saasId,
-  //     party_name: partyName,
-  //     gstin: gstin,
-  //     phone_number: phone,
-  //     gst_type: gstType,
-  //     state: state,
-  //     email: email,
-  //     billing_address: billingAddress,
-  //     opening_balance: openingBalance,
-  //     credit_limit_flag: limitFlag,
-  //     creditLimitAmount: creditLimitAmount,
-  //   };
-
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -103,9 +55,7 @@ const UserMaster = () => {
       city: city,
       country: country
     };
-    // const formData = new FormData();
-    // console.log(formData)
-
+    
     dispatch(handleAddPartyRequest(obj));
   };
 
@@ -119,16 +69,7 @@ const UserMaster = () => {
         func.apply(context, args);
       }, 1000);
     };
-  };
-
-  // const handleFunCall = () => {
-  //   dispatch(handleGstTypeDropdownRequest());
-  // };
-
-  // const optimizedFn = useCallback(debounce(handleFunCall), []);
-  // useEffect(() => {
-  //   optimizedFn();
-  // }, []);
+  };  
 
   return (
     <>
@@ -192,19 +133,17 @@ const UserMaster = () => {
                 <Col md={3}>
                   <FormGroup>
                     <Label>
-                      Store Id  <span className="text-red"> * </span>
+                      Store ID  <span className="text-red"> * </span>
                     </Label>
                     <Select
                       // options={gst_type_dropdown}
                       onChange={(e) => {
                         setStoreId(e.value);
                       }}
-                      // value={gst_type_dropdown.filter(
-                      //   (io) => io.value === gstType
-                      // )}
+                      
                       value={storeId}
                       required={true}
-                      placeholder="Store Id"
+                      placeholder="Store ID"
                     />
                   </FormGroup>
                 </Col>
@@ -229,7 +168,7 @@ const UserMaster = () => {
                 <Col md={3}>
                   <FormGroup>
                     <Label>
-                    Saas Id<span className="text-red"> * </span>
+                    Saas ID<span className="text-red"> * </span>
                     </Label>
                     <Input
                       type="text"
@@ -238,7 +177,7 @@ const UserMaster = () => {
                       }}
                       value={saasId}
                       required={true}
-                      placeholder="Enter Saas Id"
+                      placeholder="Enter Saas ID"
                     />
                   </FormGroup>
                 </Col>
@@ -246,7 +185,7 @@ const UserMaster = () => {
                 <Col md={3}>
                   <FormGroup>
                     <Label>
-                    Register Id<span className="text-red"> * </span>
+                    Register ID<span className="text-red"> * </span>
                     </Label>
                     <Input
                       type="text"
@@ -255,7 +194,7 @@ const UserMaster = () => {
                       }}
                       value={registerId}
                       required={true}
-                      placeholder="Enter Register Id"
+                      placeholder="Enter Register ID"
                     />
                   </FormGroup>
                 </Col>
@@ -293,98 +232,7 @@ const UserMaster = () => {
                     />
                   </FormGroup>
                 </Col>
-
-                {/* <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                      Opening Balance <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="number"
-                      required={true}
-                      onChange={(e) => {
-                        setOpeningBalance(e.target.value);
-                      }}
-                      value={openingBalance}
-                      placeholder="Enter Balance"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                      Credit Limit Amount <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="number"
-                      onChange={(e) => {
-                        setCreditLimitAmount(e.target.value);
-                      }}
-                      value={creditLimitAmount}
-                      required={true}
-                      placeholder="Enter Amount"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={12}>
-                  <FormGroup>
-                    <Label>
-                      Billing Address<span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="textarea"
-                      onChange={(e) => {
-                        setBillingAddress(e.target.value);
-                      }}
-                      value={billingAddress}
-                      required={true}
-                      placeholder="Enter Address"
-                    />
-                  </FormGroup>
-                </Col> */}
-
-                {/* <Col md={12}>
-                  <div>
-                    <span>Credit Limit</span>
-                    <span className="ms-1">
-                      <AiFillInfoCircle color="#979797" />
-                    </span>
-                  </div>
-                </Col>
-
-                <Col md={12} className="mt-3">
-                  <div className="d-flex flex-wrap">
-                    <Label
-                      onClick={() => {
-                        setLimitFlag(false);
-                      }}
-                      className="mouse-pointer"
-                    >
-                      No Limit
-                    </Label>
-                    <div style={{ position: "relative", top: "1px" }}>
-                      <Toggle
-                        // defaultChecked={contentToggle}
-                        className="mx-2 "
-                        onChange={() => {
-                          setLimitFlag(!limitFlag);
-                        }}
-                        checked={limitFlag === true}
-                        icons={false}
-                      />
-                    </div>
-                    <Label
-                      onClick={() => {
-                        setLimitFlag(true);
-                      }}
-                      className="mouse-pointer"
-                    >
-                      Custom Limit
-                    </Label>
-                  </div>
-                </Col> */}
+                
 
                 <Col md={12}>
                   <div className="d-flex justify-content-end">
@@ -407,39 +255,7 @@ const UserMaster = () => {
             </Form>
           </CardBody>
         </Card>
-
-        {/* <div className='mt-4'>
-                <div className='' style={{ backgroundColor: "var(--primary2)" }}>
-                    <Nav tabs>
-                        {tabArray.map((item, index) => {
-                            return (<>
-                                <NavItem style={{ backgroundColor: "var(--primary1)" }}>
-                                    <NavLink
-                                        style={{ color: String(index + 1) === activeTab ? "black" : "white", fontWeight: "bold" }}
-                                        className={`${String(index + 1) === activeTab && "active"} mouse-pointer`}
-                                        onClick={() => {
-                                            setActiveTab(String(index + 1))
-                                        }}
-                                    >
-                                        {item.name}
-                                    </NavLink>
-                                </NavItem>
-                            </>)
-                        })}
-                    </Nav>
-                    <TabContent activeTab={activeTab}>
-
-                        <TabPane tabId="1">
-                            <GSTandAddress />
-                        </TabPane>
-
-
-                        <TabPane tabId="2">
-                            <CreditAndBalance />
-                        </TabPane>
-                    </TabContent>
-                </div>
-            </div> */}
+        
       </div>
     </>
   );
