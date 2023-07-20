@@ -3,7 +3,7 @@ import { json } from "react-router-dom";
 // import { toast } from "react-toastify";
 // import { useHistory } from "react-router-dom";
 
-const initialComponentPropsManagementState = {
+var initialComponentPropsManagementState = {
   load: false,
   product_count: 0,
   get_searched_data: [],
@@ -11,6 +11,9 @@ const initialComponentPropsManagementState = {
   show_cart_modal: false,
   cart_data: [],
   get_party_name: [],
+  handle_view_order_details: [],
+  order_statue: {},
+  handle_view_orders: [],
   login_data: {},
   handel_redeem_point: {},
   register_data: {},
@@ -27,6 +30,7 @@ const initialComponentPropsManagementState = {
   handle_add_item_search: [],
   handle_hsn_codes: [],
   handle_link_user_data: {},
+  handle_create_order_data: [],
   save_product_id: "",
   save_transaction_data: {},
   search_customer_data: {},
@@ -42,9 +46,11 @@ const initialComponentPropsManagementState = {
   low_stock_items: 0,
   quantity_in_hand: 0,
   today_sales: 0,
+  pending_order_data: [],
   last_fourteen_days: 0,
   handle_user_dropdown: [],
   last_sixty_days: 0,
+  pending_order_cart_data: [],
   yesterday_sales: 0,
   tender_report_data: [],
   state_dropdown: [
@@ -502,6 +508,26 @@ export const ComponentPropsManagement = createSlice({
     handleExpenseCategoryDropdownResponse: (state, payload) => {
       state.expense_category_dropdown = payload.data;
     },
+    // Create Order Master
+    handleCreateOrderRequest: (state, payload) => {},
+    handleCreateOrderResponse: (state, payload) => {
+      console.log(payload);
+      // state.handle_create_order_data = payload.data;
+    },
+    // View Order Details
+    handleViewOrderRequest: (state, payload) => {
+      console.log("ORDER ID PAYLOAD", payload);
+    },
+    handleViewOrderResponse: (state, payload) => {
+      console.log("BAG", payload.data);
+      state.handle_view_order_details = payload.data;
+    },
+    // View order By orderDate and saasId
+    handleViewOrderBySaasIdAndOrderIdRequest: (state, payload) => {},
+    handleViewOrderBySaasIdAndOrderIdResponse: (state, payload) => {
+      // console.log(payload);
+      state.handle_view_orders = payload.data;
+    },
     handleExpenseCreateRequest: (state, payload) => {},
     handleExpenseCreateResponse: (state, payload) => {},
     handleUpdateMoqRequest: (state, payload) => {},
@@ -512,6 +538,21 @@ export const ComponentPropsManagement = createSlice({
     handleSaveSearchCustomerData: (state, payload) => {
       console.log("-|-|-", payload);
       state.search_customer_data = payload.payload.e;
+    },
+
+    handleViewOrderPendingRequest: (state, payload) => {},
+    handleViewOrderPendingResponse: (state, payload) => {
+      state.pending_order_data = payload.data;
+    },
+    pendingOrderCartDataRequest: (state, payload) => {},
+    pendingOrderCartDataResponse: (state, payload) => {
+      state.pending_order_cart_data = payload.data;
+    },
+    // update status
+    updateInvoicedRequest: (state, payload) => {},
+    updateInvoicedResponse: (state, payload) => {
+      console.log(payload);
+      // state.pending_order_cart_data = payload.data;
     },
 
     // handleSearchedDataRequest2: (state, payload) => { },
@@ -539,6 +580,9 @@ export const {
   handleBahikhataPartyDropdownRequest,
   handleBahikhataCreateRequest,
   handleUploadPicRequest,
+  handleViewOrderBySaasIdAndOrderIdRequest,
+  handleCreateOrderRequest,
+  updateInvoicedRequest,
   handleSearchInvoiceRequest,
   handleCreateSupplierRequest,
   handleRedeemPointRequest,
@@ -554,6 +598,7 @@ export const {
   handleMemberEnrollmentResponse,
   handleUpdatePriceRequest,
   handleTenderReportRequest,
+  handleViewOrderPendingRequest,
   handleEmailNotificationResponse,
   handleEmailNotificationRequest,
   handleLoginRequest,
@@ -578,6 +623,7 @@ export const {
   handleSearchedDataRequest,
   handleCartTotal,
   handleSaveTransactionRequest,
+  pendingOrderCartDataRequest,
   // handleSearchedDataRequest2,
   handleAddCartData,
   handleDeleteCartItem,
@@ -610,6 +656,7 @@ export const {
   handleGetHsnCodeDropdownRequest,
   handleUpdateItemToStoreRequest,
   handleSalesDashboardChartRequest,
+  handleViewOrderRequest,
   handleCreateTaxMasterRequest,
   handleLowStockItemListRequest,
 } = ComponentPropsManagement.actions;

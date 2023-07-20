@@ -62,7 +62,7 @@ const AddCustomer = () => {
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-10 col-sm-12">
             <form className="form-box" onSubmit={handleSubmit}>
-              <h4>Add Customer*</h4>
+              <h4>Add Customer</h4>
               <input
                 type="text"
                 className="form-control my-4"
