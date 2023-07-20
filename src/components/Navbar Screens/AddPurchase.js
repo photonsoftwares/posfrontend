@@ -125,7 +125,7 @@ const AddPurchase = () => {
             {/* <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-10 col-sm-12"> */}
             <form className="form-box" onSubmit={handleSubmit}>
-              <h2>Add Purchase</h2>
+              <h4>Add Purchase</h4>
 
               <div
                 className=""
@@ -370,7 +370,7 @@ const AddPurchase = () => {
                   type="submit"
                   className="btn btn-primary"
                   style={{
-                    backgroundColor: "#fc0202",
+                    backgroundColor: "yellowgreen",
                     outline: "none",
                     border: "none",
                     fontSize: "20px",

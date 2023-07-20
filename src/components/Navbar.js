@@ -3,6 +3,7 @@ import { FaBars } from "react-icons/fa";
 import Logo from "../assets/logo.jpeg";
 import Logo2 from "../assets/logo2.png";
 import Logo3 from "../assets/logo3.png";
+import Logo4 from "../assets/logo3.jpeg";
 import { Link } from "react-router-dom";
 import NavTab2 from "./NavTab2";
 import NavTab1 from "./NavTab1";
@@ -21,7 +22,13 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import { BsHandbag } from "react-icons/bs";
+import { BiCart } from "react-icons/bi";
+import cart from "../assets/cart.jpeg";
+import cart2 from "../assets/cart2.jpeg";
+import cart3 from "../assets/cart3.jpeg";
+import cart4 from "../assets/cart4.jpeg";
+import logout from "../assets/logout.jpeg";
+import logout2 from "../assets/logout2.jpeg";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -95,7 +102,7 @@ const Navbar = () => {
       id: 1,
       // label: "Parties",
       value: "parties",
-      icon: <FaBars color="#211212" size="25" />,
+      icon: <FaBars color="#fff" size="25" />,
       isActive: true,
     },
   ];
@@ -110,14 +117,13 @@ const Navbar = () => {
   return (
     <div
       style={{
-        maxWidth: "500px",
+        width: "100%",
         margin: "auto",
         height: "85px",
-        backgroundColor: "#ffd700",
+        backgroundColor: "#24202D",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        paddingLeft: "20px",
         // paddingRight: "20px",
         justifyContent: "space-between",
         position: "relative",
@@ -132,18 +138,19 @@ const Navbar = () => {
             // setOpenMenu(false);
           }}
           style={{
-            height: "50px",
+            height: "75px",
             width: "100%",
             flex: 1,
           }}
         >
-          <img src={Logo3} style={{ height: "35px", width: "100%" }} />
+          <img src={Logo4} style={{ height: "35px", width: "100%" }} />
         </Link>
 
         {!(location.pathname === "/" || location.pathname === "/login") && (
           <>
             <BiArrowBack
               size={20}
+              color="#fff"
               onClick={() => {
                 navigate("/");
               }}
@@ -151,9 +158,6 @@ const Navbar = () => {
             />
           </>
         )}
-        <h6 style={{ fontSize: "14px", marginTop: "10px", width: "100%" }}>
-          NextGen@CloudMpoS
-        </h6>
       </div>
       <div
         //  style={{ flexWrap: "nowrap" }}
@@ -161,15 +165,24 @@ const Navbar = () => {
       >
         <div
           style={{
-            color: "#eee",
+            // color: "#eee",
             fontWeight: "bolder",
-            color: "#8f0707",
+            color: "#fff",
             display: "flex",
             alignItems: "center",
+            // marginLeft: "10px",
             justifyContent: "center",
           }}
         >
-          <p style={{ fontSize: "19px", padding: 0, margin: 0 }}>
+          <p
+            style={{
+              fontSize: "19px",
+              padding: 0,
+              margin: 0,
+              textAlign: "center",
+              textTransform: "uppercase",
+            }}
+          >
             {localStorage.getItem("User_data") ? storeName : ""}
           </p>
         </div>
@@ -192,18 +205,59 @@ const Navbar = () => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            marginTop: 4,
+            // marginTop: 4,
           }}
         >
           {localStorage.getItem("User_data") ? (
             <div
-              style={{ position: "relative", cursor: "pointer" }}
+              style={{
+                position: "relative",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginRight: "10px",
+              }}
               onClick={() => handleShowCart()}
             >
-              <BsHandbag color="#000" fontSize={30} opacity={0.8} />
-              <div style={{ position: "absolute", top: 8, right: 50 }}>
+              <div
+                style={{
+                  height: "36px",
+                  width: "40px",
+                  marginTop: "16px",
+                  marginRight: "10px",
+                }}
+              >
+                <img
+                  src={cart4}
+                  style={{
+                    height: "90%",
+                    width: "100%",
+                    backgroundColor: "red",
+                  }}
+                />
+              </div>
+              {/* <BiCart color="#fff" fontSize={50} opacity={0.8} /> */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "14px",
+                  right: "62px",
+                  color: "#fecf59",
+                }}
+              >
                 {cartCount}
               </div>
+              <span
+                style={{
+                  fontSize: "20px",
+                  color: "#FFF",
+                  marginTop: "17px",
+                  // paddingRight: "10px",
+                }}
+              >
+                Cart
+              </span>
             </div>
           ) : (
             ""
@@ -221,19 +275,38 @@ const Navbar = () => {
                 display: "flex",
                 justifyContent: "flex-end",
                 cursor: "pointer",
+                // color: "#fff",
               }}
             >
               {localStorage.getItem("User_data") &&
               localStorage.getItem("Token") ? (
-                <GrLogout
-                  size={25}
-                  // style={{ cursor: "pointer", padding: 0, margin: 0 }}
+                <div
+                  style={{
+                    height: "40px",
+                    width: "40px",
+                    // marginTop: "16px",
+                    // marginRight: "10px",
+                  }}
                   onClick={() => {
                     handleLogout();
                     setOpenMenu(false);
                   }}
-                />
+                >
+                  <img
+                    src={logout2}
+                    alt=""
+                    style={{ height: "94%", width: "100%" }}
+                  />
+                </div>
               ) : (
+                // <GrLogout
+                //   size={25}
+                //   color="#fff"
+                //   onClick={() => {
+                //     handleLogout();
+                //     setOpenMenu(false);
+                //   }}
+                // />
                 ""
               )}
             </div>

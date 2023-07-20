@@ -144,7 +144,7 @@ const MemberEnrollment = () => {
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-10 col-sm-12 px-5">
             <form className="form-box" onSubmit={handleSubmit}>
-              <h2>Member Enrollment</h2>
+              <h4>Member Enrollment</h4>
               {/* <TextField
                 size="small"
                 type="number"
@@ -215,7 +215,7 @@ const MemberEnrollment = () => {
               />
               <div className="d-flex flex-row items-center justify-content-between mt-3">
                 <p>Business created date</p>
-                <div>
+                <div style={{ opacity: "0.5" }}>
                   {/* <ReactDatePicker
                     selected={businessCreatedDate}
                     onChange={(date) => setBusinessCreatedDate(date)}
@@ -252,11 +252,7 @@ const MemberEnrollment = () => {
               />
               <div className="d-flex flex-row items-center justify-content-between mt-3">
                 <p>Date of Birth</p>
-                <div>
-                  {/* <ReactDatePicker
-                    selected={DOB}
-                    onChange={(date) => setDob(date)}
-                  /> */}
+                <div style={{ opacity: "0.5" }}>
                   <input
                     type="date"
                     name=""
@@ -276,7 +272,7 @@ const MemberEnrollment = () => {
                     value={"Male"}
                     onChange={onOptionChange}
                     id="inlineRadio1"
-                  // value="option1"
+                    // value="option1"
                   />
                   <label className="form-check-label" for="inlineRadio1">
                     Male
@@ -298,10 +294,11 @@ const MemberEnrollment = () => {
               </div>
               <div
                 className="d-flex flex-row items-center justify-content-between mt-3"
-              // style={{ width: "100%" }}
+                // style={{ width: "100%" }}
               >
                 <p>Anniversary Date</p>
-                <div>
+                <div style={{ opacity: "0.5" }}>
+                  {" "}
                   {/* <ReactDatePicker
                     selected={anniversaryDate}
                     onChange={(date) => setAnniversaryDate(date)}
@@ -395,14 +392,39 @@ const MemberEnrollment = () => {
                 onChange={(e) => setPincode(e.target.value)}
                 required
               />
-              <div className="btn d-flex align-items-center justify-content-between my-2">
-                <button type="submit" className="btn btn-primary">
-                  Submit
+              <div className="my-3">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{
+                    backgroundColor: "yellowgreen",
+                    outline: "none",
+                    border: "none",
+                    fontSize: "20px",
+                    padding: "10px 20px",
+                    borderRadius: "10px",
+                    color: "#fff",
+                  }}
+                >
+                  Save
                 </button>
-                <Link to="/">
-                  <button type="submit" className="btn btn-secondary">
-                    Close
-                  </button>
+                <Link
+                  to="/"
+                  type="submit"
+                  // onClick={()=>}
+                  className="btn btn-primary"
+                  style={{
+                    backgroundColor: "gray",
+                    outline: "none",
+                    border: "none",
+                    marginLeft: "20px",
+                    fontSize: "20px",
+                    padding: "10px 20px",
+                    borderRadius: "10px",
+                    color: "#fff",
+                  }}
+                >
+                  Close
                 </Link>
               </div>
             </form>

@@ -49,6 +49,7 @@ const Bahikhata = (props) => {
                 payment_notes: ""
             })
 
+
             setAddBahikhataArr([])
             setBahikhataModalIsOpen(!bahikhataModalIsOpen)
         }, 500);
@@ -233,7 +234,7 @@ const Bahikhata = (props) => {
                             setBahikhataModalIsOpen(!bahikhataModalIsOpen)
                         }}
                         style={{
-                            backgroundColor: "#fc0202",
+                            backgroundColor: "#808080",   
                             border: "none"
                         }}
                     >
@@ -242,9 +243,11 @@ const Bahikhata = (props) => {
 
                     <Button
                         type="submit"
-                        color='primary'
+
+                        
                         style={{
-                            border: "none"
+                            border: "none",
+                            backgroundColor:"#9ADC32"
                         }}
                     >
                         Save

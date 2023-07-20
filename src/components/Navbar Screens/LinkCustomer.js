@@ -1,52 +1,127 @@
 import { TextField } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
-import { handleLinkUserRequest } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-import { useDispatch } from "react-redux";
+import {
+  handleLinkUserRequest,
+  handleSaveSearchCustomerData,
+} from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { BASE_Url } from "../../URL";
+import AsyncSelect from "react-select/async";
 
 const LinkCustomer = () => {
+  const { search_customer_data } = useSelector(
+    (e) => e.ComponentPropsManagement
+  );
+
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
   const dispatch = useDispatch();
+  const [userData, setUserdata] = useState({});
   const [searchValue, setSearchValue] = useState("");
   const [userName, setUsername] = useState("");
   const [userMobile, setUserMobile] = useState("");
   const [err, setErr] = useState("");
+  const [defaultItemData, setDefaultItemData] = useState([]);
+  const [itemObj, setItemObj] = useState({});
+  const loadOptions = (inputValue) => {
+    if (inputValue.length > 0) {
+      return new Promise((resolve, reject) => {
+        resolve(handleItemFilter(inputValue));
+      });
+    } else {
+      // return new Promise((resolve, reject) => {
+      //     resolve(handleRecommendedDataRequest(inputValue));
+      // });
+    }
+  };
+
+  console.log(userData);
+
+  const [customerState, setCustomerState] = useState({
+    customer_name: "",
+    customer_email: "",
+    // previous_price: "",
+    // effective_date: "",
+    // valid_upto: "",
+  });
+  // console.log(Userdata);
+
+  const handleItemFilter = async (inputValue) => {
+    try {
+      const response = await fetch(
+        `${BASE_Url}/customer/search-customer/${storeId}/${saasId}/${inputValue}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const jsonData = await response.json();
+      // console.log("IN DELIVERY", jsonData);
+      if (jsonData) {
+        if (jsonData.status === true) {
+          const d1 = jsonData.data;
+          if (d1) {
+            if (d1.length > 0) {
+              const arr = [];
+              d1.map((item) => {
+                arr.push({
+                  ...item,
+                  label: item.name,
+                  value: item.name,
+                });
+              });
+              return arr;
+            }
+          }
+          // setUserdata(jsonData);
+          return [];
+        }
+        toast.error(jsonData.message);
+      } else {
+        toast.error("Something went wrong server side");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   // const [dataRes, setDataRes] = useState({});
 
-  const handleSearch = (e) => {
-    axios
-      .post(`${BASE_Url}/customer/search-customer`, {
-        mobile_number: e.target.value,
-      })
-      // .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        console.log(data.data.data.name);
-        setUsername(data.data.data.name);
-        setUserMobile(data.data.data.mobile_number);
-      })
-      .catch((err) => {
-        console.log(err);
-        setErr(err.message);
-      });
-  };
-  useEffect(() => {}, [handleSearch]);
+  // const handleSearch = (e) => {
+  //   axios
+  //     .post(`${BASE_Url}/customer/search-customer`, {
+  //       mobile_number: e.target.value,
+  //     })
+  //     // .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       console.log(data.data.data.name);
+  //       setUsername(data.data.data.name);
+  //       setUserMobile(data.data.data.mobile_number);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setErr(err.message);
+  //     });
+  // };
+  // useEffect(() => {}, [handleSearch]);
 
-  // console.log(dataRes);
-  const debounce = (func) => {
-    let timer;
-    return function (...args) {
-      const context = this;
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
-        timer = null;
-        func.apply(context, args);
-      }, 1000);
-    };
-  };
+  // // console.log(dataRes);
+  // const debounce = (func) => {
+  //   let timer;
+  //   return function (...args) {
+  //     const context = this;
+  //     if (timer) clearTimeout(timer);
+  //     timer = setTimeout(() => {
+  //       timer = null;
+  //       func.apply(context, args);
+  //     }, 1000);
+  //   };
+  // };
 
-  const optimizedFn = useCallback(debounce(handleSearch), []);
+  // const optimizedFn = useCallback(debounce(handleSearch), []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,25 +131,35 @@ const LinkCustomer = () => {
       <div className="row d-flex justify-content-center">
         <div className="col-lg-5 col-md-10 col-sm-12 px-5">
           <form className="form-box" onSubmit={handleSubmit}>
-            <h2>Link Customer</h2>
+            <h4>Link Customer</h4>
             <div>
-              <TextField
-                size="small"
-                type="text"
-                className="form-control my-2"
-                id="customer-name"
-                label="Mobile Number"
-                value={searchValue}
+              <AsyncSelect
+                cacheOptions
+                loadOptions={loadOptions}
+                isSearchable={true}
+                defaultOptions={defaultItemData}
                 onChange={(e) => {
-                  optimizedFn(e);
-                  setSearchValue(e.target.value);
+                  // console.log("E", e);
+                  setUserdata(e);
+                  const val = e.label;
+                  dispatch(handleSaveSearchCustomerData({ e }));
+                  setItemObj(e);
+                  setCustomerState({
+                    ...customerState,
+                    customer_name: val,
+                    // customer_email: val,
+                  });
+                  // console.log("VAL", val);
                 }}
+                // value={updatePriceState.item_name}
+                required={true}
+                placeholder="Select Customer"
               />
             </div>
-            {searchValue && searchValue ? (
+            {userData && userData.email && userData.mobileNumber ? (
               <div>
                 <div className="d-flex align-items-center justify-content-between">
-                  <p style={{ padding: 0, margin: 0 }}>Customer Name</p>
+                  <p style={{ padding: 0, margin: 0 }}>Customer Email</p>
                   <p
                     style={{
                       fontWeight: "900",
@@ -83,7 +168,7 @@ const LinkCustomer = () => {
                       // fontSize: "20px",
                     }}
                   >
-                    {userName}
+                    {userData.email}
                   </p>
                 </div>
                 <div className="d-flex align-items-center justify-content-between my-3">
@@ -96,7 +181,7 @@ const LinkCustomer = () => {
                       // fontSize: "20px",
                     }}
                   >
-                    {userMobile}
+                    {userData.mobileNumber}
                   </p>
                 </div>
                 <div>
@@ -149,7 +234,7 @@ const LinkCustomer = () => {
                 type="submit"
                 className="btn btn-primary"
                 style={{
-                  backgroundColor: "#fc0202",
+                  backgroundColor: "yellowgreen",
                   outline: "none",
                   border: "none",
                   fontSize: "20px",

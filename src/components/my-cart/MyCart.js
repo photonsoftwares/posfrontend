@@ -86,7 +86,7 @@ const MyCart = ({
     };
   }, []);
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   const handleDiscountLarge = (discount_value) => {
     cartData.map((item) => {
@@ -162,7 +162,7 @@ const MyCart = ({
           },
           {
             label: "No",
-            onClick: () => { },
+            onClick: () => {},
           },
         ],
       });
@@ -340,7 +340,7 @@ const MyCart = ({
                               <BsFillCheckCircleFill
                                 color={
                                   item.zero_price === "" ||
-                                    item.zero_price === 0
+                                  item.zero_price === 0
                                     ? "#979797"
                                     : "green"
                                 }
@@ -463,14 +463,14 @@ const MyCart = ({
                         setTotalDiscountVal(0);
                       }}
                       value={item.amount_value}
-                    // disabled={percentOff?.length > 0 ? true : false}
-                    // value={amountOff}
-                    // onChange={(e) => setAmountOff(e.target.value)}
+                      // disabled={percentOff?.length > 0 ? true : false}
+                      // value={amountOff}
+                      // onChange={(e) => setAmountOff(e.target.value)}
                     />
                     <div>
                       <button
                         className="btn btn-danger my-3"
-                      // onClick={() => handleDiscountOff(item)}
+                        // onClick={() => handleDiscountOff(item)}
                       >
                         Apply
                       </button>
@@ -506,7 +506,7 @@ const MyCart = ({
                   handleDeleteCartItem(item);
                   // dispatch(handleDeleteCartItem(item));
                 }}
-              // onClick={() => handelDeleteProduct(item)}
+                // onClick={() => handelDeleteProduct(item)}
               >
                 Remove
               </p>
@@ -579,61 +579,60 @@ const MyCart = ({
 
         {cartData?.filter((io) => io.discount_menu_is_open === true)?.length ===
           0 && (
-            <>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  flexWrap: "wrap",
-                  marginTop: "20px",
-                }}
-                id="pop112"
+          <>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                marginTop: "20px",
+              }}
+              id="pop112"
               // onClick={() => setPopoverIsOpen(!popoverIsOpen)}
-              >
-                {parseInt(invoiceValue) !== 0 && (
-                  <>
-                    <button
-                      type="button"
-                      style={{
-                        backgroundColor: "rgb(169, 10, 10)",
-                        border: "none",
-                        color: "white",
-                        fontWeight: "bold",
-                        marginBottom: "10px",
-                        padding: "6px 20px",
-                        borderRadius: "10px",
-                      }}
-                      id="pop112"
+            >
+              {parseInt(invoiceValue) !== 0 && (
+                <>
+                  <button
+                    type="button"
+                    style={{
+                      backgroundColor: "rgb(169, 10, 10)",
+                      border: "none",
+                      color: "white",
+                      fontWeight: "bold",
+                      marginBottom: "10px",
+                      padding: "1px 7px",
+                      borderRadius: "8px",
+                    }}
+                    id="pop112"
+                    onClick={() => {
+                      localStorage.removeItem("my-cart");
+                      setCartData([]);
+                    }}
+                  >
+                    Remove All
+                  </button>
 
-                      onClick={() => {
-                        localStorage.removeItem("my-cart")
-                        setCartData([])
-                      }}
-                    >
-                      Remove All Cart Items
-                    </button>
-
-                    <button
-                      type="button"
-                      style={{
-                        backgroundColor: "green",
-                        border: "none",
-                        color: "white",
-                        marginBottom: "10px",
-                        fontWeight: "bold",
-                        padding: "6px 20px",
-                        borderRadius: "10px",
-                      }}
-                      id="pop112"
-                      onClick={() => setPopoverIsOpen(!popoverIsOpen)}
-                    >
-                      Invoice Discount
-                    </button>
-                  </>
-                )}
-              </div>
-            </>
-          )}
+                  <button
+                    type="button"
+                    style={{
+                      backgroundColor: "green",
+                      border: "none",
+                      color: "white",
+                      marginBottom: "10px",
+                      fontWeight: "bold",
+                      padding: "1px 7px",
+                      borderRadius: "8px",
+                    }}
+                    id="pop112"
+                    onClick={() => setPopoverIsOpen(!popoverIsOpen)}
+                  >
+                    Invoice Discount
+                  </button>
+                </>
+              )}
+            </div>
+          </>
+        )}
 
         <Modal
           show={popoverIsOpen}
@@ -646,7 +645,7 @@ const MyCart = ({
             onClick={() => setPopoverIsOpen(!popoverIsOpen)}
           >
             <Modal.Title id="contained-modal-title-vcenter">
-              <span style={{ fontWeight: "900", marginRight: "10px" }}>
+              <span style={{ fontWeight: "800", marginRight: "5px" }}>
                 Invoice Discount
               </span>
               {/* ({cartData?.length} items) */}
@@ -765,7 +764,7 @@ const MyCart = ({
             border: "none",
             fontSize: "20px",
           }}
-        // className="bg-primary"
+          // className="bg-primary"
         >
           {cartData && cartData?.length > 0
             ? "Proceed to checkout"

@@ -8,11 +8,10 @@ import { GiExpense, GiNotebook, GiStabbedNote } from "react-icons/gi";
 import { IoDocumentTextSharp } from "react-icons/io5";
 import { RiPriceTag3Fill, RiEditCircleFill } from "react-icons/ri";
 import { SiHomeassistantcommunitystore } from "react-icons/si";
-import { MdEditSquare } from "react-icons/md"
-import { GrUpdate } from "react-icons/gr"
-import { TfiViewListAlt } from 'react-icons/tfi'
+import { MdEditSquare } from "react-icons/md";
+import { GrUpdate } from "react-icons/gr";
+import { TfiViewListAlt } from "react-icons/tfi";
 import { AiFillHome, AiFillSetting } from "react-icons/ai";
-import Bahikhata from "./Bahikhata";
 import { BiGroup, BiCube } from "react-icons/bi";
 import { RxDashboard } from "react-icons/rx";
 import { FaMoneyBillAlt } from "react-icons/fa";
@@ -25,25 +24,24 @@ import {
   DropdownItem,
 } from "reactstrap";
 import Expense from "./expense";
+import Bahikhata from "./Bahikhata";
 import UpdateMoq from "./moq";
 import UpdatePrice from "./update-price";
 import ViewOrders from "./PendingOrders";
-import UOM from "./uom";
 
 const Main = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [expenseModalIsOpen, setExpenseModalIsOpen] = useState(false);
-  const [updateMoqModalIsOpen, setUpdateMoqModalIsOpen] = useState(false)
-  const [updatePriceModalIsOpen, setUpdatePriceModalIsOpen] = useState(false)
-  const [uomModalIsOpen, setUomModalIsOpen] = useState(false)
   const [bahikhataModalIsOpen, setBahikhataModalIsOpen] = useState(false);
-  const [viewOrderModalIsOpen, setViewOrderModalIsOpen] = useState(false)
+  const [updateMoqModalIsOpen, setUpdateMoqModalIsOpen] = useState(false);
+  const [updatePriceModalIsOpen, setUpdatePriceModalIsOpen] = useState(false);
+  const [viewOrderModalIsOpen, setViewOrderModalIsOpen] = useState(false);
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const navigate = useNavigate();
   const create_transaction_arr = [
     {
       id: 1,
-      label: "Retail Billing",
+      label: "Invoice",
       value: "retail_billing",
       icon: <FaReceipt color="blue" size="25" />,
       isActive: true,
@@ -64,14 +62,14 @@ const Main = () => {
     },
     {
       id: 4,
-      label: "Return/Credit Note",
+      label:"Return",
       value: "return_credit_note",
       icon: <MdNoteAlt color="red" size="25" />,
       isActive: true,
     },
     {
       id: 5,
-      label: "Delivery Challan",
+      label: "Delivery",  
       value: "delivery_challan",
       icon: <CiDeliveryTruck color="#979797" size="25" />,
       isActive: true,
@@ -85,7 +83,7 @@ const Main = () => {
     },
     {
       id: 7,
-      label: "Debit Note",
+      label:"Debit",
       value: "debit_note",
       icon: <GiStabbedNote color="#1facb8" size="25" />,
       isActive: true,
@@ -93,7 +91,7 @@ const Main = () => {
 
     {
       id: 8,
-      label: "BahiKhata",
+      label: "Bahikhata",
       value: "bahikhata",
       icon: <GiNotebook color="#ffc107" size="25" />,
       isActive: true,
@@ -103,45 +101,45 @@ const Main = () => {
   const omni_channel_arr = [
     {
       id: 1,
-      label: "Pending Orders",
+      label: "View Order",
       value: "pending_orders",
       icon: <TfiViewListAlt size="25" color="#26cbaf" />,
-      isActive: true
+      isActive: true,
     },
     {
       id: 2,
-      label: "Update MOQ",
+      label: "MOQ",
       value: "update_moq",
       icon: <RiEditCircleFill size="25" color="#a050fd" />,
-      isActive: true
+      isActive: true,
     },
     {
       id: 3,
-      label: "Update Price",
+      label: "Price",
       value: "update_price",
       icon: <RiPriceTag3Fill size="25" color="#0405c3" />,
-      isActive: true
+      isActive: true,
     },
     {
       id: 4,
-      label: "Update UOM",
+      label: "UOM",
       value: "update_uom",
       icon: <MdEditSquare size="25" color="#19d413" />,
-      isActive: true
-    }
-  ]
+      isActive: true,
+    },
+  ];
 
   const feature_arr = [
     {
       id: 1,
-      label: "Invoice Template",
+      label: "Templates",
       value: "invoice_template",
       icon: <FaFileInvoice color="#41d796" size="25" />,
       isActive: true,
     },
     {
       id: 2,
-      label: "Document Settings",
+      label: "Settings",
       value: "document_settings",
       icon: <AiFillSetting color="#495057" size="25" />,
       isActive: true,
@@ -155,7 +153,7 @@ const Main = () => {
     },
     {
       id: 4,
-      label: "Online Store",
+      label: "Store",
       value: "online_store",
       icon: <SiHomeassistantcommunitystore color="#dc3545" size="25" />,
       isActive: true,
@@ -184,13 +182,13 @@ const Main = () => {
       icon: <BiGroup color="#ff4949" size="25" />,
       isActive: true,
     },
-    {
-      id: 3,
-      label: "Online Store",
-      value: "online_store",
-      icon: <SiHomeassistantcommunitystore color="#17a2b8" size="25" />,
-      isActive: true,
-    },
+    // {
+    //   id: 3,
+    //   label: "Online Store",
+    //   value: "online_store",
+    //   icon: <SiHomeassistantcommunitystore color="#17a2b8" size="25" />,
+    //   isActive: true,
+    // },
     {
       id: 4,
       label: "Product",
@@ -220,19 +218,20 @@ const Main = () => {
       >
         <div
           style={{
-            backgroundColor: "#ffd700",
+            backgroundColor: "#ffc544",
             width: "100%",
-            // height: "85vh",
-            maxWidth: "500px",
+          
+            maxWidth: "1200px",
             border: "1px solid black",
           }}
         >
           <div style={{ height: "75vh", overflow: "auto" }}>
             <div
               style={{
-                fontSize: "20px",
+                fontSize: "25px",
                 fontWeight: "900",
                 paddingLeft: "20px",
+                color: "#230D4D",
               }}
             >
               Create Transactions
@@ -264,6 +263,7 @@ const Main = () => {
                           margin: "10px",
                           marginBottom: "20px",
                           cursor: "pointer",
+                          color: "#3d2b2b",
                         }}
                         onClick={() => {
                           if (item.value === "retail_billing") {
@@ -276,9 +276,11 @@ const Main = () => {
                             navigate("/debit-note");
                           } else if (item.value === "expense") {
                             setExpenseModalIsOpen(!expenseModalIsOpen);
-                          } else if (item.value === "bahikhata") {
-                            setBahikhataModalIsOpen(!bahikhataModalIsOpen)
-                          } else if (item.value === "delivery_challan") {
+                          }
+                            else if (item.value === "bahikhata") {
+                              setBahikhataModalIsOpen(!bahikhataModalIsOpen);
+                            } 
+                           else if (item.value === "delivery_challan") {
                             navigate("/delivery-challan");
                           }
                         }}
@@ -293,10 +295,11 @@ const Main = () => {
 
             <div
               style={{
-                fontSize: "20px",
+                fontSize: "25px",
                 fontWeight: "900",
                 paddingLeft: "20px",
                 marginTop: "30px",
+                color: "#230D4D",
               }}
             >
               Omni Channel Orders
@@ -327,16 +330,16 @@ const Main = () => {
                           margin: "10px",
                           marginBottom: "20px",
                           cursor: "pointer",
+                          color: "#3d2b2b",
                         }}
                         onClick={() => {
                           if (item.value === "update_moq") {
-                            setUpdateMoqModalIsOpen(!updateMoqModalIsOpen)
+                            setUpdateMoqModalIsOpen(!updateMoqModalIsOpen);
                           } else if (item.value === "update_price") {
-                            setUpdatePriceModalIsOpen(!updatePriceModalIsOpen)
-                          } else if (item.value === "pending_orders") {
-                            setViewOrderModalIsOpen(!viewOrderModalIsOpen)
-                          } else if (item.value === "update_uom") {
-                            setUomModalIsOpen(!uomModalIsOpen)
+                            setUpdatePriceModalIsOpen(!updatePriceModalIsOpen);
+                          }
+                           else if (item.value === "pending_orders") {
+                            setViewOrderModalIsOpen(!viewOrderModalIsOpen);
                           }
                         }}
                       >
@@ -350,10 +353,11 @@ const Main = () => {
 
             <div
               style={{
-                fontSize: "20px",
+                fontSize: "25px",
                 fontWeight: "900",
                 paddingLeft: "20px",
                 marginTop: "30px",
+                color: "#230D4D",
               }}
             >
               Features
@@ -384,6 +388,7 @@ const Main = () => {
                           margin: "10px",
                           marginBottom: "20px",
                           cursor: "pointer",
+                          color: "#3d2b2b",
                         }}
                         onClick={() => {
                           if (item.value === "dashboard") {
@@ -427,6 +432,7 @@ const Main = () => {
                           margin: "10px",
                           marginBottom: "20px",
                           cursor: "pointer",
+                          
                         }}
                         onClick={() => {
                           if (item.value === "product") {
@@ -500,16 +506,11 @@ const Main = () => {
         expenseModalIsOpen={expenseModalIsOpen}
         setExpenseModalIsOpen={setExpenseModalIsOpen}
       />
-
-      <UOM
-        uomModalIsOpen={uomModalIsOpen}
-        setUomModalIsOpen={setUomModalIsOpen}
-      />
-
-      <Bahikhata
+       <Bahikhata
         bahikhataModalIsOpen={bahikhataModalIsOpen}
         setBahikhataModalIsOpen={setBahikhataModalIsOpen}
       />
+
     </>
   );
 };

@@ -1,18 +1,21 @@
 import { TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import CreditAndBalance from "../AddParty/CreditAndBalance";
 import GSTAddress from "../AddParty/GSTAddress";
 import AdditionalFields from "../AddParty/AdditionalFields";
+import Select, { useStateManager } from "react-select";
 import {
   handleCreateSupplierRequest,
   handleOpneMenuRequest,
+  handleGetPatyNameRequest,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const AddSupplier = () => {
   const dispatch = useDispatch();
+  // const [partyName, setPatyName] = useState("");
   const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
   const [partyName, setPartyName] = useState("");
   const [gstIn, setGstIn] = useState("");
@@ -23,6 +26,22 @@ const AddSupplier = () => {
   const [billingAddress, setBillingAddress] = useState("");
   const [openingBalance, setopeningBalance] = useState("");
   const [creditLimitAmount, setCreditLimitAmount] = useState("");
+
+  useEffect(() => {
+    dispatch(handleGetPatyNameRequest());
+  }, []);
+
+  const { get_party_name } = useSelector((e) => e.ComponentPropsManagement);
+  console.log("IN COMPONENT", get_party_name);
+
+  const [bahikhataArr, setBahikhataArr] = useState({
+    party_name: "",
+    payment_type: "",
+    payment_date: "",
+    payment_mode: "",
+    amount: "",
+    payment_notes: "",
+  });
 
   const TabsData = [
     {
@@ -43,7 +62,7 @@ const AddSupplier = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // console.log(state, gstType);
+    console.log("IN DISPATCH", partyName);
     dispatch(
       handleCreateSupplierRequest({
         saas_id: saasId,
@@ -77,7 +96,24 @@ const AddSupplier = () => {
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-9 col-sm-12 px-5">
             <form className="form-box" onSubmit={handleSubmit}>
-              <h2>Add Supplier</h2>
+              <h4>Add Supplier</h4>
+              <div style={{ zIndex: 10 }}>
+                <Select
+                  options={get_party_name}
+                  onChange={(e) => {
+                    console.log("VALUE", e.value);
+                    setPartyName(e.value);
+                    const val = e.value;
+                    setBahikhataArr({ ...bahikhataArr, party_name: val });
+                  }}
+                  value={get_party_name.filter(
+                    (io) => io.value === bahikhataArr.party_name
+                  )}
+                  style={{ zIndex: 10 }}
+                  required={true}
+                  placeholder="Select Party"
+                />
+              </div>
 
               <TextField
                 type="text"
@@ -85,16 +121,7 @@ const AddSupplier = () => {
                 id="customer-name"
                 size="small"
                 required
-                value={partyName}
-                onChange={(e) => setPartyName(e.target.value)}
-                label="Party Name"
-              />
-              <TextField
-                type="text"
-                className="form-control my-2"
-                id="customer-name"
-                size="small"
-                required
+                // style={{ zIndex: 1 }}
                 value={gstIn}
                 onChange={(e) => setGstIn(e.target.value)}
                 label="GSTIN"
@@ -175,7 +202,7 @@ const AddSupplier = () => {
                   type="submit"
                   className="btn btn-primary"
                   style={{
-                    backgroundColor: "#fc0202",
+                    backgroundColor: "yellowgreen",
                     outline: "none",
                     border: "none",
                     fontSize: "20px",
@@ -189,7 +216,7 @@ const AddSupplier = () => {
                 <Link
                   to="/"
                   type="submit"
-                  onClick={() => dispatch(handleOpneMenuRequest(false))}
+                  // onClick={()=>}
                   className="btn btn-primary"
                   style={{
                     backgroundColor: "gray",

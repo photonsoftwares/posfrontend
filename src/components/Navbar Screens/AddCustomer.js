@@ -66,7 +66,7 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-9 col-sm-12 px-5">
             <form className="form-box" onSubmit={handleSubmit}>
-              <h2>Add Customer</h2>
+              <h4>Add Customer</h4>
               <TextField
                 type="text"
                 className="form-control my-2"
@@ -137,7 +137,7 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
                     value={"Male"}
                     onChange={onOptionChange}
                     id="inlineRadio1"
-                  // value="option1"
+                    // value="option1"
                   />
                   <label className="form-check-label" for="inlineRadio1">
                     Male
@@ -172,7 +172,7 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
                   type="submit"
                   className="btn btn-primary"
                   style={{
-                    backgroundColor: "#20b9e3",
+                    backgroundColor: "yellowgreen",
                     outline: "none",
                     border: "none",
                     fontSize: "20px",
@@ -189,7 +189,7 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
                   // onClick={()=>}
                   className="btn btn-primary"
                   style={{
-                    backgroundColor: "#fc0202",
+                    backgroundColor: "gray",
                     outline: "none",
                     border: "none",
                     marginLeft: "20px",

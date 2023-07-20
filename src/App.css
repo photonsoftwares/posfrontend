@@ -7,10 +7,10 @@ div.react-confirm-alert-overlay {
 }
 
 :root {
-  --primary: #27374D;
-  --primary1: #526D82;
-  --primary2: #9DB2BF;
-  --primary3: #DDE6ED;
+  --primary: #27374d;
+  --primary1: #526d82;
+  --primary2: #9db2bf;
+  --primary3: #dde6ed;
 }
 
 /* mt-3 nav nav-tabs */
@@ -19,7 +19,7 @@ div.react-confirm-alert-overlay {
 } */
 
 .app {
-  max-width: 500px;
+  max-width: 915px;
   margin: auto;
   /* padding-top: 20px; */
   background-color: #fff !important;
@@ -287,7 +287,7 @@ input[type="file"] {
   color: white;
 }
 
-.rdt_TableHeader>div {
+.rdt_TableHeader > div {
   font-weight: bolder !important;
 }
 
