@@ -1644,6 +1644,36 @@ function* handleCreateTaxMasterRequest(e) {
     toast.error(err.message);
   }
 }
+//  Saas Master.......... handleCreateSaasMasterRequest
+
+function* handleCreateSaasMasterRequest(e) {
+  try {
+    const response = yield fetch(`${BASE_Url}/saas-master/add-saas`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    });
+    const jsonData = yield response.json();
+    console.log("E TAX MASTER JSONDATA", jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleCreateSaasMasterResponse",
+          data: jsonData.data,
+        });
+      } else {
+        toast.error(jsonData.message);
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
 
 function* handleExpenseCategoryDropdownRequest(e) {
   try {
@@ -1814,6 +1844,44 @@ function* handleDebitNoteRequest(e) {
     }
   } catch (err) {
     toast.error(err.message);
+  }
+}
+
+//user master
+
+function* handleCreateUserMasterRequest(e) {
+  // const { searchValue } = e.payload;
+  console.log("E ADD PARTY", e);
+  // const { storeId } = e.payload;
+  // console.log("STORE ID", storeId);
+  const response = yield fetch(`${BASE_Url}/user-master/add-user`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(e.payload),
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("ADD PARTY DATA", jsonData);
+  if (jsonData) {
+    if (jsonData.status === true) {
+      toast.success(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleAddPartyResponse",
+        data: jsonData,
+      });
+    } else {
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleAddPartyResponse",
+        data: {},
+      });
+    }
+  } else {
+    toast.error(jsonData.message);
   }
 }
 // Delivery node
@@ -2155,6 +2223,10 @@ export function* helloSaga() {
     handleAddPartyRequest
   );
   yield takeEvery(
+    "ComponentPropsManagement/handleCreateUserMasterRequest",
+    handleCreateUserMasterRequest
+  );
+  yield takeEvery(
     "ComponentPropsManagement/handleAddPurchaseRequest",
     handleAddPurchaseRequest
   );
@@ -2162,6 +2234,7 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleCreateRowTaxMasterRequest",
     handleCreateRowTaxMasterRequest
   );
+ 
   yield takeEvery(
     "ComponentPropsManagement/handleAddItemSearchRequest",
     handleAddItemSearchRequest
@@ -2239,6 +2312,10 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleCreateTaxMasterRequest",
     handleCreateTaxMasterRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleCreateSaasMasterRequest",
+    handleCreateSaasMasterRequest
   );
   yield takeEvery(
     "ComponentPropsManagement/handleEmailNotificationResponse",

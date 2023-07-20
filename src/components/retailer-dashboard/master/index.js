@@ -4,6 +4,9 @@ import HSNMaster from './hsn-master'
 import SupplierMaster from './supplier-master'
 import TaxMaster from './tax-master';
 import ItemMaster from './item-master';
+import SaasMaster from './saas-master';
+import UserMaster from './user-master';
+import StoreMaster from './store-master';
 
 const Master = () => {
     const [activeTab, setActiveTab] = useState("1")
@@ -28,6 +31,21 @@ const Master = () => {
             id: "4",
             name: "HSN Master",
             className: "active"
+        },
+        {
+            id:"5",
+            name:"Saas Master",
+            className:"active"
+        },
+        {
+            id:"6",
+            name:"User Master",
+            className:"active"
+        },
+        {
+            id:"7",
+            name:"Store Master",
+            className:"active"
         }
     ]
 
@@ -71,6 +89,18 @@ const Master = () => {
                 <TabPane tabId="4">
                     <HSNMaster />
                 </TabPane>
+
+                <TabPane tabId= "5">
+                    <SaasMaster/>
+                    </TabPane>
+
+                    <TabPane tabId= "6">
+                    <UserMaster/>
+                    </TabPane>
+{/* 
+                    <TabPane tabId= "7">
+                    <StoreMaster/>
+                    </TabPane> */}
             </TabContent>
         </div>
 
