@@ -22,29 +22,43 @@ import Select from "react-select";
 import Flatpickr from "react-flatpickr";
 import { AiFillInfoCircle } from "react-icons/ai";
 import Toggle from "react-toggle";
-import {
-  handleGstTypeDropdownRequest,
-  handleAddPartyRequest,
-} from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+// import {
+//   handleGstTypeDropdownRequest,
+//   handleAddPartyRequest,
+// } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch, useSelector } from "react-redux";
-const SupplierMaster = () => {
+const UserMaster = () => {
   const dispatch = useDispatch();
-  const { user_data, state_dropdown, gst_type_dropdown } = useSelector(
+  // const { user_data, state_dropdown, gst_type_dropdown } = useSelector(
+    const { user_data, state_dropdown } = useSelector(
     (state) => state.ComponentPropsManagement
   );
-  console.log(gst_type_dropdown);
-  const [limitFlag, setLimitFlag] = useState(false);
-  // const [activeTab, setActiveTab] = useState("1")
+  // console.log(gst_type_dropdown);
+  // const [limitFlag, setLimitFlag] = useState(false);
+  // // const [activeTab, setActiveTab] = useState("1")
+  // const [partyName, setPartyName] = useState("");
+  // const [gstin, setGstin] = useState("");
+  // const [phone, setPhone] = useState("");
+  // const [gstType, setGstType] = useState("");
+  // const [state, setState] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [openingBalance, setOpeningBalance] = useState("");
+  // const [creditLimitAmount, setCreditLimitAmount] = useState("");
+  // const [billingAddress, setBillingAddress] = useState("");
 
-  const [partyName, setPartyName] = useState("");
-  const [gstin, setGstin] = useState("");
-  const [phone, setPhone] = useState("");
-  const [gstType, setGstType] = useState("");
+  // console.log(gst_type_dropdown);
+  const [userName, setUserName] = useState(false);
+  const [password, setPassword] = useState("");
+  const [storeName, setStoreName] = useState("");
+  const [storeId, setStoreId] = useState("");
+  const [saasId, setSaasId] = useState("");
+  const [registerId, setRegisterId] = useState("");
+  const [city, setCity] = useState("");
   const [state, setState] = useState("");
-  const [email, setEmail] = useState("");
-  const [openingBalance, setOpeningBalance] = useState("");
-  const [creditLimitAmount, setCreditLimitAmount] = useState("");
-  const [billingAddress, setBillingAddress] = useState("");
+  const [country, setCountry] = useState("");
+  const [status, setStatus] = useState("");
+  const [createdAt, setCreatedAt] = useState("");
+  const [expiration, setExpiration] = useState("");
 
   // const tabArray = [
   //     {
@@ -59,20 +73,35 @@ const SupplierMaster = () => {
   //     }
   // ]
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const obj = {
+  //     saas_id: user_data.saasId,
+  //     party_name: partyName,
+  //     gstin: gstin,
+  //     phone_number: phone,
+  //     gst_type: gstType,
+  //     state: state,
+  //     email: email,
+  //     billing_address: billingAddress,
+  //     opening_balance: openingBalance,
+  //     credit_limit_flag: limitFlag,
+  //     creditLimitAmount: creditLimitAmount,
+  //   };
+
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const obj = {
       saas_id: user_data.saasId,
-      party_name: partyName,
-      gstin: gstin,
-      phone_number: phone,
-      gst_type: gstType,
+      user_name: userName,
+      password: password,
+      store_name: storeName,
+      store_id: storeId,
       state: state,
-      email: email,
-      billing_address: billingAddress,
-      opening_balance: openingBalance,
-      credit_limit_flag: limitFlag,
-      creditLimitAmount: creditLimitAmount,
+      register_id: registerId,
+      city: city,
+      country: country
     };
     // const formData = new FormData();
     // console.log(formData)
@@ -92,36 +121,36 @@ const SupplierMaster = () => {
     };
   };
 
-  const handleFunCall = () => {
-    dispatch(handleGstTypeDropdownRequest());
-  };
+  // const handleFunCall = () => {
+  //   dispatch(handleGstTypeDropdownRequest());
+  // };
 
-  const optimizedFn = useCallback(debounce(handleFunCall), []);
-  useEffect(() => {
-    optimizedFn();
-  }, []);
+  // const optimizedFn = useCallback(debounce(handleFunCall), []);
+  // useEffect(() => {
+  //   optimizedFn();
+  // }, []);
 
   return (
     <>
       <div className="">
         <Card>
           <CardBody>
-            <div style={{ fontSize: "22px", fontWeight: "bold" }}>Supplier</div>
+            <div style={{ fontSize: "22px", fontWeight: "bold" }}>User</div>
             <Form onSubmit={handleSubmit}>
               <Row className="mt-2">
                 <Col md={3}>
                   <FormGroup>
                     <Label>
-                      Party Name <span className="text-red"> * </span>
+                      User Name <span className="text-red"> * </span>
                     </Label>
                     <Input
                       type="text"
                       onChange={(e) => {
-                        setPartyName(e.target.value);
+                        setUserName(e.target.value);
                       }}
-                      value={partyName}
+                      value={userName}
                       required={true}
-                      placeholder="Enter Party Name"
+                      placeholder="Enter User Name"
                     />
                   </FormGroup>
                 </Col>
@@ -129,16 +158,33 @@ const SupplierMaster = () => {
                 <Col md={3}>
                   <FormGroup>
                     <Label>
-                      GSTIN <span className="text-red"> * </span>
+                    Password <span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="password"
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                      }}
+                      value={password}
+                      required={true}
+                      placeholder="Enter Password"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Store Name <span className="text-red"> * </span>
                     </Label>
                     <Input
                       type="text"
                       onChange={(e) => {
-                        setGstin(e.target.value);
+                        setStoreName(e.target.value);
                       }}
-                      value={gstin}
+                      value={storeName}
                       required={true}
-                      placeholder="Enter GSTIN"
+                      placeholder="Enter Store Name"
                     />
                   </FormGroup>
                 </Col>
@@ -146,35 +192,19 @@ const SupplierMaster = () => {
                 <Col md={3}>
                   <FormGroup>
                     <Label>
-                      Phone <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="number"
-                      onChange={(e) => {
-                        setPhone(e.target.value);
-                      }}
-                      value={phone}
-                      required={true}
-                      placeholder="Enter Phone"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                      Select GST Type <span className="text-red"> * </span>
+                      Store Id  <span className="text-red"> * </span>
                     </Label>
                     <Select
-                      options={gst_type_dropdown}
+                      // options={gst_type_dropdown}
                       onChange={(e) => {
-                        setGstType(e.value);
+                        setStoreId(e.value);
                       }}
-                      value={gst_type_dropdown.filter(
-                        (io) => io.value === gstType
-                      )}
+                      // value={gst_type_dropdown.filter(
+                      //   (io) => io.value === gstType
+                      // )}
+                      value={storeId}
                       required={true}
-                      placeholder="Select Gst Type"
+                      placeholder="Store Id"
                     />
                   </FormGroup>
                 </Col>
@@ -199,20 +229,72 @@ const SupplierMaster = () => {
                 <Col md={3}>
                   <FormGroup>
                     <Label>
-                      Email<span className="text-red"> * </span>
+                    Saas Id<span className="text-red"> * </span>
                     </Label>
                     <Input
-                      type="email"
+                      type="text"
                       onChange={(e) => {
-                        setEmail(e.target.value);
+                        setSaasId(e.target.value);
                       }}
-                      value={email}
+                      value={saasId}
                       required={true}
-                      placeholder="Enter Email"
+                      placeholder="Enter Saas Id"
                     />
                   </FormGroup>
                 </Col>
+
                 <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Register Id<span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setRegisterId(e.target.value);
+                      }}
+                      value={registerId}
+                      required={true}
+                      placeholder="Enter Register Id"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    City<span className="text-red"> * </span>
+                    </Label>
+                    <Select
+                      options={state_dropdown}
+                      onChange={(e) => {
+                        setCity(e.value);
+                      }}
+                      value={state_dropdown.filter((e) => e.value === state)}
+                      required={true}
+                      placeholder="Select City"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Country<span className="text-red"> * </span>
+                    </Label>
+                    <Select
+                      options={state_dropdown}
+                      onChange={(e) => {
+                        setCountry(e.value);
+                      }}
+                      value={state_dropdown.filter((e) => e.value === state)}
+                      required={true}
+                      placeholder="Select Country"
+                    />
+                  </FormGroup>
+                </Col>
+
+                {/* <Col md={3}>
                   <FormGroup>
                     <Label>
                       Opening Balance <span className="text-red"> * </span>
@@ -261,9 +343,9 @@ const SupplierMaster = () => {
                       placeholder="Enter Address"
                     />
                   </FormGroup>
-                </Col>
+                </Col> */}
 
-                <Col md={12}>
+                {/* <Col md={12}>
                   <div>
                     <span>Credit Limit</span>
                     <span className="ms-1">
@@ -302,7 +384,7 @@ const SupplierMaster = () => {
                       Custom Limit
                     </Label>
                   </div>
-                </Col>
+                </Col> */}
 
                 <Col md={12}>
                   <div className="d-flex justify-content-end">
@@ -363,4 +445,4 @@ const SupplierMaster = () => {
   );
 };
 
-export default SupplierMaster;
+export default UserMaster;

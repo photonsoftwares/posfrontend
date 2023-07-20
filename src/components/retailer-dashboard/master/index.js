@@ -88,7 +88,7 @@ const Master = () => {
                     <UserMaster />
                 </TabPane>
 
-                <TabPane tabId="5">
+                <TabPane tabId="6">
                     <StoreMaster />
                 </TabPane>
             </TabContent>
