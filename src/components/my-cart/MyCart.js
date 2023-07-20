@@ -600,8 +600,8 @@ const MyCart = ({
                       color: "white",
                       fontWeight: "bold",
                       marginBottom: "10px",
-                      padding: "6px 20px",
-                      borderRadius: "10px",
+                      padding: "1px 7px",
+                      borderRadius: "8px",
                     }}
                     id="pop112"
                     onClick={() => {
@@ -609,7 +609,7 @@ const MyCart = ({
                       setCartData([]);
                     }}
                   >
-                    Remove All Cart Items
+                    Remove All
                   </button>
 
                   <button
@@ -620,8 +620,8 @@ const MyCart = ({
                       color: "white",
                       marginBottom: "10px",
                       fontWeight: "bold",
-                      padding: "6px 20px",
-                      borderRadius: "10px",
+                      padding: "1px 7px",
+                      borderRadius: "8px",
                     }}
                     id="pop112"
                     onClick={() => setPopoverIsOpen(!popoverIsOpen)}
@@ -645,7 +645,7 @@ const MyCart = ({
             onClick={() => setPopoverIsOpen(!popoverIsOpen)}
           >
             <Modal.Title id="contained-modal-title-vcenter">
-              <span style={{ fontWeight: "900", marginRight: "10px" }}>
+              <span style={{ fontWeight: "800", marginRight: "5px" }}>
                 Invoice Discount
               </span>
               {/* ({cartData?.length} items) */}

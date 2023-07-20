@@ -301,4 +301,4 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
   );
 };
 
-export default ViewOrders;
+export default ViewOrders;
