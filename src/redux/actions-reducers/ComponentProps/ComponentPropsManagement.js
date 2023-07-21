@@ -387,6 +387,12 @@ export const ComponentPropsManagement = createSlice({
     handleCreateSaasMasterRequest:(state,payload)=>{
 
     },
+    handleCreateUserMasterRequest:(state,payload)=>{
+
+    },
+    handleCreateStoreMasterRequest:(state,payload)=>{
+
+    },
     handleCreateTaxMasterResponse: (state, payload) => {},
     handleLowStockItemListRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
@@ -616,6 +622,8 @@ export const {
   handleSalesDashboardChartRequest,
   handleCreateTaxMasterRequest,
   handleCreateSaasMasterRequest,
+  handleCreateStoreMasterRequest,
+  handleCreateUserMasterRequest,
   handleLowStockItemListRequest,
 } = ComponentPropsManagement.actions;
 

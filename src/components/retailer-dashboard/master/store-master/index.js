@@ -20,6 +20,10 @@ import Select from "react-select";
 import Flatpickr from "react-flatpickr";
 import { AiFillInfoCircle } from "react-icons/ai";
 import Toggle from "react-toggle";
+import {
+  handleGstTypeDropdownRequest,
+  handleCreateStoreMasterRequest,
+} from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 
 import { useDispatch, useSelector } from "react-redux";
 const StoreMaster = () => {
@@ -29,7 +33,7 @@ const StoreMaster = () => {
     (state) => state.ComponentPropsManagement
   );
   
-  const [userId, setUserId] = useState(false);
+  const [userId, setUserId] = useState("");
   const [storeId, setStoreId] = useState("");
   const [saasId, setSaasId] = useState("");
   const [storeName, setStoreName] = useState("");
@@ -77,7 +81,7 @@ const StoreMaster = () => {
       tnc: tnc,
     };
     
-    dispatch(handleAddPartyRequest(obj));
+    dispatch(handleCreateStoreMasterRequest(obj));
   };
 
   const debounce = (func) => {
@@ -196,7 +200,7 @@ const StoreMaster = () => {
                       onChange={(e) => {
                         setCity(e.value);
                       }}
-                      value={state_dropdown.filter((e) => e.value === state)}
+                      value={state_dropdown.filter((e) => e.value === city)}
                       required={true}
                       placeholder="Select City"
                     />
@@ -213,7 +217,7 @@ const StoreMaster = () => {
                       onChange={(e) => {
                         setCountry(e.value);
                       }}
-                      value={state_dropdown.filter((e) => e.value === state)}
+                      value={state_dropdown.filter((e) => e.value === country)}
                       required={true}
                       placeholder="Select Country"
                     />
@@ -342,7 +346,7 @@ const StoreMaster = () => {
                 <Col md={3}>
                   <FormGroup>
                     <Label>
-                    Store Logo  <span className="text-red"> * </span>
+                    Store no <span className="text-red"> * </span>
                     </Label>
                     <Input
                       type="text"
@@ -351,7 +355,7 @@ const StoreMaster = () => {
                       }}
                       value={storeLogo}
                       required={true}
-                      placeholder="Enter  Store Logo "
+                      placeholder="Enter  "
                     />
                   </FormGroup>
                 </Col>

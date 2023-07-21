@@ -257,6 +257,7 @@ function* handleSearchedDataRequest1(e) {
     }
   } catch (err) {
     console.log(err);
+
   }
 }
 
@@ -1675,6 +1676,38 @@ function* handleCreateSaasMasterRequest(e) {
   }
 }
 
+//create store Master 
+
+function* handleCreateStoreMasterRequest(e) {
+  try {
+    const response = yield fetch(`${BASE_Url}/store-master/create-store`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    });
+    const jsonData = yield response.json();
+    console.log("E TAX MASTER JSONDATA", jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleCreateStoreMasterResponse",
+          data: jsonData.data,
+        });
+      } else {
+        toast.error(jsonData.message);
+      }
+    } else {
+      toast.error("Something went wrong");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
+
+
 function* handleExpenseCategoryDropdownRequest(e) {
   try {
     const response = yield fetch(`${host}expense/get-all-category-name`, {
@@ -1847,7 +1880,7 @@ function* handleDebitNoteRequest(e) {
   }
 }
 
-//user master
+// create user master
 
 function* handleCreateUserMasterRequest(e) {
   // const { searchValue } = e.payload;
@@ -1870,13 +1903,13 @@ function* handleCreateUserMasterRequest(e) {
     if (jsonData.status === true) {
       toast.success(jsonData.message);
       yield put({
-        type: "ComponentPropsManagement/handleAddPartyResponse",
+        type: "ComponentPropsManagement/handleCreateUserMasterResponse",
         data: jsonData,
       });
     } else {
       toast.error(jsonData.message);
       yield put({
-        type: "ComponentPropsManagement/handleAddPartyResponse",
+        type: "ComponentPropsManagement/handleCreateUserMasterResponse",
         data: {},
       });
     }
@@ -2225,6 +2258,11 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleCreateUserMasterRequest",
     handleCreateUserMasterRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleCreateStoreMasterRequest",
+    handleCreateStoreMasterRequest
   );
   yield takeEvery(
     "ComponentPropsManagement/handleAddPurchaseRequest",

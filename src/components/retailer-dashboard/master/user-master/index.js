@@ -24,7 +24,7 @@ import { AiFillInfoCircle } from "react-icons/ai";
 import Toggle from "react-toggle";
 import {
   handleGstTypeDropdownRequest,
-  handleAddPartyRequest,
+  handleCreateUserMasterRequest,
 } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch, useSelector } from "react-redux";
 const UserMaster = () => {
@@ -47,7 +47,7 @@ const UserMaster = () => {
   // const [billingAddress, setBillingAddress] = useState("");
 
   // console.log(gst_type_dropdown);
-  const [userName, setUserName] = useState(false);
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [storeName, setStoreName] = useState("");
   const [storeId, setStoreId] = useState("");
@@ -106,7 +106,7 @@ const UserMaster = () => {
     // const formData = new FormData();
     // console.log(formData)
 
-    dispatch(handleAddPartyRequest(obj));
+    dispatch(handleCreateUserMasterRequest(obj));
   };
 
   const debounce = (func) => {
@@ -269,7 +269,7 @@ const UserMaster = () => {
                       onChange={(e) => {
                         setCity(e.value);
                       }}
-                      value={state_dropdown.filter((e) => e.value === state)}
+                      value={state_dropdown.filter((e) => e.value === city)}
                       required={true}
                       placeholder="Select City"
                     />
@@ -286,7 +286,7 @@ const UserMaster = () => {
                       onChange={(e) => {
                         setCountry(e.value);
                       }}
-                      value={state_dropdown.filter((e) => e.value === state)}
+                      value={state_dropdown.filter((e) => e.value === country)}
                       required={true}
                       placeholder="Select Country"
                     />
