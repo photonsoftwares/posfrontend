@@ -4,28 +4,19 @@ import { Modal } from "react-bootstrap";
 import { Input, Label } from "reactstrap";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import {
-  handleDeleteCartItem,
   handleShowModal,
-  handleEmptyCartData,
   handlecartCount,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-import { IoIosSearch } from "react-icons/io";
-import { BsHandbag, BsArrowRight } from "react-icons/bs";
-import { FcSpeaker } from "react-icons/fc";
-import { IoCashOutline } from "react-icons/io5";
+
 import { BsArrowLeft } from "react-icons/bs";
-import { SiPaytm } from "react-icons/si";
-import { FaGooglePay } from "react-icons/fa";
+
 import FormControl from "@mui/material/FormControl";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
-import { SiPhonepe } from "react-icons/si";
-import { SiContactlesspayment } from "react-icons/si";
-import { BsCreditCardFill } from "react-icons/bs";
-import { IoLogoWhatsapp } from "react-icons/io";
+
 import { confirmAlert } from "react-confirm-alert"; // Import
 import { TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,12 +29,14 @@ const MyCart = ({
   discountAmountVal,
   discountPercentVal,
   totalDiscountVal,
+  setInvoiceValue,
   setShow,
   setTotalDiscountVal,
   setDiscountAmountVal,
   sumValue,
   setPaymentModal,
   setCartData,
+  setSumValue,
   setPopoverIsOpen,
   setDiscountPercentVal,
 }) => {
@@ -276,7 +269,32 @@ const MyCart = ({
                     }}
                   />
 
-                  {item.productQty}
+                  <div style={{ width: "100px" }}>
+                    <input
+                      type="number"
+                      value={item.productQty}
+                      style={{
+                        maxWidth: "100px",
+                        borderRadius: "10px",
+                        padding: "2px",
+                        textAlign: "center",
+                      }}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val && val > 0.001) {
+                          // item.productQty = Number(val);
+                          // item.productQty = Number(val);
+                          item.productQty = Number(parseFloat(val).toFixed(3));
+                          item.new_price = item.price * item.productQty;
+                          setCartData([...cartData]);
+                        } else {
+                          item.productQty = Number(0.001);
+                          setCartData([...cartData]);
+                        }
+                      }}
+                    />
+                  </div>
+                  {/* {item.productQty} */}
                   <AiOutlinePlus
                     onClick={() => {
                       handlePlusSign(item);
@@ -382,7 +400,7 @@ const MyCart = ({
                               style={{ textDecorationLine: "line-through" }}
                             >
                               {item.price * item.productQty}
-                            </span>{" "}
+                            </span>
                             / {parseFloat(item.new_price).toFixed(2)}
                           </>
                         ) : (

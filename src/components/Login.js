@@ -18,13 +18,11 @@ const Login = () => {
   const location = useLocation();
 
   useEffect(() => {
-
     if (isDev === true) {
-      setUsername("80001")
-      setPassword("demo123")
+      setUsername("80001");
+      setPassword("demo123");
     }
-  }, [isDev])
-
+  }, [isDev]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -36,7 +34,7 @@ const Login = () => {
     //   username,
     //   password,
     // };
-    localStorage.clear()
+    localStorage.clear();
     dispatch(
       handleLoginRequest({
         user_name: username,
@@ -57,7 +55,7 @@ const Login = () => {
             textAlign: "center",
             fontWeight: "bold",
             fontSize: "30px",
-            border: "1px solid black"
+            border: "1px solid black",
           }}
         >
           Welcome to NanoMPoS Solutions
@@ -102,11 +100,8 @@ const Login = () => {
             Login
           </Button>
         </Form>
-        <div style={{ marginTop: "10px" }} >
-
-          <small>
-            ** This is WPA worked in any browser
-          </small>
+        <div style={{ marginTop: "10px" }}>
+          <small>** This is WPA worked in any browser</small>
         </div>
         {/* <div className="mt-4">
           <Link to="/register">

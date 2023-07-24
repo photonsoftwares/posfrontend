@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaReceipt, FaFileInvoice } from "react-icons/fa";
 import { BsCartFill } from "react-icons/bs";
 import { RiSecurePaymentFill } from "react-icons/ri";
@@ -38,55 +38,75 @@ const Main = () => {
   const [viewOrderModalIsOpen, setViewOrderModalIsOpen] = useState(false);
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const navigate = useNavigate();
+
+  useEffect(() => {});
+  const {
+    createdAt,
+    password,
+    registerId,
+    status,
+    saasId,
+    storeId,
+    storeName,
+    userId,
+    userName,
+  } = localStorage.getItem("User_data")
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
+
+  console.log("MAIN", storeId, saasId, userId, userName);
+  const checkCustomer = userName.includes("C");
+  // console.log("AUTH IN MAIN", checkCustomer);
   const create_transaction_arr = [
     {
       id: 1,
       label: "Invoice",
       value: "retail_billing",
       icon: <FaReceipt color="blue" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? true : true,
     },
+
     {
       id: 2,
       label: "Purchase",
       value: "purchase",
       icon: <BsCartFill color="green" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
     {
       id: 3,
       label: "Payment",
       value: "payment",
       icon: <FaMoneyBillAlt color="#ff17f8" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
     {
       id: 4,
-      label:"Return",
+      label: "Return",
       value: "return_credit_note",
       icon: <MdNoteAlt color="red" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
     {
       id: 5,
-      label: "Delivery",  
+      label: "Delivery",
       value: "delivery_challan",
       icon: <CiDeliveryTruck color="#979797" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
     {
       id: 6,
       label: "Expense",
       value: "expense",
       icon: <GiExpense color="#6700ff" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
     {
       id: 7,
-      label:"Debit",
+      label: "Debit",
       value: "debit_note",
       icon: <GiStabbedNote color="#1facb8" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
 
     {
@@ -94,8 +114,15 @@ const Main = () => {
       label: "Bahikhata",
       value: "bahikhata",
       icon: <GiNotebook color="#ffc107" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
+    // {
+    //   id: 9,
+    //   label: "View Order",
+    //   value: "pending_orders",
+    //   icon: <TfiViewListAlt size="25" color="#26cbaf" />,
+    //   isActive: checkCustomer ? true : false,
+    // },
   ];
 
   const omni_channel_arr = [
@@ -104,28 +131,28 @@ const Main = () => {
       label: "View Order",
       value: "pending_orders",
       icon: <TfiViewListAlt size="25" color="#26cbaf" />,
-      isActive: true,
+      isActive: checkCustomer ? true : true,
     },
     {
       id: 2,
       label: "MOQ",
       value: "update_moq",
       icon: <RiEditCircleFill size="25" color="#a050fd" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
     {
       id: 3,
       label: "Price",
       value: "update_price",
       icon: <RiPriceTag3Fill size="25" color="#0405c3" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
     {
       id: 4,
       label: "UOM",
       value: "update_uom",
       icon: <MdEditSquare size="25" color="#19d413" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
   ];
 
@@ -135,35 +162,35 @@ const Main = () => {
       label: "Templates",
       value: "invoice_template",
       icon: <FaFileInvoice color="#41d796" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
     {
       id: 2,
       label: "Settings",
       value: "document_settings",
       icon: <AiFillSetting color="#495057" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
     {
       id: 3,
       label: "Dashboard",
       value: "dashboard",
       icon: <AiOutlineAreaChart color="#1184ff" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
     {
       id: 4,
       label: "Store",
       value: "online_store",
       icon: <SiHomeassistantcommunitystore color="#dc3545" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
     {
       id: 5,
       label: "Help",
       value: "help",
       icon: <MdOutlineHelp color="#007bff80" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
   ];
 
@@ -194,7 +221,7 @@ const Main = () => {
       label: "Product",
       value: "product",
       icon: <BiCube color="#28a745" size="25" />,
-      isActive: true,
+      isActive: checkCustomer ? false : true,
     },
     {
       id: 5,
@@ -204,6 +231,46 @@ const Main = () => {
       isActive: false,
     },
   ];
+
+  const filterTransactionsForCustomer = (item) => {
+    if (checkCustomer) {
+      if (item.value === "retail_billing") {
+        navigate("/home");
+      }
+    } else if (!checkCustomer) {
+      if (item.value === "retail_billing") {
+        navigate("/home");
+      } else if (item.value === "purchase") {
+        navigate("/add-purchase");
+      } else if (item.value === "return_credit_note") {
+        navigate("/return");
+      } else if (item.value === "debit_note") {
+        navigate("/debit-note");
+      } else if (item.value === "expense") {
+        setExpenseModalIsOpen(!expenseModalIsOpen);
+      } else if (item.value === "bahikhata") {
+        setBahikhataModalIsOpen(!bahikhataModalIsOpen);
+      } else if (item.value === "delivery_challan") {
+        navigate("/delivery-challan");
+      }
+    }
+  };
+
+  const filterOmniForCustomer = (item) => {
+    if (checkCustomer) {
+      if (item.value === "pending_orders") {
+        setViewOrderModalIsOpen(!viewOrderModalIsOpen);
+      }
+    } else if (!checkCustomer) {
+      if (item.value === "update_moq") {
+        setUpdateMoqModalIsOpen(!updateMoqModalIsOpen);
+      } else if (item.value === "update_price") {
+        setUpdatePriceModalIsOpen(!updatePriceModalIsOpen);
+      } else if (item.value === "pending_orders") {
+        setViewOrderModalIsOpen(!viewOrderModalIsOpen);
+      }
+    }
+  };
 
   return (
     <>
@@ -220,7 +287,6 @@ const Main = () => {
           style={{
             backgroundColor: "#ffc544",
             width: "100%",
-          
             maxWidth: "1200px",
             border: "1px solid black",
           }}
@@ -234,12 +300,13 @@ const Main = () => {
                 color: "#230D4D",
               }}
             >
-              Create Transactions
+              {checkCustomer ? "Transactions" : "Create Transactions"}
+              {/* Create Transactions */}
             </div>
             <div
               style={{
                 backgroundColor: "white",
-                margin: "20px",
+                margin: "0px 20px",
                 borderRadius: "10px",
                 display: "flex",
                 flexWrap: "wrap",
@@ -265,25 +332,24 @@ const Main = () => {
                           cursor: "pointer",
                           color: "#3d2b2b",
                         }}
-                        onClick={() => {
-                          if (item.value === "retail_billing") {
-                            navigate("/home");
-                          } else if (item.value === "purchase") {
-                            navigate("/add-purchase");
-                          } else if (item.value === "return_credit_note") {
-                            navigate("/return");
-                          } else if (item.value === "debit_note") {
-                            navigate("/debit-note");
-                          } else if (item.value === "expense") {
-                            setExpenseModalIsOpen(!expenseModalIsOpen);
-                          }
-                            else if (item.value === "bahikhata") {
-                              setBahikhataModalIsOpen(!bahikhataModalIsOpen);
-                            } 
-                           else if (item.value === "delivery_challan") {
-                            navigate("/delivery-challan");
-                          }
-                        }}
+                        onClick={() => filterTransactionsForCustomer(item)}
+                        // onClick={() => {
+                        //   if (item.value === "retail_billing") {
+                        //     navigate("/home");
+                        //   } else if (item.value === "purchase") {
+                        //     navigate("/add-purchase");
+                        //   } else if (item.value === "return_credit_note") {
+                        //     navigate("/return");
+                        //   } else if (item.value === "debit_note") {
+                        //     navigate("/debit-note");
+                        //   } else if (item.value === "expense") {
+                        //     setExpenseModalIsOpen(!expenseModalIsOpen);
+                        //   } else if (item.value === "bahikhata") {
+                        //     setBahikhataModalIsOpen(!bahikhataModalIsOpen);
+                        //   } else if (item.value === "delivery_challan") {
+                        //     navigate("/delivery-challan");
+                        //   }
+                        // }}
                       >
                         <div>{item.icon}</div>
                         <div>{item.label}</div>
@@ -298,7 +364,7 @@ const Main = () => {
                 fontSize: "25px",
                 fontWeight: "900",
                 paddingLeft: "20px",
-                marginTop: "30px",
+                // marginTop: "30px",
                 color: "#230D4D",
               }}
             >
@@ -307,7 +373,7 @@ const Main = () => {
             <div
               style={{
                 backgroundColor: "white",
-                margin: "20px",
+                margin: "0px 20px",
                 borderRadius: "10px",
                 display: "flex",
                 flexWrap: "wrap",
@@ -328,20 +394,20 @@ const Main = () => {
                           alignItems: "center",
                           flexDirection: "column",
                           margin: "10px",
-                          marginBottom: "20px",
+                          // marginBottom: "20px",
                           cursor: "pointer",
                           color: "#3d2b2b",
                         }}
-                        onClick={() => {
-                          if (item.value === "update_moq") {
-                            setUpdateMoqModalIsOpen(!updateMoqModalIsOpen);
-                          } else if (item.value === "update_price") {
-                            setUpdatePriceModalIsOpen(!updatePriceModalIsOpen);
-                          }
-                           else if (item.value === "pending_orders") {
-                            setViewOrderModalIsOpen(!viewOrderModalIsOpen);
-                          }
-                        }}
+                        onClick={() => filterOmniForCustomer(item)}
+                        // onClick={() => {
+                        //   if (item.value === "update_moq") {
+                        //     setUpdateMoqModalIsOpen(!updateMoqModalIsOpen);
+                        //   } else if (item.value === "update_price") {
+                        //     setUpdatePriceModalIsOpen(!updatePriceModalIsOpen);
+                        //   } else if (item.value === "pending_orders") {
+                        //     setViewOrderModalIsOpen(!viewOrderModalIsOpen);
+                        //   }
+                        // }}
                       >
                         <div>{item.icon}</div>
                         <div>{item.label}</div>
@@ -356,16 +422,16 @@ const Main = () => {
                 fontSize: "25px",
                 fontWeight: "900",
                 paddingLeft: "20px",
-                marginTop: "30px",
+                // marginTop: "30px",
                 color: "#230D4D",
               }}
             >
-              Features
+              {checkCustomer ? "" : "Features"}
             </div>
             <div
               style={{
                 backgroundColor: "white",
-                margin: "20px",
+                margin: "0px 20px",
                 borderRadius: "10px",
                 display: "flex",
                 flexWrap: "wrap",
@@ -432,7 +498,6 @@ const Main = () => {
                           margin: "10px",
                           marginBottom: "20px",
                           cursor: "pointer",
-                          
                         }}
                         onClick={() => {
                           if (item.value === "product") {
@@ -506,11 +571,10 @@ const Main = () => {
         expenseModalIsOpen={expenseModalIsOpen}
         setExpenseModalIsOpen={setExpenseModalIsOpen}
       />
-       <Bahikhata
+      <Bahikhata
         bahikhataModalIsOpen={bahikhataModalIsOpen}
         setBahikhataModalIsOpen={setBahikhataModalIsOpen}
       />
-
     </>
   );
 };

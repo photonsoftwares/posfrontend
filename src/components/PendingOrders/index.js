@@ -182,6 +182,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
 
   const { pending_order_data } = useSelector((e) => e.ComponentPropsManagement);
 
+  console.log("pending_order_data", pending_order_data);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -253,11 +254,11 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
               <thead>
                 <tr>
                   <th scope="col">Order Id</th>
-                  <th scope="col">Order Date</th>
-                  <th scope="col">Customer Name</th>
-                  <th scope="col">Order Quantity</th>
-                  <th scope="col">Order Value</th>
-                  <th scope="col">Order Discount</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Value</th>
+                  {/* <th scope="col">Order Discount</th> */}
                   <th scope="col">Action</th>
                 </tr>
               </thead>
@@ -267,11 +268,11 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
                     <>
                       <tr>
                         <th scope="row">{item.order_id}</th>
-                        <td>{item.order_date_time}</td>
+                        <td>{item.order_date}</td>
                         <td>{item.customer_name}</td>
                         <td>{item.order_qty}</td>
                         <td>{item.order_value}</td>
-                        <td>{item.order_discount}</td>
+                        {/* <td>{item.order_discount}</td> */}
                         <td>
                           <Button
                             type="button"
@@ -301,4 +302,4 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
   );
 };
 
-export default ViewOrders;
+export default ViewOrders;

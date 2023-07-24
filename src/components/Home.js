@@ -820,6 +820,7 @@ const Home = () => {
         <MyCart
           show={show}
           cartData={cartData}
+          setInvoiceValue={setInvoiceValue}
           invoiceValue={invoiceValue}
           popoverIsOpen={popoverIsOpen}
           setPopoverIsOpen={setPopoverIsOpen}
@@ -831,6 +832,7 @@ const Home = () => {
           setPaymentModal={setPaymentModal}
           setCartData={setCartData}
           sumValue={sumValue}
+          setSumValue={setSumValue}
           setTotalDiscountVal={setTotalDiscountVal}
           setDiscountAmountVal={setDiscountAmountVal}
         />

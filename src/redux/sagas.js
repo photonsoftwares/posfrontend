@@ -20,7 +20,7 @@ const {
   : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
-console.log("storeId", storeId);
+// console.log("storeId", storeId, saasId, userId, userName);
 
 function* handleLoginRequest(e) {
   const response = yield fetch(`${BASE_Url}/auth/user-login`, {
@@ -32,7 +32,6 @@ function* handleLoginRequest(e) {
   });
   const jsonData = yield response.json();
   console.log("LOGIN DATA", jsonData);
-
   if (jsonData) {
     if (jsonData.status === true) {
       toast.success("Login Successfully");
@@ -94,7 +93,6 @@ function* handleRegisterRequest(e) {
   }
 }
 
-
 //get Bahikhata
 function* handleBahikhataPartyDropdownRequest(e) {
   const response = yield fetch(`${BASE_Url}/bahikhata/get-party-name`, {
@@ -108,13 +106,13 @@ function* handleBahikhataPartyDropdownRequest(e) {
 
   if (jsonData) {
     if (jsonData && jsonData.data) {
-      const arr = []
+      const arr = [];
       jsonData.data.map((item) => {
-        arr.push({ label: item, value: item })
-      })
+        arr.push({ label: item, value: item });
+      });
       yield put({
         type: "ComponentPropsManagement/handleBahikhataPartyDropdownResponse",
-        data: arr
+        data: arr,
       });
     }
   } else {
@@ -123,7 +121,6 @@ function* handleBahikhataPartyDropdownRequest(e) {
       data: [],
     });
   }
-
 }
 
 //..............create Bahikhata............................
@@ -136,7 +133,7 @@ function* handleBahikhataCreateRequest(e) {
       },
       body: JSON.stringify(e.payload),
     });
-    const jsonData = yield response.json()
+    const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
         toast.success(jsonData.message);
@@ -144,7 +141,7 @@ function* handleBahikhataCreateRequest(e) {
           type: "ComponentPropsManagement/handleBahikhataCreateResponse",
           data: jsonData.data,
         });
-        return
+        return;
       } else {
         yield put({
           type: "ComponentPropsManagement/handleBahikhataCreateResponse",
@@ -239,6 +236,7 @@ function* handleSearchedDataRequest1(e) {
       }
     );
     const jsonData = yield response.json();
+    console.log("SEARCH VALUE", jsonData);
     if (jsonData) {
       if (jsonData.status === true) {
         yield put({
@@ -1941,16 +1939,14 @@ function* handleCreateUserMasterRequest(e) {
   console.log("E ADD PARTY", e);
   // const { storeId } = e.payload;
   // console.log("STORE ID", storeId);
-  const response = yield fetch(`${BASE_Url}/user-master/add-user`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+  const response = yield fetch(`${BASE_Url}/user-master/add-user`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
 
-      body: JSON.stringify(e.payload),
-    }
-  );
+    body: JSON.stringify(e.payload),
+  });
   const jsonData = yield response.json();
   console.log("ADD PARTY DATA", jsonData);
   if (jsonData) {
@@ -2463,7 +2459,7 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleCreateRowTaxMasterRequest",
     handleCreateRowTaxMasterRequest
   );
- 
+
   yield takeEvery(
     "ComponentPropsManagement/handleAddItemSearchRequest",
     handleAddItemSearchRequest
