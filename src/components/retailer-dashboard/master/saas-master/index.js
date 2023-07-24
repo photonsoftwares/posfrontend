@@ -1,149 +1,206 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label, Row } from 'reactstrap'
-import { handleGetHsnCodeDropdownRequest, handleCreateSaasMasterRequest } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
-import { useDispatch, useSelector } from 'react-redux'
-import Select from "react-select"
-import Flatpickr from "react-flatpickr";
-import moment from 'moment'
+import React, { useState, useEffect } from 'react'
+import DataTable from 'react-data-table-component';
+import { Button, Card, CardBody, Col, Input, Label, Row } from 'reactstrap';
+import { host } from "../../../../URL";
+import { CSVLink } from "react-csv";
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
+import { MdDelete, MdEdit, MdPlaylistAdd } from "react-icons/md"
+import { handleItemMasterListRequest, handleSearchedDataRequest1 } from '../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
+import { toast } from 'react-toastify';
+import AddItem from './UdateSaas';
+import "./index.css"
+import { useNavigate } from 'react-router-dom';
 
 const SaasMaster = () => {
     const dispatch = useDispatch()
-//    const { hsn_code_dropdown, gst_type_dropdown } = useSelector(state => state.ComponentPropsManagement)
-    const [saasId, setSaasId] = useState("")
-    const [name, setName] = useState("")
-    const [startDate, setStartDate] = useState("")
-    const [endDate, setEndDate] = useState("")
+    const navigate = useNavigate();
+    const { item_master_list, user_data } = useSelector((e) => e.ComponentPropsManagement);
+    const {
+        createdAt,
+        password,
+        registerId,
+        status,
+        storeId,
+        storeName,
+        userId,
+        userName,
+        saasId
+    } = localStorage.getItem("User_data")
+            ? JSON.parse(localStorage.getItem("User_data"))
+            : {};
+    const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1)
+    const [flag, setFlag] = useState(false)
+    const [searchVal, setSearchVal] = useState("")
 
-    // const debounce = (func) => {
-    //     let timer;
-    //     return function (...args) {
-    //         const context = this;
-    //         if (timer) clearTimeout(timer);
-    //         timer = setTimeout(() => {
-    //             timer = null;
-    //             func.apply(context, args);
-    //         }, 1000);
-    //     };
-    // };
+    useEffect(() => {
+        setLoading(true)
+        dispatch(handleItemMasterListRequest({ currentPage }))
+        setTimeout(() => {
+            setLoading(false)
+        }, 500);
+    }, [currentPage, flag])
 
-    // const handleFunCall = () => {
-    //     dispatch(handleGetHsnCodeDropdownRequest())
-    // }
+    const handlePageChange = (page) => {
+        setCurrentPage(page)
+    };
 
-    // const optimizedFn = useCallback(debounce(handleFunCall), []);
-    // useEffect(() => {
-    //     optimizedFn()
-    // }, [])
+    const columns = [
+        {
+            name: 'Saas Id',
+            center: true,
+            selector: row => row.item_name,
+            cell: row => {
+                return (<>
+                    <div style={{ fontWeight: "bolder" }}>
+                        {row.item_name}
+                    </div>
+                </>)
+            }
+        },
+        {
+            name: 'Saas Name',
+            center: true,
+            selector: row => row.category,
+        },
+        {
+            name: 'Start Date',
+            center: true,
+            selector: row => row.description,
+        },
+        
+        {
+            name: 'End Date',
+            center: true,
+            selector: row => row.price,
+        },
+        
 
-    const handleFormSubmit = (e) => {
-        e.preventDefault()
-        const obj = {
-            saas_id: saasId,
-            tax_name: name,
-            start_date: moment(startDate).format("Y-MM-DD"),
-            end_date: moment(endDate).format("Y-MM-DD")
+        {
+            name: "Action",
+            center: true,
+            selector: row => {
+                const [addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen] = useState(false)
+                const handleDelete = async () => {
+
+                    try {
+                        const response = await fetch(`${host}item/inactive-item/${row.item_id}/${saasId}`, {
+                            method: "PUT",
+                        });
+                        const jsonData = await response.json();
+                        if (jsonData) {
+                            if (jsonData.status === true) {
+                                toast.success(jsonData.message)
+                                setFlag(!flag);
+                                return;
+                            }
+                            toast.error(jsonData.message)
+                            setFlag(!flag);
+                        } else {
+                            toast.error("Something went wrong server side");
+                        }
+                    } catch (err) {
+                        toast.error(err.message);
+                    }
+                }
+
+                return (<>
+                    <div className='d-flex'>
+
+                        <div className='me-2'>
+                            <MdPlaylistAdd
+                                size={22}
+                                color='green'
+                                className='mouse-pointer'
+                                onClick={() => navigate("/add-item")}
+                            />
+                        </div>
+
+
+                        <div className='me-2'>
+                            <MdDelete
+                                size={22}
+                                color='red'
+                                className='mouse-pointer'
+                                onClick={() => handleDelete()}
+                            />
+                        </div>
+
+                        <div>
+                            <MdEdit
+                                size={22}
+                                color='var(--primary1)'
+                                className='mouse-pointer'
+                                onClick={() => {
+                                    setAddUpdateItemModalIsOpen(!addUpdateItemModalIsOpen)
+                                }}
+                            />
+                        </div>
+                    </div>
+
+                    <AddItem
+                        addUpdateItemModalIsOpen={addUpdateItemModalIsOpen}
+                        setAddUpdateItemModalIsOpen={setAddUpdateItemModalIsOpen}
+                        row={row}
+                        setFlag={setFlag}
+                        flag={flag}
+                    />
+                </>)
+            }
         }
-        dispatch(handleCreateSaasMasterRequest(obj))
-    }
+    ]
 
+    const handleSearch = () => {
+        if (searchVal) {
+            dispatch(handleSearchedDataRequest1({ searchValue: searchVal }));
+        } else {
+            setFlag(!flag)
+        }
+    };
+    // const data = []
     return (<>
-        <div>
-            <Card>
-                <CardBody>
-                    <Form onSubmit={handleFormSubmit}>
-                        <Row>
-                           
-                            <Col md={3}>
-                                <FormGroup>
-                                    <Label>Saas Id <span className="text-red"> * </span></Label>
 
-                                    {/* <Select
-                                        options={hsn_code_dropdown}
-                                        onChange={e => {
-                                            setHsnCode(e.value)
-                                        }}
-                                        // value={hsn_code_dropdown.filter(e => e.value === hsnCode)}
-                                        // required={true}
-                                        placeholder='Enter Id'
-                                    /> */}
-                                    <Input 
-                                       type='text'
-                                       onChange={e => {
-                                          setSaasId(e.target.value)
-                                       }}
-                                       value={saasId}
-                                        required={true}
-                                      placeholder='Enter Id'
-                                       />
-                                </FormGroup>
+        <Card className='my-3'>
+            <CardBody>
+                <Row>
+                    <Col md={5}>
 
-                            </Col>
+                        <Input
+                            type='text'
+                            onChange={e => {
+                                setSearchVal(e.target.value)
+                            }}
+                            value={searchVal}
+                            placeholder='Search...'
+                        />
+                    </Col>
+                    <Col md={3}>
+                        <Button
+                            style={{ backgroundColor: "var(--primary1)" }}
+                            onClick={() => {
+                                handleSearch()
+                            }}
+                        >Search</Button>
+                    </Col>
+                </Row>
+            </CardBody>
+        </Card>
 
-                            <Col md={3}>
-                                <FormGroup>
-                                    <Label>Saas Name <span className="text-red"> * </span></Label>
-                                    <Input
-                                        type='text'
-                                         onChange={e => {
-                                            setName(e.target.value)
-                                         }}
-                                         value={name}
-                                          required={true}
-                                        placeholder='Enter Name'
-                                    />
-                                </FormGroup>
-                            </Col>
+        <DataTable
+            columns={columns}
+            responsive={true}
+            // fixedHeader={true}
+            // fixedHeaderScrollHeight="300px"
 
-                            <Col md={3}>
-                                <FormGroup>
-                                    <Label>Start Date <span className="text-red"> * </span></Label>
-                                    <Flatpickr
-                                        className='form-control'
-                                        onChange={e => {
-                                            setStartDate(e[0])
-                                        }}
-                                        options={{ allowInput: true, dateFormat: "d-M-Y" }}
-                                        value={startDate}
-                                        required={true}
-                                        placeholder='Select Date'
-                                    />
-                                </FormGroup>
-                            </Col>
-
-                            <Col md={3}>
-                                <FormGroup>
-                                    <Label>End Date <span className="text-red"> * </span></Label>
-                                    <Flatpickr
-                                        className='form-control'
-                                        onChange={e => {
-                                            setEndDate(e[0])
-                                        }}
-                                        options={{ allowInput: true, dateFormat: "d-M-Y" }}
-                                        value={endDate}
-                                        required={true}
-                                        placeholder='Select Date'
-                                    />
-                                </FormGroup>
-                            </Col>
-
-                            <Col md={3}>
-                                <FormGroup>
-                                    <Label>&nbsp;</Label>
-                                    <div>
-                                        <Button
-                                            type='submit'
-                                            style={{ border: "none", backgroundColor: "var(--primary2)" }}
-                                        >
-                                            Submit
-                                        </Button>
-                                    </div>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                    </Form>
-                </CardBody>
-            </Card>
-        </div>
+            data={item_master_list ? item_master_list?.list : []}
+            progressPending={loading}
+            pagination
+            paginationServer
+            paginationTotalRows={item_master_list ? item_master_list.totalCount : 1}
+            // onChangeRowsPerPage={10}
+            onChangePage={handlePageChange}
+        />
     </>)
 }
 

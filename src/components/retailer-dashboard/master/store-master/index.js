@@ -1,491 +1,234 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  Button,
-  Card,
-  CardBody,
-  Col,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  TabContent,
-  TabPane,
-} from "reactstrap";
+import React, { useState, useEffect } from 'react'
+import DataTable from 'react-data-table-component';
+import { Button, Card, CardBody, Col, Input, Label, Row } from 'reactstrap';
+import { host } from "../../../../URL";
+import { CSVLink } from "react-csv";
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
+import { MdDelete, MdEdit, MdPlaylistAdd } from "react-icons/md"
+import { handleItemMasterListRequest, handleSearchedDataRequest1 } from '../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
+import { toast } from 'react-toastify';
+import AddItem from './UpdateStore';
+import "./index.css"
+import { useNavigate } from 'react-router-dom';
 
-import Select from "react-select";
-import Flatpickr from "react-flatpickr";
-import { AiFillInfoCircle } from "react-icons/ai";
-import Toggle from "react-toggle";
-import {
-  handleGstTypeDropdownRequest,
-  handleCreateStoreMasterRequest,
-} from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+const ItemMaster = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate();
+    const { item_master_list, user_data } = useSelector((e) => e.ComponentPropsManagement);
+    const {
+        createdAt,
+        password,
+        registerId,
+        status,
+        storeId,
+        storeName,
+        userId,
+        userName,
+        saasId
+    } = localStorage.getItem("User_data")
+            ? JSON.parse(localStorage.getItem("User_data"))
+            : {};
+    const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1)
+    const [flag, setFlag] = useState(false)
+    const [searchVal, setSearchVal] = useState("")
 
-import { useDispatch, useSelector } from "react-redux";
-const StoreMaster = () => {
-  const dispatch = useDispatch();
-  
-    const { user_data, state_dropdown } = useSelector(
-    (state) => state.ComponentPropsManagement
-  );
-  
-  const [userId, setUserId] = useState("");
-  const [storeId, setStoreId] = useState("");
-  const [saasId, setSaasId] = useState("");
-  const [storeName, setStoreName] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [country, setCountry] = useState("");
-  const [address, setAddress] = useState("");
-  const [taxable, setTaxable] = useState("");
-  const [gstCode, setGstCode] = useState("");
-  const [hsnCode, setHsnCode] = useState("");
-  const [storeType, setStoreType] = useState("");
-  const [exclusiveTax, setExclusiveTax] = useState("");
-  const [inclusiveTax, setInclusiveTax] = useState("");
-  const [storeLogo, setStoreLogo] = useState("");
-  const [bankAccount, setBankAccount] = useState("");
-  const [bankIfsc, setBankIfsc] = useState("");
-  const [bankBranch, setBankBranch] = useState("");
-  const [paymentQrCode, setPaymentQrCode] = useState("");
-  const [receiptFormat, setReceiptFormat] = useState("");
-  const [tnc, setTnc] = useState("");
-  
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const obj = {
-      user_id: userId,
-      store_id: storeId,
-      saas_id: user_data.saasId,
-      store_name: storeName,
-      city: city,
-      state: state,
-      country: country,
-      address: address,
-      taxable: taxable,
-      gst_code: gstCode,
-      hsn_code: hsnCode,
-      store_type: storeType,
-      exclusive_tax: exclusiveTax,
-      inclusive_tax: inclusiveTax,
-      store_logo: storeLogo,
-      bank_account: bankAccount,
-      bank_ifsc: bankIfsc,
-      bank_branch: bankBranch,
-      payment_qr_code: paymentQrCode,
-      receipt_format: receiptFormat,
-      tnc: tnc,
+    useEffect(() => {
+        setLoading(true)
+        dispatch(handleItemMasterListRequest({ currentPage }))
+        setTimeout(() => {
+            setLoading(false)
+        }, 500);
+    }, [currentPage, flag])
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page)
     };
-    
-    dispatch(handleCreateStoreMasterRequest(obj));
-  };
 
-  const debounce = (func) => {
-    let timer;
-    return function (...args) {
-      const context = this;
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
-        timer = null;
-        func.apply(context, args);
-      }, 1000);
+    const columns = [
+        {
+            name: 'User Id',
+            center: true,
+            selector: row => row.item_name,
+            cell: row => {
+                return (<>
+                    <div style={{ fontWeight: "bolder" }}>
+                        {row.item_name}
+                    </div>
+                </>)
+            }
+        },
+        {
+            name: 'Store Id',
+            center: true,
+            selector: row => row.category,
+        },
+        {
+            name: 'Store Name',
+            center: true,
+            selector: row => row.description,
+        },
+        {
+            name: 'State',
+            center: true,
+            selector: row => row.discount,
+        },
+        {
+            name: 'Saas Id',
+            center: true,
+            selector: row => row.price,
+        },
+        {
+            name: 'City',
+            center: true,
+            selector: row => row.hsn_code,
+        },
+        {
+            name: 'Country',
+            center: true,
+            selector: row => row.tax,
+        },
+        {
+            name: 'Address',
+            center: true,
+            selector: row => row.tax_code,
+        },
+        {
+            name: 'Taxable',
+            center: true,
+            selector: row => row.tax_percent,
+        },
+        {
+            name: 'GST Code',
+            center: true,
+            selector: row => row.tax_rate,
+        },
+        {
+            name: "Action",
+            center: true,
+            selector: row => {
+                const [addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen] = useState(false)
+                const handleDelete = async () => {
+
+                    try {
+                        const response = await fetch(`${host}item/inactive-item/${row.item_id}/${saasId}`, {
+                            method: "PUT",
+                        });
+                        const jsonData = await response.json();
+                        if (jsonData) {
+                            if (jsonData.status === true) {
+                                toast.success(jsonData.message)
+                                setFlag(!flag);
+                                return;
+                            }
+                            toast.error(jsonData.message)
+                            setFlag(!flag);
+                        } else {
+                            toast.error("Something went wrong server side");
+                        }
+                    } catch (err) {
+                        toast.error(err.message);
+                    }
+                }
+
+                return (<>
+                    <div className='d-flex'>
+
+                        <div className='me-2'>
+                            <MdPlaylistAdd
+                                size={22}
+                                color='green'
+                                className='mouse-pointer'
+                                onClick={() => navigate("/add-item")}
+                            />
+                        </div>
+
+
+                        <div className='me-2'>
+                            <MdDelete
+                                size={22}
+                                color='red'
+                                className='mouse-pointer'
+                                onClick={() => handleDelete()}
+                            />
+                        </div>
+
+                        <div>
+                            <MdEdit
+                                size={22}
+                                color='var(--primary1)'
+                                className='mouse-pointer'
+                                onClick={() => {
+                                    setAddUpdateItemModalIsOpen(!addUpdateItemModalIsOpen)
+                                }}
+                            />
+                        </div>
+                    </div>
+
+                    <AddItem
+                        addUpdateItemModalIsOpen={addUpdateItemModalIsOpen}
+                        setAddUpdateItemModalIsOpen={setAddUpdateItemModalIsOpen}
+                        row={row}
+                        setFlag={setFlag}
+                        flag={flag}
+                    />
+                </>)
+            }
+        }
+    ]
+
+    const handleSearch = () => {
+        if (searchVal) {
+            dispatch(handleSearchedDataRequest1({ searchValue: searchVal }));
+        } else {
+            setFlag(!flag)
+        }
     };
-  };
-  
+    // const data = []
+    return (<>
 
-  return (
-    <>
-      <div className="">
-        <Card>
-          <CardBody>
-            <div style={{ fontSize: "22px", fontWeight: "bold" }}>User</div>
-            <Form onSubmit={handleSubmit}>
-              <Row className="mt-2">
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                      User ID <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setUserId(e.target.value);
-                      }}
-                      value={userId}
-                      required={true}
-                      placeholder="Enter User ID"
-                    />
-                  </FormGroup>
-                </Col>                
+        <Card className='my-3'>
+            <CardBody>
+                <Row>
+                    <Col md={5}>
 
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Store ID<span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setStoreId(e.target.value);
-                      }}
-                      value={storeId}
-                      required={true}
-                      placeholder="Enter Store ID"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Store Name <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setStoreName(e.target.value);
-                      }}
-                      value={storeName}
-                      required={true}
-                      placeholder="Enter Store Name"
-                    />
-                  </FormGroup>
-                </Col>               
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                      State<span className="text-red"> * </span>
-                    </Label>
-                    <Select
-                      options={state_dropdown}
-                      onChange={(e) => {
-                        setState(e.value);
-                      }}
-                      value={state_dropdown.filter((e) => e.value === state)}
-                      required={true}
-                      placeholder="Select State"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Saas ID<span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setSaasId(e.target.value);
-                      }}
-                      value={saasId}
-                      required={true}
-                      placeholder="Enter Saas ID"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    City<span className="text-red"> * </span>
-                    </Label>
-                    <Select
-                      options={state_dropdown}
-                      onChange={(e) => {
-                        setCity(e.value);
-                      }}
-                      value={state_dropdown.filter((e) => e.value === city)}
-                      required={true}
-                      placeholder="Select City"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Country<span className="text-red"> * </span>
-                    </Label>
-                    <Select
-                      options={state_dropdown}
-                      onChange={(e) => {
-                        setCountry(e.value);
-                      }}
-                      value={state_dropdown.filter((e) => e.value === country)}
-                      required={true}
-                      placeholder="Select Country"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Address  <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setAddress(e.target.value);
-                      }}
-                      value={address}
-                      required={true}
-                      placeholder="Enter Address"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Taxable  <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setTaxable(e.target.value);
-                      }}
-                      value={taxable}
-                      required={true}
-                      placeholder="Enter Taxable"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    GST Code  <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setGstCode(e.target.value);
-                      }}
-                      value={gstCode}
-                      required={true}
-                      placeholder="Enter GST Code"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    HSN Code  <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setHsnCode(e.target.value);
-                      }}
-                      value={hsnCode}
-                      required={true}
-                      placeholder="Enter  HSN Code"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Store Type   <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setStoreType(e.target.value);
-                      }}
-                      value={storeType}
-                      required={true}
-                      placeholder="Enter Store Type"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Exclusive Tax  <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setExclusiveTax(e.target.value);
-                      }}
-                      value={exclusiveTax}
-                      required={true}
-                      placeholder="Enter Exclusive Tax"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Inclusive Tax  <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setInclusiveTax(e.target.value);
-                      }}
-                      value={inclusiveTax}
-                      required={true}
-                      placeholder="Enter Inclusive Tax"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Store no <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setStoreLogo(e.target.value);
-                      }}
-                      value={storeLogo}
-                      required={true}
-                      placeholder="Enter  "
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Bank Account  <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setBankAccount(e.target.value);
-                      }}
-                      value={bankAccount}
-                      required={true}
-                      placeholder="Enter Bank Account"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Bank IFSC <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setBankIfsc(e.target.value);
-                      }}
-                      value={bankIfsc}
-                      required={true}
-                      placeholder="Enter Bank IFSC"
-                    />
-                  </FormGroup>
-                </Col>
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Bank Branch  <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setBankBranch(e.target.value);
-                      }}
-                      value={bankBranch}
-                      required={true}
-                      placeholder="Enter Bank Branch "
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Payment QR Code  <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setPaymentQrCode(e.target.value);
-                      }}
-                      value={paymentQrCode}
-                      required={true}
-                      placeholder="Enter Payment QR Code "
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Receipt Format   <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setReceiptFormat(e.target.value);
-                      }}
-                      value={receiptFormat}
-                      required={true}
-                      placeholder="Enter Receipt Format "
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    T&C  <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setTnc(e.target.value);
-                      }}
-                      value={tnc}
-                      required={true}
-                      placeholder="Enter T&C "
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={12}>
-                  <div className="d-flex justify-content-end">
-                    <FormGroup>
-                      <Label>&nbsp;</Label>
-                      <div>
+                        <Input
+                            type='text'
+                            onChange={e => {
+                                setSearchVal(e.target.value)
+                            }}
+                            value={searchVal}
+                            placeholder='Search...'
+                        />
+                    </Col>
+                    <Col md={3}>
                         <Button
-                          style={{
-                            border: "none",
-                            backgroundColor: "var(--primary2)",
-                          }}
-                        >
-                          Submit
-                        </Button>
-                      </div>
-                    </FormGroup>
-                  </div>
-                </Col>
-              </Row>
-            </Form>
-          </CardBody>
+                            style={{ backgroundColor: "var(--primary1)" }}
+                            onClick={() => {
+                                handleSearch()
+                            }}
+                        >Search</Button>
+                    </Col>
+                </Row>
+            </CardBody>
         </Card>
-        
-      </div>
-    </>
-  );
-};
 
-export default StoreMaster;
+        <DataTable
+            columns={columns}
+            responsive={true}
+            // fixedHeader={true}
+            // fixedHeaderScrollHeight="300px"
+
+            data={item_master_list ? item_master_list?.list : []}
+            progressPending={loading}
+            pagination
+            paginationServer
+            paginationTotalRows={item_master_list ? item_master_list.totalCount : 1}
+            // onChangeRowsPerPage={10}
+            onChangePage={handlePageChange}
+        />
+    </>)
+}
+
+export default ItemMaster

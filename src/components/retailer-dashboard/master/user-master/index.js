@@ -1,447 +1,234 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  Button,
-  Card,
-  CardBody,
-  Col,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  TabContent,
-  TabPane,
-} from "reactstrap";
-// we are not using it
-// import GSTandAddress from "./gst-and-address";
-// import CreditAndBalance from "./credit-and-balance";
-import Select from "react-select";
-import Flatpickr from "react-flatpickr";
-import { AiFillInfoCircle } from "react-icons/ai";
-import Toggle from "react-toggle";
-import {
-  handleGstTypeDropdownRequest,
-  handleCreateUserMasterRequest,
-} from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-import { useDispatch, useSelector } from "react-redux";
-const UserMaster = () => {
-  const dispatch = useDispatch();
-  // const { user_data, state_dropdown, gst_type_dropdown } = useSelector(
-    const { user_data, state_dropdown } = useSelector(
-    (state) => state.ComponentPropsManagement
-  );
-  // console.log(gst_type_dropdown);
-  // const [limitFlag, setLimitFlag] = useState(false);
-  // // const [activeTab, setActiveTab] = useState("1")
-  // const [partyName, setPartyName] = useState("");
-  // const [gstin, setGstin] = useState("");
-  // const [phone, setPhone] = useState("");
-  // const [gstType, setGstType] = useState("");
-  // const [state, setState] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [openingBalance, setOpeningBalance] = useState("");
-  // const [creditLimitAmount, setCreditLimitAmount] = useState("");
-  // const [billingAddress, setBillingAddress] = useState("");
+import React, { useState, useEffect } from 'react'
+import DataTable from 'react-data-table-component';
+import { Button, Card, CardBody, Col, Input, Label, Row } from 'reactstrap';
+import { host } from "../../../../URL";
+import { CSVLink } from "react-csv";
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
+import { MdDelete, MdEdit, MdPlaylistAdd } from "react-icons/md"
+import { handleItemMasterListRequest, handleSearchedDataRequest1 } from '../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
+import { toast } from 'react-toastify';
+import AddItem from './UpdateUser';
+import "./index.css"
+import { useNavigate } from 'react-router-dom';
 
-  // console.log(gst_type_dropdown);
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [storeName, setStoreName] = useState("");
-  const [storeId, setStoreId] = useState("");
-  const [saasId, setSaasId] = useState("");
-  const [registerId, setRegisterId] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [country, setCountry] = useState("");
-  const [status, setStatus] = useState("");
-  const [createdAt, setCreatedAt] = useState("");
-  const [expiration, setExpiration] = useState("");
+const ItemMaster = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate();
+    const { item_master_list, user_data } = useSelector((e) => e.ComponentPropsManagement);
+    const {
+        createdAt,
+        password,
+        registerId,
+        status,
+        storeId,
+        storeName,
+        userId,
+        userName,
+        saasId
+    } = localStorage.getItem("User_data")
+            ? JSON.parse(localStorage.getItem("User_data"))
+            : {};
+    const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1)
+    const [flag, setFlag] = useState(false)
+    const [searchVal, setSearchVal] = useState("")
 
-  // const tabArray = [
-  //     {
-  //         id: "1",
-  //         name: "GST & Address",
-  //         className: "active"
-  //     },
-  //     {
-  //         id: "2",
-  //         name: "Credit & Balance",
-  //         className: "active"
-  //     }
-  // ]
+    useEffect(() => {
+        setLoading(true)
+        dispatch(handleItemMasterListRequest({ currentPage }))
+        setTimeout(() => {
+            setLoading(false)
+        }, 500);
+    }, [currentPage, flag])
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const obj = {
-  //     saas_id: user_data.saasId,
-  //     party_name: partyName,
-  //     gstin: gstin,
-  //     phone_number: phone,
-  //     gst_type: gstType,
-  //     state: state,
-  //     email: email,
-  //     billing_address: billingAddress,
-  //     opening_balance: openingBalance,
-  //     credit_limit_flag: limitFlag,
-  //     creditLimitAmount: creditLimitAmount,
-  //   };
-
-  
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const obj = {
-      saas_id: user_data.saasId,
-      user_name: userName,
-      password: password,
-      store_name: storeName,
-      store_id: storeId,
-      state: state,
-      register_id: registerId,
-      city: city,
-      country: country
+    const handlePageChange = (page) => {
+        setCurrentPage(page)
     };
-    // const formData = new FormData();
-    // console.log(formData)
 
-    dispatch(handleCreateUserMasterRequest(obj));
-  };
+    const columns = [
+        // {
+        //     name: 'Saas Id',
+        //     center: true,
+        //     selector: row => row.item_name,
+        //     cell: row => {
+        //         return (<>
+        //             <div style={{ fontWeight: "bolder" }}>
+        //                 {row.item_name}
+        //             </div>
+        //         </>)
+        //     }
+        // },
+        {
+            name: 'User Name',
+            center: true,
+            selector: row => row.category,
+        },
+        {
+            name: 'Password',
+            center: true,
+            selector: row => row.description,
+        },
+        // {
+        //     name: 'Discount',
+        //     center: true,
+        //     selector: row => row.discount,
+        // },
+        {
+            name: 'Store Name',
+            center: true,
+            selector: row => row.price,
+        },
+        {
+            name: 'State',
+            center: true,
+            selector: row => row.hsn_code,
+        },
+        {
+            name: 'Saas Id',
+            center: true,
+            selector: row => row.tax,
+        },
+        {
+            name: 'Register Id',
+            center: true,
+            selector: row => row.tax_code,
+        },
+        {
+            name: 'City',
+            center: true,
+            selector: row => row.tax_percent,
+        },
+        {
+            name: 'Country',
+            center: true,
+            selector: row => row.tax_rate,
+        },
+        {
+            name: "Action",
+            center: true,
+            selector: row => {
+                const [addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen] = useState(false)
+                const handleDelete = async () => {
 
-  const debounce = (func) => {
-    let timer;
-    return function (...args) {
-      const context = this;
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
-        timer = null;
-        func.apply(context, args);
-      }, 1000);
-    };
-  };
+                    try {
+                        const response = await fetch(`${host}item/inactive-item/${row.item_id}/${saasId}`, {
+                            method: "PUT",
+                        });
+                        const jsonData = await response.json();
+                        if (jsonData) {
+                            if (jsonData.status === true) {
+                                toast.success(jsonData.message)
+                                setFlag(!flag);
+                                return;
+                            }
+                            toast.error(jsonData.message)
+                            setFlag(!flag);
+                        } else {
+                            toast.error("Something went wrong server side");
+                        }
+                    } catch (err) {
+                        toast.error(err.message);
+                    }
+                }
 
-  // const handleFunCall = () => {
-  //   dispatch(handleGstTypeDropdownRequest());
-  // };
+                return (<>
+                    <div className='d-flex'>
 
-  // const optimizedFn = useCallback(debounce(handleFunCall), []);
-  // useEffect(() => {
-  //   optimizedFn();
-  // }, []);
+                        <div className='me-2'>
+                            <MdPlaylistAdd
+                                size={22}
+                                color='green'
+                                className='mouse-pointer'
+                                onClick={() => navigate("/add-item")}
+                            />
+                        </div>
 
-  return (
-    <>
-      <div className="">
-        <Card>
-          <CardBody>
-            <div style={{ fontSize: "22px", fontWeight: "bold" }}>User</div>
-            <Form onSubmit={handleSubmit}>
-              <Row className="mt-2">
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                      User Name <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setUserName(e.target.value);
-                      }}
-                      value={userName}
-                      required={true}
-                      placeholder="Enter User Name"
-                    />
-                  </FormGroup>
-                </Col>
 
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Password <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="password"
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                      }}
-                      value={password}
-                      required={true}
-                      placeholder="Enter Password"
-                    />
-                  </FormGroup>
-                </Col>
+                        <div className='me-2'>
+                            <MdDelete
+                                size={22}
+                                color='red'
+                                className='mouse-pointer'
+                                onClick={() => handleDelete()}
+                            />
+                        </div>
 
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Store Name <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setStoreName(e.target.value);
-                      }}
-                      value={storeName}
-                      required={true}
-                      placeholder="Enter Store Name"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                      Store Id  <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                
-                      onChange={(e) => {
-                        setStoreId(e.target.value);
-                      }}
-                    
-                      value={storeId}
-                      required={true}
-                      placeholder="Store Id"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                      State<span className="text-red"> * </span>
-                    </Label>
-                    <Select
-                      options={state_dropdown}
-                      onChange={(e) => {
-                        setState(e.value);
-                      }}
-                      value={state_dropdown.filter((e) => e.value === state)}
-                      required={true}
-                      placeholder="Select State"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Saas Id<span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setSaasId(e.target.value);
-                      }}
-                      value={saasId}
-                      required={true}
-                      placeholder="Enter Saas Id"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Register Id<span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="text"
-                      onChange={(e) => {
-                        setRegisterId(e.target.value);
-                      }}
-                      value={registerId}
-                      required={true}
-                      placeholder="Enter Register Id"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    City<span className="text-red"> * </span>
-                    </Label>
-                    <Select
-                      options={state_dropdown}
-                      onChange={(e) => {
-                        setCity(e.value);
-                      }}
-                      value={state_dropdown.filter((e) => e.value === city)}
-                      required={true}
-                      placeholder="Select City"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                    Country<span className="text-red"> * </span>
-                    </Label>
-                    <Select
-                      options={state_dropdown}
-                      onChange={(e) => {
-                        setCountry(e.value);
-                      }}
-                      value={state_dropdown.filter((e) => e.value === country)}
-                      required={true}
-                      placeholder="Select Country"
-                    />
-                  </FormGroup>
-                </Col>
-
-                {/* <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                      Opening Balance <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="number"
-                      required={true}
-                      onChange={(e) => {
-                        setOpeningBalance(e.target.value);
-                      }}
-                      value={openingBalance}
-                      placeholder="Enter Balance"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={3}>
-                  <FormGroup>
-                    <Label>
-                      Credit Limit Amount <span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="number"
-                      onChange={(e) => {
-                        setCreditLimitAmount(e.target.value);
-                      }}
-                      value={creditLimitAmount}
-                      required={true}
-                      placeholder="Enter Amount"
-                    />
-                  </FormGroup>
-                </Col>
-
-                <Col md={12}>
-                  <FormGroup>
-                    <Label>
-                      Billing Address<span className="text-red"> * </span>
-                    </Label>
-                    <Input
-                      type="textarea"
-                      onChange={(e) => {
-                        setBillingAddress(e.target.value);
-                      }}
-                      value={billingAddress}
-                      required={true}
-                      placeholder="Enter Address"
-                    />
-                  </FormGroup>
-                </Col> */}
-
-                {/* <Col md={12}>
-                  <div>
-                    <span>Credit Limit</span>
-                    <span className="ms-1">
-                      <AiFillInfoCircle color="#979797" />
-                    </span>
-                  </div>
-                </Col>
-
-                <Col md={12} className="mt-3">
-                  <div className="d-flex flex-wrap">
-                    <Label
-                      onClick={() => {
-                        setLimitFlag(false);
-                      }}
-                      className="mouse-pointer"
-                    >
-                      No Limit
-                    </Label>
-                    <div style={{ position: "relative", top: "1px" }}>
-                      <Toggle
-                        // defaultChecked={contentToggle}
-                        className="mx-2 "
-                        onChange={() => {
-                          setLimitFlag(!limitFlag);
-                        }}
-                        checked={limitFlag === true}
-                        icons={false}
-                      />
+                        <div>
+                            <MdEdit
+                                size={22}
+                                color='var(--primary1)'
+                                className='mouse-pointer'
+                                onClick={() => {
+                                    setAddUpdateItemModalIsOpen(!addUpdateItemModalIsOpen)
+                                }}
+                            />
+                        </div>
                     </div>
-                    <Label
-                      onClick={() => {
-                        setLimitFlag(true);
-                      }}
-                      className="mouse-pointer"
-                    >
-                      Custom Limit
-                    </Label>
-                  </div>
-                </Col> */}
 
-                <Col md={12}>
-                  <div className="d-flex justify-content-end">
-                    <FormGroup>
-                      <Label>&nbsp;</Label>
-                      <div>
+                    <AddItem
+                        addUpdateItemModalIsOpen={addUpdateItemModalIsOpen}
+                        setAddUpdateItemModalIsOpen={setAddUpdateItemModalIsOpen}
+                        row={row}
+                        setFlag={setFlag}
+                        flag={flag}
+                    />
+                </>)
+            }
+        }
+    ]
+
+    const handleSearch = () => {
+        if (searchVal) {
+            dispatch(handleSearchedDataRequest1({ searchValue: searchVal }));
+        } else {
+            setFlag(!flag)
+        }
+    };
+    // const data = []
+    return (<>
+
+        <Card className='my-3'>
+            <CardBody>
+                <Row>
+                    <Col md={5}>
+
+                        <Input
+                            type='text'
+                            onChange={e => {
+                                setSearchVal(e.target.value)
+                            }}
+                            value={searchVal}
+                            placeholder='Search...'
+                        />
+                    </Col>
+                    <Col md={3}>
                         <Button
-                          style={{
-                            border: "none",
-                            backgroundColor: "var(--primary2)",
-                          }}
-                        >
-                          Submit
-                        </Button>
-                      </div>
-                    </FormGroup>
-                  </div>
-                </Col>
-              </Row>
-            </Form>
-          </CardBody>
+                            style={{ backgroundColor: "var(--primary1)" }}
+                            onClick={() => {
+                                handleSearch()
+                            }}
+                        >Search</Button>
+                    </Col>
+                </Row>
+            </CardBody>
         </Card>
 
-        {/* <div className='mt-4'>
-                <div className='' style={{ backgroundColor: "var(--primary2)" }}>
-                    <Nav tabs>
-                        {tabArray.map((item, index) => {
-                            return (<>
-                                <NavItem style={{ backgroundColor: "var(--primary1)" }}>
-                                    <NavLink
-                                        style={{ color: String(index + 1) === activeTab ? "black" : "white", fontWeight: "bold" }}
-                                        className={`${String(index + 1) === activeTab && "active"} mouse-pointer`}
-                                        onClick={() => {
-                                            setActiveTab(String(index + 1))
-                                        }}
-                                    >
-                                        {item.name}
-                                    </NavLink>
-                                </NavItem>
-                            </>)
-                        })}
-                    </Nav>
-                    <TabContent activeTab={activeTab}>
+        <DataTable
+            columns={columns}
+            responsive={true}
+            // fixedHeader={true}
+            // fixedHeaderScrollHeight="300px"
 
-                        <TabPane tabId="1">
-                            <GSTandAddress />
-                        </TabPane>
+            data={item_master_list ? item_master_list?.list : []}
+            progressPending={loading}
+            pagination
+            paginationServer
+            paginationTotalRows={item_master_list ? item_master_list.totalCount : 1}
+            // onChangeRowsPerPage={10}
+            onChangePage={handlePageChange}
+        />
+    </>)
+}
 
-
-                        <TabPane tabId="2">
-                            <CreditAndBalance />
-                        </TabPane>
-                    </TabContent>
-                </div>
-            </div> */}
-      </div>
-    </>
-  );
-};
-
-export default UserMaster;
+export default ItemMaster
