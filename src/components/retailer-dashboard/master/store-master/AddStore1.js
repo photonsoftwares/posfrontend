@@ -244,7 +244,7 @@ const StoreMaster = () => {
                 <Col md={3}>
                   <FormGroup>
                     <Label>
-                    Taxable  <span className="text-red"> * </span>
+                    Taxable  <span className="text-red"></span>
                     </Label>
                     <Input
                       type="text"
@@ -329,7 +329,7 @@ const StoreMaster = () => {
                 <Col md={3}>
                   <FormGroup>
                     <Label>
-                    Inclusive Tax  <span className="text-red"> * </span>
+                    Inclusive Tax  <span className="text-red"> </span>
                     </Label>
                     <Input
                       type="text"

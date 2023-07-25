@@ -601,6 +601,71 @@ function* handleUpdateItemToStoreRequest(e) {
   }
 }
 
+function* handleUpdateStoreToStoreRequest(e) {
+  const response = yield fetch(`${BASE_Url}/store-master/update-store/6703/${e.payload.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(e.payload.data),
+  });
+  const jsonData = yield response.json();
+  console.log("REGISTER JSONDATA", jsonData);
+  if (jsonData) {
+    if (jsonData && jsonData.data) {
+      // toast.success(jsonData.message);
+      // alert(jsonData.message);
+      // const cartData = jsonData.data;
+      toast.success(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleUpdateStoreToStoreResponse",
+        data: jsonData.data.item_id,
+      });
+    } else {
+      toast.error(jsonData.message);
+    }
+  } else {
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleUpdateStoreToStoreResponse",
+      data: "",
+    });
+  }
+}
+
+function* handleUpdateUserToStoreRequest(e) {
+  const response = yield fetch(`${BASE_Url}/user-master/update-user/6727/${e.payload.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(e.payload.data),
+  });
+  const jsonData = yield response.json();
+  console.log("REGISTER JSONDATA", jsonData);
+  if (jsonData) {
+    if (jsonData && jsonData.data) {
+      // toast.success(jsonData.message);
+      // alert(jsonData.message);
+      // const cartData = jsonData.data;
+      toast.success(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleUpdateUserToStoreResponse",
+        data: jsonData.data.item_id,
+      });
+    } else {
+      toast.error(jsonData.message);
+    }
+  } else {
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleUpdateUserToStoreResponse",
+      data: "",
+    });
+  }
+}
+
+
 // SAVE TRANSACTION
 function* handleSaveTransactionRequest(e) {
   // const { searchValue } = e.payload;
@@ -1516,6 +1581,41 @@ function* handleItemMasterListRequest(e) {
   }
 }
 
+
+function* handleStoreMasterListRequest(e) {
+  try {
+    const { currentPage } = e.payload;
+    const response = yield fetch(
+      `${host}store-master/get-store-details/${currentPage}`,
+
+      
+      {
+        method: "GET",
+      }
+    );
+    const jsonData = yield response.json();
+    console.log("Store8",jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        // toast.success(jsonData.message)
+        yield put({
+          type: "ComponentPropsManagement/handleStoreMasterListResponse",
+          data: { list: jsonData.data, totalCount: jsonData.count },
+        });
+        return;
+      }
+      toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleStoreMasterListResponse",
+        data: null,
+      });
+    } else {
+      toast.error("Something went wrong server side");
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+}
 function* handleTenderReportRequest(e) {
   try {
     const { date } = e.payload;
@@ -2159,6 +2259,12 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleItemMasterListRequest",
     handleItemMasterListRequest
   );
+  yield takeEvery(
+    "ComponentPropsManagement/handleStoreMasterListRequest",
+    handleStoreMasterListRequest
+  );
+
+  //handleStoreMasterListRequest
 
   yield takeEvery(
     "ComponentPropsManagement/handleSalesReportRequest",
@@ -2214,6 +2320,16 @@ export function* helloSaga() {
     handleUpdateItemToStoreRequest
   );
 
+  //handleUpdateUserToStoreRequest
+  yield takeEvery(
+    "ComponentPropsManagement/handleUpdateUserToStoreRequest",
+    handleUpdateUserToStoreRequest
+  );
+//handleUpdateStoreToStoreRequest
+yield takeEvery(
+  "ComponentPropsManagement/handleUpdateStoreToStoreRequest",
+  handleUpdateStoreToStoreRequest
+);
   yield takeEvery(
     "ComponentPropsManagement/handleHSNCODERequest",
     handleHSNCODERequest

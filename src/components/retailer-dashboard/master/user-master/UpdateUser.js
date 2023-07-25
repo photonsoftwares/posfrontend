@@ -2,14 +2,15 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Select, { useStateManager } from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  handleAddItemToStoreRequest,
-  handleUploadPicRequest,
-  handleUpdateItemToStoreRequest,
-} from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-import {
-  handleGstTypeDropdownRequest,
   handleCreateUserMasterRequest,
+  handleUploadPicRequest,
+  handleUpdateUserToStoreRequest,
+  handleGstTypeDropdownRequest,
 } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+// import {
+//   handleGstTypeDropdownRequest,
+//   handleCreateUserMasterRequest,
+// } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { FcDepartment } from "react-icons/fc";
 import { TextField } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -152,7 +153,7 @@ const AddUser= ({
   const handleAddItem = (e) => {
     e.preventDefault();
     dispatch(
-      handleAddItemToStoreRequest({
+      handleCreateUserMasterRequest({
         item_name: itemName,
         description: itemName,
         price: Number(itemPrice),
@@ -231,7 +232,7 @@ const AddUser= ({
       country: country
     };
 
-    dispatch(handleUpdateItemToStoreRequest({ data: obj, id: row.item_id }));
+    dispatch(handleUpdateUserToStoreRequest({ data: obj, id: row.item_id }));
     setTimeout(() => {
       // setProductId(row.item_id)
       setAddUpdateItemModalIsOpen(!addUpdateItemModalIsOpen);

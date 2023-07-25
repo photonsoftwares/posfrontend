@@ -6,7 +6,7 @@ import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { MdDelete, MdEdit, MdPlaylistAdd } from "react-icons/md"
-import { handleItemMasterListRequest, handleSearchedDataRequest1 } from '../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
+import { handleStoreMasterListRequest, handleSearchedDataRequest1 } from '../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
 import { toast } from 'react-toastify';
 import AddItem from './UpdateStore';
 import "./index.css"
@@ -36,7 +36,8 @@ const ItemMaster = () => {
 
     useEffect(() => {
         setLoading(true)
-        dispatch(handleItemMasterListRequest({ currentPage }))
+        dispatch(handleStoreMasterListRequest({ currentPage }))
+        //console.log()
         setTimeout(() => {
             setLoading(false)
         }, 500);
@@ -186,6 +187,7 @@ const ItemMaster = () => {
         }
     };
     // const data = []
+    console.log("Store8",item_master_list);
     return (<>
 
         <Card className='my-3'>
@@ -221,6 +223,7 @@ const ItemMaster = () => {
             // fixedHeaderScrollHeight="300px"
 
             data={item_master_list ? item_master_list?.list : []}
+           
             progressPending={loading}
             pagination
             paginationServer

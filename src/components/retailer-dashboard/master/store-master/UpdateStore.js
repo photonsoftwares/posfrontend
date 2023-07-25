@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Select, { useStateManager } from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  handleAddItemToStoreRequest,
+  handleCreateStoreMasterRequest,
   handleUploadPicRequest,
   handleUpdateItemToStoreRequest,
 } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
@@ -21,12 +21,28 @@ import { AiFillCamera } from "react-icons/ai";
 // import { useHistory } from "react-router-dom";
 import Webcam from "react-webcam";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import {
+  Button,
+  Card,
+  CardBody,
+  Col,
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  Nav,
+  NavItem,
+  NavLink,
+  Row,
+  TabContent,
+  TabPane,
+} from "reactstrap";
 const videoConstraints = {
   width: 200,
   facinMode: "enviorment",
 };
 
-const AddStore = ({
+const AddItem = ({
   addUpdateItemModalIsOpen,
   setAddUpdateItemModalIsOpen,
   row,
@@ -61,6 +77,9 @@ const AddStore = ({
 
   // console.log(save_product_id);
   const dispatch = useDispatch();
+  const { user_data, state_dropdown } = useSelector(
+    (state) => state.ComponentPropsManagement
+  );
   //
   const classes = useStyles();
 
@@ -74,12 +93,33 @@ const AddStore = ({
   const [department, setDepartment] = useState("");
   const [itemCode, setItemCode] = useState("");
   const [itemDesc, setItemDesc] = useState("");
-  const [hsnCode, setHsnCode] = useState("");
+  //const [hsnCode, setHsnCode] = useState("");
   const [itemPrice, setItemPrice] = useState("0");
   const [openCam, setOpenCam] = useState(false);
   const [productId, setProductId] = useState("");
   const [taxPercentage, setTaxPercentage] = useState("0");
   const [itemCategory, setItemCategory] = useState("");
+  const [userId, setUserId] = useState("");
+  const [storeid, setStoreId] = useState("");
+  const [saasid, setSaasId] = useState("");
+  const [storeName, setStoreName] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
+  const [address, setAddress] = useState("");
+  const [taxable, setTaxable] = useState("");
+  const [gstCode, setGstCode] = useState("");
+  const [hsnCode, setHsnCode] = useState("");
+  const [storeType, setStoreType] = useState("");
+  const [exclusiveTax, setExclusiveTax] = useState("");
+  const [inclusiveTax, setInclusiveTax] = useState("");
+  const [storeLogo, setStoreLogo] = useState("");
+  const [bankAccount, setBankAccount] = useState("");
+  const [bankIfsc, setBankIfsc] = useState("");
+  const [bankBranch, setBankBranch] = useState("");
+  const [paymentQrCode, setPaymentQrCode] = useState("");
+  const [receiptFormat, setReceiptFormat] = useState("");
+  const [tnc, setTnc] = useState("");
 
   // console.log("UPLOAD ITEM", uploadItem);
   // console.log("rr", row)
@@ -117,7 +157,7 @@ const AddStore = ({
   const handleAddItem = (e) => {
     e.preventDefault();
     dispatch(
-      handleAddItemToStoreRequest({
+      handleCreateStoreMasterRequest({
         item_name: itemName,
         description: itemName,
         price: Number(itemPrice),
@@ -296,46 +336,381 @@ const AddStore = ({
                   className="d-flex flex-col"
                   style={{ display: "flex", flexDirection: "column" }}
                 >
-                  <TextField
-                    size="small"
-                    type="text"
-                    className="form-control my-2"
-                    value={itemName}
-                    onChange={(e) => setItemName(e.target.value)}
-                    label="Item Name"
-                    multiline
-                    required
-                    rows={1}
-                  />
+                  <Row className="mt-2">
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                      User ID <span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setUserId(e.target.value);
+                      }}
+                      value={userId}
+                      required={true}
+                      placeholder="Enter User ID"
+                    />
+                  </FormGroup>
+                </Col>                
 
-                  <TextField
-                    size="small"
-                    type="text"
-                    className="form-control my-2"
-                    value={itemPrice}
-                    required
-                    onChange={(e) => setItemPrice(e.target.value)}
-                    label="Item Price"
-                  />
-                  <TextField
-                    size="small"
-                    type="text"
-                    className="form-control my-2"
-                    value={hsnCode}
-                    required
-                    onChange={(e) => setHsnCode(e.target.value)}
-                    label="HSN Code"
-                  />
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Store ID<span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setStoreId(e.target.value);
+                      }}
+                      value={storeId}
+                      required={true}
+                      placeholder="Enter Store ID"
+                    />
+                  </FormGroup>
+                </Col>
 
-                  <TextField
-                    size="small"
-                    type="text"
-                    className="form-control my-2"
-                    value={taxPercentage}
-                    required
-                    onChange={(e) => setTaxPercentage(e.target.value)}
-                    label="Tax Percentage"
-                  />
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Store Name <span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setStoreName(e.target.value);
+                      }}
+                      value={storeName}
+                      required={true}
+                      placeholder="Enter Store Name"
+                    />
+                  </FormGroup>
+                </Col>               
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                      State<span className="text-red"></span>
+                    </Label>
+                    <Select
+                      options={state_dropdown}
+                      onChange={(e) => {
+                        setState(e.value);
+                      }}
+                      value={state_dropdown.filter((e) => e.value === state)}
+                      required={true}
+                      placeholder="Select State"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Saas ID<span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setSaasId(e.target.value);
+                      }}
+                      value={saasId}
+                      required={true}
+                      placeholder="Enter Saas ID"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    City<span className="text-red"></span>
+                    </Label>
+                    <Select
+                      options={state_dropdown}
+                      onChange={(e) => {
+                        setCity(e.value);
+                      }}
+                      value={state_dropdown.filter((e) => e.value === city)}
+                      required={true}
+                      placeholder="Select City"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Country<span className="text-red"></span>
+                    </Label>
+                    <Select
+                      options={state_dropdown}
+                      onChange={(e) => {
+                        setCountry(e.value);
+                      }}
+                      value={state_dropdown.filter((e) => e.value === country)}
+                      required={true}
+                      placeholder="Select Country"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Address  <span className="text-red"></span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setAddress(e.target.value);
+                      }}
+                      value={address}
+                      required={true}
+                      placeholder="Enter Address"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Taxable  <span className="text-red"></span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setTaxable(e.target.value);
+                      }}
+                      value={taxable}
+                      required={true}
+                      placeholder="Enter Taxable"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    GST Code  <span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setGstCode(e.target.value);
+                      }}
+                      value={gstCode}
+                      required={true}
+                      placeholder="Enter GST Code"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    HSN Code  <span className="text-red"></span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setHsnCode(e.target.value);
+                      }}
+                      value={hsnCode}
+                      required={true}
+                      placeholder="Enter  HSN Code"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Store Type   <span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setStoreType(e.target.value);
+                      }}
+                      value={storeType}
+                      required={true}
+                      placeholder="Enter Store Type"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Exclusive Tax  <span className="text-red"></span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setExclusiveTax(e.target.value);
+                      }}
+                      value={exclusiveTax}
+                      required={true}
+                      placeholder="Enter Exclusive Tax"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Inclusive Tax  <span className="text-red"> </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setInclusiveTax(e.target.value);
+                      }}
+                      value={inclusiveTax}
+                      required={true}
+                      placeholder="Enter Inclusive Tax"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Store no <span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setStoreLogo(e.target.value);
+                      }}
+                      value={storeLogo}
+                      required={true}
+                      placeholder="Enter  "
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Bank Account  <span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setBankAccount(e.target.value);
+                      }}
+                      value={bankAccount}
+                      required={true}
+                      placeholder="Enter Bank Account"
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Bank IFSC <span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setBankIfsc(e.target.value);
+                      }}
+                      value={bankIfsc}
+                      required={true}
+                      placeholder="Enter Bank IFSC"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Bank Branch  <span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setBankBranch(e.target.value);
+                      }}
+                      value={bankBranch}
+                      required={true}
+                      placeholder="Enter Bank Branch "
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Payment QR Code  <span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setPaymentQrCode(e.target.value);
+                      }}
+                      value={paymentQrCode}
+                      required={true}
+                      placeholder="Enter Payment QR Code "
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    Receipt Format   <span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setReceiptFormat(e.target.value);
+                      }}
+                      value={receiptFormat}
+                      required={true}
+                      placeholder="Enter Receipt Format "
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>
+                    T&C  <span className="text-red"> * </span>
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => {
+                        setTnc(e.target.value);
+                      }}
+                      value={tnc}
+                      required={true}
+                      placeholder="Enter T&C "
+                    />
+                  </FormGroup>
+                </Col>
+
+                <Col md={12}>
+                  <div className="d-flex justify-content-end">
+                    <FormGroup>
+                      <Label>&nbsp;</Label>
+                      <div>
+                        <Button
+                          style={{
+                            border: "none",
+                            backgroundColor: "var(--primary2)",
+                          }}
+                        >
+                          Submit
+                        </Button>
+                      </div>
+                    </FormGroup>
+                  </div>
+                </Col>
+              </Row>
                 </div>
 
                 <div className="">
@@ -400,4 +775,4 @@ const AddStore = ({
   );
 };
 
-export default AddStore;
+export default AddItem;

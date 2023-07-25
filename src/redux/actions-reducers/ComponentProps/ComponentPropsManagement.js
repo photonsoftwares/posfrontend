@@ -251,6 +251,14 @@ export const ComponentPropsManagement = createSlice({
     handleUpdateItemToStoreRequest: (state, payload) => {
       // state.load = true;
     },
+
+    //handleUpdateStoreToStoreRequest
+    handleUpdateStoreToStoreRequest: (state, payload) => {
+      // state.load = true;
+    },
+    handleUpdateUserToStoreRequest:(state,payload)=>{
+
+    },
     // Handle Tax Rates
     handleTaxRatesRequest: (state, payload) => {
       state.load = true;
@@ -455,6 +463,12 @@ export const ComponentPropsManagement = createSlice({
     handleItemMasterListResponse: (state, payload) => {
       state.item_master_list = payload.data;
     },
+
+    //handleStoreMasterListRequest
+    handleStoreMasterListRequest: (state, payload) => {},
+    handleStoreMasterListResponse: (state, payload) => {
+      state.item_master_list = payload.data;
+    },
     // HANDLE LINK LOYALTY
     handleLinkLoyaltyRequest: (state, payload) => {
       console.log("PAYLOAD LOYALTY REQ", payload);
@@ -571,6 +585,7 @@ export const {
   handleSearchedDataRequest1,
   handleMemberEnrollmentRequest,
   handleItemMasterListRequest,
+  handleStoreMasterListRequest,
   handleNoOfItemRequest,
   handleRegisterRequest,
   handleUpdateMoqRequest,
@@ -619,6 +634,8 @@ export const {
   handleGstTypeDropdownRequest,
   handleGetHsnCodeDropdownRequest,
   handleUpdateItemToStoreRequest,
+  handleUpdateStoreToStoreRequest,
+  handleUpdateUserToStoreRequest,
   handleSalesDashboardChartRequest,
   handleCreateTaxMasterRequest,
   handleCreateSaasMasterRequest,
