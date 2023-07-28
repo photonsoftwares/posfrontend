@@ -68,8 +68,7 @@ const Home = () => {
     dispatch(handleRecommendedDataRequest());
   }, []);
 
-  console.log("LINK LOYALITY DATA", link_loyalty_detail);
-  console.log("LINK CUSTOMER DATA", search_customer_data);
+  // console.log("LINK CUSTOMER DATA", search_customer_data);
 
   const [validated, setValidated] = useState(false);
   const [searchedData, setSearchedData] = useState([]);
@@ -80,6 +79,7 @@ const Home = () => {
   const [percentOff, setPercentOff] = useState(1);
   const [amountOff, setAmountOff] = useState("");
   const [show, setShow] = useState(false);
+
   const [speachModal, setSpechModal] = useState(false);
   const [visibleVoiceCommand, setVisibleVoiceCommand] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -109,6 +109,8 @@ const Home = () => {
   const [loyaltyAmount, setLoyaltyAmount] = useState(
     link_loyalty_detail.balance_amount
   );
+
+  // console.log("recommended DATA", recommendedData);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -141,7 +143,7 @@ const Home = () => {
 
     var MyDate = new Date();
     var MyDateString;
-    console.log("inside effect", link_loyalty_detail);
+    console.log("inside effect", cartData);
     if (link_loyalty_detail && Object.keys(link_loyalty_detail.length > 0)) {
       if (checkLoyalty === true) {
         dispatch(

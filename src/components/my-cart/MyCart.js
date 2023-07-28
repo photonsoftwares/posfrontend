@@ -4,10 +4,11 @@ import { Modal } from "react-bootstrap";
 import { Input, Label } from "reactstrap";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import {
+  handleCreateOrderRequest,
   handleShowModal,
   handlecartCount,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-
+import { useNavigate } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
 
 import FormControl from "@mui/material/FormControl";
@@ -40,6 +41,23 @@ const MyCart = ({
   setPopoverIsOpen,
   setDiscountPercentVal,
 }) => {
+  const navigate = useNavigate();
+  const {
+    createdAt,
+    password,
+    registerId,
+    status,
+    saasId,
+    storeId,
+    storeName,
+    userId,
+    userName,
+  } = localStorage.getItem("User_data")
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
+
+  console.log("MY CART", userName);
+  const checkCustomer = userName.includes("C");
   const { show_cart_modal } = useSelector((e) => e.ComponentPropsManagement);
   const dispatch = useDispatch();
 
@@ -171,7 +189,7 @@ const MyCart = ({
       if (getData?.length > 0) {
         if (getData?.length > 1) {
           const updateCart = getData.filter(
-            (el) => el.productId !== item.productId
+            (el) => el.item_id !== item.item_id
           );
           localStorage.setItem("my-cart", JSON.stringify(updateCart));
           setCartData(updateCart);
@@ -250,7 +268,7 @@ const MyCart = ({
               marginBottom: "10px",
             }}
           >
-            <h1>{item.itemName}</h1>
+            <h1>{item.item_name}</h1>
             <div className="cart_product">
               <div style={{ height: "50px" }} className="cart_column">
                 <div
@@ -768,7 +786,31 @@ const MyCart = ({
           onClick={() => {
             if (cartData?.length > 0) {
               if (cartData.filter((io) => io.price === 0)?.length === 0) {
-                setPaymentModal(true);
+                if (checkCustomer) {
+                  dispatch(
+                    handleCreateOrderRequest({
+                      customer_id: userId,
+                      customer_name: userName,
+                      saas_id: saasId,
+                      store_id: storeId,
+                      order_qty: cartData.length,
+                      order_tax: 0.0,
+                      // order_value: 100.0,
+                      order_value: Number(invoiceValue),
+                      order_discount: 0.0,
+                      status: "pending",
+                      item_list: cartData,
+                    })
+                  );
+                  setShow((state) => !show);
+                  localStorage.removeItem("my-cart");
+                  setCartData([]);
+                  setTimeout(() => {
+                    navigate("/");
+                  }, 1000);
+                } else {
+                  setPaymentModal(true);
+                }
               } else {
                 toast.error("Item amount should not be zero");
               }
@@ -777,16 +819,33 @@ const MyCart = ({
             }
           }}
           style={{
-            backgroundColor: "#20b9e3",
+            // backgroundColor: "#20b9e3",
             outline: "none",
             border: "none",
             fontSize: "20px",
           }}
           // className="bg-primary"
         >
-          {cartData && cartData?.length > 0
-            ? "Proceed to checkout"
-            : "No Item here"}
+          {cartData && cartData?.length > 0 ? (
+            // ? "Proceed to checkout"
+            <div onClick={() => {}}>
+              {checkCustomer ? (
+                // <div>"Confirm Order"</div>
+                <div>
+                  <button className="btn btn-danger">
+                    Place Order(Pickup at shop)
+                  </button>
+                  <button className="btn btn-danger">
+                    Place Order(Cash on delivery)
+                  </button>
+                </div>
+              ) : (
+                "Proceed to checkout"
+              )}
+            </div>
+          ) : (
+            "No Item here"
+          )}
           {/* Proceed to checkout */}
         </Button>
       </Modal.Footer>

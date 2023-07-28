@@ -103,11 +103,11 @@ const Login = () => {
         <div style={{ marginTop: "10px" }}>
           <small>** This is WPA worked in any browser</small>
         </div>
-        {/* <div className="mt-4">
+        <div className="mt-4">
           <Link to="/register">
-            <h2>Register</h2>
+            <h2>Sign Up</h2>
           </Link>
-        </div> */}
+        </div>
       </div>
     </div>
   );

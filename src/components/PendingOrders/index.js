@@ -177,9 +177,26 @@ import MyCart from "./MyCart";
 import { handleViewOrderPendingRequest } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 
 const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
+  const {
+    createdAt,
+    password,
+    registerId,
+    status,
+    saasId,
+    storeId,
+    storeName,
+    userId,
+    userName,
+  } = localStorage.getItem("User_data")
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
+
+  console.log("MAIN", storeId, saasId, userId, userName);
+  const checkCustomer = userName.includes("C");
+
   const [show, setShow] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
-
+  console.log("ORDER NUMBER", orderNumber);
   const { pending_order_data } = useSelector((e) => e.ComponentPropsManagement);
 
   console.log("pending_order_data", pending_order_data);
@@ -191,7 +208,7 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
 
   useEffect(() => {
     if (pending_order_data.length > 0) {
-      setOrderNumber(pending_order_data[0].order_id);
+      // setOrderNumber(pending_order_data[0].order_id);
     }
   }, [pending_order_data]);
 
@@ -274,14 +291,45 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
                         <td>{item.order_value}</td>
                         {/* <td>{item.order_discount}</td> */}
                         <td>
-                          <Button
+                          {checkCustomer ? (
+                            <Button
+                              type="button"
+                              className="btn btn-sm disabled"
+                              // color="primary"
+                              // onClick={() => setShow(true)}
+                              // onClick={() => {
+                              //   setShow(true);
+                              //   setOrderNumber(item.order_id);
+                              // }}
+                            >
+                              {item.status}
+                            </Button>
+                          ) : (
+                            <Button
+                              type="button"
+                              className="btn btn-sm "
+                              color="primary"
+                              // onClick={() => setShow(true)}
+                              onClick={() => {
+                                setShow(true);
+                                setOrderNumber(item.order_id);
+                              }}
+                            >
+                              To Bill
+                            </Button>
+                          )}
+                          {/* <Button
                             type="button"
                             className="btn btn-sm"
                             color="primary"
-                            onClick={() => setShow(true)}
+                            // onClick={() => setShow(true)}
+                            onClick={() => {
+                              setShow(true);
+                              setOrderNumber(item.order_id);
+                            }}
                           >
                             To Bill
-                          </Button>
+                          </Button> */}
                         </td>
                       </tr>
                     </>

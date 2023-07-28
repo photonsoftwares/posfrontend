@@ -125,8 +125,9 @@ function* handleBahikhataPartyDropdownRequest(e) {
 
 //..............create Bahikhata............................
 function* handleBahikhataCreateRequest(e) {
+  console.log("handleBahikhataCreateRequest", e);
   try {
-    const response = yield fetch(`${host}/bahikhata/create-bahikhata`, {
+    const response = yield fetch(`${host}bahikhata/create-bahikhata`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -261,12 +262,12 @@ function* handleSearchedDataRequest1(e) {
 // HANDLE ADD ITEM SEARCH
 function* handleAddItemSearchRequest(e) {
   // const navigate = useNavigate();
-
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
   const { searchValue } = e.payload;
   // console.log("SEARCH VALUE", e);
   const response = yield fetch(
     // `${BASE_Url}/search/get-result/Store1/AAAA/${searchValue}`,
-    `${BASE_Url}/search/get-result/Store1/AAAA/${searchValue}`,
+    `${BASE_Url}/search/get-result/${storeId}/${saasId}/${searchValue}`,
     {
       method: "GET",
       headers: {
@@ -285,6 +286,8 @@ function* handleAddItemSearchRequest(e) {
           type: "ComponentPropsManagement/handleAddItemSearchResponse",
           data: jsonData.data,
         });
+      } else {
+        toast.error(jsonData.message);
       }
     } else {
       yield put({
@@ -292,6 +295,8 @@ function* handleAddItemSearchRequest(e) {
         data: [],
       });
     }
+  } else {
+    toast.error(jsonData.message);
   }
 }
 
@@ -370,7 +375,11 @@ function* handleCreateSupplierRequest(e) {
 }
 function* handleRecommendedDataRequest() {
   // console.log("***", e.payload);
-  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const { storeId, saasId, userName } = JSON.parse(
+    localStorage.getItem("User_data")
+  );
+  const checkCustomer = userName.includes("C");
+  console.log("SAGA CHECK CUSTOMER", checkCustomer);
   const response = yield fetch(
     `${BASE_Url}/search/recommended-items/${storeId}/${saasId}`,
     {
@@ -391,7 +400,11 @@ function* handleRecommendedDataRequest() {
       tempSearchArr.map((el) => {
         el["productQty"] = 1;
         el["sku"] = "SKU";
-        el["department"] = "Dept2";
+        // el["department"] = "Dept2";
+        el["bill_qty"] = 0;
+        checkCustomer ? (el["name"] = el.item_name) : "";
+        checkCustomer ? (el["order_qty"] = el.productQty) : "";
+        checkCustomer ? (el["order_price"] = el.price) : "";
         // el["new_edit_price"] = 0;
         // el["discount"] = false;
       });
@@ -1742,7 +1755,6 @@ function* handleExpenseCreateRequest(e) {
 // --------------
 
 function* pendingOrderCartDataRequest(e) {
-  const { order_id } = e.payload;
   const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
   console.log("E ORDER=>", e);
   console.log("E FOR ORDER ID", e);
@@ -1750,7 +1762,7 @@ function* pendingOrderCartDataRequest(e) {
     const { order_id } = e.payload;
     const response = yield fetch(
       // `${host}order/view-order-detail/${storeId}/${saasId}${order_id}`,
-      `http://3.111.70.84:8088/test/api/v1/order/view-order-detail/${storeId}/${saasId}/${order_id}`,
+      `${host}order/view-order-detail/${storeId}/${saasId}/${order_id}`,
       {
         method: "GET",
         headers: {
@@ -1831,7 +1843,7 @@ function* handleViewOrderPendingRequest(e) {
 function* handleMemberEnrollmentRequest(e) {
   console.log("E PAYLOAD ENROLLMENT", e.payload);
 
-  const response = yield fetch(`${BASE_Url}loyalty/customer`, {
+  const response = yield fetch(`${LOYALTY_BASE_URL}/loyalty/customer`, {
     // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
     method: "POST",
     headers: {
@@ -1841,23 +1853,23 @@ function* handleMemberEnrollmentRequest(e) {
   });
   const jsonData = yield response.json();
   console.log("JSONDATA MEMBER ENRL", jsonData);
-  // if (jsonData) {
-  //   if (jsonData.status === true) {
-  //     toast.success(jsonData.messag);
-  //     // yield put({
-  //     //   type: "ComponentPropsManagement/handleYesterdaySalesResponse",
-  //     //   data: jsonData,
-  //     // });
-  //     // return;
-  //   }
-  //   toast.error(jsonData.message);
-  //   yield put({
-  //     type: "ComponentPropsManagement/handleYesterdaySalesResponse",
-  //     data: null,
-  //   });
-  // } else {
-  //   toast.error("Something went wrong server side");
-  // }
+  if (jsonData) {
+    if (jsonData.status === true) {
+      toast.success(jsonData.message);
+      // yield put({
+      //   type: "ComponentPropsManagement/handleYesterdaySalesResponse",
+      //   data: jsonData,
+      // });
+      // return;
+    }
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleYesterdaySalesResponse",
+      data: null,
+    });
+  } else {
+    toast.error("Something went wrong server side");
+  }
 }
 
 // Accruval Loyalty
@@ -2206,35 +2218,35 @@ function* handleViewOrderRequest(e) {
   );
   const jsonData = yield response.json();
   console.log("JSONDATA VIEW ORDER", jsonData.data);
-  if (jsonData) {
-    const arr = jsonData.data;
-    arr.map((el) => {
-      el["discount"] = 0;
-      el["sku"] = "SKU";
-      el["description"] = "description";
-      el["tax"] = 0.0;
-      el["department"] = "Dept2";
-      el["promoId"] = "123";
-      el["discount_menu_is_open"] = false;
-      el["discount_value"] = 0;
-      // item["discount_menu_is_open"] = false;
-    });
-    if (jsonData.status === true) {
-      yield put({
-        type: "ComponentPropsManagement/handleViewOrderResponse",
-        // data: jsonData.data,
-        data: arr,
-      });
-      return;
-    }
-    toast.error(jsonData.message);
-    yield put({
-      type: "ComponentPropsManagement/handleViewOrderResponse",
-      data: [],
-    });
-  } else {
-    toast.error(jsonData.message);
-  }
+  // if (jsonData) {
+  //   const arr = jsonData.data;
+  //   arr.map((el) => {
+  //     el["discount"] = 0;
+  //     el["sku"] = "SKU";
+  //     el["description"] = "description";
+  //     el["tax"] = 0.0;
+  //     el["department"] = "Dept2";
+  //     el["promoId"] = "123";
+  //     el["discount_menu_is_open"] = false;
+  //     el["discount_value"] = 0;
+  //     // item["discount_menu_is_open"] = false;
+  //   });
+  //   if (jsonData.status === true) {
+  //     yield put({
+  //       type: "ComponentPropsManagement/handleViewOrderResponse",
+  //       // data: jsonData.data,
+  //       data: arr,
+  //     });
+  //     return;
+  //   }
+  //   toast.error(jsonData.message);
+  //   yield put({
+  //     type: "ComponentPropsManagement/handleViewOrderResponse",
+  //     data: [],
+  //   });
+  // } else {
+  //   toast.error(jsonData.message);
+  // }
 }
 
 // View order By orderDate and saasId
@@ -2316,22 +2328,26 @@ function* handleCreateOrderRequest(e) {
   });
   const jsonData = yield response.json();
   console.log("JSONDATA Create OrderMaster", jsonData);
-  // if (jsonData) {
-  //   if (jsonData.status === true) {
-  //     yield put({
-  //       type: "ComponentPropsManagement/handleCreateOrderResponse",
-  //       data: jsonData.data,
-  //     });
-  //     return;
-  //   }
-  //   toast.error(jsonData.message);
-  //   yield put({
-  //     type: "ComponentPropsManagement/handleCreateOrderResponse",
-  //     data: [],
-  //   });
-  // } else {
-  //   toast.error(jsonData.message);
-  // }
+  if (jsonData) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleCreateOrderResponse",
+        data: jsonData.data,
+      });
+      toast.success(jsonData.message);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1000);
+      // return;
+    }
+    // toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleCreateOrderResponse",
+      data: [],
+    });
+  } else {
+    toast.error(jsonData.message);
+  }
 }
 
 export function* helloSaga() {

@@ -17,6 +17,8 @@ import { RxDashboard } from "react-icons/rx";
 import { FaMoneyBillAlt } from "react-icons/fa";
 import { AiOutlineAreaChart } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import offer from "../assets/offer.jpeg";
+import { BiUser } from "react-icons/bi";
 import {
   Dropdown,
   DropdownToggle,
@@ -28,7 +30,7 @@ import Bahikhata from "./Bahikhata";
 import UpdateMoq from "./moq";
 import UpdatePrice from "./update-price";
 import ViewOrders from "./PendingOrders";
-
+import video from "../assets/shop.mp4";
 const Main = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [expenseModalIsOpen, setExpenseModalIsOpen] = useState(false);
@@ -60,7 +62,8 @@ const Main = () => {
   const create_transaction_arr = [
     {
       id: 1,
-      label: "Invoice",
+      // label: "Invoice",
+      label: checkCustomer ? "Order Now" : "Invoice",
       value: "retail_billing",
       icon: <FaReceipt color="blue" size="25" />,
       isActive: checkCustomer ? true : true,
@@ -469,6 +472,78 @@ const Main = () => {
                   );
                 })}
             </div>
+            {/* ----- */}
+            <div
+              style={{
+                fontSize: "25px",
+                fontWeight: "900",
+                paddingLeft: "20px",
+                // marginTop: "30px",
+                color: "#230D4D",
+              }}
+            >
+              {checkCustomer ? "Customer Profile" : ""}
+            </div>
+            <div
+              style={{
+                backgroundColor: "white",
+                margin: "0px 20px",
+                borderRadius: "10px",
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                alignItems: "center",
+                userSelect: "none",
+              }}
+            >
+              {checkCustomer ? (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    margin: "10px",
+                    // marginBottom: "20px",
+                    cursor: "pointer",
+                    color: "#3d2b2b",
+                  }}
+                >
+                  <BiUser size={25} />
+                  <p>Profile</p>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+            {/*  */}
+
+            {checkCustomer ? (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    width: "300px",
+                    height: "300px",
+                  }}
+                >
+                  <img
+                    src={offer}
+                    style={{ width: "100%", height: "100%" }}
+                    alt=""
+                  />
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+
+            {/*  */}
           </div>
 
           <div style={{}}>

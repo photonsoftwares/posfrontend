@@ -79,7 +79,7 @@ const Register = () => {
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-10 col-sm-12">
             <form className="form-box" onSubmit={handleSubmit}>
-              <h2>Registration</h2>
+              <h2>Sign Up</h2>
               <div
                 className="d-flex flex-col"
                 style={{ display: "flex", flexDirection: "column" }}
@@ -96,7 +96,7 @@ const Register = () => {
                 />
                 <div
                   className="d-flex flex-column"
-                // style={{ borderBottom: "1px solid #000" }}
+                  // style={{ borderBottom: "1px solid #000" }}
                 >
                   <TextField
                     size="small"
@@ -134,7 +134,7 @@ const Register = () => {
                   required
                   value={storeName}
                   onChange={(e) => setStoreName(e.target.value)}
-                //   rows={3}
+                  //   rows={3}
                 />
                 <TextField
                   size="small"
@@ -225,7 +225,7 @@ const Register = () => {
                         required
                         onChange={onOptionChange}
                         id="inlineRadio4"
-                      // value="option1"
+                        // value="option1"
                       />
                       <label className="form-check-label" for="inlineRadio4">
                         Yes
@@ -284,7 +284,7 @@ const Register = () => {
                         required
                         onChange={onOptionStoreChange}
                         id="inlineRadio2"
-                      // value="option1"
+                        // value="option1"
                       />
                       <label className="form-check-label" for="inlineRadio2">
                         Medium
@@ -320,7 +320,7 @@ const Register = () => {
                     color: "#fff",
                   }}
                 >
-                  Register
+                  Sign up
                 </button>
                 <Link
                   to="/login"

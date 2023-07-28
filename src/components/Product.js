@@ -92,7 +92,7 @@ const Product = ({
                   }}
                 >
                   <p className="h6" style={{ fontWeight: "bold" }}>
-                    {item.itemName}
+                    {item.item_name}
                   </p>
                   {Number(item.price) === 0 ? (
                     <>

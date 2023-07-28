@@ -13,6 +13,7 @@ const LinkLoyalityCustomer = () => {
   const { link_loyalty_detail } = useSelector(
     (e) => e.ComponentPropsManagement
   );
+  console.log("LINK LOYLTY DATA", link_loyalty_detail);
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
   const [userName, setUsername] = useState("");
@@ -44,7 +45,7 @@ const LinkLoyalityCustomer = () => {
         email_id: "",
         customer_id: "",
         client_id: saasId,
-        base_currency: "AED",
+        base_currency: "INR",
       })
     );
     // axios
