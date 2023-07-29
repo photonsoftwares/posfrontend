@@ -7,8 +7,10 @@ var initialComponentPropsManagementState = {
   load: false,
   product_count: 0,
   get_searched_data: [],
+  view_orderModal_customer: false,
   get_QR_img: "",
   show_cart_modal: false,
+  show_viewOrder_modal: false,
   cart_data: [],
   get_party_name: [],
   handle_view_order_details: [],
@@ -95,7 +97,7 @@ var initialComponentPropsManagementState = {
 
   expense_category_dropdown: [],
   update_price_item_name_dropdown: [],
-  bahikhata_party_name_dropdown: []
+  bahikhata_party_name_dropdown: [],
 };
 
 export const ComponentPropsManagement = createSlice({
@@ -106,13 +108,10 @@ export const ComponentPropsManagement = createSlice({
     handleLoginRequest: (state, payload) => {
       state.load = true;
     },
-    handleBahikhataCreateRequest: (state, payload) => {
-    },
-    handleBahikhataCreateResponse: (state, payload) => {
-    },
-    
-    handleBahikhataPartyDropdownRequest: (state, payload) => {
-    },
+    handleBahikhataCreateRequest: (state, payload) => {},
+    handleBahikhataCreateResponse: (state, payload) => {},
+
+    handleBahikhataPartyDropdownRequest: (state, payload) => {},
     handleBahikhataPartyDropdownResponse: (state, payload) => {
       state.bahikhata_party_name_dropdown = payload.data;
     },
@@ -388,11 +387,8 @@ export const ComponentPropsManagement = createSlice({
     },
     handleCreateTaxMasterRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
-      
     },
-    handleCreateSaasMasterRequest:(state,payload)=>{
-
-    },
+    handleCreateSaasMasterRequest: (state, payload) => {},
     handleCreateTaxMasterResponse: (state, payload) => {},
     handleLowStockItemListRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
@@ -417,6 +413,10 @@ export const ComponentPropsManagement = createSlice({
 
     handleShowModal: (state, payload) => {
       state.show_cart_modal = payload.payload.bagModalIsOpne;
+    },
+
+    handleViewOrderModal: (state, payload) => {
+      state.show_viewOrder_modal = payload.payload.viewOrderModalIsOpne;
     },
 
     handleSalesReportRequest: (state, payload) => {},
@@ -637,6 +637,7 @@ export const {
   handleInc,
   handleEmptyCartItem,
   handleEmptyCartData,
+  handleViewOrderModal,
   handleSalesReportRequest,
   handleQRImageRequest,
   getCartTotal,

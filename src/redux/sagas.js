@@ -60,7 +60,7 @@ function* handleLoginRequest(e) {
 }
 // REGISTER USER
 function* handleRegisterRequest(e) {
-  const response = yield fetch(`${BASE_Url}/auth/user-registration`, {
+  const response = yield fetch(`${BASE_Url}/user-master/customer-sign-up`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -73,18 +73,19 @@ function* handleRegisterRequest(e) {
   if (jsonData) {
     if (jsonData.status === true) {
       toast.success("Register User Successfully");
-      localStorage.setItem(
-        "login_data",
-        JSON.stringify(jsonData.data.user_data)
-      );
-      localStorage.setItem("Token", JSON.stringify(jsonData.data.jwt_response));
+      // localStorage.setItem(
+      //   "login_data",
+      //   JSON.stringify(jsonData.data.user_data)
+      // );
+      // localStorage.setItem("Token", JSON.stringify(jsonData.data.jwt_response));
       // window.location.href("/");
-      yield put({
-        type: "ComponentPropsManagement/handleLoginResponse",
-        data: jsonData.data.user_data,
-      });
+      // yield put({
+      //   type: "ComponentPropsManagement/handleLoginResponse",
+      //   data: jsonData.data.user_data,
+      // });
     } else {
-      toast.error("Please enter correct username and password");
+      // toast.error("Please enter correct username and password");
+      toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleLoginResponse",
         data: {},

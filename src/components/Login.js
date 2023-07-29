@@ -96,18 +96,51 @@ const Login = () => {
               </FormGroup>
             </Col>
           </Row>
-          <Button color="primary" className="login_button" type="submit">
+          <Button
+            color="primary"
+            // className="login_button"
+            type="submit"
+            style={{
+              backgroundColor: "#20b9e3",
+              outline: "none",
+              border: "none",
+              fontSize: "20px",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              background: "#ECE447",
+              width: "100%",
+              color: "#000",
+            }}
+          >
             Login
           </Button>
         </Form>
         <div style={{ marginTop: "10px" }}>
           <small>** This is WPA worked in any browser</small>
         </div>
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <Link to="/register">
             <h2>Sign Up</h2>
           </Link>
-        </div>
+        </div> */}
+        <p
+          className="mt-3"
+          style={{
+            color: "#808080",
+            fontFamily: "Segoe UI",
+            fontSize: "16px",
+            fontStyle: "normal",
+            fontWeight: "400",
+            lineHight: "normal",
+            textAlign: "center",
+          }}
+        >
+          Don’t have an account?
+          <Link to="/register" style={{ textDecoration: "none" }}>
+            {" "}
+            Signup{" "}
+          </Link>
+        </p>
       </div>
     </div>
   );

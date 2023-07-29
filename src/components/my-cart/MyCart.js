@@ -22,6 +22,7 @@ import { confirmAlert } from "react-confirm-alert"; // Import
 import { TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { BASE_Url } from "../../URL";
 const MyCart = ({
   show,
   cartData,
@@ -268,6 +269,14 @@ const MyCart = ({
               marginBottom: "10px",
             }}
           >
+            <div style={{ height: "50px", width: "50px" }}>
+              <img
+                style={{ height: "100%", width: "100%" }}
+                src={`${BASE_Url}/item/get-image/${item && item.imageName}`}
+                class="card-img-top"
+                alt="..."
+              />
+            </div>{" "}
             <h1>{item.item_name}</h1>
             <div className="cart_product">
               <div style={{ height: "50px" }} className="cart_column">
@@ -802,7 +811,6 @@ const MyCart = ({
                       item_list: cartData,
                     })
                   );
-                  setShow((state) => !show);
                   localStorage.removeItem("my-cart");
                   setCartData([]);
                   setTimeout(() => {
@@ -819,7 +827,7 @@ const MyCart = ({
             }
           }}
           style={{
-            // backgroundColor: "#20b9e3",
+            backgroundColor: "#20b9e3",
             outline: "none",
             border: "none",
             fontSize: "20px",
@@ -829,19 +837,7 @@ const MyCart = ({
           {cartData && cartData?.length > 0 ? (
             // ? "Proceed to checkout"
             <div onClick={() => {}}>
-              {checkCustomer ? (
-                // <div>"Confirm Order"</div>
-                <div>
-                  <button className="btn btn-danger">
-                    Place Order(Pickup at shop)
-                  </button>
-                  <button className="btn btn-danger">
-                    Place Order(Cash on delivery)
-                  </button>
-                </div>
-              ) : (
-                "Proceed to checkout"
-              )}
+              {checkCustomer ? "Confirm Order" : "Proceed to checkout"}
             </div>
           ) : (
             "No Item here"

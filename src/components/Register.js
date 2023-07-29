@@ -21,7 +21,8 @@ const Register = () => {
   const [gstCode, setGstCode] = useState("");
   const [hsnCode, setHsnCode] = useState("");
   const [storeType, setStoreType] = useState("");
-
+  const [mobile, setMobile] = useState("");
+  const [email, setEmail] = useState("");
   const onOptionChange = (e) => {
     setTaxable(e.target.value);
     console.log("E TARGET VALUE", e.target.value);
@@ -36,20 +37,11 @@ const Register = () => {
     if (password === confirmPassword) {
       dispatch(
         handleRegisterRequest({
-          user_name: userName,
+          mobile_number: mobile,
           password: password,
-          store_name: storeName,
-          store_id: storeId,
-          saas_id: saasId,
-          register_id: registerId,
-          city: city,
-          state: state,
-          country: country,
-          brand_logo: brandLogo,
-          tax_able: taxable,
-          gst_code: gstCode,
-          hsn_code: hsnCode,
-          store_type: storeType,
+          customer_name: userName,
+          email: email,
+          saas_id: "8",
         })
       );
     } else {
@@ -69,9 +61,9 @@ const Register = () => {
     setGstCode("");
     setHsnCode("");
     setStoreType("");
-    setTimeout(() => {
-      window.location.replace("/");
-    }, 500);
+    // setTimeout(() => {
+    //   window.location.replace("/");
+    // }, 500);
   };
   return (
     <section>
@@ -79,7 +71,7 @@ const Register = () => {
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-10 col-sm-12">
             <form className="form-box" onSubmit={handleSubmit}>
-              <h2>Sign Up</h2>
+              <h2 style={{ textAlign: "center" }}>Register</h2>
               <div
                 className="d-flex flex-col"
                 style={{ display: "flex", flexDirection: "column" }}
@@ -129,11 +121,11 @@ const Register = () => {
                   type="text"
                   className="form-control my-2"
                   id="customer-name"
-                  label="Store Name"
+                  label="Mobile No."
                   //   multiline
                   required
-                  value={storeName}
-                  onChange={(e) => setStoreName(e.target.value)}
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value)}
                   //   rows={3}
                 />
                 <TextField
@@ -142,12 +134,12 @@ const Register = () => {
                   className="form-control my-2"
                   id="customer-name"
                   required
-                  value={storeId}
-                  onChange={(e) => setStoreId(e.target.value)}
-                  label="Store Id"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  label="Email"
                 />
 
-                <TextField
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -156,9 +148,9 @@ const Register = () => {
                   required
                   onChange={(e) => setSaasId(e.target.value)}
                   label="Saas Id"
-                />
+                /> */}
 
-                <TextField
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -167,8 +159,8 @@ const Register = () => {
                   required
                   onChange={(e) => setRegisterId(e.target.value)}
                   label="Register Id"
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -177,8 +169,8 @@ const Register = () => {
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   label="City"
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -187,8 +179,8 @@ const Register = () => {
                   value={state}
                   onChange={(e) => setState(e.target.value)}
                   label="State"
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -197,8 +189,8 @@ const Register = () => {
                   required
                   onChange={(e) => setCountry(e.target.value)}
                   label="Country"
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -207,8 +199,8 @@ const Register = () => {
                   required
                   onChange={(e) => setBrandLogo(e.target.value)}
                   label="Brand Logo"
-                />
-                <div
+                /> */}
+                {/* <div
                   className="d-flex flex-column align-items-center justify-content-center my-2 pb-2"
                   style={{ border: "1px solid #e2e2e2" }}
                 >
@@ -246,8 +238,8 @@ const Register = () => {
                       </label>
                     </div>
                   </div>
-                </div>
-                <TextField
+                </div> */}
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -256,8 +248,8 @@ const Register = () => {
                   required
                   onChange={(e) => setGstCode(e.target.value)}
                   label="GST Code"
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -266,8 +258,8 @@ const Register = () => {
                   required
                   onChange={(e) => setHsnCode(e.target.value)}
                   label="HSN Code"
-                />
-                <div
+                /> */}
+                {/* <div
                   className="d-flex flex-column align-items-center justify-content-center my-2 pb-2"
                   style={{ border: "1px solid #e2e2e2" }}
                 >
@@ -305,7 +297,7 @@ const Register = () => {
                       </label>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <div className="">
@@ -316,13 +308,14 @@ const Register = () => {
                     border: "none",
                     fontSize: "20px",
                     padding: "10px 20px",
-                    borderRadius: "10px",
-                    color: "#fff",
+                    borderRadius: "8px",
+                    background: "#ECE447",
+                    width: "100%",
                   }}
                 >
-                  Sign up
+                  Register
                 </button>
-                <Link
+                {/* <Link
                   to="/login"
                   type="submit"
                   // onClick={()=>}
@@ -339,7 +332,24 @@ const Register = () => {
                   }}
                 >
                   Login
-                </Link>
+                </Link> */}
+                <p
+                  className="mt-3"
+                  style={{
+                    color: "#808080",
+                    fontFamily: "Segoe UI",
+                    fontSize: "16px",
+                    fontStyle: "normal",
+                    fontWeight: "400",
+                    lineHight: "normal",
+                    textAlign: "center",
+                  }}
+                >
+                  Already have an account?{" "}
+                  <Link to="/login" style={{ textDecoration: "none" }}>
+                    Login
+                  </Link>
+                </p>
               </div>
             </form>
           </div>

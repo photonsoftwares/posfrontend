@@ -31,7 +31,20 @@ import UpdateMoq from "./moq";
 import UpdatePrice from "./update-price";
 import ViewOrders from "./PendingOrders";
 import video from "../assets/shop.mp4";
+import { useSelector } from "react-redux";
 const Main = () => {
+  const {
+    get_searched_data,
+    // cart_data,
+    get_QR_img,
+    link_loyalty_detail,
+    total_price,
+    handle_saveTransaction_data,
+    get_recommended_items,
+    search_customer_data,
+    show_cart_modal,
+    show_viewOrder_modal,
+  } = useSelector((e) => e.ComponentPropsManagement);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [expenseModalIsOpen, setExpenseModalIsOpen] = useState(false);
   const [bahikhataModalIsOpen, setBahikhataModalIsOpen] = useState(false);
@@ -52,12 +65,18 @@ const Main = () => {
     storeName,
     userId,
     userName,
+    userType,
   } = localStorage.getItem("User_data")
     ? JSON.parse(localStorage.getItem("User_data"))
     : {};
-
-  console.log("MAIN", storeId, saasId, userId, userName);
+  console.log(userType);
   const checkCustomer = userName.includes("C");
+
+  useEffect(() => {
+    if (userType === "CUSTOMER") {
+      navigate("/home");
+    }
+  }, [userType]);
   // console.log("AUTH IN MAIN", checkCustomer);
   const create_transaction_arr = [
     {
@@ -68,7 +87,6 @@ const Main = () => {
       icon: <FaReceipt color="blue" size="25" />,
       isActive: checkCustomer ? true : true,
     },
-
     {
       id: 2,
       label: "Purchase",
@@ -111,7 +129,6 @@ const Main = () => {
       icon: <GiStabbedNote color="#1facb8" size="25" />,
       isActive: checkCustomer ? false : true,
     },
-
     {
       id: 8,
       label: "Bahikhata",
