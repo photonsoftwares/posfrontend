@@ -6,10 +6,12 @@ import { FaUserAlt } from "react-icons/fa";
 // import { handleLoginRequest } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { handleLoginRequest } from "../../src/redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { isDev } from "../URL";
 const Login = () => {
+  const params = useParams();
+  console.log("LOGIN PARAMS", params);
   const navigate = useNavigate();
   // console.log("NAVIGATE", navigate());
   const dispatch = useDispatch();
@@ -136,9 +138,12 @@ const Login = () => {
           }}
         >
           Don’t have an account?
-          <Link to="/register" style={{ textDecoration: "none" }}>
-            {" "}
-            Signup{" "}
+          <Link
+            to="/register"
+            // to={`/register/{}`}
+            style={{ textDecoration: "none" }}
+          >
+            Signup
           </Link>
         </p>
       </div>

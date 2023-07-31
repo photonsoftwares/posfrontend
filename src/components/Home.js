@@ -41,7 +41,6 @@ import { TextField } from "@mui/material";
 import MyCart from "./my-cart/MyCart";
 import { HiCreditCard } from "react-icons/hi2";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
-import { Loyalty } from "@material-ui/icons";
 import { AiFillHome } from "react-icons/ai";
 import { BiBox, BiCart, BiCube, BiGroup } from "react-icons/bi";
 import { RxDashboard } from "react-icons/rx";
@@ -72,7 +71,7 @@ const Home = () => {
   console.log(userType);
   const checkCustomer = userName.includes("C");
 
-  // const userData = JSON.parse(localStorage.getItem("User_data"));
+  const userData = JSON.parse(localStorage.getItem("User_data"));
 
   const {
     get_searched_data,
@@ -101,7 +100,7 @@ const Home = () => {
   const [cartData, setCartData] = useState(null);
   const [percentOff, setPercentOff] = useState(1);
   const [amountOff, setAmountOff] = useState("");
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const [speachModal, setSpechModal] = useState(false);
   const [visibleVoiceCommand, setVisibleVoiceCommand] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -652,7 +651,7 @@ const Home = () => {
     setEmail("");
   };
 
-  console.log("HOME CARTDATA", cartData);
+  // console.log("HOME CARTDATA", cartData);
 
   // console.log("DISCOUNT AMOUNT", discountAmountVal);
   // console.log("OPTION TICK", optionTick);
@@ -869,7 +868,8 @@ const Home = () => {
           >
             {link_loyalty_detail && link_loyalty_detail.customer_name ? (
               <div
-              // className="d-flex flex-row"
+                className="d-flex flex-row text-center"
+                style={{ width: "100%" }}
               >
                 <p style={{ padding: 0, margin: 0, marginRight: "30px" }}>
                   Cutomer Name

@@ -2329,26 +2329,26 @@ function* handleCreateOrderRequest(e) {
   });
   const jsonData = yield response.json();
   console.log("JSONDATA Create OrderMaster", jsonData);
-  if (jsonData) {
-    if (jsonData.status === true) {
-      yield put({
-        type: "ComponentPropsManagement/handleCreateOrderResponse",
-        data: jsonData.data,
-      });
-      toast.success(jsonData.message);
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 1000);
-      // return;
-    }
-    // toast.error(jsonData.message);
-    yield put({
-      type: "ComponentPropsManagement/handleCreateOrderResponse",
-      data: [],
-    });
-  } else {
-    toast.error(jsonData.message);
-  }
+  // if (jsonData) {
+  //   if (jsonData.status === true) {
+  //     yield put({
+  //       type: "ComponentPropsManagement/handleCreateOrderResponse",
+  //       data: jsonData.data,
+  //     });
+  //     toast.success(jsonData.message);
+  //     // setTimeout(() => {
+  //     //   window.location.reload();
+  //     // }, 1000);
+  //     // return;
+  //   }
+  //   // toast.error(jsonData.message);
+  //   yield put({
+  //     type: "ComponentPropsManagement/handleCreateOrderResponse",
+  //     data: [],
+  //   });
+  // } else {
+  //   toast.error(jsonData.message);
+  // }
 }
 
 export function* helloSaga() {

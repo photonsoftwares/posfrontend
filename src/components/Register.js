@@ -1,10 +1,14 @@
 import { TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { handleRegisterRequest } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { toast } from "react-toastify";
+// import { Email } from "@material-ui/icons";
+import { useNavigate } from "react-router-dom";
 const Register = () => {
+  const navigate = useNavigate();
+  const params = useParams();
   const dispatch = useDispatch();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +27,7 @@ const Register = () => {
   const [storeType, setStoreType] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
+
   const onOptionChange = (e) => {
     setTaxable(e.target.value);
     console.log("E TARGET VALUE", e.target.value);
@@ -32,23 +37,40 @@ const Register = () => {
     console.log("E TARGET VALUE", e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  console.log("PARAMS", params);
+
+  // useEffect(() => {
+  //   if (params.saasId && params.storeId) {
+  //     navigate("/login");
+  //   }
+  // }, [saasId, storeId]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
     if (password === confirmPassword) {
       dispatch(
         handleRegisterRequest({
           mobile_number: mobile,
           password: password,
           customer_name: userName,
+          store_id: params.storeId,
           email: email,
-          saas_id: "8",
+          saas_id: params.saasId,
         })
+      );
+      console.log(
+        userName,
+        params.saasId,
+        params.storeId,
+        password,
+        email,
+        mobile
       );
     } else {
       toast.error("Password Did'nt Match!");
     }
-    setUserName("");
-    setPassword("");
+    // setUserName("");
+    // setPassword("");
     setConfirmPassword("");
     setStoreName("");
     setSaasId("");
@@ -79,13 +101,18 @@ const Register = () => {
                 <TextField
                   size="small"
                   type="text"
-                  className="form-control mt-2"
+                  className="form-control my-2"
                   id="customer-name"
-                  label="User Name"
-                  value={userName}
+                  label="User Id"
+                  //   multiline
                   required
-                  onChange={(e) => setUserName(e.target.value)}
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value)}
+                  //   rows={3}
                 />
+
+                {/*  */}
+
                 <div
                   className="d-flex flex-column"
                   // style={{ borderBottom: "1px solid #000" }}
@@ -119,14 +146,12 @@ const Register = () => {
                 <TextField
                   size="small"
                   type="text"
-                  className="form-control my-2"
+                  className="form-control mt-2"
                   id="customer-name"
-                  label="Mobile No."
-                  //   multiline
+                  label="Customer Name"
+                  value={userName}
                   required
-                  value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
-                  //   rows={3}
+                  onChange={(e) => setUserName(e.target.value)}
                 />
                 <TextField
                   size="small"

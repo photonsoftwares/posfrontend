@@ -50,11 +50,10 @@ const Product = ({
     <>
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "row",
-          flexWrap: "wrap",
+          // display: "flex",
+          display: "grid",
+          gridTemplateColumns: "repeat(2,1fr)",
+          placeItems: "center",
         }}
       >
         {data.map((item) => (
@@ -92,7 +91,6 @@ const Product = ({
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
-                            // aria-label="toggle password visibility"
                             onClick={() => {
                               item.price = item.new_price;
                               setData([...data]);
@@ -143,15 +141,12 @@ const Product = ({
                   <p style={{ fontWeight: "400" }}>₹ {item.price}</p>
                 </>
               )}
-              {/* <a href="#" class="btn btn-sm btn-warning">
-                Add to Cart
-              </a> */}
+
               <div
                 style={{
                   display: "flex",
                   flex: 1,
                   alignItems: "center",
-                  // justifyContent: "flex-end",
                 }}
               >
                 <div
@@ -160,6 +155,7 @@ const Product = ({
                       item.price === 0 || item.price === 0 ? "none" : "block",
                   }}
                   onClick={() => {
+                    console.log("ITEM", item);
                     const el = JSON.parse(localStorage.getItem("my-cart"));
                     if (el) {
                       if (el?.length > 0) {
@@ -237,7 +233,6 @@ const Product = ({
                 >
                   <Button
                     size="sm"
-                    // variant={`${item.price === 0 ? "secondary" : "warning"}`}
                     variant={`warning`}
                     style={{
                       width: "100%",
