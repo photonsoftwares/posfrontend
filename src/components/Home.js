@@ -40,7 +40,10 @@ import { TextField } from "@mui/material";
 import MyCart from "./my-cart/MyCart";
 import { HiCreditCard } from "react-icons/hi2";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
-import { Loyalty } from "@material-ui/icons";
+import { AiFillHome } from "react-icons/ai";
+import { BiBox, BiCart, BiCube, BiGroup } from "react-icons/bi";
+import { RxDashboard } from "react-icons/rx";
+import ViewOrders from "./PendingOrders";
 
 const Home = () => {
   // const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
@@ -648,6 +651,7 @@ const Home = () => {
           <IoIosSearch size={30} opacity={0.4} />
 
           <input
+          
             style={{ border: "1px solid yellowgreen", outline: "none" }}
             type="text"
             value={searchValue}
@@ -660,7 +664,12 @@ const Home = () => {
             className="form-control"
             aria-describedby="emailHelp"
             placeholder="Search for items..."
+            
+            
+             
           />
+  
+        
           {/* // <div style={{ width: "100%" }}>{transcript}</div> */}
           {/* )} */}
         </div>

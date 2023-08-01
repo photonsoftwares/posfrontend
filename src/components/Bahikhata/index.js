@@ -60,38 +60,45 @@ const Bahikhata = (props) => {
     }, [])
 
 
-    return (<>
-        <Modal
-            isOpen={bahikhataModalIsOpen}
-            toggle={() => { setBahikhataModalIsOpen(!bahikhataModalIsOpen) }}
-        >
-            <ModalHeader>
-                <HiOutlineArrowSmallLeft
-                    className='mouse-pointer'
-                    onClick={() => {
-                        setBahikhataModalIsOpen(!bahikhataModalIsOpen)
+  return (
+    <>
+      <Modal
+        isOpen={bahikhataModalIsOpen}
+        toggle={() => {
+          setBahikhataModalIsOpen(!bahikhataModalIsOpen);
+        }}
+      >
+        <ModalHeader>
+          <HiOutlineArrowSmallLeft
+            className="mouse-pointer"
+            onClick={() => {
+              setBahikhataModalIsOpen(!bahikhataModalIsOpen);
+            }}
+          />
+          &nbsp; Create Bahikhata
+        </ModalHeader>
+        <Form onSubmit={handleSubmit}>
+          <ModalBody>
+            <Row>
+              <Col md={12}>
+                <FormGroup>
+                  <Label>
+                    Select Party <span className="text-red"> * </span>
+                  </Label>
+                  <Select
+                    options={bahikhata_party_name_dropdown}
+                    onChange={(e) => {
+                      const val = e.value;
+                      setBahikhataArr({ ...bahikhataArr, party_name: val });
                     }}
-                />&nbsp;
-                Create Bahikhata
-            </ModalHeader>
-            <Form onSubmit={handleSubmit}>
-                <ModalBody>
-                    <Row>
-                        <Col md={12}>
-                            <FormGroup>
-                                <Label>Select Party <span className="text-red"> * </span></Label>
-                                <Select
-                                    options={bahikhata_party_name_dropdown}
-                                    onChange={e => {
-                                        const val = e.value
-                                        setBahikhataArr({ ...bahikhataArr, party_name: val })
-                                    }}
-                                    value={bahikhata_party_name_dropdown.filter(io => io.value === bahikhataArr.party_name)}
-                                    required={true}
-                                    placeholder="Select Party"
-                                />
-                            </FormGroup>
-                        </Col>
+                    value={bahikhata_party_name_dropdown.filter(
+                      (io) => io.value === bahikhataArr.party_name
+                    )}
+                    required={true}
+                    placeholder="Select Party"
+                  />
+                </FormGroup>
+              </Col>
 
                         <Col md={12}>
                             <FormGroup>
