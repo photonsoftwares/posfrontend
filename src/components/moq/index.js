@@ -62,6 +62,13 @@ const UpdateMoq = ({ updateMoqModalIsOpen, setUpdateMoqModalIsOpen }) => {
                                     Item Name <span className="text-red"> * </span>
                                 </Label>
                                 <Input
+                                
+style={{
+    fontFamily: 'Arial, sans-serif',
+    fontStyle: 'italic',
+    fontSize: '16px',
+  
+  }}
                                     type='text'
                                     onChange={e => {
                                         const val = e.target.value
@@ -80,6 +87,12 @@ const UpdateMoq = ({ updateMoqModalIsOpen, setUpdateMoqModalIsOpen }) => {
                                     Minimum Order Quantity <span className="text-red"> * </span>
                                 </Label>
                                 <Input
+                                style={{
+                                    fontFamily: 'Arial, sans-serif',
+                                    fontStyle: 'italic',
+                                    fontSize: '16px',
+                                  
+                                  }}
                                     type='number'
                                     onChange={e => {
                                         const val = e.target.value
@@ -98,6 +111,13 @@ const UpdateMoq = ({ updateMoqModalIsOpen, setUpdateMoqModalIsOpen }) => {
                                     Effective Date <span className="text-red"> * </span>
                                 </Label>
                                 <Flatpickr
+
+style={{
+    fontFamily: 'Arial, sans-serif',
+    fontStyle: 'italic',
+    fontSize: '16px',
+  
+  }}
                                     className='form-control'
                                     onChange={e => {
                                         const val = e[0]
@@ -117,6 +137,12 @@ const UpdateMoq = ({ updateMoqModalIsOpen, setUpdateMoqModalIsOpen }) => {
                                     Valid Upto <span className="text-red"> * </span>
                                 </Label>
                                 <Flatpickr
+                                style={{
+                                    fontFamily: 'Arial, sans-serif',
+                                    fontStyle: 'italic',
+                                    fontSize: '16px',
+                                  
+                                  }}
                                     className='form-control'
                                     onChange={e => {
                                         const val = e[0]

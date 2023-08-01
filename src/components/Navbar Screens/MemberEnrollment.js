@@ -41,6 +41,7 @@ const MemberEnrollment = () => {
   const [selectedLocationOption, setselectedLocationOption] = useState(null);
   const [selectedCityOption, setSelectedCityOption] = useState(null);
   const [selectedSuffixOption, setSelectedSuffixOption] = useState(null);
+  const [showMore, setShowMore] = useState(false);
 
   //   const options = [
   //     { value: "AED", label: "AED" },
@@ -138,6 +139,15 @@ const MemberEnrollment = () => {
     setAddress2("");
   };
 
+
+  // const AddMoreDetails =()=>{
+    
+  // }
+
+  const handleShowMoreToggle=()=>{
+    setShowMore(!showMore)
+  }
+
   return (
     <section>
       <div className="container">
@@ -214,20 +224,20 @@ const MemberEnrollment = () => {
                 required
               />
               <div className="d-flex flex-row items-center justify-content-between mt-3">
-                <p>Business created date</p>
+                {/* <p>Business created date</p> */}
                 <div style={{ opacity: "0.5" }}>
                   {/* <ReactDatePicker
                     selected={businessCreatedDate}
                     onChange={(date) => setBusinessCreatedDate(date)}
                   /> */}
-                  <input
-                    type="date"
-                    name=""
-                    id=""
-                    // placeholder="Date of Birth"
-                    value={businessCreatedDate}
-                    onChange={(e) => setBusinessCreatedDate(e.target.value)}
-                  />
+                  {/* <input */}
+                    {/* type="date" */}
+                    {/* name="" */}
+                    {/* id="" */}
+                    {/* // placeholder="Date of Birth" */}
+                    {/* value={businessCreatedDate} */}
+                    {/* onChange={(e) => setBusinessCreatedDate(e.target.value)} */}
+                  {/* /> */}
                 </div>
               </div>
               <TextField
@@ -235,7 +245,7 @@ const MemberEnrollment = () => {
                 type="text"
                 className="form-control mt-2"
                 id="customer-name"
-                label="Nationality"
+                label="Nationality" 
                 value={nationality}
                 onChange={(e) => setNationality(e.target.value)}
                 required
@@ -292,6 +302,37 @@ const MemberEnrollment = () => {
                   </label>
                 </div>
               </div>
+
+             <button style={{
+              padding: '10px 20px',
+              borderRadius: '5px',
+              background: '#4CAF50',
+              color: '#fff',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+              transition: 'transform 0.2s ease-in-out',
+             }}
+             onClick={handleShowMoreToggle}
+             >
+                      {showMore ? 'Show Less' : 'Add more Details'}
+
+             </button>
+
+
+
+
+
+
+
+
+               {
+                showMore ?
+
+                <div>
+                       
               <div
                 className="d-flex flex-row items-center justify-content-between mt-3"
                 // style={{ width: "100%" }}
@@ -392,6 +433,12 @@ const MemberEnrollment = () => {
                 onChange={(e) => setPincode(e.target.value)}
                 required
               />
+                </div> : <></>
+               }   
+               
+               
+
+
               <div className="my-3">
                 <button
                   type="submit"

@@ -92,7 +92,7 @@ const Expense = (props) => {
               <Col md={12}>
                 <FormGroup>
                   <Label>
-                    Select Category <span className="text-red"> * </span>
+                    Select Category <span className="text-red"></span>
                   </Label>
                   <Select
                     options={expense_category_dropdown}
@@ -112,7 +112,7 @@ const Expense = (props) => {
               <Col md={12}>
                 <FormGroup>
                   <Label>
-                    Expense Date <span className="text-red"> * </span>
+                    Expense Date <span className="text-red"></span>
                   </Label>
                   <Flatpickr
                     className="form-control"
@@ -131,7 +131,7 @@ const Expense = (props) => {
               <Col md={12}>
                 <FormGroup>
                   <Label>
-                    Payment Mode <span className="text-red"> * </span>
+                    Payment Mode <span className="text-red"></span>
                   </Label>
                   <div className="d-flex">
                     <div className="me-4">
@@ -264,7 +264,7 @@ const Expense = (props) => {
               <Col md={12}>
                 <FormGroup>
                   <Label>
-                    Expense Notes <span className="text-red"> * </span>
+                    Expense Notes <span className="text-red"></span>
                   </Label>
                   <Input
                     type="textarea"

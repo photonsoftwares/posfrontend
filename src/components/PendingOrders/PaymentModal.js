@@ -461,8 +461,10 @@ const PaymentModal = (props) => {
                             variant="outline-success"
                             size="lg"
                             onClick={() => setHandleOpenWhatsapp(true)}
-                        >
+                        >     
                             WhatsApp <IoLogoWhatsapp size={25} />
+
+                            console.log("sv vbjbvjbvjdfvl")
                         </Button>
                         <form
                             onSubmit={handleNotifyEmail}
