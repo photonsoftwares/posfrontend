@@ -79,10 +79,10 @@ const App = () => {
           path="/login"
           element={<ProtectedRoutingWhenLogout Component={Login} />}
         />
-        <Route
-          path="/register"
-          element={<ProtectedRoutingWhenLogout Component={Register} />}
-        />
+
+        {/* <Route path="/register" Component={Register} />
+
+        <Route path="/:saasId/:storeId" Component={Register} /> */}
         <Route
           path="/loyality-dashboard"
           element={<ProtectedRoutingWhenLogin Component={LoyalityDashboard} />}
@@ -169,6 +169,9 @@ const App = () => {
             <ProtectedRoutingWhenLogin Component={MembePointRedemption} />
           }
         />
+        <Route path="/register" Component={Register} />
+
+        <Route path="/:saasId/:storeId" Component={Register} />
       </Routes>
       {/* </BrowserRouter> */}
     </>

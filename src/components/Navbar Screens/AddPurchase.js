@@ -1,5 +1,6 @@
 import { TextField } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
+import AsyncSelect from "react-select/async";
 import ReactDatePicker from "react-datepicker";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { BiSearchAlt2 } from "react-icons/bi";
@@ -14,6 +15,7 @@ import {
   handlePartyNameDataRequest,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch, useSelector } from "react-redux";
+import { BASE_Url } from "../../URL";
 
 const AddPurchase = () => {
   const { handle_party_name_data, handle_add_item_search } = useSelector(
@@ -47,8 +49,81 @@ const AddPurchase = () => {
   const [value, setValue] = useState(0);
   const [tabs] = useState(TabsData);
   const [quantity, setQuantity] = useState();
+  const [defaultItemData, setDefaultItemData] = useState([]);
+  const [itemId, setItemId] = useState("");
   const { component } = tabs[value];
+  const [itemObj, setItemObj] = useState({});
+  const [updatePriceState, setUpdatePriceState] = useState({
+    item_name: "",
+    item_price: "",
+    previous_price: "",
+    effective_date: "",
+    valid_upto: "",
+  });
 
+  console.log("UPDATE PRICE STATE", updatePriceState.item_name);
+
+  const loadOptions = (inputValue) => {
+    if (inputValue.length > 0) {
+      return new Promise((resolve, reject) => {
+        resolve(handleItemFilter(inputValue));
+      });
+    } else {
+      // return new Promise((resolve, reject) => {
+      //     resolve(handleRecommendedDataRequest(inputValue));
+      // });
+    }
+  };
+  // ------------
+  console.log("ITEM ID", itemId);
+
+  const handleItemFilter = async (inputValue) => {
+    const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+    try {
+      const response = await fetch(
+        // `${BASE_Url}/customer/search-customer/${storeId}/${saasId}/${inputValue}`,
+        `${BASE_Url}/search/recommended-items/${storeId}/${saasId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const jsonData = await response.json();
+      // console.log("IN DELIVERY", jsonData);
+      if (jsonData) {
+        if (jsonData.status === true) {
+          const d1 = jsonData.data;
+          console.log("object", d1);
+          if (d1) {
+            if (d1.length > 0) {
+              const arr = [];
+              d1.map((item) => {
+                arr.push({
+                  ...item,
+                  label: item.item_name,
+                  value: item.item_name,
+                });
+                setItemId(item.item_id);
+              });
+              return arr;
+            }
+          }
+          return [];
+        }
+        toast.error(jsonData.message);
+      } else {
+        toast.error("Something went wrong server side");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // ------------
+  console.log(handle_party_name_data);
+  console.log(handle_add_item_search);
   useEffect(() => {
     if (handle_add_item_search && handle_add_item_search[0]) {
       setItemCode(handle_add_item_search[0].productId);
@@ -58,8 +133,11 @@ const AddPurchase = () => {
 
   useEffect(() => {
     if (handle_party_name_data && handle_party_name_data.partyName) {
-      setPartyName(handle_party_name_data.partyName);
-      setSupplierId(handle_party_name_data.supplierId);
+      setPartyName(handle_party_name_data && handle_party_name_data.partyName);
+      setSupplierId(
+        handle_party_name_data && handle_party_name_data.supplierId
+      );
+      // setQuantity(handle_party_name_data)
     }
   }, [handle_party_name_data]);
   // console.log("PARTY NAME", handle_party_name_data);
@@ -102,9 +180,9 @@ const AddPurchase = () => {
       handleAddPurchaseRequest({
         saas_id: saasId,
         store_id: storeId,
-        supplier_id: supplierId,
+        supplier_name: partyName,
         item_list: [
-          { productId: Number(itemCode), productQty: Number(quantity) },
+          { productId: Number(itemId), productQty: Number(quantity) },
         ],
       })
     );
@@ -146,8 +224,8 @@ const AddPurchase = () => {
                     size="small"
                     value={billNumber}
                     onChange={(e) => setBillnumber(e.target.value)}
-                    required
-                    disabled
+                    // required
+                    // disabled
                     label="Bill Number"
                   />
                 </div>
@@ -164,7 +242,6 @@ const AddPurchase = () => {
                   />
                 </div>
               </div>
-
               <TextField
                 type="text"
                 className="form-control my-2"
@@ -177,7 +254,7 @@ const AddPurchase = () => {
                   setPhoneNumber(e.target.value);
                 }}
                 // style={{ zIndex: -2 }}
-                label="Phone Number"
+                label="Search by Phone Number"
               />
               <TextField
                 type="text"
@@ -189,6 +266,7 @@ const AddPurchase = () => {
                 onChange={(e) => setPartyName(e.target.value)}
                 label="Party Name"
               />
+
               <div
                 style={{ width: "100%" }}
                 onClick={() => setAddItem((state) => !state)}
@@ -211,7 +289,7 @@ const AddPurchase = () => {
                 {addItem ? (
                   <>
                     <div>
-                      <TextField
+                      {/* <TextField
                         type="text"
                         className="form-control my-2"
                         id="customer-name"
@@ -223,7 +301,54 @@ const AddPurchase = () => {
                           setItemName(e.target.value);
                         }}
                         label="Item Name"
-                      />
+                      /> */}
+
+                      <div>
+                        <div style={{ zIndex: 3 }}>
+                          <AsyncSelect
+                            cacheOptions
+                            loadOptions={loadOptions}
+                            isSearchable={true}
+                            defaultOptions={defaultItemData}
+                            onChange={(e) => {
+                              const val = e.label;
+                              setItemObj(e);
+                              setUpdatePriceState({
+                                ...updatePriceState,
+                                item_name: val,
+                              });
+                            }}
+                            // value={updatePriceState.item_name}
+                            // value={loadOptions.filter(
+                            //   (io) => io.value === loadOptions.party_name
+                            // )}
+                            required={true}
+                            placeholder="Select Item"
+                            styles={{
+                              menu: (baseStyles, state) => ({
+                                ...baseStyles,
+                                // height: "50px",
+                                overflow: "auto",
+                                // fontWeight: "900",
+                                zIndex: 900,
+                              }),
+                              option: (baseStyles, state) => ({
+                                ...baseStyles,
+                                height: "50px",
+                                fontWeight: "900",
+                                // overflow: "auto",
+                                zIndex: 900,
+                              }),
+                              control: (baseStyles, state) => ({
+                                ...baseStyles,
+                                // height: "50px",
+                                // fontWeight: "900",
+                                // overflow: "auto",
+                              }),
+                            }}
+                          />
+                        </div>
+                      </div>
                       <TextField
                         type="text"
                         className="form-control my-2"
@@ -234,7 +359,7 @@ const AddPurchase = () => {
                         onChange={(e) => setQuantity(e.target.value)}
                         label="Quantity"
                       />
-                      <TextField
+                      {/* <TextField
                         type="text"
                         className="form-control my-2"
                         id="customer-name"
@@ -264,7 +389,7 @@ const AddPurchase = () => {
                         value={mobile}
                         onChange={(e) => setMobile(e.target.value)}
                         label="Phone Number"
-                      />
+                      /> */}
                     </div>
                     <div style={{ marginBottom: 0, paddingBottom: 0 }}>
                       <div
@@ -350,20 +475,6 @@ const AddPurchase = () => {
                   ""
                 )}
               </div>
-              {/* <div
-                style={{
-                  height: "300px",
-                  width: "100%",
-                  marginTop: "10px",
-                  backgroundColor: "#e2e2e2",
-                  padding: "20px 20px",
-                }}
-              >
-                <div className="d-flex align-items-center justify-content-between">
-                  <p>Total Amount</p>
-                  <p>₹_____________</p>
-                </div>
-              </div> */}
 
               <div className="mt-3">
                 <button

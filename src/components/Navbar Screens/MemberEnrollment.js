@@ -102,7 +102,7 @@ const MemberEnrollment = () => {
       handleMemberEnrollmentRequest({
         customer_id: "",
         client_id: saasId,
-        base_currency: baseCurrecy,
+        base_currency: "INR",
         mobile_number: mobile,
         customer_name: customerName,
         email_id: email,
@@ -136,6 +136,7 @@ const MemberEnrollment = () => {
     setPreferredAddress("");
     setAddress1("");
     setAddress2("");
+    setPincode("");
   };
 
   return (
@@ -163,7 +164,7 @@ const MemberEnrollment = () => {
                 label="Client ID"
                 required
               /> */}
-              <TextField
+              {/* <TextField
                 size="small"
                 type="text"
                 className="form-control mt-2"
@@ -172,7 +173,7 @@ const MemberEnrollment = () => {
                 onChange={(e) => setBaseCurrency(e.target.value)}
                 label="Bace Currency"
                 required
-              />
+              /> */}
               <TextField
                 size="small"
                 type="number"

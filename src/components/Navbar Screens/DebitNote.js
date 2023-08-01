@@ -153,7 +153,7 @@ const DebitNote = () => {
         customer_party: updatePriceState.item_name,
         charges: charges,
         amount: amount,
-        add_note: items,
+        add_chalan: items,
       })
     );
     setProductName("");
@@ -168,9 +168,10 @@ const DebitNote = () => {
   };
 
   const handleItemFilter = async (inputValue) => {
+    const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
     try {
       const response = await fetch(
-        `${BASE_Url}/customer/search-customer/${storeId}/EEEE/${inputValue}`,
+        `${BASE_Url}/customer/search-customer/${storeId}/${saasId}/${inputValue}`,
         {
           method: "GET",
           headers: {
@@ -318,7 +319,7 @@ const DebitNote = () => {
                         }}
                         // value={updatePriceState.item_name}
                         required={true}
-                        placeholder="Select Item"
+                        placeholder="Select Customer"
                       />
                     </div>
                   </div>
@@ -514,7 +515,7 @@ const DebitNote = () => {
               )}
             </div>
             <div className="d-flex justify-content-between bg-white">
-              <p className="fw-bold">Optional</p>
+              {/* <p className="fw-bold">Optional</p> */}
               <h5 className="text-primary fw-bold">
                 <AiOutlinePlusCircle className="mx-2" />
                 Additional Charges

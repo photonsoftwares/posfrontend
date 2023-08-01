@@ -25,6 +25,7 @@ import {
   handleItemsDataRequest,
   handleEmailNotificationResponse,
   handleRedeemPointRequest,
+  handleViewOrderModal,
 } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { Button } from "react-bootstrap";
 import pdfFile from "../assets/PDF.pdf";
@@ -40,15 +41,35 @@ import { TextField } from "@mui/material";
 import MyCart from "./my-cart/MyCart";
 import { HiCreditCard } from "react-icons/hi2";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
-import { Loyalty } from "@material-ui/icons";
+import { AiFillHome } from "react-icons/ai";
+import { BiBox, BiCart, BiCube, BiGroup } from "react-icons/bi";
+import { RxDashboard } from "react-icons/rx";
+import ViewOrders from "./PendingOrders";
 
 const Home = () => {
   // const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
-
+  const navigate = useNavigate();
   const [popoverIsOpen, setPopoverIsOpen] = useState(false);
   const dispatch = useDispatch();
   const [defaultPdfFile] = useState(pdfFile);
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
+
+  const {
+    createdAt,
+    password,
+    registerId,
+    status,
+    saasId,
+    storeId,
+    // storeName,
+    userId,
+    userName,
+    userType,
+  } = localStorage.getItem("User_data")
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
+  console.log(userType);
+  const checkCustomer = userName.includes("C");
 
   const userData = JSON.parse(localStorage.getItem("User_data"));
 
@@ -62,14 +83,14 @@ const Home = () => {
     get_recommended_items,
     search_customer_data,
     show_cart_modal,
+    show_viewOrder_modal,
   } = useSelector((e) => e.ComponentPropsManagement);
   // console.log("GSD", get_searched_data);
   useEffect(() => {
     dispatch(handleRecommendedDataRequest());
   }, []);
 
-  console.log("LINK LOYALITY DATA", link_loyalty_detail);
-  console.log("LINK CUSTOMER DATA", search_customer_data);
+  // console.log("LINK CUSTOMER DATA", search_customer_data);
 
   const [validated, setValidated] = useState(false);
   const [searchedData, setSearchedData] = useState([]);
@@ -79,7 +100,7 @@ const Home = () => {
   const [cartData, setCartData] = useState(null);
   const [percentOff, setPercentOff] = useState(1);
   const [amountOff, setAmountOff] = useState("");
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const [speachModal, setSpechModal] = useState(false);
   const [visibleVoiceCommand, setVisibleVoiceCommand] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -109,6 +130,9 @@ const Home = () => {
   const [loyaltyAmount, setLoyaltyAmount] = useState(
     link_loyalty_detail.balance_amount
   );
+  const [viewOrderModalIsOpen, setViewOrderModalIsOpen] = useState(false);
+
+  console.log("recommended DATA", recommendedData);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -141,7 +165,7 @@ const Home = () => {
 
     var MyDate = new Date();
     var MyDateString;
-    console.log("inside effect", link_loyalty_detail);
+    console.log("inside effect", cartData);
     if (link_loyalty_detail && Object.keys(link_loyalty_detail.length > 0)) {
       if (checkLoyalty === true) {
         dispatch(
@@ -627,11 +651,102 @@ const Home = () => {
     setEmail("");
   };
 
+  // console.log("HOME CARTDATA", cartData);
+
   // console.log("DISCOUNT AMOUNT", discountAmountVal);
   // console.log("OPTION TICK", optionTick);
   console.log("TENDER 3", handleTander3());
 
   // console.log("HANDLE TENDER", handleTenderAmount());
+  const customerTab = [
+    {
+      id: 1,
+      label: "Home",
+      value: "home",
+      icon: <AiFillHome color="#D64046" opacity={0.6} size="25" />,
+      isActive: true,
+    },
+    {
+      id: 2,
+      label: "Order",
+      value: "order",
+      icon: <BiBox color="#D64046" size="25" />,
+      isActive: true,
+    },
+    {
+      id: 4,
+      label: "Cart",
+      value: "cart",
+      icon: <BiCart color="#D64046" size="25" />,
+      isActive: true,
+    },
+    {
+      id: 5,
+      label: "Profile",
+      value: "profile",
+      icon: <BiGroup color="#D64046" size="25" />,
+      isActive: true,
+    },
+  ];
+  const handleUserCheck = () => {
+    if (userType === "CUSTOMER") {
+      return (
+        <div
+          className="d-flex flex-row"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          {customerTab
+            .filter((io) => io.isActive === true)
+            .map((item) => {
+              return (
+                <>
+                  <div
+                    style={{
+                      display: "flex",
+                      // justifyContent: "space-between",
+                      alignItems: "center",
+                      flexDirection: "column",
+                      // margin: "10px",
+                      // marginBottom: "20px",
+                      cursor: "pointer",
+                      color: "#3d2b2b",
+                    }}
+                    onClick={() => {
+                      if (item.value === "home") {
+                        navigate("/home");
+                      } else if (item.value === "order") {
+                        setViewOrderModalIsOpen((state) => !state);
+                        // <ViewOrders
+                        //   viewOrderModalIsOpen={viewOrderModalIsOpen}
+                        //   setViewOrderModalIsOpen={setViewOrderModalIsOpen}
+                        // />;
+                        // dispatch(
+                        //   handleViewOrderModal({
+                        //     viewOrderModalIsOpne: !show_viewOrder_modal,
+                        //   })
+                        // );
+                      } else if (item.value === "cart") {
+                        dispatch(
+                          handleShowModal({ bagModalIsOpne: !show_cart_modal })
+                        );
+                      } else if (item.value === "profile") {
+                      }
+                    }}
+                  >
+                    <div>{item.icon}</div>
+                    <div style={{ color: "#D64046" }}>{item.label}</div>
+                  </div>
+                </>
+              );
+            })}
+        </div>
+      );
+    }
+  };
 
   return (
     <div className="app">
@@ -722,7 +837,7 @@ const Home = () => {
         style={{
           position: "absolute",
           bottom: "0",
-          backgroundColor: "#ffd700",
+          backgroundColor: "#fff",
           width: "100%",
           height: "50px",
           borderRadius: "5px",
@@ -736,7 +851,7 @@ const Home = () => {
             display: "flex",
             width: "100%",
             alignItems: "center",
-            justifyContent: "space-around",
+            // justifyContent: "space-around",
             color: "#fff",
           }}
         >
@@ -745,24 +860,27 @@ const Home = () => {
               color: "#eee",
               fontWeight: "bolder",
               color: "#8f0707",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              // display: "flex",
+              // alignItems: "center",
+              // justifyContent: "space-between",
               width: "100%",
             }}
           >
             {link_loyalty_detail && link_loyalty_detail.customer_name ? (
-              <div className="d-flex flex-row">
+              <div
+                className="d-flex flex-row text-center"
+                style={{ width: "100%" }}
+              >
                 <p style={{ padding: 0, margin: 0, marginRight: "30px" }}>
                   Cutomer Name
                 </p>
                 <p style={{ padding: 0, margin: 0 }}>
-                  {" "}
                   {link_loyalty_detail.customer_name}
                 </p>
               </div>
             ) : (
-              ""
+              // ""
+              handleUserCheck()
             )}
           </div>
           <div
@@ -818,6 +936,7 @@ const Home = () => {
         <MyCart
           show={show}
           cartData={cartData}
+          setInvoiceValue={setInvoiceValue}
           invoiceValue={invoiceValue}
           popoverIsOpen={popoverIsOpen}
           setPopoverIsOpen={setPopoverIsOpen}
@@ -829,6 +948,7 @@ const Home = () => {
           setPaymentModal={setPaymentModal}
           setCartData={setCartData}
           sumValue={sumValue}
+          setSumValue={setSumValue}
           setTotalDiscountVal={setTotalDiscountVal}
           setDiscountAmountVal={setDiscountAmountVal}
         />
@@ -1333,6 +1453,10 @@ const Home = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <ViewOrders
+        viewOrderModalIsOpen={viewOrderModalIsOpen}
+        setViewOrderModalIsOpen={setViewOrderModalIsOpen}
+      />
     </div>
   );
 };

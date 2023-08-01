@@ -14,13 +14,14 @@ import Modal from "react-bootstrap/Modal";
 import { useDispatch, useSelector } from "react-redux";
 // import Product from "../components/Product";
 import {
-    handleSearchedDataRequest,
-    handleSaveTransactionRequest,
-    handleRecommendedDataRequest,
-    handleAccruvalRequest,
-    handleShowModal,
-    handleItemsDataRequest,
-    handleEmailNotificationResponse,
+  handleSearchedDataRequest,
+  handleSaveTransactionRequest,
+  handleRecommendedDataRequest,
+  handleAccruvalRequest,
+  handleShowModal,
+  handleItemsDataRequest,
+  handleEmailNotificationResponse,
+  updateInvoicedRequest,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { Button } from "react-bootstrap";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
@@ -33,484 +34,500 @@ import { HiCreditCard } from "react-icons/hi2";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 
 const PaymentModal = (props) => {
-    const {
-        setPaymentModalIsOpen,
-        paymentModalIsOpen,
-        invoiceValue,
-        sumValue,
-        amount,
-        setAmount,
-        setBalanceDue,
-        balanceDue,
-        optionTickSum,
-        setOptionTickSum,
-        setOptionTick,
-        optionTick,
-        cartData,
-        setCartData
-    } = props
-    const userData = JSON.parse(localStorage.getItem("User_data"));
-    const [loyaltyAmount, setLoyaltyAmount] = useState(10000)
-    const [handleShowReceipt, setHandleShowReceipt] = useState(false);
-    const defaultLayoutPluginInstance = defaultLayoutPlugin();
-    const dispatch = useDispatch();
-    const [email, setEmail] = useState("");
-    const [defaultPdfFile] = useState(pdfFile);
-    const {
-        get_searched_data,
-        // cart_data,
-        get_QR_img,
-        total_price,
-        handle_saveTransaction_data,
-        get_recommended_items,
-        show_cart_modal,
-    } = useSelector((e) => e.ComponentPropsManagement);
-    const handleToQR = () => {
-        if (balanceDue === 0) {
-            setHandleShowReceipt(true);
-        }
-        else {
-            toast.error("Pay Due Amount!");
-        }
-    };
+  const {
+    setPaymentModalIsOpen,
+    paymentModalIsOpen,
+    invoiceValue,
+    sumValue,
+    amount,
+    setAmount,
+    setBalanceDue,
+    balanceDue,
+    optionTickSum,
+    setOptionTickSum,
+    setOptionTick,
+    optionTick,
+    cartData,
+    setCartData,
+  } = props;
+  const userData = JSON.parse(localStorage.getItem("User_data"));
+  //   console.log("ORDER NUMBER PAYMENT", props.orderNumber);
+  const [loyaltyAmount, setLoyaltyAmount] = useState(10000);
+  const [handleShowReceipt, setHandleShowReceipt] = useState(false);
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState("");
+  const [defaultPdfFile] = useState(pdfFile);
+  const {
+    get_searched_data,
+    // cart_data,
+    get_QR_img,
+    total_price,
+    handle_saveTransaction_data,
+    get_recommended_items,
+    show_cart_modal,
+  } = useSelector((e) => e.ComponentPropsManagement);
+  const handleToQR = () => {
+    if (balanceDue === 0) {
+      setHandleShowReceipt(true);
+    } else {
+      toast.error("Pay Due Amount!");
+    }
+  };
 
-    const optionArray = [
-        {
-            id: 1,
-            name: "Cash",
-            icon: <IoCashOutline size={25} />,
-            value: "cash",
-        },
-        {
-            id: 2,
-            name: "Paytm",
-            icon: <SiPaytm size={25} />,
-            value: "paytm",
-        },
-        {
-            id: 3,
-            name: "Google Pay",
-            icon: <FaGooglePay size={25} color="white" />,
-            value: "googlepay",
-        },
-        {
-            id: 4,
-            name: "Phone Pay",
-            icon: <SiPhonepe size={25} color="white" />,
-            value: "phonepay",
-        },
-        {
-            id: 5,
-            name: "UPI",
-            icon: <SiContactlesspayment size={25} color="white" />,
-            value: "upi",
-        },
-        {
-            id: 6,
-            name: "Card",
-            icon: <BsCreditCardFill size={25} />,
-            value: "card",
-        },
-        {
-            id: 7,
-            name: "Credit Sale",
-            icon: <FcSalesPerformance size={25} />,
-            value: "credit_sale",
-        },
-        {
-            id: 8,
-            name: "Loyalty",
-            icon: <RiMoneyDollarCircleFill color="#F1C40F" size={25} />,
-            value: "loyalty",
-        },
-    ];
+  const optionArray = [
+    {
+      id: 1,
+      name: "Cash",
+      icon: <IoCashOutline size={25} />,
+      value: "cash",
+    },
+    {
+      id: 2,
+      name: "Paytm",
+      icon: <SiPaytm size={25} />,
+      value: "paytm",
+    },
+    {
+      id: 3,
+      name: "Google Pay",
+      icon: <FaGooglePay size={25} color="white" />,
+      value: "googlepay",
+    },
+    {
+      id: 4,
+      name: "Phone Pay",
+      icon: <SiPhonepe size={25} color="white" />,
+      value: "phonepay",
+    },
+    {
+      id: 5,
+      name: "UPI",
+      icon: <SiContactlesspayment size={25} color="white" />,
+      value: "upi",
+    },
+    {
+      id: 6,
+      name: "Card",
+      icon: <BsCreditCardFill size={25} />,
+      value: "card",
+    },
+    {
+      id: 7,
+      name: "Credit Sale",
+      icon: <FcSalesPerformance size={25} />,
+      value: "credit_sale",
+    },
+    {
+      id: 8,
+      name: "Loyalty",
+      icon: <RiMoneyDollarCircleFill color="#F1C40F" size={25} />,
+      value: "loyalty",
+    },
+  ];
 
-    const handleTenderAmount = () => {
-        if (optionTick?.length > 0) {
-            const obj = {};
-            optionTick.map((item) => {
-                obj[item.name] = item.amount;
-            });
-            return obj;
-            // setSendValues(obj)
-        }
-        return {};
-    };
+  const handleTenderAmount = () => {
+    if (optionTick?.length > 0) {
+      const obj = {};
+      optionTick.map((item) => {
+        obj[item.name] = item.amount;
+      });
+      return obj;
+      // setSendValues(obj)
+    }
+    return {};
+  };
 
-    const handleNotifyEmail = (e) => {
-        e.preventDefault();
-        if (email) {
-            dispatch(
-                handleEmailNotificationResponse({
-                    to: email,
-                    receiptFileName:
-                        handle_saveTransaction_data &&
-                        handle_saveTransaction_data.pdf_file_name,
-                })
-            );
-        }
-        setEmail("");
-    };
+  const handleNotifyEmail = (e) => {
+    e.preventDefault();
+    if (email) {
+      dispatch(
+        handleEmailNotificationResponse({
+          to: email,
+          receiptFileName:
+            handle_saveTransaction_data &&
+            handle_saveTransaction_data.pdf_file_name,
+        })
+      );
+    }
+    setEmail("");
+  };
 
-    return (<>
-        <Modal
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            show={paymentModalIsOpen}
-        >
-            <Modal.Body>
-                <div className="main-container">
-                    <div
-                        className="main-container1"
-                        style={{
-                            backgroundColor: "#f8f8f8",
-                        }}
-                    >
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        >
-                            <div>
-                                <div
-                                    style={{
-                                        fontSize: "24px",
-                                        fontWeight: 700,
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    Total Invoice Value: {invoiceValue}
-                                </div>
-                                <div className="mt-2">
-                                    <input
-                                        type="number"
-                                        className="input-style"
-                                        onChange={(e) => {
-                                            const val = Number(e.target.value);
-                                            if (!val) {
-                                                setAmount("");
-                                            } else {
-                                                if (val <= balanceDue) {
-                                                    setAmount(val);
-                                                } else {
-                                                    setAmount(balanceDue);
-                                                }
-                                            }
-                                        }}
-                                        // disabled={optionTick?.length > 0}
-                                        disabled={Number(optionTickSum) === Number(sumValue)}
-                                        value={amount}
-                                        required={true}
-                                        placeholder="Enter Amount"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            style={{
-                                maxWidth: "100%",
-                                display: "flex",
-                                marginRight: "26px",
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <div className="option-item-container">
-                                {optionArray.map((item, i) => {
-                                    return (
-                                        <>
-                                            <div className="mb-2 d-flex px-0" key={item.id}>
-                                                <div
-                                                    onClick={() => {
-                                                        if (item.value !== "loyalty") {
-                                                            if (optionTick?.length === 0) {
-                                                                const obj = { ...item, amount };
-                                                                setOptionTick([...optionTick, obj]);
-                                                            } else if (optionTick?.length > 0) {
-                                                                if (
-                                                                    optionTick.filter(
-                                                                        (io) => io.value === item.value
-                                                                    )?.length > 0
-                                                                ) {
-                                                                    setOptionTick(
-                                                                        optionTick.filter(
-                                                                            (io) => io.value !== item.value
-                                                                        )
-                                                                    );
-                                                                } else {
-                                                                    if (Number(optionTickSum) <= sumValue) {
-                                                                        const obj = { ...item, amount };
-                                                                        setOptionTick([...optionTick, obj]);
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                        if (item.value === 'loyalty') {
-                                                            let newLoyaltyAmount = loyaltyAmount
-                                                            if (loyaltyAmount > amount) {
-                                                                newLoyaltyAmount = amount
-                                                            }
-                                                            if (optionTick?.length === 0) {
-                                                                const obj = { ...item, amount: newLoyaltyAmount };
-                                                                setOptionTick([...optionTick, obj]);
-                                                            } else if (optionTick?.length > 0) {
-                                                                if (
-                                                                    optionTick.filter(
-                                                                        (io) => io.value === item.value
-                                                                    )?.length > 0
-                                                                ) {
-                                                                    setOptionTick(
-                                                                        optionTick.filter(
-                                                                            (io) => io.value !== item.value
-                                                                        )
-                                                                    );
-                                                                } else {
-                                                                    if (Number(optionTickSum) <= sumValue) {
-                                                                        const obj = { ...item, amount: newLoyaltyAmount };
-                                                                        setOptionTick([...optionTick, obj]);
-                                                                    }
-                                                                }
-                                                            }
-                                                            // const r1 = amount - loyaltyAmount
-                                                            // setAmount(r1)
-                                                        }
-
-                                                    }}
-                                                    className={`option-item ${optionTick.filter((io) => io.name === item.value)
-                                                        ?.length > 0 && ""
-                                                        }`}
-                                                    style={{
-                                                        width: "90%",
-                                                        backgroundColor:
-                                                            item.name === "Cash"
-                                                                ? "#fed813"
-                                                                : item.name === "Paytm"
-                                                                    ? "#00B9F1"
-                                                                    : item.name === "Google Pay"
-                                                                        ? "#2DA94F"
-                                                                        : item.name === "Phone Pay"
-                                                                            ? "#5f259f"
-                                                                            : item.name === "UPI"
-                                                                                ? "#ff7909"
-                                                                                : item.name === "Credit Sale"
-                                                                                    ? "#1741b2"
-                                                                                    : item.name === "Loyalty"
-                                                                                        ? "#c8030e"
-                                                                                        : "silver",
-                                                    }}
-                                                >
-                                                    <div style={{ position: "relative", top: "2px" }}>
-                                                        {item.icon}
-                                                    </div>
-                                                    <div
-                                                        style={{
-                                                            fontSize: "10px",
-                                                            color:
-                                                                item.name === "Cash"
-                                                                    ? "black"
-                                                                    : item.name === "Paytm"
-                                                                        ? "black"
-                                                                        : item.name === "Google Pay"
-                                                                            ? "white"
-                                                                            : item.name === "Phone Pay"
-                                                                                ? "white"
-                                                                                : item.name === "UPI"
-                                                                                    ? "white"
-                                                                                    : item.name === "Credit Sale"
-                                                                                        ? "#fff"
-                                                                                        : item.name === "Loyalty"
-                                                                                            ? "#fff"
-                                                                                            : "black",
-                                                        }}
-                                                    >
-                                                        {item.name}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <div className="calculated_amount-container">
-                                {optionTick && optionTick?.length > 0 && (
-                                    <>
-                                        {optionTick.map((item) => {
-                                            return (
-                                                <>
-                                                    <div style={{ fontSize: "20px" }}>
-                                                        {item.name} - {item.amount}
-                                                    </div>
-                                                </>
-                                            );
-                                        })}
-                                    </>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="due-blnce-container">
-                            Balance Due = {balanceDue}
-                        </div>
-
-                        <div className="btn-container">
-                            <button
-                                type="submit"
-                                className="btn-style"
-                                onClick={() => {
-                                    handleToQR();
-                                    dispatch(
-                                        handleSaveTransactionRequest({
-                                            registerId: userData && userData.registerId,
-                                            storeId: userData && userData.storeId,
-                                            saasId: userData && userData.saasId,
-                                            tenderId: "TENDER1",
-                                            tender: handleTenderAmount(),
-                                            cartItems: cartData,
-                                        })
-                                    );
-                                }}
-                            >
-                                Receipts
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button
-                    onClick={() => setPaymentModalIsOpen(false)}
-                    style={{
-                        backgroundColor: "#20b9e3",
-                        outline: "none",
-                        border: "none",
-                        fontSize: "20px",
-                    }}
-                >
-                    Close
-                </Button>
-            </Modal.Footer>
-        </Modal>
-
-        <Modal
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            show={handleShowReceipt}
-            style={{ height: "100%" }}
-        >
-            <Modal.Header>
-                <Modal.Title>Your Receipt! </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <div style={{ height: "300px", width: "100%", margin: "auto" }}>
-                    {defaultPdfFile && (
-                        <>
-                            <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                                <Viewer
-                                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
-                                        handle_saveTransaction_data.pdf_file_name
-                                        }`}
-                                    plugins={[defaultLayoutPluginInstance]}
-                                />
-                            </Worker>
-                        </>
-                    )}
-                </div>
+  return (
+    <>
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={paymentModalIsOpen}
+      >
+        <Modal.Body>
+          <div className="main-container">
+            <div
+              className="main-container1"
+              style={{
+                backgroundColor: "#f8f8f8",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <div>
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "space-evenly",
-                            marginTop: "30px",
-                        }}
-                    >
-                        <div
-                            style={{
-                                // height: "100px",
-                                // width: "100%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                marginTop: "20px",
-                                marginBottom: "20px",
-                            }}
-                        >
-                            <img
-                                src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
-                                    handle_saveTransaction_data.qr_file_name
-                                    }`}
-                                alt=""
-                                style={{ height: "100%", width: "80%" }}
-                            />
-                        </div>
-                        <Button
-                            variant="outline-success"
-                            size="lg"
-                            onClick={() => setHandleOpenWhatsapp(true)}
-                        >
-                            WhatsApp <IoLogoWhatsapp size={25} />
-                        </Button>
-                        <form
-                            onSubmit={handleNotifyEmail}
-                            className="d-flex flex-row align-items-center"
-                            style={{ width: "50%" }}
-                        >
-                            <TextField
-                                type="email"
-                                className="form-control my-2"
-                                id="customer-name"
-                                required
-                                size="small"
-                                label="Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <div className="mx-2">
-                                <button type="submit" className="btn btn-primary">
-                                    Send
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button
-                    //  variant="secondary"
+                  <div
                     style={{
-                        backgroundColor: "#20b9e3",
-                        outline: "none",
-                        border: "none",
-                        fontSize: "20px",
+                      fontSize: "24px",
+                      fontWeight: 700,
+                      textAlign: "center",
                     }}
-                    onClick={() => {
-                        localStorage.removeItem("my-cart");
+                  >
+                    Total Invoice Value: {invoiceValue}
+                  </div>
+                  <div className="mt-2">
+                    <input
+                      type="number"
+                      className="input-style"
+                      onChange={(e) => {
+                        const val = Number(e.target.value);
+                        if (!val) {
+                          setAmount("");
+                        } else {
+                          if (val <= balanceDue) {
+                            setAmount(val);
+                          } else {
+                            setAmount(balanceDue);
+                          }
+                        }
+                      }}
+                      // disabled={optionTick?.length > 0}
+                      disabled={Number(optionTickSum) === Number(sumValue)}
+                      value={amount}
+                      required={true}
+                      placeholder="Enter Amount"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                style={{
+                  maxWidth: "100%",
+                  display: "flex",
+                  marginRight: "26px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="option-item-container">
+                  {optionArray.map((item, i) => {
+                    return (
+                      <>
+                        <div className="mb-2 d-flex px-0" key={item.id}>
+                          <div
+                            onClick={() => {
+                              if (item.value !== "loyalty") {
+                                if (optionTick?.length === 0) {
+                                  const obj = { ...item, amount };
+                                  setOptionTick([...optionTick, obj]);
+                                } else if (optionTick?.length > 0) {
+                                  if (
+                                    optionTick.filter(
+                                      (io) => io.value === item.value
+                                    )?.length > 0
+                                  ) {
+                                    setOptionTick(
+                                      optionTick.filter(
+                                        (io) => io.value !== item.value
+                                      )
+                                    );
+                                  } else {
+                                    if (Number(optionTickSum) <= sumValue) {
+                                      const obj = { ...item, amount };
+                                      setOptionTick([...optionTick, obj]);
+                                    }
+                                  }
+                                }
+                              }
+                              if (item.value === "loyalty") {
+                                let newLoyaltyAmount = loyaltyAmount;
+                                if (loyaltyAmount > amount) {
+                                  newLoyaltyAmount = amount;
+                                }
+                                if (optionTick?.length === 0) {
+                                  const obj = {
+                                    ...item,
+                                    amount: newLoyaltyAmount,
+                                  };
+                                  setOptionTick([...optionTick, obj]);
+                                } else if (optionTick?.length > 0) {
+                                  if (
+                                    optionTick.filter(
+                                      (io) => io.value === item.value
+                                    )?.length > 0
+                                  ) {
+                                    setOptionTick(
+                                      optionTick.filter(
+                                        (io) => io.value !== item.value
+                                      )
+                                    );
+                                  } else {
+                                    if (Number(optionTickSum) <= sumValue) {
+                                      const obj = {
+                                        ...item,
+                                        amount: newLoyaltyAmount,
+                                      };
+                                      setOptionTick([...optionTick, obj]);
+                                    }
+                                  }
+                                }
+                                // const r1 = amount - loyaltyAmount
+                                // setAmount(r1)
+                              }
+                            }}
+                            className={`option-item ${
+                              optionTick.filter((io) => io.name === item.value)
+                                ?.length > 0 && ""
+                            }`}
+                            style={{
+                              width: "90%",
+                              backgroundColor:
+                                item.name === "Cash"
+                                  ? "#fed813"
+                                  : item.name === "Paytm"
+                                  ? "#00B9F1"
+                                  : item.name === "Google Pay"
+                                  ? "#2DA94F"
+                                  : item.name === "Phone Pay"
+                                  ? "#5f259f"
+                                  : item.name === "UPI"
+                                  ? "#ff7909"
+                                  : item.name === "Credit Sale"
+                                  ? "#1741b2"
+                                  : item.name === "Loyalty"
+                                  ? "#c8030e"
+                                  : "silver",
+                            }}
+                          >
+                            <div style={{ position: "relative", top: "2px" }}>
+                              {item.icon}
+                            </div>
+                            <div
+                              style={{
+                                fontSize: "10px",
+                                color:
+                                  item.name === "Cash"
+                                    ? "black"
+                                    : item.name === "Paytm"
+                                    ? "black"
+                                    : item.name === "Google Pay"
+                                    ? "white"
+                                    : item.name === "Phone Pay"
+                                    ? "white"
+                                    : item.name === "UPI"
+                                    ? "white"
+                                    : item.name === "Credit Sale"
+                                    ? "#fff"
+                                    : item.name === "Loyalty"
+                                    ? "#fff"
+                                    : "black",
+                              }}
+                            >
+                              {item.name}
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })}
+                </div>
+              </div>
 
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 500);
-                    }}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="calculated_amount-container">
+                  {optionTick && optionTick?.length > 0 && (
+                    <>
+                      {optionTick.map((item) => {
+                        return (
+                          <>
+                            <div style={{ fontSize: "20px" }}>
+                              {item.name} - {item.amount}
+                            </div>
+                          </>
+                        );
+                      })}
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="due-blnce-container">
+                Balance Due = {balanceDue}
+              </div>
+
+              <div className="btn-container">
+                <button
+                  type="submit"
+                  className="btn-style"
+                  onClick={() => {
+                    handleToQR();
+                    dispatch(
+                      handleSaveTransactionRequest({
+                        registerId: userData && userData.registerId,
+                        storeId: userData && userData.storeId,
+                        saasId: userData && userData.saasId,
+                        tenderId: "TENDER1",
+                        tender: handleTenderAmount(),
+                        cartItems: cartData,
+                      })
+                    );
+                    // dispatch(updateInvoicedRequest(props.orderNumber));
+                    dispatch(
+                      updateInvoicedRequest({
+                        order_id: props.orderNumber,
+                        status: "Invoiced",
+                      })
+                    );
+                  }}
                 >
-                    Close
-                </Button>
-            </Modal.Footer>
-        </Modal>
-    </>)
-}
+                  Receipts
+                </button>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            onClick={() => setPaymentModalIsOpen(false)}
+            style={{
+              backgroundColor: "#20b9e3",
+              outline: "none",
+              border: "none",
+              fontSize: "20px",
+            }}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-export default PaymentModal
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={handleShowReceipt}
+        style={{ height: "100%" }}
+      >
+        <Modal.Header>
+          <Modal.Title>Your Receipt! </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div style={{ height: "300px", width: "100%", margin: "auto" }}>
+            {defaultPdfFile && (
+              <>
+                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                  <Viewer
+                    fileUrl={`${BASE_Url}/transaction/pdf/${
+                      handle_saveTransaction_data &&
+                      handle_saveTransaction_data.pdf_file_name
+                    }`}
+                    plugins={[defaultLayoutPluginInstance]}
+                  />
+                </Worker>
+              </>
+            )}
+          </div>
+          <div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                marginTop: "30px",
+              }}
+            >
+              <div
+                style={{
+                  // height: "100px",
+                  // width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: "20px",
+                  marginBottom: "20px",
+                }}
+              >
+                <img
+                  src={`${BASE_Url}/transaction/pdf-qr/${
+                    handle_saveTransaction_data &&
+                    handle_saveTransaction_data.qr_file_name
+                  }`}
+                  alt=""
+                  style={{ height: "100%", width: "80%" }}
+                />
+              </div>
+              <Button
+                variant="outline-success"
+                size="lg"
+                onClick={() => setHandleOpenWhatsapp(true)}
+              >
+                WhatsApp <IoLogoWhatsapp size={25} />
+              </Button>
+              <form
+                onSubmit={handleNotifyEmail}
+                className="d-flex flex-row align-items-center"
+                style={{ width: "50%" }}
+              >
+                <TextField
+                  type="email"
+                  className="form-control my-2"
+                  id="customer-name"
+                  required
+                  size="small"
+                  label="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <div className="mx-2">
+                  <button type="submit" className="btn btn-primary">
+                    Send
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            //  variant="secondary"
+            style={{
+              backgroundColor: "#20b9e3",
+              outline: "none",
+              border: "none",
+              fontSize: "20px",
+            }}
+            onClick={() => {
+              localStorage.removeItem("my-cart");
 
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
+            }}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+};
+
+export default PaymentModal;

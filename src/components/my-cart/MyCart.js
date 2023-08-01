@@ -4,32 +4,25 @@ import { Modal } from "react-bootstrap";
 import { Input, Label } from "reactstrap";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import {
-  handleDeleteCartItem,
+  handleCreateOrderRequest,
   handleShowModal,
-  handleEmptyCartData,
   handlecartCount,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-import { IoIosSearch } from "react-icons/io";
-import { BsHandbag, BsArrowRight } from "react-icons/bs";
-import { FcSpeaker } from "react-icons/fc";
-import { IoCashOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
-import { SiPaytm } from "react-icons/si";
-import { FaGooglePay } from "react-icons/fa";
+
 import FormControl from "@mui/material/FormControl";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
-import { SiPhonepe } from "react-icons/si";
-import { SiContactlesspayment } from "react-icons/si";
-import { BsCreditCardFill } from "react-icons/bs";
-import { IoLogoWhatsapp } from "react-icons/io";
+
 import { confirmAlert } from "react-confirm-alert"; // Import
 import { TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { BASE_Url } from "../../URL";
 const MyCart = ({
   show,
   cartData,
@@ -38,15 +31,37 @@ const MyCart = ({
   discountAmountVal,
   discountPercentVal,
   totalDiscountVal,
+  setInvoiceValue,
   setShow,
   setTotalDiscountVal,
   setDiscountAmountVal,
   sumValue,
   setPaymentModal,
   setCartData,
+  setSumValue,
   setPopoverIsOpen,
   setDiscountPercentVal,
 }) => {
+  const [paymenOptions, setPaymentOptions] = useState(false);
+  const navigate = useNavigate();
+  const {
+    createdAt,
+    password,
+    registerId,
+    status,
+    saasId,
+    storeId,
+    storeName,
+    userType,
+    userId,
+    userName,
+  } = localStorage.getItem("User_data")
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
+
+  console.log("MY CART", userName);
+  // const checkCustomer = userName.includes("C");
+  const checkCustomer = userType === "CUSTOMER";
   const { show_cart_modal } = useSelector((e) => e.ComponentPropsManagement);
   const dispatch = useDispatch();
 
@@ -178,7 +193,7 @@ const MyCart = ({
       if (getData?.length > 0) {
         if (getData?.length > 1) {
           const updateCart = getData.filter(
-            (el) => el.productId !== item.productId
+            (el) => el.item_id !== item.item_id
           );
           localStorage.setItem("my-cart", JSON.stringify(updateCart));
           setCartData(updateCart);
@@ -224,6 +239,8 @@ const MyCart = ({
     setCartData([...cartData]);
   };
 
+  const handleCheckCustomerPyament = () => {};
+
   return (
     <Modal
       show={show}
@@ -257,7 +274,15 @@ const MyCart = ({
               marginBottom: "10px",
             }}
           >
-            <h1>{item.itemName}</h1>
+            <div style={{ height: "50px", width: "50px" }}>
+              <img
+                style={{ height: "100%", width: "100%" }}
+                src={`${BASE_Url}/item/get-image/${item && item.imageName}`}
+                class="card-img-top"
+                alt="..."
+              />
+            </div>{" "}
+            <h1>{item.item_name}</h1>
             <div className="cart_product">
               <div style={{ height: "50px" }} className="cart_column">
                 <div
@@ -276,7 +301,32 @@ const MyCart = ({
                     }}
                   />
 
-                  {item.productQty}
+                  <div style={{ width: "100px" }}>
+                    <input
+                      type="number"
+                      value={item.productQty}
+                      style={{
+                        maxWidth: "100px",
+                        borderRadius: "10px",
+                        padding: "2px",
+                        textAlign: "center",
+                      }}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val && val > 0.001) {
+                          // item.productQty = Number(val);
+                          // item.productQty = Number(val);
+                          item.productQty = Number(parseFloat(val).toFixed(3));
+                          item.new_price = item.price * item.productQty;
+                          setCartData([...cartData]);
+                        } else {
+                          item.productQty = Number(0.001);
+                          setCartData([...cartData]);
+                        }
+                      }}
+                    />
+                  </div>
+                  {/* {item.productQty} */}
                   <AiOutlinePlus
                     onClick={() => {
                       handlePlusSign(item);
@@ -382,7 +432,7 @@ const MyCart = ({
                               style={{ textDecorationLine: "line-through" }}
                             >
                               {item.price * item.productQty}
-                            </span>{" "}
+                            </span>
                             / {parseFloat(item.new_price).toFixed(2)}
                           </>
                         ) : (
@@ -750,7 +800,30 @@ const MyCart = ({
           onClick={() => {
             if (cartData?.length > 0) {
               if (cartData.filter((io) => io.price === 0)?.length === 0) {
-                setPaymentModal(true);
+                if (checkCustomer) {
+                  // dispatch(
+                  //   handleCreateOrderRequest({
+                  //     customer_id: userId,
+                  //     customer_name: userName,
+                  //     saas_id: saasId,
+                  //     store_id: storeId,
+                  //     order_qty: cartData.length,
+                  //     order_tax: 0.0,
+                  //     // order_value: 100.0,
+                  //     order_value: Number(invoiceValue),
+                  //     order_discount: 0.0,
+                  //     status: "pending",
+                  //     item_list: cartData,
+                  //   })
+                  // );
+                  // setCartData([]);
+                  // localStorage.removeItem("my-cart");
+                  // setTimeout(() => {
+                  //   navigate("/");
+                  // }, 1000);
+                } else {
+                  setPaymentModal(true);
+                }
               } else {
                 toast.error("Item amount should not be zero");
               }
@@ -759,16 +832,214 @@ const MyCart = ({
             }
           }}
           style={{
-            backgroundColor: "#20b9e3",
+            // backgroundColor: "#ECE447",
+            width: "100%",
+            // display: "flex",
+            // alignItems: "center",
+            // justifyContent: "flex-start",
+            float: "feft",
+            backgroundColor: paymenOptions ? "#fff" : "#ECE447",
+            color: "#000",
             outline: "none",
             border: "none",
             fontSize: "20px",
           }}
           // className="bg-primary"
         >
-          {cartData && cartData?.length > 0
-            ? "Proceed to checkout"
-            : "No Item here"}
+          {cartData && cartData?.length > 0 ? (
+            // ? "Proceed to checkout"
+            <div onClick={() => {}}>
+              {checkCustomer ? (
+                <div onClick={() => setPaymentOptions(true)}>
+                  {paymenOptions ? (
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        // alignItems: "center",
+                        justifyContent: "flex-start",
+                      }}
+                    >
+                      <p
+                        onClick={() => setPaymentOptions(false)}
+                        style={{
+                          backgroundColor: "#ECE447",
+                          color: "#000",
+                          outline: "none",
+                          border: "none",
+                          padding: "10px",
+                          fontSize: "20px",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        Select Payment Method
+                      </p>
+                      <ul
+                        style={{ listStyle: "none" }}
+                        onClick={() => {
+                          setPaymentOptions((state) => !state);
+                          dispatch(
+                            handleCreateOrderRequest({
+                              customer_id: userId,
+                              customer_name: userName,
+                              saas_id: saasId,
+                              store_id: storeId,
+                              order_qty: cartData.length,
+                              order_tax: 0.0,
+                              // order_value: 100.0,
+                              order_value: Number(invoiceValue),
+                              order_discount: 0.0,
+                              status: "pending",
+                              payment_type: "COD",
+                              item_list: cartData,
+                            })
+                          );
+                          setCartData([]);
+                          setShow(false);
+                          localStorage.removeItem("my-cart");
+                          setTimeout(() => {
+                            // navigate("/");
+                          }, 1000);
+                        }}
+                      >
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="flexRadioDefault"
+                            id="flexRadioDefault1"
+                          />
+                          <li>{"Cash On delivery"}</li>
+                        </div>
+                      </ul>
+                      <ul
+                        style={{ listStyle: "none" }}
+                        onClick={() => {
+                          setPaymentOptions((state) => !state);
+                          dispatch(
+                            handleCreateOrderRequest({
+                              customer_id: userId,
+                              customer_name: userName,
+                              saas_id: saasId,
+                              store_id: storeId,
+                              order_qty: cartData.length,
+                              order_tax: 0.0,
+                              // order_value: 100.0,
+                              order_value: Number(invoiceValue),
+                              order_discount: 0.0,
+                              status: "pending",
+                              payment_type: "PFS",
+                              item_list: cartData,
+                            })
+                          );
+                          setCartData([]);
+                          setShow(false);
+                          localStorage.removeItem("my-cart");
+                          setTimeout(() => {
+                            // navigate("/");
+                          }, 1000);
+                        }}
+                      >
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="flexRadioDefault"
+                            id="flexRadioDefault1"
+                          />
+                          <li>{"Pickup at Store"}</li>
+                        </div>
+                      </ul>
+                      <ul
+                        style={{ listStyle: "none" }}
+                        onClick={() => {
+                          setPaymentOptions((state) => !state);
+                          dispatch(
+                            handleCreateOrderRequest({
+                              customer_id: userId,
+                              customer_name: userName,
+                              saas_id: saasId,
+                              store_id: storeId,
+                              order_qty: cartData.length,
+                              order_tax: 0.0,
+                              // order_value: 100.0,
+                              order_value: Number(invoiceValue),
+                              order_discount: 0.0,
+                              status: "pending",
+                              payment_type: "CRL",
+                              item_list: cartData,
+                            })
+                          );
+                          setCartData([]);
+                          setShow(false);
+                          localStorage.removeItem("my-cart");
+                          setTimeout(() => {
+                            navigate("/");
+                          }, 1000);
+                        }}
+                      >
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="flexRadioDefault"
+                            id="flexRadioDefault1"
+                          />
+                          <li>{"Credit Sale"}</li>
+                        </div>
+                      </ul>
+                      <ul
+                        style={{ listStyle: "none" }}
+                        onClick={() => {
+                          setPaymentOptions((state) => !state);
+                          dispatch(
+                            handleCreateOrderRequest({
+                              customer_id: userId,
+                              customer_name: userName,
+                              saas_id: saasId,
+                              store_id: storeId,
+                              order_qty: cartData.length,
+                              order_tax: 0.0,
+                              // order_value: 100.0,
+                              order_value: Number(invoiceValue),
+                              order_discount: 0.0,
+                              status: "pending",
+                              payment_type: "ADP",
+                              item_list: cartData,
+                            })
+                          );
+                          setCartData([]);
+                          setShow(false);
+                          localStorage.removeItem("my-cart");
+                          setTimeout(() => {
+                            navigate("/");
+                          }, 1000);
+                        }}
+                      >
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="flexRadioDefault"
+                            id="flexRadioDefault1"
+                          />
+                          <li>{"Online Order"}</li>
+                        </div>
+                      </ul>
+                    </div>
+                  ) : (
+                    "Select Payment Method"
+                  )}
+                </div>
+              ) : (
+                "Proceed to checkout"
+              )}
+              {/* {"Select Payment Method"} */}
+            </div>
+          ) : (
+            "No Item here"
+          )}
           {/* Proceed to checkout */}
         </Button>
       </Modal.Footer>
