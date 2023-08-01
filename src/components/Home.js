@@ -16,6 +16,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Product from "../components/Product";
 
 import qrData from "../assets/QR.jpeg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import {QrScanner} from "react-qr-scanner"
+import QrReader from 'react-qr-reader';
+
 import {
   handleSearchedDataRequest,
   handleSaveTransactionRequest,
@@ -54,6 +59,12 @@ const Home = () => {
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   const userData = JSON.parse(localStorage.getItem("User_data"));
+  const [showScanner, setShowScanner] = useState(false);
+  const [scannedBarcode, setScannedBarcode] = useState('');
+
+  const scannerRef = useRef(null);
+
+   
 
   const {
     get_searched_data,
@@ -112,6 +123,22 @@ const Home = () => {
   const [loyaltyAmount, setLoyaltyAmount] = useState(
     link_loyalty_detail.balance_amount
   );
+
+
+  const [result, setResult] = useState('No result');
+
+  const handleScan = (data) => {
+    if (data) {
+      setResult(data);
+    }
+  };
+
+  const handleError = (err) => {
+    console.error(err);
+  };
+
+
+
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -630,6 +657,30 @@ const Home = () => {
     setEmail("");
   };
 
+
+
+  const handelIcon=()=>{
+    alert("lens clicked")
+  }
+
+  const handleLensIconClick = () => {
+    setShowScanner(true);
+  };
+
+  const handleScannerError = (error) => {
+    console.error('Error scanning barcode:', error);
+    setShowScanner(false);
+  };
+
+  // const handleScan = (result) => {
+  //   if (result) {
+  //     setScannedBarcode(result.text);
+  //     setShowScanner(false);
+  //     // Now you can use the scanned barcode to perform a search or any other desired functionality.
+  //   }
+  // };
+
+
   // console.log("DISCOUNT AMOUNT", discountAmountVal);
   // console.log("OPTION TICK", optionTick);
   console.log("TENDER 3", handleTander3());
@@ -652,6 +703,7 @@ const Home = () => {
 
           <input
           
+          
             style={{ border: "1px solid yellowgreen", outline: "none" }}
             type="text"
             value={searchValue}
@@ -664,12 +716,47 @@ const Home = () => {
             className="form-control"
             aria-describedby="emailHelp"
             placeholder="Search for items..."
-            
-            
-             
+      />
+
+
+
+       
+       { <FontAwesomeIcon icon={faCamera}
+
+           onClick={handelIcon}
+          style={{fontSize:"35px"}}/>
+
+          
+}
+
+<div className="search-bar">
+      <input type="text" placeholder="Search products..." />
+      <FontAwesomeIcon icon={faCamera} className="lens-icon" onClick={handleLensIconClick} />
+
+      {showScanner && (
+        <div className="barcode-scanner">
+          <QrScanner
+            ref={scannerRef}
+            onScan={handleScan}
+            onError={handleScannerError}
+            facingMode="environment" // To use the rear camera for barcode scanning (if available)
           />
+        </div>
+      )}
+                <div>
+      <QrReader
+        delay={300}
+        onError={handleError}
+        onScan={handleScan}
+        style={{ width: '100%' }}
+      />
+      <p>{result}</p>
+    </div>
+      {scannedBarcode && <div>Scanned Barcode: {scannedBarcode}</div>}
+    </div>
   
-        
+  
+          
           {/* // <div style={{ width: "100%" }}>{transcript}</div> */}
           {/* )} */}
         </div>

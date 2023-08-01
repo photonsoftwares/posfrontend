@@ -5,6 +5,9 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@material-ui/icons": "^4.11.3",
     "@mui/material": "^5.13.5",
     "@mui/x-date-pickers": "^6.8.0",
@@ -34,6 +37,8 @@
     "react-flatpickr": "^3.10.13",
     "react-icons": "^4.10.1",
     "react-pdf": "^7.1.1",
+    "react-qr-reader": "^3.0.0-beta-1",
+    "react-qr-scanner": "^1.0.0-alpha.11",
     "react-radio-buttons": "^1.2.2",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.11.2",
