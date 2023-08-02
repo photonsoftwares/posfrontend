@@ -15,21 +15,19 @@ import Modal from "react-bootstrap/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import Product from "../components/Product";
 
-import qrData from "../assets/QR.jpeg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
-import {QrScanner} from "react-qr-scanner"
-import QrReader from 'react-qr-reader';
+import { useZxing } from "react-zxing";
 
 import {
-  handleSearchedDataRequest,
-  handleSaveTransactionRequest,
-  handleRecommendedDataRequest,
-  handleAccruvalRequest,
-  handleShowModal,
-  handleItemsDataRequest,
-  handleEmailNotificationResponse,
-  handleRedeemPointRequest,
+ handleSearchedDataRequest,
+ handleSaveTransactionRequest,
+ handleRecommendedDataRequest,
+ handleAccruvalRequest,
+ handleShowModal,
+ handleItemsDataRequest,
+ handleEmailNotificationResponse,
+ handleRedeemPointRequest,
 } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { Button } from "react-bootstrap";
 import pdfFile from "../assets/PDF.pdf";
@@ -51,1386 +49,1382 @@ import { RxDashboard } from "react-icons/rx";
 import ViewOrders from "./PendingOrders";
 
 const Home = () => {
-  // const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
-
-  const [popoverIsOpen, setPopoverIsOpen] = useState(false);
-  const dispatch = useDispatch();
-  const [defaultPdfFile] = useState(pdfFile);
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
-
-  const userData = JSON.parse(localStorage.getItem("User_data"));
-  const [showScanner, setShowScanner] = useState(false);
-  const [scannedBarcode, setScannedBarcode] = useState('');
-
-  const scannerRef = useRef(null);
-
-   
-
-  const {
-    get_searched_data,
-    // cart_data,
-    get_QR_img,
-    link_loyalty_detail,
-    total_price,
-    handle_saveTransaction_data,
-    get_recommended_items,
-    search_customer_data,
-    show_cart_modal,
-  } = useSelector((e) => e.ComponentPropsManagement);
-  // console.log("GSD", get_searched_data);
-  useEffect(() => {
-    dispatch(handleRecommendedDataRequest());
-  }, []);
-
-  console.log("LINK LOYALITY DATA", link_loyalty_detail);
-  console.log("LINK CUSTOMER DATA", search_customer_data);
-
-  const [validated, setValidated] = useState(false);
-  const [searchedData, setSearchedData] = useState([]);
-  const [recommendedData, setRecommendedData] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
-  // const [cartData, setCartData] = useState(null);
-  const [cartData, setCartData] = useState(null);
-  const [percentOff, setPercentOff] = useState(1);
-  const [amountOff, setAmountOff] = useState("");
-  const [show, setShow] = useState(false);
-  const [speachModal, setSpechModal] = useState(false);
-  const [visibleVoiceCommand, setVisibleVoiceCommand] = useState(true);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [paymentModal, setPaymentModal] = useState(false);
-  const [handleShowReceipt, setHandleShowReceipt] = useState(false);
-  const [handleShowQR, setHandleShowQR] = useState(false);
-  const [handleOpenWhatsapp, setHandleOpenWhatsapp] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState([]);
-  const [balanceDue, setBalanceDue] = useState(0);
-  const [sumValue, setSumValue] = useState(0);
-  const [QR, setQR] = useState(null);
-  const [overDicount, setOverDiscount] = useState([]);
-  const [isIndividualDiscount, setIsIndividualDiscount] = useState(true);
-  const [amount, setAmount] = useState("");
-  const [optionTick, setOptionTick] = useState([]);
-  const [optionTickSum, setOptionTickSum] = useState(0);
-  const [discountPercentVal, setDiscountPercentVal] = useState("");
-  const [discountAmountVal, setDiscountAmountVal] = useState("");
-  const [totalDiscountVal, setTotalDiscountVal] = useState(0);
-  const [invoiceValue, setInvoiceValue] = useState(0);
-  const [addPrice, setAddPrice] = useState("");
-  const [email, setEmail] = useState("");
-  const [updatecart, setUpdatecart] = useState(true);
-  const [storeName, setStoreName] = useState("");
-  const [checkLoyalty, setcheckLoyalty] = useState(false);
-  const [loyalityRedemedValue, setLoyalityRedemedValue] = useState(0);
-  const [loyaltyAmount, setLoyaltyAmount] = useState(
-    link_loyalty_detail.balance_amount
-  );
-
-
-  const [result, setResult] = useState('No result');
-
-  const handleScan = (data) => {
-    if (data) {
-      setResult(data);
-    }
-  };
-
-  const handleError = (err) => {
-    console.error(err);
-  };
-
-
-
-
-  useEffect(() => {
-    if (localStorage.getItem("Store_data")) {
-      const allData = JSON.parse(localStorage.getItem("Store_data"));
-      // console.log("STORE NAME", storeName);
-      setStoreName(allData?.storeName);
-    }
-  }, [storeName]);
-
-  const getDataFromStorage = () => {
-    try {
-      const t1 = JSON.parse(localStorage.getItem("my-cart"));
-      setCartData(t1);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  useEffect(() => {
-    getDataFromStorage();
-  }, [updatecart]);
-
-  // console.log("handle_saveTransaction_data", handle_saveTransaction_data);
-
-  useEffect(() => {
-    const date = new Date();
-
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-
-    var MyDate = new Date();
-    var MyDateString;
-    console.log("inside effect", link_loyalty_detail);
-    if (link_loyalty_detail && Object.keys(link_loyalty_detail.length > 0)) {
-      if (checkLoyalty === true) {
-        dispatch(
-          handleRedeemPointRequest({
-            link_loyalty_detail,
-            redeem_amount: optionTick.filter((el) => el.value === "loyalty")[0]
-              .amount,
-            bussiness_date: "2023-04-24",
-            invoice_number: handle_saveTransaction_data.transaction_id + "",
-            remarks: "",
-          })
-        );
-        // dispatch(
-        //   handleAccruvalRequest({
-        //     link_loyalty_detail,
-        //     client_id: userData && userData.saasId,
-        //     source_channel: "POS",
-        //     register_id: userData && userData.registerId,
-        //     total_invoice_amount: Number(invoiceValue),
-        //     store_id: Number(userData && userData.storeId),
-        //     business_date: `${year}-${month < 10 ? "0" + month : month}-${
-        //       day < 10 ? "0" + day : day
-        //     }`,
-        //     invoice_no: handle_saveTransaction_data.transaction_id + "",
-        //     source_app: "POS",
-        //     concept_code: Number(1),
-        //     source_function: "POST",
-        //     country: link_loyalty_detail.country?.toUpperCase(),
-        //     reference_number: handle_saveTransaction_data.transaction_id + "",
-        //     territory_code: "INR",
-        //     remarks: "GOOD",
-        //     product: cartDataAcc(),
-        //     transaction_type: "PURCHASE",
-        //     program_name: "campaign name",
-        //     base_currency: link_loyalty_detail.base_currency,
-        //     tender: handleTander3(),
-        //   })
-        // );
-      } else {
-        // dispatch(
-        //   handleAccruvalRequest({
-        //     link_loyalty_detail,
-        //     client_id: userData && userData.saasId,
-        //     source_channel: "POS",
-        //     register_id: userData && userData.registerId,
-        //     total_invoice_amount: Number(invoiceValue),
-        //     store_id: Number(userData && userData.storeId),
-        //     business_date: `${year}-${month < 10 ? "0" + month : month}-${
-        //       day < 10 ? "0" + day : day
-        //     }`,
-        //     invoice_no: handle_saveTransaction_data.transaction_id + "",
-        //     source_app: "POS",
-        //     concept_code: Number(1),
-        //     source_function: "POST",
-        //     country: link_loyalty_detail.country?.toUpperCase(),
-        //     reference_number: handle_saveTransaction_data.transaction_id + "",
-        //     territory_code: "INR",
-        //     remarks: "GOOD",
-        //     product: cartDataAcc(),
-        //     transaction_type: "PURCHASE",
-        //     program_name: "campaign name",
-        //     base_currency: link_loyalty_detail.base_currency,
-        //     tender: handleTander3(),
-        //   })
-        // );
-      }
-    } else {
-      // dispatch(
-      //   handleAccruvalRequest({
-      //     link_loyalty_detail,
-      //     client_id: userData && userData.saasId,
-      //     source_channel: "POS",
-      //     register_id: userData && userData.registerId,
-      //     total_invoice_amount: Number(invoiceValue),
-      //     store_id: Number(userData && userData.storeId),
-      //     business_date: `${year}-${month < 10 ? "0" + month : month}-${
-      //       day < 10 ? "0" + day : day
-      //     }`,
-      //     invoice_no: handle_saveTransaction_data.transaction_id + "",
-      //     source_app: "POS",
-      //     concept_code: Number(1),
-      //     source_function: "POST",
-      //     country: link_loyalty_detail.country?.toUpperCase(),
-      //     reference_number: handle_saveTransaction_data.transaction_id + "",
-      //     territory_code: "INR",
-      //     remarks: "GOOD",
-      //     product: cartDataAcc(),
-      //     transaction_type: "PURCHASE",
-      //     program_name: "campaign name",
-      //     base_currency: link_loyalty_detail.base_currency,
-      //     tender: handleTander3(),
-      //   })
-      // );
-    }
-  }, [handle_saveTransaction_data]);
-
-  // const findtLoyaltyTender = () => {
-  //   if (optionTick?.length > 0) {
-  //     const obj = {};
-  //     optionTick.map((item) => {
-  //       obj[item.name] = item.amount;
-  //     });
-  //     return obj;
-  //     // setSendValues(obj)
-  //   }
-  //   return {};
-  // };
-
-  const cartDataAcc = () => {
-    if (cartData?.length > 0) {
-      let arr = [];
-      cartData.map((item) => {
-        console.log("ITEM", item);
-
-        arr.push({
-          product_name: item.category,
-          product_quantity: item.productQty,
-          product_amount: item.price,
-          product_non_sale_amount: item.discount == 0 ? item.price : "",
-          product_sale_amount:
-            item.discount > 0 ? item.price - item.discount : "",
-          product_discount_amount: Number(
-            item.discount > 0 ? item.discount : 0
-          ),
-          qr_sale_flag: true,
-        });
-      });
-      return arr;
-      // setSendValues(obj)
-    }
-    return [];
-  };
-
-  // cartDataAcc();
-
-  useEffect(() => {
-    setShow(show_cart_modal);
-  }, [show_cart_modal]);
-
-  useEffect(() => {
-    if (
-      Number(optionTickSum) === Number(invoiceValue) &&
-      Number(invoiceValue) !== 0
-    ) {
-      setAmount(0);
-      setBalanceDue(0);
-    } else if (Number(optionTickSum) < Number(invoiceValue)) {
-      const balance_due = Number(invoiceValue) - Number(optionTickSum);
-      setBalanceDue(parseFloat(balance_due).toFixed(2));
-      setAmount(parseFloat(balance_due).toFixed(2));
-    }
-  }, [optionTickSum, invoiceValue]);
-
-  useEffect(() => {
-    // if (totalDiscountVal) {
-    //   setInvoiceValue(parseFloat(sumValue - totalDiscountVal).toFixed(2));
-    // } else {
-    // }
-    setInvoiceValue(parseFloat(sumValue).toFixed(2));
-  }, [sumValue, totalDiscountVal]);
-
-  useEffect(() => {
-    if (get_recommended_items && get_recommended_items?.data) {
-      if (get_recommended_items?.data?.length > 0) {
-        const t1 = JSON.parse(JSON.stringify(get_recommended_items?.data));
-        t1.map((item) => {
-          item["new_price"] = item.price;
-        });
-        setRecommendedData(t1);
-      }
-    }
-  }, [get_recommended_items]);
-
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    setValidated(true);
-  };
-
-  useEffect(() => {
-    console.log("cartData", cartData);
-    const arr = [];
-    let sum = 0;
-    cartData?.map((el) => {
-      // const totalCart = Number(el.price) * Number(el.productQty);
-      // arr.push(totalCart);
-      // const r =  el.new_price* el.productQty
-      arr.push(el.new_price);
-    });
-    arr?.map((el) => {
-      sum = sum + el;
-    });
-    console.log("SUM", sum);
-    // setBalanceDue(sum);
-    setSumValue(sum);
-    setAmount(sum);
-
-    // =============================
-  }, [cartData]);
-
-  useEffect(() => {
-    if (get_QR_img) {
-      setQR(get_QR_img);
-    }
-  }, [get_QR_img]);
-
-  // useEffect(() => {
-  //   if (cart_data) {
-  //     if (cart_data?.length > 0) {
-  //       const t1 = JSON.parse(JSON.stringify(cart_data));
-  // t1.map((item) => {
-  //   item["discount_menu_is_open"] = false;
-  //   item["discount_value"] = "";
-  //   item["amount_value"] = "";
-  //   item["new_price"] = Number(item.price) * Number(item.productQty);
-  //   item["zero_price"] = Number(item.price) * Number(item.productQty);
-  // });
-  //       setCartData(t1);
-  //     }
-  //  else {
-  //   setCartData([]);
-  //   setTotalDiscountVal(0);
-  // }
-  // }
-  // }, [cart_data]);
-  const optionArray = [
-    {
-      id: 1,
-      name: "Cash",
-      icon: <IoCashOutline size={25} />,
-      value: "cash",
-      isActive: false,
-    },
-    {
-      id: 2,
-      name: "Paytm",
-      icon: <SiPaytm size={25} />,
-      value: "paytm",
-      isActive: false,
-    },
-    {
-      id: 3,
-      name: "Google Pay",
-      icon: <FaGooglePay size={25} color="white" />,
-      value: "googlepay",
-      isActive: false,
-    },
-    {
-      id: 4,
-      name: "Phone Pay",
-      icon: <SiPhonepe size={25} color="white" />,
-      value: "phonepay",
-      isActive: false,
-    },
-    {
-      id: 5,
-      name: "UPI",
-      icon: <SiContactlesspayment size={25} color="white" />,
-      value: "upi",
-      isActive: false,
-    },
-    {
-      id: 6,
-      name: "Card",
-      icon: <BsCreditCardFill size={25} />,
-      value: "card",
-      isActive: false,
-    },
-    {
-      id: 7,
-      name: "Credit Sale",
-      icon: <FcSalesPerformance size={25} />,
-      value: "credit_sale",
-      isActive: false,
-    },
-
-    {
-      id: 8,
-      name: "Loyalty",
-      cardValue: link_loyalty_detail.balance_amount,
-      icon: link_loyalty_detail.balance_amount,
-      value: "loyalty",
-      isActive: link_loyalty_detail.balance_amount > 0 ? false : true,
-    },
-  ];
-
-  const debounce = (func) => {
-    let timer;
-    return function (...args) {
-      const context = this;
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
-        timer = null;
-        func.apply(context, args);
-      }, 1000);
-    };
-  };
-
-  const handleVoiceSearch = (value) => {
-    dispatch(handleSearchedDataRequest({ searchValue: value }));
-  };
-
-  const optimizedVoicefn = useCallback(debounce(handleVoiceSearch), []);
-
-  useEffect(() => {
-    if (get_searched_data && get_searched_data?.data) {
-      if (get_searched_data?.data?.length > 0) {
-        const t1 = JSON.parse(JSON.stringify(get_searched_data?.data));
-        t1.map((item) => {
-          item["new_price"] = item.price;
-        });
-        setSearchedData(t1);
-      }
-    }
-  }, [get_searched_data]);
-
-  // console.log(searchedData);
-  const handleSearch = (value) => {
-    dispatch(handleSearchedDataRequest({ searchValue: value }));
-  };
-
-  const optimizedFn = useCallback(debounce(handleSearch), []);
-
-  useEffect(() => {
-    if (searchValue) {
-      optimizedFn(searchValue);
-    }
-  }, [searchValue]);
-
-  let recognition = null;
-  try {
-    recognition = window.recognition;
-    recognition.addEventListener("result", (e) => {
-      const transcript = Array.from(e.results)
-        .map((result) => result[0])
-        .map((result) => result.transcript)
-        .join("");
-
-      // document.getElementById("p").innerHTML = transcript;
-      setSearchValue(transcript);
-    });
-  } catch (err) {
-    console.log(err);
-  }
-
-  const handleVoiceCommand = () => {
-    try {
-      recognition.start();
-    } catch (err) {
-      console.log("err", err);
-    }
-    // setVisibleVoiceCommand((state) => !state);
-    // SpeechRecognition.startListening({ language: "en-IN" });
-  };
-
-  const handleSelect = (e) => {
-    // console.log(e.target.value);
-  };
-
-  useEffect(() => {
-    // console.log("optionTick", optionTick);
-    let sum = 0;
-    if (optionTick && optionTick?.length > 0) {
-      optionTick.map((item) => {
-        sum = sum + Number(item.amount);
-      });
-    } else {
-      sum = 0;
-    }
-    setOptionTickSum(sum);
-  }, [optionTick]);
-
-  const handleToQR = () => {
-    if (balanceDue == 0) {
-      setHandleShowReceipt(true);
-    }
-    //  else if (balanceDue == 0) {
-    //   setHandleShowReceipt(true);
-    // }
-    else {
-      // alert("PAY DUE AMOUNT");
-      toast.success("Pay Due Amount!");
-    }
-  };
-
-  const handleWhatsSubmit = (event) => {
-    event.preventDefault();
-    toast.success("Invoice Sent To Your WhatsApp!");
-    // alert("Form Sumbited!");
-    // window.location.reload();
-  };
-
-  const RenderUi = () => {
-    if (searchedData && searchValue?.length > 0) {
-      return (
-        <>
-          <Product
-            setSearchValue={setSearchValue}
-            setData={setSearchedData}
-            cartData={cartData}
-            setCartData={setCartData}
-            data={searchedData}
-            setUpdatecart={setUpdatecart}
-            updatecart={updatecart}
-          />
-        </>
-      );
-    } else if (recommendedData && recommendedData?.length > 0) {
-      return (
-        <>
-          <Product
-            setSearchValue={setSearchValue}
-            data={recommendedData}
-            cartData={cartData}
-            setCartData={setCartData}
-            setData={setRecommendedData}
-            setUpdatecart={setUpdatecart}
-            updatecart={updatecart}
-          />
-        </>
-      );
-    }
-  };
-
-  const handleTenderAmount = () => {
-    if (optionTick?.length > 0) {
-      const obj = {};
-      optionTick.map((item) => {
-        obj[item.name] = item.amount;
-      });
-      return obj;
-      // setSendValues(obj)
-    }
-    return {};
-  };
-
-  const handleTander2 = () => {
-    if (optionTick?.length > 0) {
-      const obj = {};
-      optionTick.map((item) => {
-        // obj[item.name] = item.amount;
-        obj["tender_name"] = item.name.toLowerCase();
-        obj["tender_value"] = Number(item.amount);
-      });
-      return obj;
-      // setSendValues(obj)
-    }
-    return {};
-  };
-  const handleTander3 = () => {
-    if (optionTick?.length > 0) {
-      const arr = [];
-      optionTick.map((item) => {
-        arr.push({
-          tender_name: item.name.toLowerCase(),
-          tender_value: Number(item.amount),
-        });
-        // obj["tender_name"] = item.name.toLowerCase();
-        // obj["tender_value"] = Number(item.amount);
-      });
-      return arr;
-      // setSendValues(obj)
-    }
-    return [];
-  };
-
-  const handleNotifyEmail = (e) => {
-    e.preventDefault();
-    if (email) {
-      dispatch(
-        handleEmailNotificationResponse({
-          to: email,
-          receiptFileName:
-            handle_saveTransaction_data &&
-            handle_saveTransaction_data.pdf_file_name,
-        })
-      );
-    }
-    setEmail("");
-  };
-
-
-
-  const handelIcon=()=>{
-    alert("lens clicked")
-  }
-
-  const handleLensIconClick = () => {
-    setShowScanner(true);
-  };
-
-  const handleScannerError = (error) => {
-    console.error('Error scanning barcode:', error);
-    setShowScanner(false);
-  };
-
-  // const handleScan = (result) => {
-  //   if (result) {
-  //     setScannedBarcode(result.text);
-  //     setShowScanner(false);
-  //     // Now you can use the scanned barcode to perform a search or any other desired functionality.
-  //   }
-  // };
-
-
-  // console.log("DISCOUNT AMOUNT", discountAmountVal);
-  // console.log("OPTION TICK", optionTick);
-  console.log("TENDER 3", handleTander3());
-
-  // console.log("HANDLE TENDER", handleTenderAmount());
-
-  return (
-    <div className="app">
-      <div
-        style={{
-          // position: "sticky",
-          // top: 0,
-          width: "",
-          // height: "85px",
-          backgroundColor: "#fff",
-        }}
-      >
-        <div className="d-flex align-items-center justify-content-center mt-3">
-          <IoIosSearch size={30} opacity={0.4} />
-
-          <input
-          
-          
-            style={{ border: "1px solid yellowgreen", outline: "none" }}
-            type="text"
-            value={searchValue}
-            autoFocus
-            onChange={(e) => {
-              const val = e.target.value;
-              // optimizedFn(val)
-              setSearchValue(val);
-            }}
-            className="form-control"
-            aria-describedby="emailHelp"
-            placeholder="Search for items..."
-      />
-
-
-
-       
-       { <FontAwesomeIcon icon={faCamera}
-
-           onClick={handelIcon}
-          style={{fontSize:"35px"}}/>
-
-          
-}
-
-<div className="search-bar">
-      <input type="text" placeholder="Search products..." />
-      <FontAwesomeIcon icon={faCamera} className="lens-icon" onClick={handleLensIconClick} />
-
-      {showScanner && (
-        <div className="barcode-scanner">
-          <QrScanner
-            ref={scannerRef}
-            onScan={handleScan}
-            onError={handleScannerError}
-            facingMode="environment" // To use the rear camera for barcode scanning (if available)
-          />
-        </div>
-      )}
-                <div>
-      <QrReader
-        delay={300}
-        onError={handleError}
-        onScan={handleScan}
-        style={{ width: '100%' }}
-      />
-      <p>{result}</p>
-    </div>
-      {scannedBarcode && <div>Scanned Barcode: {scannedBarcode}</div>}
-    </div>
-  
-  
-          
-          {/* // <div style={{ width: "100%" }}>{transcript}</div> */}
-          {/* )} */}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            // marginTop: "10px",
-            justifyContent: "center",
-          }}
-        >
-          <FcSpeaker
-            size={30}
-            opacity={0.9}
-            // onClick={() => setSpechModal(true)}
-            onClick={handleVoiceCommand}
-            // onClick={() => {
-            //   setVisibleVoiceCommand(true);
-            //   startListening;
-            // }}
-          />
-        </div>
-      </div>
-      <ul
-        style={{
-          paddingLeft: "20px",
-          paddingRight: "20px",
-          overflowY: "scroll",
-          maxHeight: "400px",
-          // paddingBottom: "20px",
-        }}
-      >
-        <h5
-          // className="my-3"
-          style={{
-            fontWeight: "bold",
-            padding: 0,
-            margin: 0,
-            display: searchValue?.length ? "none" : "block",
-          }}
-        >
-          Recommended Items
-        </h5>
-
-        <RenderUi />
-        {/* {searchedData && searchValue?.length > 0
-          ? searchedData.map((item, index) => (
-              <Product item={item} key={index} />
-            ))
-          : recommendedData &&
-            recommendedData?.length > 0 &&
-            recommendedData.map((item, index) => (
-              <>
-                <Product item={item} key={index} />
-              </>
-            ))} */}
-      </ul>
-      <div
-        style={{
-          position: "absolute",
-          bottom: "0",
-          backgroundColor: "#ffd700",
-          width: "100%",
-          height: "50px",
-          borderRadius: "5px",
-        }}
-      >
-        {/* {cart_data && ( */}
-        <div
-          style={{
-            paddingLeft: "20px",
-            paddingRight: "20px",
-            display: "flex",
-            width: "100%",
-            alignItems: "center",
-            justifyContent: "space-around",
-            color: "#fff",
-          }}
-        >
-          <div
-            style={{
-              color: "#eee",
-              fontWeight: "bolder",
-              color: "#8f0707",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-            }}
-          >
-            {link_loyalty_detail && link_loyalty_detail.customer_name ? (
-              <div className="d-flex flex-row">
-                <p style={{ padding: 0, margin: 0, marginRight: "30px" }}>
-                  Cutomer Name
-                </p>
-                <p style={{ padding: 0, margin: 0 }}>
-                  {" "}
-                  {link_loyalty_detail.customer_name}
-                </p>
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
-          <div
-            style={{
-              fontWeight: "lighter",
-              color: "#fff",
-              position: "relative",
-              cursor: "pointer",
-            }}
-          >
-            <div style={{ margin: "5px 0px" }}>
-              {/* <BsHandbag color="#000" fontSize={30} opacity={0.8} /> */}
-            </div>
-            <h6
-              style={{
-                fontSize: "15px",
-                padding: 0,
-                margin: 0,
-                position: "absolute",
-                color: "red",
-                right: "11px",
-                top: "16px",
-              }}
-            >
-              {/* {cartData?.length} */}
-            </h6>
-          </div>
-          <h2
-            style={{
-              padding: 0,
-              margin: 0,
-              fontWeight: "400",
-              color: "#000",
-              textDecoration: "none",
-              fontSize: "20px",
-              cursor: "pointer",
-            }}
-            // onClick={() => {
-            //   if (cartData && cartData?.length > 0) {
-            //     setShow(true);
-            //   } else {
-            //     toast.error("Please add atleast one item in cart");
-            //   }
-            // }}
-          >
-            {/* View Cart <BsArrowRight /> */}
-          </h2>
-        </div>
-        {/* )} */}
-      </div>
-      {/* MY CART */}
-      {show === true && (
-        <MyCart
-          show={show}
-          cartData={cartData}
-          invoiceValue={invoiceValue}
-          popoverIsOpen={popoverIsOpen}
-          setPopoverIsOpen={setPopoverIsOpen}
-          discountAmountVal={discountAmountVal}
-          discountPercentVal={discountPercentVal}
-          setDiscountPercentVal={setDiscountPercentVal}
-          totalDiscountVal={totalDiscountVal}
-          setShow={setShow}
-          setPaymentModal={setPaymentModal}
-          setCartData={setCartData}
-          sumValue={sumValue}
-          setTotalDiscountVal={setTotalDiscountVal}
-          setDiscountAmountVal={setDiscountAmountVal}
-        />
-      )}
-
-      <Modal
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        // id="contained-modal-title-vcenter"
-        show={paymentModal}
-        // style={{ position: "relative" }}
-      >
-        <Modal.Body>
-          <div className="main-container">
-            <div
-              className="main-container1"
-              style={{
-                backgroundColor: "#f8f8f8",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      fontSize: "24px",
-                      fontWeight: 700,
-                      textAlign: "center",
-                    }}
-                  >
-                    Total Invoice Value: {invoiceValue}
-                  </div>
-                  <div className="mt-2">
-                    <input
-                      type="number"
-                      className="input-style"
-                      onChange={(e) => {
-                        const val = Number(e.target.value);
-                        if (!val) {
-                          setAmount("");
-                        } else {
-                          if (val <= balanceDue) {
-                            setAmount(val);
-                          } else {
-                            setAmount(balanceDue);
-                          }
-                        }
-                      }}
-                      // disabled={optionTick?.length > 0}
-                      disabled={Number(optionTickSum) === Number(sumValue)}
-                      value={amount}
-                      required={true}
-                      placeholder="Enter Amount"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                style={{
-                  maxWidth: "100%",
-                  display: "flex",
-                  marginRight: "26px",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <div className="option-item-container">
-                  {optionArray
-                    .filter((el) => el.isActive === false)
-                    .map((item, i) => {
-                      return (
-                        <>
-                          <div className="mb-2 d-flex px-0" key={item.id}>
-                            <div
-                              onClick={() => {
-                                if (optionTick?.length === 0) {
-                                  const obj = { ...item, amount };
-                                  setOptionTick([...optionTick, obj]);
-                                } else if (optionTick?.length > 0) {
-                                  if (
-                                    optionTick.filter(
-                                      (io) => io.value === item.value
-                                    )?.length > 0
-                                  ) {
-                                    setOptionTick(
-                                      optionTick.filter(
-                                        (io) => io.value !== item.value
-                                      )
-                                    );
-                                  } else {
-                                    if (Number(optionTickSum) <= sumValue) {
-                                      const obj = { ...item, amount };
-                                      setOptionTick([...optionTick, obj]);
-                                    }
-                                  }
-                                }
-                                console.log(item);
-                                if (item.value === "loyalty") {
-                                  setcheckLoyalty(true);
-                                  let newLoyaltyAmount = loyaltyAmount;
-                                  if (loyaltyAmount > amount) {
-                                    newLoyaltyAmount = amount;
-                                  }
-                                  if (optionTick?.length === 0) {
-                                    const obj = {
-                                      ...item,
-                                      amount: newLoyaltyAmount,
-                                    };
-                                    setOptionTick([...optionTick, obj]);
-                                  } else if (optionTick?.length > 0) {
-                                    if (
-                                      optionTick.filter(
-                                        (io) => io.value === item.value
-                                      )?.length > 0
-                                    ) {
-                                      setOptionTick(
-                                        optionTick.filter(
-                                          (io) => io.value !== item.value
-                                        )
-                                      );
-                                    } else {
-                                      if (Number(optionTickSum) <= sumValue) {
-                                        const obj = {
-                                          ...item,
-                                          amount: newLoyaltyAmount,
-                                        };
-                                        setOptionTick([...optionTick, obj]);
-                                      }
-                                    }
-                                  }
-                                }
-                              }}
-                              className={`option-item ${
-                                optionTick.filter(
-                                  (io) => io.name === item.value
-                                )?.length > 0 && ""
-                              }`}
-                              style={{
-                                width: "90%",
-                                backgroundColor:
-                                  item.name === "Cash"
-                                    ? "#fed813"
-                                    : item.name === "Paytm"
-                                    ? "#00B9F1"
-                                    : item.name === "Google Pay"
-                                    ? "#2DA94F"
-                                    : item.name === "Phone Pay"
-                                    ? "#5f259f"
-                                    : item.name === "UPI"
-                                    ? "#ff7909"
-                                    : item.name === "Credit Sale"
-                                    ? "#1741b2"
-                                    : item.name === "Loyalty"
-                                    ? "#c8030e"
-                                    : "silver",
-                              }}
-                            >
-                              <div style={{ position: "relative", top: "2px" }}>
-                                {item.icon}
-                              </div>
-                              <div
-                                style={{
-                                  fontSize: "10px",
-                                  color:
-                                    item.name === "Cash"
-                                      ? "black"
-                                      : item.name === "Paytm"
-                                      ? "black"
-                                      : item.name === "Google Pay"
-                                      ? "white"
-                                      : item.name === "Phone Pay"
-                                      ? "white"
-                                      : item.name === "UPI"
-                                      ? "white"
-                                      : item.name === "Credit Sale"
-                                      ? "#fff"
-                                      : item.name === "Loyalty"
-                                      ? "#fff"
-                                      : "black",
-                                }}
-                              >
-                                {item.name}
-                              </div>
-                            </div>
-                          </div>
-                        </>
-                      );
-                    })}
-                </div>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <div className="calculated_amount-container">
-                  {optionTick && optionTick?.length > 0 && (
-                    <>
-                      {optionTick.map((item) => {
-                        return (
-                          <>
-                            <div style={{ fontSize: "20px" }}>
-                              {item.name} - {item.amount}
-                            </div>
-                          </>
-                        );
-                      })}
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <div className="due-blnce-container">
-                Balance Due = {balanceDue}
-              </div>
-
-              <div className="btn-container">
-                <button
-                  type="submit"
-                  className="btn-style"
-                  onClick={() => {
-                    const date = new Date();
-
-                    let day = date.getDate();
-                    let month = date.getMonth() + 1;
-                    let year = date.getFullYear();
-
-                    handleToQR();
-
-                    dispatch(
-                      handleSaveTransactionRequest({
-                        registerId: userData && userData.registerId,
-                        storeId: userData && userData.storeId,
-                        saasId: userData && userData.saasId,
-                        tenderId: "TENDER1",
-                        tender: handleTenderAmount(),
-                        cartItems: cartData,
-                        customer_id:
-                          search_customer_data && search_customer_data.id,
-                        loyalty_id:
-                          link_loyalty_detail && link_loyalty_detail.loyalty_id,
-                      })
-                    );
-                    dispatch(
-                      handleAccruvalRequest({
-                        link_loyalty_detail,
-                        client_id: userData && userData.saasId,
-                        source_channel: "POS",
-                        register_id: userData && userData.registerId,
-                        total_invoice_amount: Number(invoiceValue),
-                        store_id: Number(userData && userData.storeId),
-                        business_date: `${year}-${
-                          month < 10 ? "0" + month : month
-                        }-${day < 10 ? "0" + day : day}`,
-                        invoice_no:
-                          handle_saveTransaction_data.transaction_id + "",
-                        source_app: "POS",
-                        concept_code: Number(1),
-                        source_function: "POST",
-                        country: link_loyalty_detail.country?.toUpperCase(),
-                        reference_number:
-                          handle_saveTransaction_data.transaction_id + "",
-                        territory_code: "INR",
-                        remarks: "GOOD",
-                        product: cartDataAcc(),
-                        transaction_type: "PURCHASE",
-                        program_name: "campaign name",
-                        base_currency: link_loyalty_detail.base_currency,
-                        tender: handleTander3(),
-                      })
-                    );
-                    // dispatch(
-                    //   handleAccruvalRequest({
-                    //     client_id: userData && userData.saasId,
-                    //     source_channel: "POS",
-                    //     register_id: "2002",
-                    //     total_invoice_amount: balanceDue,
-                    //     store_id: userData && userData.storeId,
-                    //     business_date: "2023-04-05",
-                    //     invoice_no: "8487021",
-                    //     source_app: "POS",
-                    //     concept_code: 1,
-                    //     source_function: "POST",
-                    //     country: loyalty_data && loyalty_data.data.country,
-                    //     reference_number: "8487021",
-                    //     territory_code:
-                    //       loyalty_data && loyalty_data.data.country,
-                    //     remarks: "GOOD",
-                    //     product: cartData,
-                    //     transaction_type: "PURCHASE",
-                    //     program_name: "campaign name",
-                    //     base_currency: loyalty_data.data.base_currency,
-                    //     tender: handleTenderAmount(),
-                    //     //  [
-                    //     //   {
-                    //     //     tender_name: "check",
-                    //     //     tender_value: 300,
-                    //     //   },
-                    //     //   {
-                    //     //     tender_name: "cash",
-                    //     //     tender_value: 300,
-                    //     //   },
-                    //     // ],
-                    //   })
-                    // );
-                  }}
-                >
-                  Receipts
-                </button>
-              </div>
-            </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            onClick={() => setPaymentModal(false)}
-            style={{
-              backgroundColor: "#20b9e3",
-              outline: "none",
-              border: "none",
-              fontSize: "20px",
-            }}
-          >
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      {/* PDF RECEiPT*/}
-      <Modal
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        show={handleShowReceipt}
-        style={{ height: "100%" }}
-      >
-        <Modal.Header>
-          <Modal.Title>Your Receipt! </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div style={{ height: "300px", width: "100%", margin: "auto" }}>
-            {defaultPdfFile && (
-              <>
-                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                  <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${
-                      handle_saveTransaction_data &&
-                      handle_saveTransaction_data.pdf_file_name
-                    }`}
-                    plugins={[defaultLayoutPluginInstance]}
-                  />
-                </Worker>
-              </>
-            )}
-          </div>
-          <div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "space-evenly",
-                marginTop: "30px",
-              }}
-            >
-              <div
-                style={{
-                  // height: "100px",
-                  // width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: "20px",
-                  marginBottom: "20px",
-                }}
-              >
-                <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${
-                    handle_saveTransaction_data &&
-                    handle_saveTransaction_data.qr_file_name
-                  }`}
-                  alt=""
-                  style={{ height: "100%", width: "80%" }}
-                />
-              </div>
-              <Button
-                variant="outline-success"
-                size="lg"
-                onClick={() => setHandleOpenWhatsapp(true)}
-              >
-                WhatsApp <IoLogoWhatsapp size={25} />
-              </Button>
-              <form
-                onSubmit={handleNotifyEmail}
-                className="d-flex flex-row align-items-center"
-                style={{ width: "50%" }}
-              >
-                <TextField
-                  type="email"
-                  className="form-control my-2"
-                  id="customer-name"
-                  required
-                  size="small"
-                  label="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <div className="mx-2">
-                  <button type="submit" className="btn btn-primary">
-                    Send
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            //  variant="secondary"
-            style={{
-              backgroundColor: "#20b9e3",
-              outline: "none",
-              border: "none",
-              fontSize: "20px",
-            }}
-            onClick={() => {
-              setHandleShowReceipt(false);
-              setPaymentModal(false);
-              // setShow(false);
-              // dispatch(handleEmptyCartItem());
-              setCartData([]);
-              setAmount(0);
-              // setSumValue(0);
-              setSearchValue("");
-              dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
-              localStorage.removeItem("my-cart");
-              setTimeout(() => {
-                window.location.reload();
-              }, 500);
-            }}
-          >
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      {/* QR */}
-      {/* WhatsApp */}
-      <Modal
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        show={handleOpenWhatsapp}
-      >
-        <Modal.Header>
-          <Modal.Title>WhatsApp</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {/*  */}
-
-          <form
-            style={{ height: "100vh", width: "100%" }}
-            onSubmit={handleWhatsSubmit}
-          >
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label">
-                Mobile
-              </label>
-              <input
-                type="text"
-                class="form-control"
-                value="8400063557"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
-              />
-            </div>
-            <button type="submit" class="btn btn-primary">
-              Submit
-            </button>
-          </form>
-          {/*  */}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            //  variant="secondary"
-            style={{
-              backgroundColor: "#20b9e3",
-              outline: "none",
-              border: "none",
-              fontSize: "20px",
-            }}
-            onClick={() => setHandleOpenWhatsapp(false)}
-          >
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
-  );
+ // const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
+
+ const [popoverIsOpen, setPopoverIsOpen] = useState(false);
+ const dispatch = useDispatch();
+ const [defaultPdfFile] = useState(pdfFile);
+ const defaultLayoutPluginInstance = defaultLayoutPlugin();
+
+ const userData = JSON.parse(localStorage.getItem("User_data"));
+ const [showScanner, setShowScanner] = useState(false);
+
+ const {
+ get_searched_data,
+ // cart_data,
+ get_QR_img,
+ link_loyalty_detail,
+ total_price,
+ handle_saveTransaction_data,
+ get_recommended_items,
+ search_customer_data,
+ show_cart_modal,
+ } = useSelector((e) => e.ComponentPropsManagement);
+ // console.log("GSD", get_searched_data);
+ useEffect(() => {
+ dispatch(handleRecommendedDataRequest());
+ }, []);
+
+ console.log("LINK LOYALITY DATA", link_loyalty_detail);
+ console.log("LINK CUSTOMER DATA", search_customer_data);
+
+ const [validated, setValidated] = useState(false);
+ const [searchedData, setSearchedData] = useState([]);
+ const [recommendedData, setRecommendedData] = useState([]);
+ const [searchValue, setSearchValue] = useState("");
+ // const [cartData, setCartData] = useState(null);
+ const [cartData, setCartData] = useState(null);
+ const [percentOff, setPercentOff] = useState(1);
+ const [amountOff, setAmountOff] = useState("");
+ const [show, setShow] = useState(false);
+ const [speachModal, setSpechModal] = useState(false);
+ const [visibleVoiceCommand, setVisibleVoiceCommand] = useState(true);
+ const [selectedOption, setSelectedOption] = useState(null);
+ const [paymentModal, setPaymentModal] = useState(false);
+ const [handleShowReceipt, setHandleShowReceipt] = useState(false);
+ const [handleShowQR, setHandleShowQR] = useState(false);
+ const [handleOpenWhatsapp, setHandleOpenWhatsapp] = useState(false);
+ const [paymentMethod, setPaymentMethod] = useState([]);
+ const [balanceDue, setBalanceDue] = useState(0);
+ const [sumValue, setSumValue] = useState(0);
+ const [QR, setQR] = useState(null);
+ const [overDicount, setOverDiscount] = useState([]);
+ const [isIndividualDiscount, setIsIndividualDiscount] = useState(true);
+ const [amount, setAmount] = useState("");
+ const [optionTick, setOptionTick] = useState([]);
+ const [optionTickSum, setOptionTickSum] = useState(0);
+ const [discountPercentVal, setDiscountPercentVal] = useState("");
+ const [discountAmountVal, setDiscountAmountVal] = useState("");
+ const [totalDiscountVal, setTotalDiscountVal] = useState(0);
+ const [invoiceValue, setInvoiceValue] = useState(0);
+ const [addPrice, setAddPrice] = useState("");
+ const [email, setEmail] = useState("");
+ const [updatecart, setUpdatecart] = useState(true);
+ const [storeName, setStoreName] = useState("");
+ const [checkLoyalty, setcheckLoyalty] = useState(false);
+ const [loyalityRedemedValue, setLoyalityRedemedValue] = useState(0);
+ const [loyaltyAmount, setLoyaltyAmount] = useState(
+ link_loyalty_detail.balance_amount
+ );
+ const [scannerResponse, setScannerResponse] = useState("");
+ const [showCamera, setShowCamera] = useState(false);
+
+ const { ref } = useZxing({
+ onResult(result) {
+ console.log(result.getText(), 'RESULT ++++++++++++')
+ setScannerResponse(result.getText());
+ },
+ });
+
+
+
+ const [result, setResult] = useState('No result');
+
+ const handleScan = (data) => {
+ if (data) {
+ setResult(data);
+ }
+ };
+
+ const handleError = (err) => {
+ console.error(err);
+ };
+
+
+
+
+ useEffect(() => {
+ if (localStorage.getItem("Store_data")) {
+ const allData = JSON.parse(localStorage.getItem("Store_data"));
+ // console.log("STORE NAME", storeName);
+ setStoreName(allData?.storeName);
+ }
+ }, [storeName]);
+
+ const getDataFromStorage = () => {
+ try {
+ const t1 = JSON.parse(localStorage.getItem("my-cart"));
+ setCartData(t1);
+ } catch (err) {
+ console.log(err);
+ }
+ };
+ useEffect(() => {
+ getDataFromStorage();
+ }, [updatecart]);
+
+ // console.log("handle_saveTransaction_data", handle_saveTransaction_data);
+
+ useEffect(() => {
+ const date = new Date();
+
+ let day = date.getDate();
+ let month = date.getMonth() + 1;
+ let year = date.getFullYear();
+
+ var MyDate = new Date();
+ var MyDateString;
+ console.log("inside effect", link_loyalty_detail);
+ if (link_loyalty_detail && Object.keys(link_loyalty_detail.length > 0)) {
+ if (checkLoyalty === true) {
+ dispatch(
+ handleRedeemPointRequest({
+ link_loyalty_detail,
+ redeem_amount: optionTick.filter((el) => el.value === "loyalty")[0]
+ .amount,
+ bussiness_date: "2023-04-24",
+ invoice_number: handle_saveTransaction_data.transaction_id + "",
+ remarks: "",
+ })
+ );
+ // dispatch(
+ // handleAccruvalRequest({
+ // link_loyalty_detail,
+ // client_id: userData && userData.saasId,
+ // source_channel: "POS",
+ // register_id: userData && userData.registerId,
+ // total_invoice_amount: Number(invoiceValue),
+ // store_id: Number(userData && userData.storeId),
+ // business_date: `${year}-${month < 10 ? "0" + month : month}-${
+ // day < 10 ? "0" + day : day
+ // }`,
+ // invoice_no: handle_saveTransaction_data.transaction_id + "",
+ // source_app: "POS",
+ // concept_code: Number(1),
+ // source_function: "POST",
+ // country: link_loyalty_detail.country?.toUpperCase(),
+ // reference_number: handle_saveTransaction_data.transaction_id + "",
+ // territory_code: "INR",
+ // remarks: "GOOD",
+ // product: cartDataAcc(),
+ // transaction_type: "PURCHASE",
+ // program_name: "campaign name",
+ // base_currency: link_loyalty_detail.base_currency,
+ // tender: handleTander3(),
+ // })
+ // );
+ } else {
+ // dispatch(
+ // handleAccruvalRequest({
+ // link_loyalty_detail,
+ // client_id: userData && userData.saasId,
+ // source_channel: "POS",
+ // register_id: userData && userData.registerId,
+ // total_invoice_amount: Number(invoiceValue),
+ // store_id: Number(userData && userData.storeId),
+ // business_date: `${year}-${month < 10 ? "0" + month : month}-${
+ // day < 10 ? "0" + day : day
+ // }`,
+ // invoice_no: handle_saveTransaction_data.transaction_id + "",
+ // source_app: "POS",
+ // concept_code: Number(1),
+ // source_function: "POST",
+ // country: link_loyalty_detail.country?.toUpperCase(),
+ // reference_number: handle_saveTransaction_data.transaction_id + "",
+ // territory_code: "INR",
+ // remarks: "GOOD",
+ // product: cartDataAcc(),
+ // transaction_type: "PURCHASE",
+ // program_name: "campaign name",
+ // base_currency: link_loyalty_detail.base_currency,
+ // tender: handleTander3(),
+ // })
+ // );
+ }
+ } else {
+ // dispatch(
+ // handleAccruvalRequest({
+ // link_loyalty_detail,
+ // client_id: userData && userData.saasId,
+ // source_channel: "POS",
+ // register_id: userData && userData.registerId,
+ // total_invoice_amount: Number(invoiceValue),
+ // store_id: Number(userData && userData.storeId),
+ // business_date: `${year}-${month < 10 ? "0" + month : month}-${
+ // day < 10 ? "0" + day : day
+ // }`,
+ // invoice_no: handle_saveTransaction_data.transaction_id + "",
+ // source_app: "POS",
+ // concept_code: Number(1),
+ // source_function: "POST",
+ // country: link_loyalty_detail.country?.toUpperCase(),
+ // reference_number: handle_saveTransaction_data.transaction_id + "",
+ // territory_code: "INR",
+ // remarks: "GOOD",
+ // product: cartDataAcc(),
+ // transaction_type: "PURCHASE",
+ // program_name: "campaign name",
+ // base_currency: link_loyalty_detail.base_currency,
+ // tender: handleTander3(),
+ // })
+ // );
+ }
+ }, [handle_saveTransaction_data]);
+
+ // const findtLoyaltyTender = () => {
+ // if (optionTick?.length > 0) {
+ // const obj = {};
+ // optionTick.map((item) => {
+ // obj[item.name] = item.amount;
+ // });
+ // return obj;
+ // // setSendValues(obj)
+ // }
+ // return {};
+ // };
+
+ const cartDataAcc = () => {
+ if (cartData?.length > 0) {
+ let arr = [];
+ cartData.map((item) => {
+ console.log("ITEM", item);
+
+ arr.push({
+ product_name: item.category,
+ product_quantity: item.productQty,
+ product_amount: item.price,
+ product_non_sale_amount: item.discount == 0 ? item.price : "",
+ product_sale_amount:
+ item.discount > 0 ? item.price - item.discount : "",
+ product_discount_amount: Number(
+ item.discount > 0 ? item.discount : 0
+ ),
+ qr_sale_flag: true,
+ });
+ });
+ return arr;
+ // setSendValues(obj)
+ }
+ return [];
+ };
+
+ // cartDataAcc();
+
+ useEffect(() => {
+ setShow(show_cart_modal);
+ }, [show_cart_modal]);
+
+ useEffect(() => {
+ if (
+ Number(optionTickSum) === Number(invoiceValue) &&
+ Number(invoiceValue) !== 0
+ ) {
+ setAmount(0);
+ setBalanceDue(0);
+ } else if (Number(optionTickSum) < Number(invoiceValue)) {
+ const balance_due = Number(invoiceValue) - Number(optionTickSum);
+ setBalanceDue(parseFloat(balance_due).toFixed(2));
+ setAmount(parseFloat(balance_due).toFixed(2));
+ }
+ }, [optionTickSum, invoiceValue]);
+
+ useEffect(() => {
+ // if (totalDiscountVal) {
+ // setInvoiceValue(parseFloat(sumValue - totalDiscountVal).toFixed(2));
+ // } else {
+ // }
+ setInvoiceValue(parseFloat(sumValue).toFixed(2));
+ }, [sumValue, totalDiscountVal]);
+
+ useEffect(() => {
+ if (get_recommended_items && get_recommended_items?.data) {
+ if (get_recommended_items?.data?.length > 0) {
+ const t1 = JSON.parse(JSON.stringify(get_recommended_items?.data));
+ t1.map((item) => {
+ item["new_price"] = item.price;
+ });
+ setRecommendedData(t1);
+ }
+ }
+ }, [get_recommended_items]);
+
+ const handleSubmit = (event) => {
+ const form = event.currentTarget;
+ if (form.checkValidity() === false) {
+ event.preventDefault();
+ event.stopPropagation();
+ }
+
+ setValidated(true);
+ };
+
+ useEffect(() => {
+ console.log("cartData", cartData);
+ const arr = [];
+ let sum = 0;
+ cartData?.map((el) => {
+ // const totalCart = Number(el.price) * Number(el.productQty);
+ // arr.push(totalCart);
+ // const r = el.new_price* el.productQty
+ arr.push(el.new_price);
+ });
+ arr?.map((el) => {
+ sum = sum + el;
+ });
+ console.log("SUM", sum);
+ // setBalanceDue(sum);
+ setSumValue(sum);
+ setAmount(sum);
+
+ // =============================
+ }, [cartData]);
+
+ useEffect(() => {
+ if (get_QR_img) {
+ setQR(get_QR_img);
+ }
+ }, [get_QR_img]);
+
+ // useEffect(() => {
+ // if (cart_data) {
+ // if (cart_data?.length > 0) {
+ // const t1 = JSON.parse(JSON.stringify(cart_data));
+ // t1.map((item) => {
+ // item["discount_menu_is_open"] = false;
+ // item["discount_value"] = "";
+ // item["amount_value"] = "";
+ // item["new_price"] = Number(item.price) * Number(item.productQty);
+ // item["zero_price"] = Number(item.price) * Number(item.productQty);
+ // });
+ // setCartData(t1);
+ // }
+ // else {
+ // setCartData([]);
+ // setTotalDiscountVal(0);
+ // }
+ // }
+ // }, [cart_data]);
+ const optionArray = [
+ {
+ id: 1,
+ name: "Cash",
+ icon: <IoCashOutline size={25} />,
+ value: "cash",
+ isActive: false,
+ },
+ {
+ id: 2,
+ name: "Paytm",
+ icon: <SiPaytm size={25} />,
+ value: "paytm",
+ isActive: false,
+ },
+ {
+ id: 3,
+ name: "Google Pay",
+ icon: <FaGooglePay size={25} color="white" />,
+ value: "googlepay",
+ isActive: false,
+ },
+ {
+ id: 4,
+ name: "Phone Pay",
+ icon: <SiPhonepe size={25} color="white" />,
+ value: "phonepay",
+ isActive: false,
+ },
+ {
+ id: 5,
+ name: "UPI",
+ icon: <SiContactlesspayment size={25} color="white" />,
+ value: "upi",
+ isActive: false,
+ },
+ {
+ id: 6,
+ name: "Card",
+ icon: <BsCreditCardFill size={25} />,
+ value: "card",
+ isActive: false,
+ },
+ {
+ id: 7,
+ name: "Credit Sale",
+ icon: <FcSalesPerformance size={25} />,
+ value: "credit_sale",
+ isActive: false,
+ },
+
+ {
+ id: 8,
+ name: "Loyalty",
+ cardValue: link_loyalty_detail.balance_amount,
+ icon: link_loyalty_detail.balance_amount,
+ value: "loyalty",
+ isActive: link_loyalty_detail.balance_amount > 0 ? false : true,
+ },
+ ];
+
+ const debounce = (func) => {
+ let timer;
+ return function (...args) {
+ const context = this;
+ if (timer) clearTimeout(timer);
+ timer = setTimeout(() => {
+ timer = null;
+ func.apply(context, args);
+ }, 1000);
+ };
+ };
+
+ const handleVoiceSearch = (value) => {
+ dispatch(handleSearchedDataRequest({ searchValue: value }));
+ };
+
+ const optimizedVoicefn = useCallback(debounce(handleVoiceSearch), []);
+
+ useEffect(() => {
+ if (get_searched_data && get_searched_data?.data) {
+ if (get_searched_data?.data?.length > 0) {
+ const t1 = JSON.parse(JSON.stringify(get_searched_data?.data));
+ t1.map((item) => {
+ item["new_price"] = item.price;
+ });
+ setSearchedData(t1);
+ }
+ }
+ }, [get_searched_data]);
+
+ // console.log(searchedData);
+ const handleSearch = (value) => {
+ dispatch(handleSearchedDataRequest({ searchValue: value }));
+ };
+
+ const optimizedFn = useCallback(debounce(handleSearch), []);
+
+ useEffect(() => {
+ if (searchValue) {
+ optimizedFn(searchValue);
+ }
+ }, [searchValue]);
+
+ let recognition = null;
+ try {
+ recognition = window.recognition;
+ recognition.addEventListener("result", (e) => {
+ const transcript = Array.from(e.results)
+ .map((result) => result[0])
+ .map((result) => result.transcript)
+ .join("");
+
+ // document.getElementById("p").innerHTML = transcript;
+ setSearchValue(transcript);
+ });
+ } catch (err) {
+ console.log(err);
+ }
+
+ const handleVoiceCommand = () => {
+ try {
+ recognition.start();
+ } catch (err) {
+ console.log("err", err);
+ }
+ // setVisibleVoiceCommand((state) => !state);
+ // SpeechRecognition.startListening({ language: "en-IN" });
+ };
+
+ const handleSelect = (e) => {
+ // console.log(e.target.value);
+ };
+
+ useEffect(() => {
+ // console.log("optionTick", optionTick);
+ let sum = 0;
+ if (optionTick && optionTick?.length > 0) {
+ optionTick.map((item) => {
+ sum = sum + Number(item.amount);
+ });
+ } else {
+ sum = 0;
+ }
+ setOptionTickSum(sum);
+ }, [optionTick]);
+
+ const handleToQR = () => {
+ if (balanceDue == 0) {
+ setHandleShowReceipt(true);
+ }
+ // else if (balanceDue == 0) {
+ // setHandleShowReceipt(true);
+ // }
+ else {
+ // alert("PAY DUE AMOUNT");
+ toast.success("Pay Due Amount!");
+ }
+ };
+
+ const handleWhatsSubmit = (event) => {
+ event.preventDefault();
+ toast.success("Invoice Sent To Your WhatsApp!");
+ // alert("Form Sumbited!");
+ // window.location.reload();
+ };
+
+ const RenderUi = () => {
+ if (searchedData && searchValue?.length > 0) {
+ return (
+ <>
+ <Product
+ setSearchValue={setSearchValue}
+ setData={setSearchedData}
+ cartData={cartData}
+ setCartData={setCartData}
+ data={searchedData}
+ setUpdatecart={setUpdatecart}
+ updatecart={updatecart}
+ />
+ </>
+ );
+ } else if (recommendedData && recommendedData?.length > 0) {
+ return (
+ <>
+ <Product
+ setSearchValue={setSearchValue}
+ data={recommendedData}
+ cartData={cartData}
+ setCartData={setCartData}
+ setData={setRecommendedData}
+ setUpdatecart={setUpdatecart}
+ updatecart={updatecart}
+ />
+ </>
+ );
+ }
+ };
+
+ const handleTenderAmount = () => {
+ if (optionTick?.length > 0) {
+ const obj = {};
+ optionTick.map((item) => {
+ obj[item.name] = item.amount;
+ });
+ return obj;
+ // setSendValues(obj)
+ }
+ return {};
+ };
+
+ const handleTander2 = () => {
+ if (optionTick?.length > 0) {
+ const obj = {};
+ optionTick.map((item) => {
+ // obj[item.name] = item.amount;
+ obj["tender_name"] = item.name.toLowerCase();
+ obj["tender_value"] = Number(item.amount);
+ });
+ return obj;
+ // setSendValues(obj)
+ }
+ return {};
+ };
+ const handleTander3 = () => {
+ if (optionTick?.length > 0) {
+ const arr = [];
+ optionTick.map((item) => {
+ arr.push({
+ tender_name: item.name.toLowerCase(),
+ tender_value: Number(item.amount),
+ });
+ // obj["tender_name"] = item.name.toLowerCase();
+ // obj["tender_value"] = Number(item.amount);
+ });
+ return arr;
+ // setSendValues(obj)
+ }
+ return [];
+ };
+
+ const handleNotifyEmail = (e) => {
+ e.preventDefault();
+ if (email) {
+ dispatch(
+ handleEmailNotificationResponse({
+ to: email,
+ receiptFileName:
+ handle_saveTransaction_data &&
+ handle_saveTransaction_data.pdf_file_name,
+ })
+ );
+ }
+ setEmail("");
+ };
+
+
+
+ const handelIcon = () => {
+ alert("lens clicked")
+ }
+
+ const handleLensIconClick = () => {
+ setShowScanner(true);
+ setShowCamera(true)
+ };
+
+ // console.log("DISCOUNT AMOUNT", discountAmountVal);
+ // console.log("OPTION TICK", optionTick);
+ console.log("TENDER 3", handleTander3());
+
+ // console.log("HANDLE TENDER", handleTenderAmount());
+
+ return (
+ <div className="app">
+ <div
+ style={{
+ // position: "sticky",
+ // top: 0,
+ width: "",
+ // height: "85px",
+ backgroundColor: "#fff",
+ }}
+ >
+ <div className="d-flex align-items-center justify-content-center mt-3">
+ <IoIosSearch size={30} opacity={0.4} />
+
+ <input
+ style={{ border: "1px solid yellowgreen", outline: "none" }}
+ type="text"
+ value={searchValue}
+ autoFocus
+ onChange={(e) => {
+ const val = e.target.value;
+ // optimizedFn(val)
+ setSearchValue(val);
+ }}
+ className="form-control"
+ aria-describedby="emailHelp"
+ placeholder="Search for items..."
+ />
+
+ <FontAwesomeIcon icon={faCamera}
+ onClick={handleLensIconClick}
+ style={{ fontSize: "35px" }}
+ />
+ {/* // <div style={{ width: "100%" }}>{transcript}</div> */}
+ {/* )} */}
+ </div>
+
+ <div className="search-bar">
+ {/* <input type="text" placeholder="Search products..." />
+ <FontAwesomeIcon icon={faCamera} className="lens-icon" onClick={handleLensIconClick} /> */}
+
+ {/* {showScanner && ( */}
+ <div style={{
+ textAlign: 'center',
+ marginTop: '30px'
+ }}>
+ <video
+ ref={ref}
+ style={{
+ width: '300px',
+ margin: "auto"
+ }}
+ />
+ </div>
+ {/* )} */}
+
+ {showCamera && (
+ <video ref={ref} autoPlay muted />
+ )}
+ {!showCamera && (
+ <div style={{
+ textAlign: 'center',
+ marginTop: '20px',
+ marginBottom: '0px'
+ }}>
+ <button onClick={handleLensIconClick}>Start Scan</button>
+ </div>
+ )}
+ {scannerResponse && (
+ <p style={{ textAlign: 'center' }} >
+ <span>Scanner result: </span>
+ <span>{scannerResponse}</span>
+ </p>
+ )}
+ </div>
+
+ <div
+ style={{
+ display: "flex",
+ alignItems: "center",
+ // marginTop: "10px",
+ justifyContent: "center",
+ }}
+ >
+ <FcSpeaker
+ size={30}
+ opacity={0.9}
+ // onClick={() => setSpechModal(true)}
+ onClick={handleVoiceCommand}
+ // onClick={() => {
+ // setVisibleVoiceCommand(true);
+ // startListening;
+ // }}
+ />
+ </div>
+ </div>
+ <ul
+ style={{
+ paddingLeft: "20px",
+ paddingRight: "20px",
+ overflowY: "scroll",
+ maxHeight: "400px",
+ // paddingBottom: "20px",
+ }}
+ >
+ <h5
+ // className="my-3"
+ style={{
+ fontWeight: "bold",
+ padding: 0,
+ margin: 0,
+ display: searchValue?.length ? "none" : "block",
+ }}
+ >
+ Recommended Items
+ </h5>
+
+ <RenderUi />
+ {/* {searchedData && searchValue?.length > 0
+ ? searchedData.map((item, index) => (
+ <Product item={item} key={index} />
+ ))
+ : recommendedData &&
+ recommendedData?.length > 0 &&
+ recommendedData.map((item, index) => (
+ <>
+ <Product item={item} key={index} />
+ </>
+ ))} */}
+ </ul>
+ <div
+ style={{
+ position: "absolute",
+ bottom: "0",
+ backgroundColor: "#ffd700",
+ width: "100%",
+ height: "50px",
+ borderRadius: "5px",
+ }}
+ >
+ {/* {cart_data && ( */}
+ <div
+ style={{
+ paddingLeft: "20px",
+ paddingRight: "20px",
+ display: "flex",
+ width: "100%",
+ alignItems: "center",
+ justifyContent: "space-around",
+ color: "#fff",
+ }}
+ >
+ <div
+ style={{
+ color: "#eee",
+ fontWeight: "bolder",
+ color: "#8f0707",
+ display: "flex",
+ alignItems: "center",
+ justifyContent: "center",
+ width: "100%",
+ }}
+ >
+ {link_loyalty_detail && link_loyalty_detail.customer_name ? (
+ <div className="d-flex flex-row">
+ <p style={{ padding: 0, margin: 0, marginRight: "30px" }}>
+ Cutomer Name
+ </p>
+ <p style={{ padding: 0, margin: 0 }}>
+ {" "}
+ {link_loyalty_detail.customer_name}
+ </p>
+ </div>
+ ) : (
+ ""
+ )}
+ </div>
+ <div
+ style={{
+ fontWeight: "lighter",
+ color: "#fff",
+ position: "relative",
+ cursor: "pointer",
+ }}
+ >
+ <div style={{ margin: "5px 0px" }}>
+ {/* <BsHandbag color="#000" fontSize={30} opacity={0.8} /> */}
+ </div>
+ <h6
+ style={{
+ fontSize: "15px",
+ padding: 0,
+ margin: 0,
+ position: "absolute",
+ color: "red",
+ right: "11px",
+ top: "16px",
+ }}
+ >
+ {/* {cartData?.length} */}
+ </h6>
+ </div>
+ <h2
+ style={{
+ padding: 0,
+ margin: 0,
+ fontWeight: "400",
+ color: "#000",
+ textDecoration: "none",
+ fontSize: "20px",
+ cursor: "pointer",
+ }}
+ // onClick={() => {
+ // if (cartData && cartData?.length > 0) {
+ // setShow(true);
+ // } else {
+ // toast.error("Please add atleast one item in cart");
+ // }
+ // }}
+ >
+ {/* View Cart <BsArrowRight /> */}
+ </h2>
+ </div>
+ {/* )} */}
+ </div>
+ {/* MY CART */}
+ {show === true && (
+ <MyCart
+ show={show}
+ cartData={cartData}
+ invoiceValue={invoiceValue}
+ popoverIsOpen={popoverIsOpen}
+ setPopoverIsOpen={setPopoverIsOpen}
+ discountAmountVal={discountAmountVal}
+ discountPercentVal={discountPercentVal}
+ setDiscountPercentVal={setDiscountPercentVal}
+ totalDiscountVal={totalDiscountVal}
+ setShow={setShow}
+ setPaymentModal={setPaymentModal}
+ setCartData={setCartData}
+ sumValue={sumValue}
+ setTotalDiscountVal={setTotalDiscountVal}
+ setDiscountAmountVal={setDiscountAmountVal}
+ />
+ )}
+
+ <Modal
+ size="lg"
+ aria-labelledby="contained-modal-title-vcenter"
+ centered
+ // id="contained-modal-title-vcenter"
+ show={paymentModal}
+ // style={{ position: "relative" }}
+ >
+ <Modal.Body>
+ <div className="main-container">
+ <div
+ className="main-container1"
+ style={{
+ backgroundColor: "#f8f8f8",
+ }}
+ >
+ <div
+ style={{
+ display: "flex",
+ justifyContent: "center",
+ alignItems: "center",
+ }}
+ >
+ <div>
+ <div
+ style={{
+ fontSize: "24px",
+ fontWeight: 700,
+ textAlign: "center",
+ }}
+ >
+ Total Invoice Value: {invoiceValue}
+ </div>
+ <div className="mt-2">
+ <input
+ type="number"
+ className="input-style"
+ onChange={(e) => {
+ const val = Number(e.target.value);
+ if (!val) {
+ setAmount("");
+ } else {
+ if (val <= balanceDue) {
+ setAmount(val);
+ } else {
+ setAmount(balanceDue);
+ }
+ }
+ }}
+ // disabled={optionTick?.length > 0}
+ disabled={Number(optionTickSum) === Number(sumValue)}
+ value={amount}
+ required={true}
+ placeholder="Enter Amount"
+ />
+ </div>
+ </div>
+ </div>
+ <div
+ style={{
+ maxWidth: "100%",
+ display: "flex",
+ marginRight: "26px",
+ alignItems: "center",
+ justifyContent: "center",
+ }}
+ >
+ <div className="option-item-container">
+ {optionArray
+ .filter((el) => el.isActive === false)
+ .map((item, i) => {
+ return (
+ <>
+ <div className="mb-2 d-flex px-0" key={item.id}>
+ <div
+ onClick={() => {
+ if (optionTick?.length === 0) {
+ const obj = { ...item, amount };
+ setOptionTick([...optionTick, obj]);
+ } else if (optionTick?.length > 0) {
+ if (
+ optionTick.filter(
+ (io) => io.value === item.value
+ )?.length > 0
+ ) {
+ setOptionTick(
+ optionTick.filter(
+ (io) => io.value !== item.value
+ )
+ );
+ } else {
+ if (Number(optionTickSum) <= sumValue) {
+ const obj = { ...item, amount };
+ setOptionTick([...optionTick, obj]);
+ }
+ }
+ }
+ console.log(item);
+ if (item.value === "loyalty") {
+ setcheckLoyalty(true);
+ let newLoyaltyAmount = loyaltyAmount;
+ if (loyaltyAmount > amount) {
+ newLoyaltyAmount = amount;
+ }
+ if (optionTick?.length === 0) {
+ const obj = {
+ ...item,
+ amount: newLoyaltyAmount,
+ };
+ setOptionTick([...optionTick, obj]);
+ } else if (optionTick?.length > 0) {
+ if (
+ optionTick.filter(
+ (io) => io.value === item.value
+ )?.length > 0
+ ) {
+ setOptionTick(
+ optionTick.filter(
+ (io) => io.value !== item.value
+ )
+ );
+ } else {
+ if (Number(optionTickSum) <= sumValue) {
+ const obj = {
+ ...item,
+ amount: newLoyaltyAmount,
+ };
+ setOptionTick([...optionTick, obj]);
+ }
+ }
+ }
+ }
+ }}
+ className={`option-item ${
+ optionTick.filter(
+ (io) => io.name === item.value
+ )?.length > 0 && ""
+ }`}
+ style={{
+ width: "90%",
+ backgroundColor:
+ item.name === "Cash"
+ ? "#fed813"
+ : item.name === "Paytm"
+ ? "#00B9F1"
+ : item.name === "Google Pay"
+ ? "#2DA94F"
+ : item.name === "Phone Pay"
+ ? "#5f259f"
+ : item.name === "UPI"
+ ? "#ff7909"
+ : item.name === "Credit Sale"
+ ? "#1741b2"
+ : item.name === "Loyalty"
+ ? "#c8030e"
+ : "silver",
+ }}
+ >
+ <div style={{ position: "relative", top: "2px" }}>
+ {item.icon}
+ </div>
+ <div
+ style={{
+ fontSize: "10px",
+ color:
+ item.name === "Cash"
+ ? "black"
+ : item.name === "Paytm"
+ ? "black"
+ : item.name === "Google Pay"
+ ? "white"
+ : item.name === "Phone Pay"
+ ? "white"
+ : item.name === "UPI"
+ ? "white"
+ : item.name === "Credit Sale"
+ ? "#fff"
+ : item.name === "Loyalty"
+ ? "#fff"
+ : "black",
+ }}
+ >
+ {item.name}
+ </div>
+ </div>
+ </div>
+ </>
+ );
+ })}
+ </div>
+ </div>
+
+ <div
+ style={{
+ display: "flex",
+ alignItems: "center",
+ justifyContent: "center",
+ }}
+ >
+ <div className="calculated_amount-container">
+ {optionTick && optionTick?.length > 0 && (
+ <>
+ {optionTick.map((item) => {
+ return (
+ <>
+ <div style={{ fontSize: "20px" }}>
+ {item.name} - {item.amount}
+ </div>
+ </>
+ );
+ })}
+ </>
+ )}
+ </div>
+ </div>
+
+ <div className="due-blnce-container">
+ Balance Due = {balanceDue}
+ </div>
+
+ <div className="btn-container">
+ <button
+ type="submit"
+ className="btn-style"
+ onClick={() => {
+ const date = new Date();
+
+ let day = date.getDate();
+ let month = date.getMonth() + 1;
+ let year = date.getFullYear();
+
+ handleToQR();
+
+ dispatch(
+ handleSaveTransactionRequest({
+ registerId: userData && userData.registerId,
+ storeId: userData && userData.storeId,
+ saasId: userData && userData.saasId,
+ tenderId: "TENDER1",
+ tender: handleTenderAmount(),
+ cartItems: cartData,
+ customer_id:
+ search_customer_data && search_customer_data.id,
+ loyalty_id:
+ link_loyalty_detail && link_loyalty_detail.loyalty_id,
+ })
+ );
+ dispatch(
+ handleAccruvalRequest({
+ link_loyalty_detail,
+ client_id: userData && userData.saasId,
+ source_channel: "POS",
+ register_id: userData && userData.registerId,
+ total_invoice_amount: Number(invoiceValue),
+ store_id: Number(userData && userData.storeId),
+ business_date: `${year}-${
+ month < 10 ? "0" + month : month
+ }-${day < 10 ? "0" + day : day}`,
+ invoice_no:
+ handle_saveTransaction_data.transaction_id + "",
+ source_app: "POS",
+ concept_code: Number(1),
+ source_function: "POST",
+ country: link_loyalty_detail.country?.toUpperCase(),
+ reference_number:
+ handle_saveTransaction_data.transaction_id + "",
+ territory_code: "INR",
+ remarks: "GOOD",
+ product: cartDataAcc(),
+ transaction_type: "PURCHASE",
+ program_name: "campaign name",
+ base_currency: link_loyalty_detail.base_currency,
+ tender: handleTander3(),
+ })
+ );
+ // dispatch(
+ // handleAccruvalRequest({
+ // client_id: userData && userData.saasId,
+ // source_channel: "POS",
+ // register_id: "2002",
+ // total_invoice_amount: balanceDue,
+ // store_id: userData && userData.storeId,
+ // business_date: "2023-04-05",
+ // invoice_no: "8487021",
+ // source_app: "POS",
+ // concept_code: 1,
+ // source_function: "POST",
+ // country: loyalty_data && loyalty_data.data.country,
+ // reference_number: "8487021",
+ // territory_code:
+ // loyalty_data && loyalty_data.data.country,
+ // remarks: "GOOD",
+ // product: cartData,
+ // transaction_type: "PURCHASE",
+ // program_name: "campaign name",
+ // base_currency: loyalty_data.data.base_currency,
+ // tender: handleTenderAmount(),
+ // // [
+ // // {
+ // // tender_name: "check",
+ // // tender_value: 300,
+ // // },
+ // // {
+ // // tender_name: "cash",
+ // // tender_value: 300,
+ // // },
+ // // ],
+ // })
+ // );
+ }}
+ >
+ Receipts
+ </button>
+ </div>
+ </div>
+ </div>
+ </Modal.Body>
+ <Modal.Footer>
+ <Button
+ onClick={() => setPaymentModal(false)}
+ style={{
+ backgroundColor: "#20b9e3",
+ outline: "none",
+ border: "none",
+ fontSize: "20px",
+ }}
+ >
+ Close
+ </Button>
+ </Modal.Footer>
+ </Modal>
+ {/* PDF RECEiPT*/}
+ <Modal
+ size="lg"
+ aria-labelledby="contained-modal-title-vcenter"
+ centered
+ show={handleShowReceipt}
+ style={{ height: "100%" }}
+ >
+ <Modal.Header>
+ <Modal.Title>Your Receipt! </Modal.Title>
+ </Modal.Header>
+ <Modal.Body>
+ <div style={{ height: "300px", width: "100%", margin: "auto" }}>
+ {defaultPdfFile && (
+ <>
+ <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+ <Viewer
+ fileUrl={`${BASE_Url}/transaction/pdf/${
+ handle_saveTransaction_data &&
+ handle_saveTransaction_data.pdf_file_name
+ }`}
+ plugins={[defaultLayoutPluginInstance]}
+ />
+ </Worker>
+ </>
+ )}
+ </div>
+ <div>
+ <div
+ style={{
+ display: "flex",
+ flexDirection: "column",
+ alignItems: "center",
+ justifyContent: "space-evenly",
+ marginTop: "30px",
+ }}
+ >
+ <div
+ style={{
+ // height: "100px",
+ // width: "100%",
+ display: "flex",
+ alignItems: "center",
+ justifyContent: "center",
+ marginTop: "20px",
+ marginBottom: "20px",
+ }}
+ >
+ <img
+ src={`${BASE_Url}/transaction/pdf-qr/${
+ handle_saveTransaction_data &&
+ handle_saveTransaction_data.qr_file_name
+ }`}
+ alt=""
+ style={{ height: "100%", width: "80%" }}
+ />
+ </div>
+ <Button
+ variant="outline-success"
+ size="lg"
+ onClick={() => setHandleOpenWhatsapp(true)}
+ >
+ WhatsApp <IoLogoWhatsapp size={25} />
+ </Button>
+ <form
+ onSubmit={handleNotifyEmail}
+ className="d-flex flex-row align-items-center"
+ style={{ width: "50%" }}
+ >
+ <TextField
+ type="email"
+ className="form-control my-2"
+ id="customer-name"
+ required
+ size="small"
+ label="Email"
+ value={email}
+ onChange={(e) => setEmail(e.target.value)}
+ />
+ <div className="mx-2">
+ <button type="submit" className="btn btn-primary">
+ Send
+ </button>
+ </div>
+ </form>
+ </div>
+ </div>
+ </Modal.Body>
+ <Modal.Footer>
+ <Button
+ // variant="secondary"
+ style={{
+ backgroundColor: "#20b9e3",
+ outline: "none",
+ border: "none",
+ fontSize: "20px",
+ }}
+ onClick={() => {
+ setHandleShowReceipt(false);
+ setPaymentModal(false);
+ // setShow(false);
+ // dispatch(handleEmptyCartItem());
+ setCartData([]);
+ setAmount(0);
+ // setSumValue(0);
+ setSearchValue("");
+ dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
+ localStorage.removeItem("my-cart");
+ setTimeout(() => {
+ window.location.reload();
+ }, 500);
+ }}
+ >
+ Close
+ </Button>
+ </Modal.Footer>
+ </Modal>
+ {/* QR */}
+ {/* WhatsApp */}
+ <Modal
+ size="lg"
+ aria-labelledby="contained-modal-title-vcenter"
+ centered
+ show={handleOpenWhatsapp}
+ >
+ <Modal.Header>
+ <Modal.Title>WhatsApp</Modal.Title>
+ </Modal.Header>
+ <Modal.Body>
+ {/* */}
+
+ <form
+ style={{ height: "100vh", width: "100%" }}
+ onSubmit={handleWhatsSubmit}
+ >
+ <div class="mb-3">
+ <label for="exampleInputEmail1" class="form-label">
+ Mobile
+ </label>
+ <input
+ type="text"
+ class="form-control"
+ value="8400063557"
+ id="exampleInputEmail1"
+ aria-describedby="emailHelp"
+ />
+ </div>
+ <button type="submit" class="btn btn-primary">
+ Submit
+ </button>
+ </form>
+ {/* */}
+ </Modal.Body>
+ <Modal.Footer>
+ <Button
+ // variant="secondary"
+ style={{
+ backgroundColor: "#20b9e3",
+ outline: "none",
+ border: "none",
+ fontSize: "20px",
+ }}
+ onClick={() => setHandleOpenWhatsapp(false)}
+ >
+ Close
+ </Button>
+ </Modal.Footer>
+ </Modal>
+ </div>
+ );
 };
 
 export default Home;
+
