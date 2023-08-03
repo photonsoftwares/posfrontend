@@ -333,7 +333,6 @@ const Main = () => {
                 flexDirection: "column",
                 justifyContent: "flex-start",
                 flexWrap: "wrap",
-
                 userSelect: "none",
               }}
             >
@@ -500,11 +499,15 @@ const Main = () => {
                             alignItems: "center",
                             flexDirection: "column",
                             margin: "10px",
-                            // marginBottom: "20px",
+                            marginBottom: "20px",
                             cursor: "pointer",
                             color: "#3d2b2b",
                           }}
-                          onClick={() => filterOmniForCustomer(item)}
+                          onClick={() => {
+                            if (item.value === "dashboard") {
+                              navigate("/retailer-dashboard");
+                            }
+                          }}
                         >
                           <div>{item.icon}</div>
                           <div>{item.label}</div>
