@@ -8,7 +8,7 @@ const InventoryDashboard = () => {
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-10 col-sm-12">
             <div className="mt-3">
-              <h1>Inventory Dashboard</h1>
+              <h1>Inventory Dashboardsss</h1>
               <button
                 type="submit"
                 className="btn btn-primary"
