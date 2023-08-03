@@ -303,9 +303,20 @@ const Main = () => {
           flexDirection: "column",
         }}
       >
+        <h1
+          style={{
+            color: "#1E1E1E",
+            // font-family: Segoe UI;
+            fontSize: "20px",
+            fontWeight: 600,
+            lineHeight: "normal",
+          }}
+        >
+          Hi {storeName}
+        </h1>
         <div
           style={{
-            backgroundColor: "#ffc544",
+            backgroundColor: "#FDEECC",
             width: "100%",
             maxWidth: "1200px",
             border: "1px solid black",
@@ -314,188 +325,202 @@ const Main = () => {
           <div style={{ height: "75vh", overflow: "auto" }}>
             <div
               style={{
-                fontSize: "25px",
-                fontWeight: "900",
-                paddingLeft: "20px",
-                color: "#230D4D",
-              }}
-            >
-              {checkCustomer ? "Transactions" : "Create Transactions"}
-              {/* Create Transactions */}
-            </div>
-            <div
-              style={{
                 backgroundColor: "white",
-                margin: "0px 20px",
+                margin: "20px 20px",
                 borderRadius: "10px",
+                boxShadow: "0px 4px 12px 0px rgba(133, 133, 133, 0.15)",
                 display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
                 flexWrap: "wrap",
-                justifyContent: "center",
-                alignItems: "center",
+
                 userSelect: "none",
               }}
             >
-              {create_transaction_arr
-                .filter((io) => io.isActive === true)
-                .map((item) => {
-                  return (
-                    <>
-                      <div
-                        key={item.id}
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          flexDirection: "column",
-                          margin: "10px",
-                          marginBottom: "20px",
-                          cursor: "pointer",
-                          color: "#3d2b2b",
-                        }}
-                        onClick={() => filterTransactionsForCustomer(item)}
-                        // onClick={() => {
-                        //   if (item.value === "retail_billing") {
-                        //     navigate("/home");
-                        //   } else if (item.value === "purchase") {
-                        //     navigate("/add-purchase");
-                        //   } else if (item.value === "return_credit_note") {
-                        //     navigate("/return");
-                        //   } else if (item.value === "debit_note") {
-                        //     navigate("/debit-note");
-                        //   } else if (item.value === "expense") {
-                        //     setExpenseModalIsOpen(!expenseModalIsOpen);
-                        //   } else if (item.value === "bahikhata") {
-                        //     setBahikhataModalIsOpen(!bahikhataModalIsOpen);
-                        //   } else if (item.value === "delivery_challan") {
-                        //     navigate("/delivery-challan");
-                        //   }
-                        // }}
-                      >
-                        <div>{item.icon}</div>
-                        <div>{item.label}</div>
-                      </div>
-                    </>
-                  );
-                })}
+              <div
+                style={{
+                  fontSize: "25px",
+                  fontWeight: "900",
+                  paddingLeft: "20px",
+                  color: "#230D4D",
+                  margin: "10px 0",
+                }}
+              >
+                {checkCustomer ? "Transactions" : "Create Transactions"}
+              </div>
+              <div
+                style={{
+                  backgroundColor: "white",
+                  margin: "0px 20px",
+                  borderRadius: "10px",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  // justifyContent: "center",
+                  // alignItems: "center",
+                  userSelect: "none",
+                }}
+              >
+                {create_transaction_arr
+                  .filter((io) => io.isActive === true)
+                  .map((item) => {
+                    return (
+                      <>
+                        <div
+                          key={item.id}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                            margin: "10px",
+                            marginBottom: "20px",
+                            cursor: "pointer",
+                            color: "#3d2b2b",
+                          }}
+                          onClick={() => filterTransactionsForCustomer(item)}
+                        >
+                          <div>{item.icon}</div>
+                          <div>{item.label}</div>
+                        </div>
+                      </>
+                    );
+                  })}
+              </div>
             </div>
 
             <div
               style={{
-                fontSize: "25px",
-                fontWeight: "900",
-                paddingLeft: "20px",
-                // marginTop: "30px",
-                color: "#230D4D",
+                backgroundColor: "white",
+                margin: "20px 20px",
+                borderRadius: "10px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+                flexWrap: "wrap",
+                // justifyContent: "center",
+                // alignItems: "center",
+                boxShadow: "0px 4px 12px 0px rgba(133, 133, 133, 0.15)",
+                userSelect: "none",
               }}
             >
-              Omni Channel Orders
+              <div
+                style={{
+                  fontSize: "25px",
+                  fontWeight: "900",
+                  paddingLeft: "20px",
+                  // marginTop: "30px",
+                  color: "#230D4D",
+                }}
+              >
+                Omni Channel Orders
+              </div>
+              <div
+                style={{
+                  backgroundColor: "white",
+                  margin: "0px 20px",
+                  borderRadius: "10px",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  // justifyContent: "center",
+                  // alignItems: "center",
+                  userSelect: "none",
+                }}
+              >
+                {omni_channel_arr
+                  .filter((io) => io.isActive === true)
+                  .map((item) => {
+                    return (
+                      <>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                            margin: "10px",
+                            // marginBottom: "20px",
+                            cursor: "pointer",
+                            color: "#3d2b2b",
+                          }}
+                          onClick={() => filterOmniForCustomer(item)}
+                        >
+                          <div>{item.icon}</div>
+                          <div>{item.label}</div>
+                        </div>
+                      </>
+                    );
+                  })}
+              </div>
             </div>
             <div
               style={{
                 backgroundColor: "white",
-                margin: "0px 20px",
+                margin: "20px 20px",
                 borderRadius: "10px",
                 display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
                 flexWrap: "wrap",
-                justifyContent: "center",
-                alignItems: "center",
+                boxShadow: "0px 4px 12px 0px rgba(133, 133, 133, 0.15)",
+
                 userSelect: "none",
               }}
             >
-              {omni_channel_arr
-                .filter((io) => io.isActive === true)
-                .map((item) => {
-                  return (
-                    <>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          flexDirection: "column",
-                          margin: "10px",
-                          // marginBottom: "20px",
-                          cursor: "pointer",
-                          color: "#3d2b2b",
-                        }}
-                        onClick={() => filterOmniForCustomer(item)}
-                        // onClick={() => {
-                        //   if (item.value === "update_moq") {
-                        //     setUpdateMoqModalIsOpen(!updateMoqModalIsOpen);
-                        //   } else if (item.value === "update_price") {
-                        //     setUpdatePriceModalIsOpen(!updatePriceModalIsOpen);
-                        //   } else if (item.value === "pending_orders") {
-                        //     setViewOrderModalIsOpen(!viewOrderModalIsOpen);
-                        //   }
-                        // }}
-                      >
-                        <div>{item.icon}</div>
-                        <div>{item.label}</div>
-                      </div>
-                    </>
-                  );
-                })}
+              <div
+                style={{
+                  fontSize: "25px",
+                  fontWeight: "900",
+                  paddingLeft: "20px",
+                  color: "#230D4D",
+                }}
+              >
+                Features
+              </div>
+              <div
+                style={{
+                  backgroundColor: "white",
+                  margin: "0px 20px",
+                  borderRadius: "10px",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  // justifyContent: "center",
+                  // alignItems: "center",
+                  userSelect: "none",
+                }}
+              >
+                {feature_arr
+                  .filter((io) => io.isActive === true)
+                  .map((item) => {
+                    return (
+                      <>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                            margin: "10px",
+                            // marginBottom: "20px",
+                            cursor: "pointer",
+                            color: "#3d2b2b",
+                          }}
+                          onClick={() => filterOmniForCustomer(item)}
+                        >
+                          <div>{item.icon}</div>
+                          <div>{item.label}</div>
+                        </div>
+                      </>
+                    );
+                  })}
+              </div>
             </div>
 
-            <div
-              style={{
-                fontSize: "25px",
-                fontWeight: "900",
-                paddingLeft: "20px",
-                // marginTop: "30px",
-                color: "#230D4D",
-              }}
-            >
-              {checkCustomer ? "" : "Features"}
-            </div>
-            <div
-              style={{
-                backgroundColor: "white",
-                margin: "0px 20px",
-                borderRadius: "10px",
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                alignItems: "center",
-                userSelect: "none",
-              }}
-            >
-              {feature_arr
-                .filter((io) => io.isActive === true)
-                .map((item) => {
-                  return (
-                    <>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          flexDirection: "column",
-                          margin: "10px",
-                          marginBottom: "20px",
-                          cursor: "pointer",
-                          color: "#3d2b2b",
-                        }}
-                        onClick={() => {
-                          if (item.value === "dashboard") {
-                            navigate("/retailer-dashboard");
-                          }
-                        }}
-                      >
-                        <div>{item.icon}</div>
-                        <div>{item.label}</div>
-                      </div>
-                    </>
-                  );
-                })}
-            </div>
             {/* ----- */}
             <div
               style={{
                 fontSize: "25px",
                 fontWeight: "900",
                 paddingLeft: "20px",
-                // marginTop: "30px",
                 color: "#230D4D",
               }}
             >
@@ -521,7 +546,6 @@ const Main = () => {
                     alignItems: "center",
                     flexDirection: "column",
                     margin: "10px",
-                    // marginBottom: "20px",
                     cursor: "pointer",
                     color: "#3d2b2b",
                   }}

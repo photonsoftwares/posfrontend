@@ -2102,17 +2102,18 @@ function* handleLinkLoyaltyRequest(e) {
       }
     );
     const jsonData = yield response.json();
-    console.log("JSONDATA E USER", jsonData);
-    if (jsonData) {
+    console.log("JSONDATA loyalty data", jsonData);
+    // 9877678
+    if (jsonData && jsonData.data) {
       yield put({
         type: "ComponentPropsManagement/handleLinkLoyaltyResponse",
         data: jsonData,
       });
     } else {
-      // toast.error("Something went wrong");
+      toast.error(jsonData.error_message);
     }
   } catch (err) {
-    // toast.error(err.message);
+    toast.error("No data Found");
   }
 }
 function* handleLinkCustomerRequest(e) {
