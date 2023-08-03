@@ -95,6 +95,26 @@ const Expense = (props) => {
                     Select Category <span className="text-red"></span>
                   </Label>
                   <Select
+                  styles={{
+                    menu: (baseStyles, state) => ({
+                      ...baseStyles,
+                      // height: "50px",
+                      overflow: "auto",
+                      fontWeight: "900",
+                    }),
+                    option: (baseStyles, state) => ({
+                      ...baseStyles,
+                      height: "50px",
+                      fontWeight: "900",
+                      overflow: "auto",
+                    }),
+                    control: (baseStyles, state) => ({
+                      ...baseStyles,
+                      // height: "50px",
+                      fontWeight: "900",
+                      // overflow: "auto",
+                    }),
+                  }}
                     options={expense_category_dropdown}
                     onChange={(e) => {
                       const val = e.value;
@@ -115,6 +135,9 @@ const Expense = (props) => {
                     Expense Date <span className="text-red"></span>
                   </Label>
                   <Flatpickr
+
+                  style={{  fontStyle: 'italic',
+                  fontFamily: 'Arial, sans-serif',}}
                     className="form-control"
                     onChange={(e) => {
                       const d = e[0];
@@ -267,6 +290,8 @@ const Expense = (props) => {
                     Expense Notes <span className="text-red"></span>
                   </Label>
                   <Input
+                  style={{   fontStyle: 'italic',
+                  fontFamily: 'Arial, sans-serif',}}
                     type="textarea"
                     onChange={(e) => {
                       const val = e.target.value;

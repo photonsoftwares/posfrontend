@@ -13,6 +13,7 @@ const LinkLoyalityCustomer = () => {
   const { link_loyalty_detail } = useSelector(
     (e) => e.ComponentPropsManagement
   );
+  console.log("LINK LOYLTY DATA", link_loyalty_detail);
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
   const [userName, setUsername] = useState("");
@@ -44,7 +45,7 @@ const LinkLoyalityCustomer = () => {
         email_id: "",
         customer_id: "",
         client_id: saasId,
-        base_currency: "AED",
+        base_currency: "INR",
       })
     );
     // axios
@@ -94,6 +95,9 @@ const LinkLoyalityCustomer = () => {
         <div className="col-lg-5 col-md-10 col-sm-12 px-5">
           <form className="form-box" onSubmit={handleSubmit}>
             <h4>Link Loyalty</h4>
+            {/* <div>
+              <div>NanoPos Loyalty</div>
+            </div> */}
             <div>
               <TextField
                 size="small"
@@ -109,7 +113,14 @@ const LinkLoyalityCustomer = () => {
               />
             </div>
             {searchValue && searchValue ? (
-              <div>
+              <div
+                style={{
+                  background: "yellow",
+                  padding: "20px",
+                  borderRadius: "20px",
+                }}
+              >
+                <p>Nano POS</p>
                 <div className="d-flex align-items-center justify-content-between">
                   <p style={{ padding: 0, margin: 0 }}>Loyality Customer</p>
                   <p

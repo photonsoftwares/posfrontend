@@ -86,6 +86,27 @@ const Bahikhata = (props) => {
                     Select Party <span className="text-red"> * </span>
                   </Label>
                   <Select
+
+styles={{
+  menu: (baseStyles, state) => ({
+    ...baseStyles,
+    // height: "50px",
+    overflow: "auto",
+    fontWeight: "900",
+  }),
+  option: (baseStyles, state) => ({
+    ...baseStyles,
+    height: "50px",
+    fontWeight: "300",
+    overflow: "auto",
+  }),
+  control: (baseStyles, state) => ({
+    ...baseStyles,
+    // height: "50px",
+    fontWeight: "800",
+    // overflow: "auto",
+  }),
+}}
                     options={bahikhata_party_name_dropdown}
                     onChange={(e) => {
                       const val = e.value;
@@ -139,6 +160,9 @@ const Bahikhata = (props) => {
                             <FormGroup>
                                 <Label>Payment Date <span className="text-red"> * </span></Label>
                                 <Flatpickr
+
+                                style={{fontStyle: 'italic',
+                                fontFamily: 'Arial, sans-serif',}}
                                     className='form-control'
                                     onChange={e => {
                                         const d = e[0]
@@ -204,6 +228,8 @@ const Bahikhata = (props) => {
                             <FormGroup>
                                 <Label>Amount <span className="text-red"> * </span></Label>
                                 <Input
+                                style={{fontStyle: 'italic',
+                                fontFamily: 'Arial, sans-serif',}}
                                     type="number"
                                     onChange={e => {
                                         const val = e.target.value
@@ -220,6 +246,9 @@ const Bahikhata = (props) => {
                             <FormGroup>
                                 <Label>Payment Notes <span className="text-red"> * </span></Label>
                                 <Input
+
+                                style={{fontStyle: 'italic',
+                                fontFamily: 'Arial, sans-serif',}}
                                     type='textarea'
                                     onChange={e => {
                                         const val = e.target.value

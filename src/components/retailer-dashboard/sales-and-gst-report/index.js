@@ -41,7 +41,7 @@ const SalesAndGstReport = () => {
     const debounce = (func) => {
         let timer;
         return function (...args) {
-            const context = this;
+            const context = this; 
             if (timer) clearTimeout(timer);
             timer = setTimeout(() => {
                 timer = null;

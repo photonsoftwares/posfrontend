@@ -171,7 +171,7 @@ const DeliveryChalan = () => {
   const handleItemFilter = async (inputValue) => {
     try {
       const response = await fetch(
-        `${BASE_Url}/customer/search-customer/${storeId}/EEEE/${inputValue}`,
+        `${BASE_Url}/customer/search-customer/${storeId}/${saasId}/${inputValue}`,
         {
           method: "GET",
           headers: {

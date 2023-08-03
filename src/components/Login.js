@@ -6,10 +6,12 @@ import { FaUserAlt } from "react-icons/fa";
 // import { handleLoginRequest } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { handleLoginRequest } from "../../src/redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { isDev } from "../URL";
 const Login = () => {
+  const params = useParams();
+  console.log("LOGIN PARAMS", params);
   const navigate = useNavigate();
   // console.log("NAVIGATE", navigate());
   const dispatch = useDispatch();
@@ -18,13 +20,11 @@ const Login = () => {
   const location = useLocation();
 
   useEffect(() => {
-
     if (isDev === true) {
-      setUsername("80001")
-      setPassword("demo123")
+      setUsername("80001");
+      setPassword("demo123");
     }
-  }, [isDev])
-
+  }, [isDev]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -36,7 +36,7 @@ const Login = () => {
     //   username,
     //   password,
     // };
-    localStorage.clear()
+    localStorage.clear();
     dispatch(
       handleLoginRequest({
         user_name: username,
@@ -57,7 +57,7 @@ const Login = () => {
             textAlign: "center",
             fontWeight: "bold",
             fontSize: "30px",
-            border: "1px solid black"
+            border: "1px solid black",
           }}
         >
           Welcome to NanoMPoS Solutions
@@ -98,21 +98,54 @@ const Login = () => {
               </FormGroup>
             </Col>
           </Row>
-          <Button color="primary" className="login_button" type="submit">
+          <Button
+            color="primary"
+            // className="login_button"
+            type="submit"
+            style={{
+              backgroundColor: "#20b9e3",
+              outline: "none",
+              border: "none",
+              fontSize: "20px",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              background: "#ECE447",
+              width: "100%",
+              color: "#000",
+            }}
+          >
             Login
           </Button>
         </Form>
-        <div style={{ marginTop: "10px" }} >
-
-          <small>
-            ** This is WPA worked in any browser
-          </small>
+        <div style={{ marginTop: "10px" }}>
+          <small>** This is WPA worked in any browser</small>
         </div>
         {/* <div className="mt-4">
           <Link to="/register">
-            <h2>Register</h2>
+            <h2>Sign Up</h2>
           </Link>
         </div> */}
+        <p
+          className="mt-3"
+          style={{
+            color: "#808080",
+            fontFamily: "Segoe UI",
+            fontSize: "16px",
+            fontStyle: "normal",
+            fontWeight: "400",
+            lineHight: "normal",
+            textAlign: "center",
+          }}
+        >
+          Don’t have an account?
+          <Link
+            to="/register"
+            // to={`/register/{}`}
+            style={{ textDecoration: "none" }}
+          >
+            Signup
+          </Link>
+        </p>
       </div>
     </div>
   );

@@ -208,7 +208,7 @@ const AddItem = ({
             }
             className="mouse-pointer"
           />{" "}
-          Update Item
+          Update Item *
         </ModalHeader>
         <ModalBody>
           <div className="row d-flex justify-content-center">

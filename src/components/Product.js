@@ -38,6 +38,8 @@ const Product = ({
 
   useEffect(() => {
     const el = JSON.parse(localStorage.getItem("my-cart"));
+    console.log("EL", el);
+    console.log("DATA", data);
     if (el) {
       dispatch(handlecartCount(el?.length));
     } else {
@@ -54,6 +56,11 @@ const Product = ({
           display: "grid",
           gridTemplateColumns: "repeat(2,1fr)",
           placeItems: "center",
+          // alignItems: "center",
+
+          // justifyContent: "center",
+          // flexDirection: "row",
+          // flexWrap: "wrap",
         }}
       >
         {data.map((item) => (
@@ -91,6 +98,7 @@ const Product = ({
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
+                            // aria-label="toggle password visibility"
                             onClick={() => {
                               item.price = item.new_price;
                               setData([...data]);
@@ -141,12 +149,15 @@ const Product = ({
                   <p style={{ fontWeight: "400" }}>₹ {item.price}</p>
                 </>
               )}
-
+              {/* <a href="#" class="btn btn-sm btn-warning">
+                Add to Cart
+              </a> */}
               <div
                 style={{
                   display: "flex",
                   flex: 1,
                   alignItems: "center",
+                  // justifyContent: "flex-end",
                 }}
               >
                 <div
@@ -155,17 +166,19 @@ const Product = ({
                       item.price === 0 || item.price === 0 ? "none" : "block",
                   }}
                   onClick={() => {
-                    console.log("ITEM", item);
                     const el = JSON.parse(localStorage.getItem("my-cart"));
                     if (el) {
                       if (el?.length > 0) {
                         let flag = 0;
+                        console.log("ELSSS", el);
                         el.map((el1) => {
-                          if (el1.productId === item.productId) {
+                          if (
+                            el1.productId === item.productId &&
+                            el1.item_name === item.item_name
+                          ) {
                             if (el1.price === item.price) {
                               el1.productQty = el1.productQty + 1;
                               flag = 1;
-                              console.log(el1.productQty)
                             } else {
                               item["discount_menu_is_open"] = false;
                               item["discount_value"] = "";
@@ -174,10 +187,11 @@ const Product = ({
                                 Number(item.price) * Number(item.productQty);
                               item["zero_price"] =
                                 Number(item.price) * Number(item.productQty);
-                              localStorage.setItem(
+                              const c = localStorage.setItem(
                                 "my-cart",
                                 JSON.stringify([...el, item])
                               );
+                              console.log("C JSON DATA", c);
                             }
                           }
                         });
@@ -234,6 +248,7 @@ const Product = ({
                 >
                   <Button
                     size="sm"
+                    // variant={`${item.price === 0 ? "secondary" : "warning"}`}
                     variant={`warning`}
                     style={{
                       width: "100%",
@@ -250,8 +265,7 @@ const Product = ({
         ))}
       </div>
       {/* ---------------- */}
-      {/* /* {data.map((item, index) => { */}
-      {data.map((item, index) => {
+      {/* {data.map((item, index) => {
         return (
           <>
             <div
@@ -295,7 +309,7 @@ const Product = ({
                   }}
                 >
                   <p className="h6" style={{ fontWeight: "bold" }}>
-                    {item.itemName}
+                    {item.item_name}
                   </p>
                   {Number(item.price) === 0 ? (
                     <>
@@ -479,7 +493,7 @@ const Product = ({
             </div>
           </>
         );
-      })}
+      })} */}
     </>
   );
 };
