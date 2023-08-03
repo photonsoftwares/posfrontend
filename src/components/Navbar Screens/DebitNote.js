@@ -515,7 +515,7 @@ const DebitNote = () => {
               )}
             </div>
             <div className="d-flex justify-content-between bg-white">
-              {/* <p className="fw-bold">Optional</p> */}
+              <p className="fw-bold">Optional</p>
               <h5 className="text-primary fw-bold">
                 <AiOutlinePlusCircle className="mx-2" />
                 Additional Charges

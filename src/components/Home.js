@@ -651,7 +651,7 @@ const Home = () => {
     setEmail("");
   };
 
-  // console.log("HOME CARTDATA", cartData);
+  console.log("HOME CARTDATA", cartData);
 
   // console.log("DISCOUNT AMOUNT", discountAmountVal);
   // console.log("OPTION TICK", optionTick);

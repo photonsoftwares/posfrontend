@@ -173,6 +173,12 @@ const MyCart = ({
             label: "Yes",
             onClick: () => {
               dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
+              // setDiscountPercentVal("");
+              // setDiscountAmountVal("");
+
+              if (discountPercentVal || discountAmountVal) {
+                window.location.reload();
+              }
             },
           },
           {
@@ -664,8 +670,12 @@ const MyCart = ({
 
                   <button
                     type="button"
+                    className="dissabled"
                     style={{
-                      backgroundColor: "green",
+                      backgroundColor:
+                        discountPercentVal || discountAmountVal
+                          ? "gray"
+                          : "green",
                       border: "none",
                       color: "white",
                       marginBottom: "10px",
@@ -674,7 +684,12 @@ const MyCart = ({
                       borderRadius: "8px",
                     }}
                     id="pop112"
-                    onClick={() => setPopoverIsOpen(!popoverIsOpen)}
+                    // onClick={() => setPopoverIsOpen(!popoverIsOpen)}
+                    onClick={() =>
+                      discountPercentVal || discountAmountVal
+                        ? setPopoverIsOpen(false)
+                        : setPopoverIsOpen(!popoverIsOpen)
+                    }
                   >
                     Invoice Discount
                   </button>
