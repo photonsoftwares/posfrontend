@@ -2206,6 +2206,31 @@ function* handleSearchInvoiceRequest(e) {
   }
 }
 
+// Search handlePurchaseRequest
+function*  handelPurchaseRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const date = new Date();
+  const response = yield fetch(
+    `http://3.111.70.84:8088/test/api/v1/ledger/getLedger/2023-07-27/8/80001`,
+    {
+      method: "GET",
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("Done by prince", jsonData);
+  if (jsonData) {
+    yield put({
+      type: "ComponentPropsManagement/handelPurchaseResponse",
+      data: jsonData.data,
+    });
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handelPurchaseResponse",
+      data: "",
+    });
+  }
+}
+
 // View Order Request
 function* handleViewOrderRequest(e) {
   // console.log("ORDER ID SAGA", e);
@@ -2639,6 +2664,11 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/updateInvoicedRequest",
     updateInvoicedRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handelPurchaseRequest",
+    handelPurchaseRequest
   );
 }
 

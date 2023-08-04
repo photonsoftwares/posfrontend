@@ -6,9 +6,8 @@ import InventoryDashboard from '../inventory-dashboard';
 import Navbar from '../navbar';
 import Master from '../master';
 import SalesAndGstReport from '../sales-and-gst-report';
-import Misreport from '../Mis-report/Misreport';
-// import MisReportTable from '../Mis-report/Misreport';
-// import MisReportTable from '../Mis-report/index.js';
+import ReportMis from '../Mis-report/ReportMis';
+
 
 
 
@@ -16,14 +15,6 @@ function Home() {
     const [headActiveTab, setHeadActiveTab] = useState("1")
     const [activeTab, setActiveTab] = useState("1")
 
-    // const headArray = [
-    //     {
-    //         id: "1",
-    //         name: "Sales and GST Report",
-    //         className: "active",
-    //         isActive: true
-    //     }
-    // ]
 
     const tabArray = [
         {
@@ -111,9 +102,9 @@ function Home() {
                     <Master />
                 </TabPane>
 
-                
+            
                 <TabPane tabId="6">
-                    < Misreport/>
+                    < ReportMis/>
                 </TabPane>
             </TabContent>
         </div>
