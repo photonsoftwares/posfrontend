@@ -3,13 +3,14 @@ import { Button, Col, FormGroup, Row } from "reactstrap";
 import { Modal } from "react-bootstrap";
 import { Input, Label } from "reactstrap";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
+import { LiaCookieSolid } from "react-icons/lia";
 import {
   handleCreateOrderRequest,
   handleShowModal,
   handlecartCount,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useNavigate } from "react-router-dom";
-import { BsArrowLeft } from "react-icons/bs";
+import { BsArrowLeft, BsTrash3 } from "react-icons/bs";
 
 import FormControl from "@mui/material/FormControl";
 import { BsFillCheckCircleFill } from "react-icons/bs";
@@ -280,177 +281,274 @@ const MyCart = ({
               marginBottom: "10px",
             }}
           >
-            <div style={{ height: "50px", width: "50px" }}>
-              <img
-                style={{ height: "100%", width: "100%" }}
-                src={`${BASE_Url}/item/get-image/${item && item.imageName}`}
-                class="card-img-top"
-                alt="..."
-              />
-            </div>{" "}
-            <h1>{item.item_name}</h1>
-            <div className="cart_product">
-              <div style={{ height: "50px" }} className="cart_column">
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                // padding: "10px",
+                alignItems: "center",
+                justifyContent: "center",
+                border: "1px solid #e7e7e7",
+                marginBottom: "10px",
+              }}
+            >
+              <div style={{ height: "100%", width: "200px", flex: 1 }}>
+                <img
+                  style={{ height: "100%", width: "100%" }}
+                  src={`${BASE_Url}/item/get-image/${item && item.imageName}`}
+                  class="card-img-top"
+                  alt="..."
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  // padding: "10px 0",
+                  justifyContent: "center",
+                  flex: 1,
+                }}
+              >
                 <div
                   style={{
-                    border: "1px solid #eee",
-                    borderRadius: "20px",
-                    padding: "10px",
                     display: "flex",
+                    flexDirection: "column",
+
                     alignItems: "center",
-                    justifyContent: "space-evenly",
+                    justifyContent: "center",
                   }}
                 >
-                  <AiOutlineMinus
-                    onClick={() => {
-                      handleDec(item);
-                    }}
-                  />
-
-                  <div style={{ width: "100px" }}>
-                    <input
-                      type="number"
-                      value={item.productQty}
-                      style={{
-                        maxWidth: "100px",
-                        borderRadius: "10px",
-                        padding: "2px",
-                        textAlign: "center",
-                      }}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (val && val > 0.001) {
-                          // item.productQty = Number(val);
-                          // item.productQty = Number(val);
-                          item.productQty = Number(parseFloat(val).toFixed(3));
-                          item.new_price = item.price * item.productQty;
-                          setCartData([...cartData]);
-                        } else {
-                          item.productQty = Number(0.001);
-                          setCartData([...cartData]);
-                        }
-                      }}
-                    />
-                  </div>
-                  {/* {item.productQty} */}
-                  <AiOutlinePlus
-                    onClick={() => {
-                      handlePlusSign(item);
-
-                      // if (discountPercentVal) {
-                      //   item.discount_value = discount_value;
-                      //   const price = Number(item.price) * Number(item.productQty);
-                      //   if (price !== 0) {
-                      //     const val = (sumValue * discount_value) / 100;
-                      //     const calculatedVal = (price * val) / sumValue;
-                      //     item.discount = parseFloat(calculatedVal).toFixed(2);
-                      //     item.new_price = price - calculatedVal;
-                      //   }
-                      // } else if (discountAmountVal) {
-                      //   const q = item.productQty + 1;
-                      //   item.amount_value = discountAmountVal;
-                      //   const price = item.price * q
-                      //   item.price = price
-                      //   if (price !== 0) {
-                      //     const calculatedVal = (price * discountAmountVal) / sumValue;
-                      //     // const calculatedVal = price - discountAmountVal;
-                      //     item.discount = parseFloat(calculatedVal).toFixed(2);
-                      //     item.new_price = price - calculatedVal;
-                      //   }
-                      // }
-
-                      // handleApplyClick()
-                    }}
-                  />
-                </div>
-              </div>
-              <div style={{ flex: 1, marginLeft: "20px" }}>
-                {Number(item.price) * Number(item.productQty) === 0 ? (
-                  <>
-                    <FormControl
-                      sx={{ m: 1, width: "25ch" }}
-                      variant="outlined"
-                    >
-                      <InputLabel>Amount</InputLabel>
-                      <OutlinedInput
-                        type="number"
-                        size="small"
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            item.price = item.zero_price;
-                            item.new_price = item.zero_price;
-                            setCartData([...cartData]);
-                          }
-                        }}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              // aria-label="toggle password visibility"
-                              onClick={() => {
-                                item.price = item.zero_price;
-                                item.new_price = item.zero_price;
-                                setCartData([...cartData]);
-                              }}
-                              edge="end"
-                            >
-                              <BsFillCheckCircleFill
-                                color={
-                                  item.zero_price === "" ||
-                                  item.zero_price === 0
-                                    ? "#979797"
-                                    : "green"
-                                }
-                              />
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                        label="Amount"
-                        className="w-50"
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val) {
-                            item.zero_price = Number(val);
-                            setCartData([...cartData]);
-                          } else {
-                            item.zero_price = "";
-                            setCartData([...cartData]);
-                          }
-                        }}
-                        value={item.zero_price}
-                      />
-                    </FormControl>
-                  </>
-                ) : (
-                  <>
-                    <div>{item.price * item.productQty}</div>
-                    <div>
+                  <h4 style={{ marginTop: "10px" }}>{item.item_name}</h4>
+                  <h5>{item.price * item.productQty}</h5>
+                  <div
+                  // className="cart_product"
+                  >
+                    <div style={{ height: "50px" }} className="cart_column">
                       <div
                         style={{
-                          fontSize: "10px",
-                          // display: "flex",
-                          // justifyContent: "center",
-                          marginRight: "30px",
+                          border: "1px solid #eee",
+                          borderRadius: "20px",
+                          padding: "10px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-evenly",
                         }}
                       >
-                        {item.discount_value || item.amount_value ? (
-                          <>
-                            <span
-                              style={{ textDecorationLine: "line-through" }}
-                            >
-                              {item.price * item.productQty}
-                            </span>
-                            / {parseFloat(item.new_price).toFixed(2)}
-                          </>
-                        ) : (
-                          <>{/* // <>{item.price * item.productQty}</> */}</>
-                        )}
+                        <AiOutlineMinus
+                          onClick={() => {
+                            handleDec(item);
+                          }}
+                          style={{ marginRight: "10px" }}
+                        />
+
+                        <div style={{ width: "100px" }}>
+                          <input
+                            type="number"
+                            value={item.productQty}
+                            onWheel={(e) => e.target.blur()}
+                            // onWheel={}
+                            style={{
+                              maxWidth: "100px",
+                              borderRadius: "10px",
+                              padding: "2px",
+                              textAlign: "center",
+                            }}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              if (val && val > 0.001) {
+                                // item.productQty = Number(val);
+                                // item.productQty = Number(val);
+                                item.productQty = Number(
+                                  parseFloat(val).toFixed(3)
+                                );
+                                item.new_price = item.price * item.productQty;
+                                setCartData([...cartData]);
+                              } else {
+                                item.productQty = Number(0.001);
+                                setCartData([...cartData]);
+                              }
+                            }}
+                          />
+                        </div>
+                        {/* {item.productQty} */}
+                        <AiOutlinePlus
+                          style={{ marginLeft: "10px" }}
+                          onClick={() => {
+                            handlePlusSign(item);
+                          }}
+                        />
                       </div>
                     </div>
-                  </>
-                )}
+                    <div style={{ flex: 1, marginLeft: "20px" }}>
+                      {Number(item.price) * Number(item.productQty) === 0 ? (
+                        <>
+                          <FormControl
+                            sx={{ m: 1, width: "25ch" }}
+                            variant="outlined"
+                          >
+                            <InputLabel>Amount</InputLabel>
+                            <OutlinedInput
+                              type="number"
+                              size="small"
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  item.price = item.zero_price;
+                                  item.new_price = item.zero_price;
+                                  setCartData([...cartData]);
+                                }
+                              }}
+                              endAdornment={
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    // aria-label="toggle password visibility"
+                                    onClick={() => {
+                                      item.price = item.zero_price;
+                                      item.new_price = item.zero_price;
+                                      setCartData([...cartData]);
+                                    }}
+                                    edge="end"
+                                  >
+                                    <BsFillCheckCircleFill
+                                      color={
+                                        item.zero_price === "" ||
+                                        item.zero_price === 0
+                                          ? "#979797"
+                                          : "green"
+                                      }
+                                    />
+                                  </IconButton>
+                                </InputAdornment>
+                              }
+                              label="Amount"
+                              className="w-50"
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                if (val) {
+                                  item.zero_price = Number(val);
+                                  setCartData([...cartData]);
+                                } else {
+                                  item.zero_price = "";
+                                  setCartData([...cartData]);
+                                }
+                              }}
+                              value={item.zero_price}
+                            />
+                          </FormControl>
+                        </>
+                      ) : (
+                        <>
+                          {/* <div>{item.price * item.productQty}</div> */}
+                          <div>
+                            <div
+                              style={{
+                                fontSize: "20px",
+                                // display: "flex",
+                                // justifyContent: "center",
+                                margin: "20px 0px",
+                              }}
+                            >
+                              {item.discount_value || item.amount_value ? (
+                                <>
+                                  <span
+                                    style={{
+                                      textDecorationLine: "line-through",
+                                    }}
+                                  >
+                                    {item.price * item.productQty}
+                                  </span>
+                                  / {parseFloat(item.new_price).toFixed(2)}
+                                </>
+                              ) : (
+                                <>
+                                  {/* // <>{item.price * item.productQty}</> */}
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                    {/*  */}
+                  </div>
+                  <div
+                    style={{
+                      color: "#1E1E1E",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                      marginTop: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyItems: "center",
+                    }}
+                  >
+                    <BsTrash3 />
+                    <p
+                      style={{ padding: 0, margin: "0 5px" }}
+                      onClick={() => {
+                        handleDeleteCartItem(item);
+                        // dispatch(handleDeleteCartItem(item));
+                      }}
+                      // onClick={() => handelDeleteProduct(item)}
+                    >
+                      Delete
+                    </p>
+                  </div>
+                </div>
               </div>
-              {/*  */}
             </div>
+            {totalDiscountVal === 0 && (
+              <>
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <LiaCookieSolid size={30} />
+                    <p
+                      style={{
+                        color: "#1E1E1E",
+                        fontWeight: "600",
+                        padding: 0,
+                        margin: 0,
+                        fontSize: "25px",
+                        cursor: "pointer",
+                      }}
+                      // onClick={() => {
+                      //   item.discount = !item.discount;
+                      //   setCartData([...cartData]);
+                      //   // setDiscount((state) => !state);
+                      // }}
+                      onClick={() => {
+                        item.discount_menu_is_open =
+                          !item.discount_menu_is_open;
+                        item.amount_value = "";
+                        item.discount_value = "";
+                        item.new_price = item.price * item.productQty;
+                        setDiscountPercentVal("");
+                        setDiscountAmountVal("");
+                        setTotalDiscountVal(0);
+                        setCartData([...cartData]);
+                        // item.discount == !true ? setDiscount((state) => !state) : ""
+                      }}
+                      className="mx-4"
+                    >
+                      Discount
+                    </p>
+                  </div>
+                </div>
+              </>
+            )}
             {/* {item.discount ? ( */}
             {item.discount_menu_is_open === true && (
               <>
@@ -466,6 +564,7 @@ const MyCart = ({
                     <TextField
                       label="Percent Off"
                       type="number"
+                      onWheel={(e) => e.target.blur()}
                       className="me-3"
                       // ref={ref}
                       // disabled={amountOff?.length > 0 ? true : false}
@@ -499,6 +598,7 @@ const MyCart = ({
                       type="number"
                       className="me-3"
                       disabled={item.discount_value}
+                      onWheel={(e) => e.target.blur()}
                       onChange={(e) => {
                         const val = Number(e.target.value);
                         if (val) {
@@ -552,7 +652,7 @@ const MyCart = ({
             )}
             {/* {console.log("ITEM", item)} */}
             <div style={{ display: "flex", flexDirection: "row" }}>
-              <p
+              {/* <p
                 style={{
                   color: "#a90a0a",
                   fontWeight: "600",
@@ -565,37 +665,7 @@ const MyCart = ({
                 // onClick={() => handelDeleteProduct(item)}
               >
                 Remove
-              </p>
-              {totalDiscountVal === 0 && (
-                <>
-                  <p
-                    style={{
-                      color: "darkblue",
-                      fontWeight: "600",
-                      cursor: "pointer",
-                    }}
-                    // onClick={() => {
-                    //   item.discount = !item.discount;
-                    //   setCartData([...cartData]);
-                    //   // setDiscount((state) => !state);
-                    // }}
-                    onClick={() => {
-                      item.discount_menu_is_open = !item.discount_menu_is_open;
-                      item.amount_value = "";
-                      item.discount_value = "";
-                      item.new_price = item.price * item.productQty;
-                      setDiscountPercentVal("");
-                      setDiscountAmountVal("");
-                      setTotalDiscountVal(0);
-                      setCartData([...cartData]);
-                      // item.discount == !true ? setDiscount((state) => !state) : ""
-                    }}
-                    className="mx-4"
-                  >
-                    Discount
-                  </p>
-                </>
-              )}
+              </p> */}
             </div>
           </div>
         ))}
@@ -668,31 +738,34 @@ const MyCart = ({
                     Remove All
                   </button>
 
-                  <button
-                    type="button"
-                    className="dissabled"
-                    style={{
-                      backgroundColor:
+                  <div>
+                    <button
+                      type="button"
+                      className="dissabled"
+                      style={{
+                        backgroundColor:
+                          discountPercentVal || discountAmountVal
+                            ? "gray"
+                            : "green",
+                        border: "none",
+                        color: "white",
+                        marginBottom: "10px",
+                        fontWeight: "bold",
+                        padding: "1px 7px",
+                        borderRadius: "8px",
+                      }}
+                      id="pop112"
+                      // onClick={() => setPopoverIsOpen(!popoverIsOpen)}
+                      onClick={() =>
                         discountPercentVal || discountAmountVal
-                          ? "gray"
-                          : "green",
-                      border: "none",
-                      color: "white",
-                      marginBottom: "10px",
-                      fontWeight: "bold",
-                      padding: "1px 7px",
-                      borderRadius: "8px",
-                    }}
-                    id="pop112"
-                    // onClick={() => setPopoverIsOpen(!popoverIsOpen)}
-                    onClick={() =>
-                      discountPercentVal || discountAmountVal
-                        ? setPopoverIsOpen(false)
-                        : setPopoverIsOpen(!popoverIsOpen)
-                    }
-                  >
-                    Invoice Discount
-                  </button>
+                          ? setPopoverIsOpen(false)
+                          : setPopoverIsOpen(!popoverIsOpen)
+                      }
+                    >
+                      <LiaCookieSolid size={30} />
+                      Invoice Discount
+                    </button>
+                  </div>
                 </>
               )}
             </div>
@@ -740,6 +813,7 @@ const MyCart = ({
                       // handleDiscount(item, val);
                     }}
                     value={discountPercentVal}
+                    onWheel={(e) => e.target.blur()}
                     placeholder="Percent Value"
                   />
                 </FormGroup>
@@ -753,6 +827,7 @@ const MyCart = ({
                   <Input
                     type="text"
                     disabled={discountPercentVal}
+                    onWheel={(e) => e.target.blur()}
                     onChange={(e) => {
                       const val = Number(e.target.value);
                       if (val) {

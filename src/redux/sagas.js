@@ -438,7 +438,6 @@ function* handleQRImageRequest(e) {
 
   console.log("FILE", jsonData.url);
   if (jsonData && jsonData.url) {
-    //   const cartData = jsonData.data;
     yield put({
       type: "ComponentPropsManagement/handleQRImageResponse",
       data: jsonData.url,
@@ -495,6 +494,39 @@ function* handleEmailNotificationResponse(e) {
   });
   const jsonData = yield response.json();
   console.log("Email Notify JSONDATA", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    toast.success(jsonData.message);
+    // alert(jsonData.message);
+    // const cartData = jsonData.data;
+    // yield put({
+    //   type: "ComponentPropsManagement/handleRegisterUserResponse",
+    //   data: jsonData.data,
+    // });
+    // } else {
+    //   toast.error(jsonData.message);
+    // }
+  } else {
+    toast.error(jsonData.message);
+    // yield put({
+    //   type: "ComponentPropsManagement/handleRegisterUserResponse",
+    //   data: {},
+    // });
+  }
+}
+// WhatsApp
+function* handlewhatsAppRequest(e) {
+  // console.log("E WAPP", e.payload);
+  const response = yield fetch(`${BASE_Url}/whatsapk/send/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify(e.payload),
+  });
+  const jsonData = yield response.json();
+  console.log("WHATSAPP JSONDATA", jsonData);
   if (jsonData) {
     // if (jsonData && jsonData.data) {
     toast.success(jsonData.message);
@@ -2102,17 +2134,18 @@ function* handleLinkLoyaltyRequest(e) {
       }
     );
     const jsonData = yield response.json();
-    console.log("JSONDATA E USER", jsonData);
-    if (jsonData) {
+    console.log("JSONDATA loyalty data", jsonData);
+    // 9877678
+    if (jsonData && jsonData.data) {
       yield put({
         type: "ComponentPropsManagement/handleLinkLoyaltyResponse",
         data: jsonData,
       });
     } else {
-      // toast.error("Something went wrong");
+      toast.error(jsonData.error_message);
     }
   } catch (err) {
-    // toast.error(err.message);
+    toast.error("No data Found");
   }
 }
 function* handleLinkCustomerRequest(e) {
@@ -2202,6 +2235,31 @@ function* handleSearchInvoiceRequest(e) {
     });
   } else {
     toast.error(jsonData.message);
+  }
+}
+
+// Search handlePurchaseRequest
+function*  handelPurchaseRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const date = new Date();
+  const response = yield fetch(
+    `http://3.111.70.84:8088/test/api/v1/ledger/getLedger/2023-07-27/8/80001`,
+    {
+      method: "GET",
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("Done by prince", jsonData);
+  if (jsonData) {
+    yield put({
+      type: "ComponentPropsManagement/handelPurchaseResponse",
+      data: jsonData.data,
+    });
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handelPurchaseResponse",
+      data: "",
+    });
   }
 }
 
@@ -2564,6 +2622,10 @@ export function* helloSaga() {
     handleEmailNotificationResponse
   );
   yield takeEvery(
+    "ComponentPropsManagement/handlewhatsAppRequest",
+    handlewhatsAppRequest
+  );
+  yield takeEvery(
     "ComponentPropsManagement/handleLowStockItemListRequest",
     handleLowStockItemListRequest
   );
@@ -2638,6 +2700,11 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/updateInvoicedRequest",
     updateInvoicedRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handelPurchaseRequest",
+    handelPurchaseRequest
   );
 }
 

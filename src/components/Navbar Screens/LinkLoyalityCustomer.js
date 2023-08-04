@@ -115,12 +115,21 @@ const LinkLoyalityCustomer = () => {
             {searchValue && searchValue ? (
               <div
                 style={{
-                  background: "yellow",
+                  background: "#ffae00",
                   padding: "20px",
                   borderRadius: "20px",
                 }}
               >
-                <p>Nano POS</p>
+                <p
+                  style={{
+                    fontSize: "30px",
+                    textAlign: "center",
+                    color: "white",
+                  }}
+                >
+                  Nano Loyalty
+                </p>
+
                 <div className="d-flex align-items-center justify-content-between">
                   <p style={{ padding: 0, margin: 0 }}>Loyality Customer</p>
                   <p
@@ -147,6 +156,7 @@ const LinkLoyalityCustomer = () => {
                     {userMobile}
                   </p>
                 </div>
+
                 <div className="d-flex align-items-center justify-content-between my-3">
                   <p style={{ padding: 0, margin: 0 }}>Loyalty Amount</p>
                   <p

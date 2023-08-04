@@ -55,6 +55,7 @@ var initialComponentPropsManagementState = {
   pending_order_cart_data: [],
   yesterday_sales: 0,
   tender_report_data: [],
+  purchase_data:{},
   state_dropdown: [
     { label: "Andhra Pradesh", value: "Andhra Pradesh" },
     { label: "Arunachal Pradesh", value: "Arunachal Pradesh" },
@@ -379,6 +380,10 @@ export const ComponentPropsManagement = createSlice({
     handleEmailNotificationResponse: (state, payload) => {
       // state.email_notification = payload.data;
     },
+    handlewhatsAppRequest: (state, payload) => {},
+    handlewhatsAppResponse: (state, payload) => {
+      // state.email_notification = payload.data;
+    },
     handleSalesDashboardChartRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
     },
@@ -559,6 +564,14 @@ export const ComponentPropsManagement = createSlice({
       // state.pending_order_cart_data = payload.data;
     },
 
+     //hadel purchase
+    handelPurchaseRequest: (state, payload) => {},
+    handelPurchaseResponse: (state, payload) => {
+      // console.log("prince saini",payload);
+      state.purchase_data = payload.data;
+    },
+
+
     // handleSearchedDataRequest2: (state, payload) => { },
     // handleSearchedDataResponse2: (state, payload) => {
     //   let arr = []
@@ -605,6 +618,7 @@ export const {
   handleViewOrderPendingRequest,
   handleEmailNotificationResponse,
   handleEmailNotificationRequest,
+  handlewhatsAppRequest,
   handleLoginRequest,
   handleOpneMenuRequest,
   handleSearchedDataRequest1,
@@ -665,6 +679,7 @@ export const {
   handleCreateTaxMasterRequest,
   handleCreateSaasMasterRequest,
   handleLowStockItemListRequest,
+  handelPurchaseRequest,
 } = ComponentPropsManagement.actions;
 
 export default ComponentPropsManagement.reducer;

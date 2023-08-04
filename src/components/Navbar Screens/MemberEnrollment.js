@@ -218,7 +218,7 @@ const MemberEnrollment = () => {
                 type="text"
                 className="form-control mt-2"
                 id="customer-name"
-                label="Source Channnel"
+                label="POS"
                 value={sourceChannel}
                 onChange={(e) => setSourceChannel(e.target.value)}
                 required
@@ -451,6 +451,7 @@ const MemberEnrollment = () => {
                     padding: "10px 20px",
                     borderRadius: "10px",
                     color: "#fff",
+                    marginBottom:"15px"
                   }}
                 >
                   Save
@@ -469,6 +470,7 @@ const MemberEnrollment = () => {
                     padding: "10px 20px",
                     borderRadius: "10px",
                     color: "#fff",
+                    marginBottom:"15px"
                   }}
                 >
                   Close

@@ -7,9 +7,12 @@ import { IoCashOutline } from "react-icons/io5";
 import { SiPaytm } from "react-icons/si";
 import { FaGooglePay } from "react-icons/fa";
 import { SiPhonepe } from "react-icons/si";
+import { GrClose } from "react-icons/gr";
 import { SiContactlesspayment } from "react-icons/si";
+import { AiOutlineMail } from "react-icons/ai";
 import { BsCreditCardFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
+import { FcSms } from "react-icons/fc";
 import Modal from "react-bootstrap/Modal";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +25,7 @@ import {
   handleRecommendedDataRequest,
   handleAccruvalRequest,
   handleShowModal,
+  handlewhatsAppRequest,
   handleItemsDataRequest,
   handleEmailNotificationResponse,
   handleRedeemPointRequest,
@@ -45,6 +49,7 @@ import { AiFillHome } from "react-icons/ai";
 import { BiBox, BiCart, BiCube, BiGroup } from "react-icons/bi";
 import { RxDashboard } from "react-icons/rx";
 import ViewOrders from "./PendingOrders";
+import { WhatsApp } from "@material-ui/icons";
 
 const Home = () => {
   // const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
@@ -86,6 +91,7 @@ const Home = () => {
     show_viewOrder_modal,
   } = useSelector((e) => e.ComponentPropsManagement);
   // console.log("GSD", get_searched_data);
+
   useEffect(() => {
     dispatch(handleRecommendedDataRequest());
   }, []);
@@ -127,6 +133,10 @@ const Home = () => {
   const [storeName, setStoreName] = useState("");
   const [checkLoyalty, setcheckLoyalty] = useState(false);
   const [loyalityRedemedValue, setLoyalityRedemedValue] = useState(0);
+  const [emailOpen, setEmailOpen] = useState(false);
+  const [WhatsAppOpen, setWhatsAppOpen] = useState(false);
+  const [smsOpen, setSmsOpen] = useState(false);
+  const [whatsApp, setWhatsApp] = useState("");
   const [loyaltyAmount, setLoyaltyAmount] = useState(
     link_loyalty_detail.balance_amount
   );
@@ -648,6 +658,22 @@ const Home = () => {
         })
       );
     }
+    setEmail("");
+  };
+  const handleWhatsApp = (e) => {
+    e.preventDefault();
+    console.log("handleWhatsApp", e);
+    // if (whatsApp) {
+    dispatch(
+      handlewhatsAppRequest({
+        to: whatsApp,
+        url:
+          handle_saveTransaction_data &&
+          handle_saveTransaction_data.pdf_file_name,
+      })
+    );
+    setWhatsApp("");
+    // }
     setEmail("");
   };
 
@@ -1273,23 +1299,25 @@ const Home = () => {
                 >
                   Receipts
                 </button>
+                <Button
+                  onClick={() => setPaymentModal(false)}
+                  style={{
+                    backgroundColor: "#20b9e3",
+                    fontSize: "20px",
+                    marginLeft: "20px",
+                    padding: "10px 20px",
+                    outline: "none",
+                    border: "none",
+                    fontSize: "20px",
+                  }}
+                >
+                  Close
+                </Button>
               </div>
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button
-            onClick={() => setPaymentModal(false)}
-            style={{
-              backgroundColor: "#20b9e3",
-              outline: "none",
-              border: "none",
-              fontSize: "20px",
-            }}
-          >
-            Close
-          </Button>
-        </Modal.Footer>
+        <Modal.Footer></Modal.Footer>
       </Modal>
       {/* PDF RECEiPT*/}
       <Modal
@@ -1325,9 +1353,171 @@ const Home = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "space-evenly",
-                marginTop: "30px",
+                marginTop: "20px",
               }}
             >
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <div
+                // style={{ flex: 1 }}
+                >
+                  <Button
+                    variant="outline-success"
+                    size="lg"
+                    // onClick={() => setHandleOpenWhatsapp(true)}
+                    onClick={() => {
+                      setWhatsAppOpen((state) => !state);
+                      setSmsOpen(false);
+                      setEmailOpen(false);
+                    }}
+                  >
+                    WhatsApp <IoLogoWhatsapp size={25} />
+                  </Button>
+                </div>
+                <div
+                //  style={{ flex: 1 }}
+                >
+                  <Button
+                    variant="outline-success"
+                    size="lg"
+                    // onClick={() => setHandleOpenWhatsapp(true)}
+                    onClick={() => {
+                      setEmailOpen((state) => !state);
+                      setWhatsAppOpen(false);
+                      setSmsOpen(false);
+                    }}
+                  >
+                    Email <AiOutlineMail size={25} />
+                  </Button>
+                </div>
+                <div
+                // style={{ flex: 1 }}
+                >
+                  <Button
+                    variant="outline-success"
+                    size="lg"
+                    onClick={() => {
+                      setSmsOpen((state) => !state);
+                      setEmailOpen(false);
+                      setWhatsAppOpen(false);
+                    }}
+                  >
+                    SMS <FcSms size={25} />
+                  </Button>
+                </div>
+              </div>
+              {emailOpen ? (
+                <form
+                  onSubmit={handleNotifyEmail}
+                  className="d-flex flex-row align-items-center"
+                  style={{ width: "50%" }}
+                >
+                  <TextField
+                    type="email"
+                    className="form-control my-2"
+                    id="customer-name"
+                    required
+                    size="small"
+                    label="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <div className="mx-2">
+                    <button type="submit" className="btn btn-primary">
+                      Send
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                ""
+              )}
+              {WhatsAppOpen ? (
+                <form
+                  onSubmit={handleWhatsApp}
+                  className="d-flex flex-row align-items-center"
+                  style={{ width: "50%" }}
+                >
+                  <TextField
+                    type="number"
+                    className="form-control my-2"
+                    id="customer-name"
+                    required
+                    onWheel={(e) => e.target.blur()}
+                    size="small"
+                    label="WhatsApp"
+                    value={whatsApp}
+                    onChange={(e) => setWhatsApp(e.target.value)}
+                  />
+                  <div className="mx-2">
+                    <button type="submit" className="btn btn-primary">
+                      Send
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                ""
+              )}
+              {smsOpen ? (
+                <form
+                  onSubmit={() => {}}
+                  className="d-flex flex-row align-items-center"
+                  style={{ width: "50%" }}
+                >
+                  <TextField
+                    type="email"
+                    className="form-control my-2"
+                    id="customer-name"
+                    required
+                    size="small"
+                    label="SMS"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <div className="mx-2">
+                    <button type="submit" className="btn btn-primary">
+                      Send
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                ""
+              )}
+              <Button
+                //  variant="secondary"
+                style={{
+                  backgroundColor: "#20b9e3",
+                  outline: "none",
+                  border: "none",
+                  fontSize: "20px",
+                  marginTop: "20px",
+                }}
+                onClick={() => {
+                  setHandleShowReceipt(false);
+                  setPaymentModal(false);
+                  // setShow(false);
+                  // dispatch(handleEmptyCartItem());
+                  setCartData([]);
+                  setAmount(0);
+                  // setSumValue(0);
+                  setSearchValue("");
+                  dispatch(
+                    handleShowModal({ bagModalIsOpne: !show_cart_modal })
+                  );
+                  localStorage.removeItem("my-cart");
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 500);
+                }}
+              >
+                Close
+              </Button>
               <div
                 style={{
                   // height: "100px",
@@ -1335,7 +1525,7 @@ const Home = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  marginTop: "20px",
+                  // marginTop: "20px",
                   marginBottom: "20px",
                 }}
               >
@@ -1348,117 +1538,13 @@ const Home = () => {
                   style={{ height: "100%", width: "80%" }}
                 />
               </div>
-              <Button
-                variant="outline-success"
-                size="lg"
-                onClick={() => setHandleOpenWhatsapp(true)}
-              >
-                WhatsApp <IoLogoWhatsapp size={25} />
-              </Button>
-              <form
-                onSubmit={handleNotifyEmail}
-                className="d-flex flex-row align-items-center"
-                style={{ width: "50%" }}
-              >
-                <TextField
-                  type="email"
-                  className="form-control my-2"
-                  id="customer-name"
-                  required
-                  size="small"
-                  label="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <div className="mx-2">
-                  <button type="submit" className="btn btn-primary">
-                    Send
-                  </button>
-                </div>
-              </form>
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button
-            //  variant="secondary"
-            style={{
-              backgroundColor: "#20b9e3",
-              outline: "none",
-              border: "none",
-              fontSize: "20px",
-            }}
-            onClick={() => {
-              setHandleShowReceipt(false);
-              setPaymentModal(false);
-              // setShow(false);
-              // dispatch(handleEmptyCartItem());
-              setCartData([]);
-              setAmount(0);
-              // setSumValue(0);
-              setSearchValue("");
-              dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
-              localStorage.removeItem("my-cart");
-              setTimeout(() => {
-                window.location.reload();
-              }, 500);
-            }}
-          >
-            Close
-          </Button>
-        </Modal.Footer>
+        <Modal.Footer></Modal.Footer>
       </Modal>
       {/* QR */}
       {/* WhatsApp */}
-      <Modal
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        show={handleOpenWhatsapp}
-      >
-        <Modal.Header>
-          <Modal.Title>WhatsApp</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {/*  */}
-
-          <form
-            style={{ height: "100vh", width: "100%" }}
-            onSubmit={handleWhatsSubmit}
-          >
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label">
-                Mobile
-              </label>
-              <input
-                type="text"
-                class="form-control"
-                value="8400063557"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
-              />
-            </div>
-            <button type="submit" class="btn btn-primary">
-              Submit
-            </button>
-          </form>
-          {/*  */}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            //  variant="secondary"
-            style={{
-              backgroundColor: "#20b9e3",
-              outline: "none",
-              border: "none",
-              fontSize: "20px",
-            }}
-            onClick={() => setHandleOpenWhatsapp(false)}
-          >
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
       <ViewOrders
         viewOrderModalIsOpen={viewOrderModalIsOpen}
         setViewOrderModalIsOpen={setViewOrderModalIsOpen}
