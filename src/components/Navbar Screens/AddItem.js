@@ -328,7 +328,7 @@ const AddItem = () => {
                     onChange={(e) => setItemName(e.target.value)}
                     label="Item Name"
                     multiline
-                    required
+                    // required
                     rows={1}
                   />
                   {/* <TextField
@@ -361,7 +361,7 @@ const AddItem = () => {
                     className="form-control my-2"
                     id="customer-name"
                     value={itemPrice}
-                    required
+                    // required
                     onChange={(e) => setItemPrice(e.target.value)}
                     label="Item Price"
                   />
@@ -371,7 +371,7 @@ const AddItem = () => {
                     className="form-control my-2"
                     id="customer-name"
                     value={taxPercentage}
-                    required
+                    // required
                     onChange={(e) => setTaxPercentage(e.target.value)}
                     label="Tax Percentage"
                   />
@@ -381,7 +381,7 @@ const AddItem = () => {
                     className="form-control my-2"
                     id="customer-name"
                     value={purchasePrice}
-                    required
+                    // required
                     onChange={(e) => setPurchasePrice(e.target.value)}
                     label="Purchase Price"
                   />

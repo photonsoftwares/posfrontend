@@ -322,7 +322,7 @@ const Main = () => {
             border: "1px solid black",
           }}
         >
-          <div style={{ height: "75vh", overflow: "auto" }}>
+          <div style={{ height: "70vh", overflow: "auto" }}>
             <div
               style={{
                 backgroundColor: "white",

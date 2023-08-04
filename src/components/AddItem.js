@@ -88,127 +88,129 @@ const AddItem = () => {
     setSelectedOptionTax(null);
   };
 
-  return (<>
-    <div style={{ width: "100vw" }}>
-      <div style={{ maxWidth: "500px", margin: "auto" }}>
-        {/* <section>
+  return (
+    <>
+      <div style={{ width: "100vw" }}>
+        <div style={{ maxWidth: "500px", margin: "auto" }}>
+          {/* <section>
       <div className="container">
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-10 col-sm-12"> */}
-        <form className="form-box" onSubmit={handleAddItem}>
-          <h2>Add Item</h2>
+          <form className="form-box" onSubmit={handleAddItem}>
+            <h2>Add Item 2</h2>
 
-          <input
-            type="text"
-            className="form-control mt-4"
-            id="customer-name"
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
-            placeholder="Item Name"
-          />
-          <input
-            type="text"
-            className="form-control mt-4"
-            id="customer-name"
-            value={itemCode}
-            onChange={(e) => setItemCode(e.target.value)}
-            placeholder="Item Code"
-          />
-          <button
-            type="button"
-            className="btn btn-primary btn-sm my-2"
-            onClick={() => generateUUid()}
-          >
-            Generate item code
-          </button>
-          <textarea
-            type="text"
-            className="form-control"
-            id="customer-name"
-            value={itemDesc}
-            onChange={(e) => setItemDesc(e.target.value)}
-            placeholder="Item Description"
-          />
-          <input
-            type="text"
-            className="form-control my-4"
-            id="customer-name"
-            value={itemPrice}
-            onChange={(e) => setItemPrice(e.target.value)}
-            placeholder="Item Price"
-          />
+            <input
+              type="text"
+              className="form-control mt-4"
+              id="customer-name"
+              value={itemName}
+              onChange={(e) => setItemName(e.target.value)}
+              placeholder="Item Name"
+            />
+            <input
+              type="text"
+              className="form-control mt-4"
+              id="customer-name"
+              value={itemCode}
+              onChange={(e) => setItemCode(e.target.value)}
+              placeholder="Item Code"
+            />
+            <button
+              type="button"
+              className="btn btn-primary btn-sm my-2"
+              onClick={() => generateUUid()}
+            >
+              Generate item code
+            </button>
+            <textarea
+              type="text"
+              className="form-control"
+              id="customer-name"
+              value={itemDesc}
+              onChange={(e) => setItemDesc(e.target.value)}
+              placeholder="Item Description"
+            />
+            <input
+              type="text"
+              className="form-control my-4"
+              id="customer-name"
+              value={itemPrice}
+              onChange={(e) => setItemPrice(e.target.value)}
+              placeholder="Item Price"
+            />
 
-          <input
-            type="text"
-            className="form-control mt-4"
-            id="customer-name"
-            value={ItemTax}
-            onChange={(e) => setItemTax(e.target.value)}
-            placeholder="Tax Code"
-          />
-          <Select
-            defaultValue={selectedOptionDiscount}
-            onChange={setSelectedOptionDiscount}
-            options={optionsDiscount}
-            className="my-3"
-            placeholder="Discount"
-            isClearable={true}
-            required
-          />
-          <Select
-            defaultValue={selectedOptionTax}
-            onChange={setSelectedOptionTax}
-            options={optionsTax}
-            className="my-3"
-            required
-            placeholder="Tax"
-          />
-          <Select
-            defaultValue={selectedHSNTax}
-            onChange={setSelectedHSNTax}
-            options={optionsHSN}
-            className="my-3"
-            required
-            placeholder="HSN Code"
-          />
+            <input
+              type="text"
+              className="form-control mt-4"
+              id="customer-name"
+              value={ItemTax}
+              onChange={(e) => setItemTax(e.target.value)}
+              placeholder="Tax Code"
+            />
+            <Select
+              defaultValue={selectedOptionDiscount}
+              onChange={setSelectedOptionDiscount}
+              options={optionsDiscount}
+              className="my-3"
+              placeholder="Discount"
+              isClearable={true}
+              required
+            />
+            <Select
+              defaultValue={selectedOptionTax}
+              onChange={setSelectedOptionTax}
+              options={optionsTax}
+              className="my-3"
+              required
+              placeholder="Tax"
+            />
+            <Select
+              defaultValue={selectedHSNTax}
+              onChange={setSelectedHSNTax}
+              options={optionsHSN}
+              className="my-3"
+              required
+              placeholder="HSN Code"
+            />
 
-          <input
-            type="text"
-            className="form-control my-4"
-            id="customer-name"
-            value={taxPercentage}
-            onChange={(e) => setTaxPercentage(e.target.value)}
-            placeholder="TAX Percent"
-          />
-          <input
-            type="text"
-            className="form-control my-4"
-            id="customer-name"
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
-            placeholder="Department"
-          />
+            <input
+              type="text"
+              className="form-control my-4"
+              id="customer-name"
+              value={taxPercentage}
+              onChange={(e) => setTaxPercentage(e.target.value)}
+              placeholder="TAX Percent"
+            />
+            <input
+              type="text"
+              className="form-control my-4"
+              id="customer-name"
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
+              placeholder="Department"
+            />
 
-          <button
-            //  variant="secondary"
-            style={{
-              backgroundColor: "#20b9e3",
-              outline: "none",
-              border: "none",
-              fontSize: "20px",
-              padding: "10px 20px",
-              borderRadius: "10px",
-              color: "#fff",
-            }}
-          >
-            Close
-          </button>
-        </form>
+            <button
+              //  variant="secondary"
+              style={{
+                backgroundColor: "#20b9e3",
+                outline: "none",
+                border: "none",
+                fontSize: "20px",
+                padding: "10px 20px",
+                borderRadius: "10px",
+                color: "#fff",
+              }}
+            >
+              Close
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
-    {/* </div>
+      {/* </div>
     </section> */}
-  </>);
+    </>
+  );
 };
 
 export default AddItem;
