@@ -438,7 +438,6 @@ function* handleQRImageRequest(e) {
 
   console.log("FILE", jsonData.url);
   if (jsonData && jsonData.url) {
-    //   const cartData = jsonData.data;
     yield put({
       type: "ComponentPropsManagement/handleQRImageResponse",
       data: jsonData.url,
@@ -495,6 +494,39 @@ function* handleEmailNotificationResponse(e) {
   });
   const jsonData = yield response.json();
   console.log("Email Notify JSONDATA", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    toast.success(jsonData.message);
+    // alert(jsonData.message);
+    // const cartData = jsonData.data;
+    // yield put({
+    //   type: "ComponentPropsManagement/handleRegisterUserResponse",
+    //   data: jsonData.data,
+    // });
+    // } else {
+    //   toast.error(jsonData.message);
+    // }
+  } else {
+    toast.error(jsonData.message);
+    // yield put({
+    //   type: "ComponentPropsManagement/handleRegisterUserResponse",
+    //   data: {},
+    // });
+  }
+}
+// WhatsApp
+function* handlewhatsAppRequest(e) {
+  // console.log("E WAPP", e.payload);
+  const response = yield fetch(`${BASE_Url}/whatsapk/send/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify(e.payload),
+  });
+  const jsonData = yield response.json();
+  console.log("WHATSAPP JSONDATA", jsonData);
   if (jsonData) {
     // if (jsonData && jsonData.data) {
     toast.success(jsonData.message);
@@ -2588,6 +2620,10 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleEmailNotificationResponse",
     handleEmailNotificationResponse
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handlewhatsAppRequest",
+    handlewhatsAppRequest
   );
   yield takeEvery(
     "ComponentPropsManagement/handleLowStockItemListRequest",

@@ -380,6 +380,10 @@ export const ComponentPropsManagement = createSlice({
     handleEmailNotificationResponse: (state, payload) => {
       // state.email_notification = payload.data;
     },
+    handlewhatsAppRequest: (state, payload) => {},
+    handlewhatsAppResponse: (state, payload) => {
+      // state.email_notification = payload.data;
+    },
     handleSalesDashboardChartRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
     },
@@ -614,6 +618,7 @@ export const {
   handleViewOrderPendingRequest,
   handleEmailNotificationResponse,
   handleEmailNotificationRequest,
+  handlewhatsAppRequest,
   handleLoginRequest,
   handleOpneMenuRequest,
   handleSearchedDataRequest1,
