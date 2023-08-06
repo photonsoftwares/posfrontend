@@ -13,7 +13,7 @@ var initialComponentPropsManagementState = {
   show_viewOrder_modal: false,
   cart_data: [],
   get_party_name: [],
-  handle_view_order_details: [],
+  handle_view_order_details: [], 
   order_statue: {},
   handle_view_orders: [],
   login_data: {},
