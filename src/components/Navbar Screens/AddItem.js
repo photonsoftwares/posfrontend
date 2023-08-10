@@ -4,6 +4,7 @@ import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleAddItemToStoreRequest,
+  handleInventoryMasterRequest,
   handleUploadPicRequest,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { FcDepartment } from "react-icons/fc";
@@ -59,10 +60,10 @@ const AddItem = () => {
   }
   const { save_product_id } = useSelector((e) => e.ComponentPropsManagement);
 
-  // console.log(save_product_id);
+  console.log("save_product_id", save_product_id);
   const dispatch = useDispatch();
   //
-  const classes = useStyles();
+  // const classes = useStyles();
 
   const [source, setSource] = useState("");
   //
@@ -80,17 +81,52 @@ const AddItem = () => {
   const [productId, setProductId] = useState("");
   const [taxPercentage, setTaxPercentage] = useState("");
   const [itemCategory, setItemCategory] = useState("");
+  const [receivedQuantity, setReceivedQuantity] = useState("");
   const [purchasePrice, setPurchasePrice] = useState("");
+  const [stockQty, setStockQty] = useState("");
+  const [soldQuantity, setSoldQuantity] = useState("");
+  const [closingQuantity, setClosingQuantity] = useState("");
+  const [openingQuantity, setOpeningQuantity] = useState("");
+  const [taxPercenatage, setTaxPercenatage] = useState("0.00");
+  const [sellingPrice, setSellingPrice] = useState("");
+  const [mrp, setMrp] = useState("");
 
   // console.log("UPLOAD ITEM", uploadItem);
 
   useEffect(() => {
     if (save_product_id) {
       setProductId(save_product_id);
+      dispatch(
+        handleInventoryMasterRequest({
+          item_name: save_product_id.item_name,
+          // item_code: Number(itemCode),
+          item_code: save_product_id.item_id,
+          description: itemName,
+          price: Number(itemPrice),
+          // discount: Number(selectedOptionDiscount.value),
+          tax: Number(taxPercentage),
+          tax_code: Number(taxPercentage),
+          status: "active",
+          saas_id: saasId,
+          purchase_pricerice: purchasePrice,
+          mrp: mrp,
+          sold_qty: 0,
+          closing_qty: closingQuantity,
+          opening_qty: openingQuantity,
+          received_qty: receivedQuantity,
+          category: itemCategory,
+          selling_price: sellingPrice,
+          stock_qty: stockQty,
+          tax_percentage: taxPercenatage,
+          store_id: storeId,
+          department: itemName,
+          // promo_id: saasId,
+        })
+      );
     }
   }, [save_product_id]);
 
-  // console.log("PID", productId);
+  console.log("PID", productId);
 
   const { saasId, storeId } = JSON.parse(localStorage.getItem("User_data"));
   const webcamRef = useRef(null);
@@ -118,11 +154,18 @@ const AddItem = () => {
         tax_code: Number(taxPercentage),
         status: "active",
         saas_id: saasId,
+        purchase_pricerice: purchasePrice,
+        mrp: mrp,
+        category: itemCategory,
+        selling_price: sellingPrice,
+        stock_qty: stockQty,
+        tax_percentage: taxPercenatage,
         store_id: storeId,
         department: itemName,
         // promo_id: saasId,
       })
     );
+
     setItemName("");
     setItemPrice("");
     setItemCode("");
@@ -134,6 +177,15 @@ const AddItem = () => {
     setTaxPercentage("");
     setSelectedHSNTax(null);
     setSelectedOptionTax(null);
+    setItemCategory("");
+    setTaxPercenatage("");
+    setPurchasePrice("");
+    setSellingPrice("");
+    setStockQty("");
+    setMrp("");
+    setOpeningQuantity("");
+    setReceivedQuantity("");
+    setClosingQuantity("");
   };
 
   const onUserMedia = (e) => {
@@ -166,7 +218,7 @@ const AddItem = () => {
       <div className="container">
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-9 col-sm-12 px-5">
-            {productId ? (
+            {false ? (
               <div>
                 <p>Upload Pic</p>
 
@@ -178,18 +230,18 @@ const AddItem = () => {
                         display="flex"
                         justifyContent="center"
                         border={1}
-                        className={classes.imgBox}
+                        // className={classes.imgBox}
                       >
                         <img
                           src={source}
                           alt={"snap"}
-                          className={classes.img}
+                          // className={classes.img}
                         />
                       </div>
                     )}
                     <input
                       accept="image/*"
-                      className={classes.input}
+                      // className={classes.input}
                       id="icon-button-file"
                       type="file"
                       capture="environment"
@@ -342,19 +394,19 @@ const AddItem = () => {
                     label="Item Desc"
                     multiline
                     rows={3}
-                  />
+                  /> */}
                   <TextField
                     size="small"
                     type="text"
                     className="form-control my-2"
                     id="customer-name"
-                    value={itemName}
-                    onChange={(e) => setItemName(e.target.value)}
+                    value={itemCategory}
+                    onChange={(e) => setItemCategory(e.target.value)}
                     label="Item Category"
                     required
                     multiline
                     rows={1}
-                  /> */}
+                  />
                   <TextField
                     size="small"
                     type="text"
@@ -386,7 +438,77 @@ const AddItem = () => {
                     label="Purchase Price"
                   />
                 </div>
+                <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
+                  value={sellingPrice}
+                  onChange={(e) => setSellingPrice(e.target.value)}
+                  label="Selling Price"
+                />
+                <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
+                  value={stockQty}
+                  onChange={(e) => setStockQty(e.target.value)}
+                  label="Stock Quantity"
+                />
+                <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
+                  value={mrp}
+                  onChange={(e) => setMrp(e.target.value)}
+                  label="MRP"
+                />
+                <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
+                  value={openingQuantity}
+                  onChange={(e) => setOpeningQuantity(e.target.value)}
+                  label="Opening Quantity"
+                />
+                <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
+                  value={receivedQuantity}
+                  onChange={(e) => setReceivedQuantity(e.target.value)}
+                  label="Received Quantity"
+                />
+                <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
+                  value={closingQuantity}
+                  onChange={(e) => setClosingQuantity(e.target.value)}
+                  label="Clossing Quantity"
+                />
+                <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
 
+                  value={taxPercenatage}
+                  onChange={(e) => setTaxPercenatage(e.target.value)}
+                  label="Tax Percentage"
+                />
                 <div className="">
                   <button
                     style={{

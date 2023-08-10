@@ -11,11 +11,15 @@ var initialComponentPropsManagementState = {
   get_QR_img: "",
   show_cart_modal: false,
   show_viewOrder_modal: false,
+  get_categories: [],
+  get_all_catrgory_data: [],
   cart_data: [],
   get_party_name: [],
   handle_view_order_details: [],
   order_statue: {},
+  customer_order: [],
   handle_view_orders: [],
+  xyz_State: [],
   login_data: {},
   handel_redeem_point: {},
   register_data: {},
@@ -495,6 +499,12 @@ export const ComponentPropsManagement = createSlice({
     handleLinkCustomerResponse: (state, payload) => {
       state.tender_report_data = payload.data ? [payload.data] : [];
     },
+    // Categories
+    handleCategoriesRequest: (state, payload) => {},
+    handleCategoriesResponse: (state, payload) => {
+      state.get_categories = payload.data;
+      // state.tender_report_data = payload.data ? [payload.data] : [];
+    },
 
     handleSearchedDataRequest1: (state, payload) => {},
     handleSearchedDataResponse1: (state, payload) => {
@@ -552,6 +562,11 @@ export const ComponentPropsManagement = createSlice({
     handleViewOrderPendingResponse: (state, payload) => {
       state.pending_order_data = payload.data;
     },
+    handleViewOrderByCustomerRequest: (state, payload) => {},
+    handleViewOrderByCustomerResponse: (state, payload) => {
+      console.log("customer_order", payload);
+      state.customer_order = payload.data;
+    },
     pendingOrderCartDataRequest: (state, payload) => {},
     pendingOrderCartDataResponse: (state, payload) => {
       state.pending_order_cart_data = payload.data;
@@ -561,6 +576,25 @@ export const ComponentPropsManagement = createSlice({
     updateInvoicedResponse: (state, payload) => {
       console.log(payload);
       // state.pending_order_cart_data = payload.data;
+    },
+
+    // get all data by category
+    handleAllDataByCategoryRequest: (state, payload) => {},
+    handleAllDataByCategoryResponse: (state, payload) => {
+      console.log(payload);
+      state.get_all_catrgory_data = payload.data;
+    },
+    // Handle Debit note
+    handleXYZRequest: (state, payload) => {},
+    handleXYZResponse: (state, payload) => {
+      console.log("---------------", payload);
+      state.xyz_State = payload.data;
+    },
+    // Add Purchase => inventory-master/inventory
+    handleInventoryMasterRequest: (state, payload) => {},
+    handleInventoryMasterResponse: (state, payload) => {
+      console.log("---------------", payload);
+      // state.xyz_State = payload.data;
     },
 
     // handleSearchedDataRequest2: (state, payload) => { },
@@ -591,6 +625,7 @@ export const {
   handleViewOrderBySaasIdAndOrderIdRequest,
   handleCreateOrderRequest,
   updateInvoicedRequest,
+  handleCategoriesRequest,
   handleSearchInvoiceRequest,
   handleCreateSupplierRequest,
   handleRedeemPointRequest,
@@ -603,6 +638,7 @@ export const {
   handleExpenseCreateRequest,
   handleShowModal,
   handleAccruvalRequest,
+  handleAllDataByCategoryRequest,
   handleMemberEnrollmentResponse,
   handleUpdatePriceRequest,
   handleTenderReportRequest,
@@ -639,6 +675,7 @@ export const {
   handleRecommendedDataRequest,
   handleDiscountItem,
   handleAddtoCart,
+  handleInventoryMasterRequest,
   handleInc,
   handleEmptyCartItem,
   handleEmptyCartData,
@@ -653,6 +690,7 @@ export const {
   handleLastWeekSalesRequest,
   handleGetPatyNameRequest,
   handleLastMonthSalesRequest,
+  handleViewOrderByCustomerRequest,
   handleTodaySalesRequest,
   handleNumberOfCustomerRequest,
   handleGstReportRequest,
@@ -662,6 +700,7 @@ export const {
   handleLastSixtyDaysSalesRequest,
   handleGstReportItemRequest,
   handleYesterdaySalesRequest,
+  handleXYZRequest,
   handleGstTypeDropdownRequest,
   handleGetHsnCodeDropdownRequest,
   handleUpdateItemToStoreRequest,

@@ -14,6 +14,7 @@ const {
   storeId,
   storeName,
   userId,
+  userType,
   userName,
 } = localStorage.getItem("User_data")
   ? JSON.parse(localStorage.getItem("User_data"))
@@ -382,7 +383,7 @@ function* handleRecommendedDataRequest() {
   const checkCustomer = userName.includes("C");
   console.log("SAGA CHECK CUSTOMER", checkCustomer);
   const response = yield fetch(
-    `${BASE_Url}/search/recommended-items/${storeId}/${saasId}`,
+    `${BASE_Url}/search/recommended-item/${storeId}/${saasId}`,
     {
       method: "GET",
       headers: {
@@ -403,9 +404,10 @@ function* handleRecommendedDataRequest() {
         el["sku"] = "SKU";
         // el["department"] = "Dept2";
         el["bill_qty"] = 0;
-        checkCustomer ? (el["name"] = el.item_name) : "";
-        checkCustomer ? (el["order_qty"] = el.productQty) : "";
-        checkCustomer ? (el["order_price"] = el.price) : "";
+        userType === "CUSTOMER" ? (el["name"] = el.item_name) : "";
+        // userType === "CUSTOMER" ? (el["order_qty"] = el.productQty) : "";
+        userType === "CUSTOMER" ? (el["order_price"] = el.price) : "";
+
         // el["new_edit_price"] = 0;
         // el["discount"] = false;
       });
@@ -598,7 +600,7 @@ function* handleAddItemToStoreRequest(e) {
       toast.success(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleAddItemToStoreResponse",
-        data: jsonData.data.productId,
+        data: jsonData.data,
       });
     } else {
       toast.error(jsonData.message);
@@ -737,6 +739,7 @@ function* handleHSNCODERequest() {
     });
   }
 }
+
 // Handle ADD Party
 function* handleAddPartyRequest(e) {
   // const { searchValue } = e.payload;
@@ -774,12 +777,43 @@ function* handleAddPartyRequest(e) {
     toast.error(jsonData.message);
   }
 }
-// Handle Tax Rates
-function* handleTaxRatesRequest() {
+// Add Purchase => inventory-master/inventory
+function* handleInventoryMasterRequest(e) {
   // const { searchValue } = e.payload;
-  // console.log("E SAVE TRANSACTION", e);
+  // console.log("E ADD PARTY", e);
   // const { storeId } = e.payload;
   // console.log("STORE ID", storeId);
+  const response = yield fetch(`${BASE_Url}/inventory-master/inventory`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify(e.payload),
+  });
+  const jsonData = yield response.json();
+  console.log("inventory-master/inventory", jsonData);
+
+  // if (jsonData) {
+  //   if (jsonData.status === true) {
+  //     toast.success(jsonData.message);
+  //     yield put({
+  //       type: "ComponentPropsManagement/handleAddPartyResponse",
+  //       data: jsonData,
+  //     });
+  //   } else {
+  //     toast.error(jsonData.message);
+  //     yield put({
+  //       type: "ComponentPropsManagement/handleAddPartyResponse",
+  //       data: {},
+  //     });
+  //   }
+  // } else {
+  //   toast.error(jsonData.message);
+  // }
+}
+// Handle Tax Rates
+function* handleTaxRatesRequest() {
   const response = yield fetch(`${BASE_Url}/tax/get-taxes`, {
     method: "GET",
     headers: {
@@ -805,6 +839,34 @@ function* handleTaxRatesRequest() {
     yield put({
       type: "ComponentPropsManagement/handleTaxRatesResponse",
       data: "",
+    });
+  }
+}
+// Handle Debit note
+function* handleXYZRequest() {
+  const response = yield fetch(
+    `http://3.111.70.84:8088/test/api/v1/Debit/view-debitnote/8/2023-07-27`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("DEBITNOTE JSONSDATA", jsonData);
+  // console.log("TAX RATE JSONDATA", jsonData);
+  if (jsonData) {
+    if (jsonData && jsonData.data) {
+      yield put({
+        type: "ComponentPropsManagement/handleXYZResponse",
+        data: jsonData.data,
+      });
+    }
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleXYZResponse",
+      data: [],
     });
   }
 }
@@ -1146,13 +1208,10 @@ function* handleNumberOfCustomerRequest(e) {
 }
 
 function* handleLowStockItemsRequest(e) {
-  // var myHeaders = new Headers();
-  // myHeaders.append("Authorization", `Bearer ${ token }`)
   const response = yield fetch(
     `${host}inventory-master/inventory-less-closing-quantity`,
     {
       method: "GET",
-      // headers: myHeaders,
     }
   );
   const jsonData = yield response.json();
@@ -2311,6 +2370,108 @@ function* handleViewOrderBySaasIdAndOrderIdRequest(e) {
     toast.error(jsonData.message);
   }
 }
+// View order By Customer
+function* handleViewOrderByCustomerRequest(e) {
+  const { storeId, saasId, userName } = JSON.parse(
+    localStorage.getItem("User_data")
+  );
+  const response = yield fetch(
+    `${BASE_Url}/order/view-order-customer/${saasId}/${userName}`,
+    {
+      method: "GET",
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("__CUSTOMER", jsonData);
+  if (jsonData) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleViewOrderByCustomerResponse",
+        data: jsonData.data,
+      });
+      return;
+    }
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleViewOrderBySaasIdAndOrderIdResponse",
+      data: [],
+    });
+  } else {
+    toast.error(jsonData.message);
+  }
+}
+// Category
+function* handleCategoriesRequest(e) {
+  const { storeId, saasId, userName } = JSON.parse(
+    localStorage.getItem("User_data")
+  );
+  const response = yield fetch(`${BASE_Url}/item/get/category/${saasId}`, {
+    method: "GET",
+  });
+  const jsonData = yield response.json();
+  console.log("__CATEGORY", jsonData);
+  if (jsonData) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleCategoriesResponse",
+        data: jsonData.data,
+      });
+      return;
+    }
+    toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleCategoriesResponse",
+      data: [],
+    });
+  } else {
+    toast.error(jsonData.message);
+  }
+}
+// get all data by category
+function* handleAllDataByCategoryRequest(e) {
+  const { storeId, saasId, userName } = JSON.parse(
+    localStorage.getItem("User_data")
+  );
+  const response = yield fetch(
+    // `${BASE_Url}/item/get/item/List/${"GROCERY"}/${saasId}`,
+    `${BASE_Url}/item/get/item/List/${e.payload.el}/${saasId}`,
+    {
+      method: "GET",
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("CATEGORIES_____-_", jsonData);
+  if (jsonData) {
+    if (jsonData.status === true) {
+      const tempSearchArr = jsonData.data;
+      tempSearchArr.map((el) => {
+        el["productQty"] = 1;
+        el["sku"] = "SKU";
+        // el["department"] = "Dept2";
+        el["bill_qty"] = 0;
+        userType === "CUSTOMER" ? (el["name"] = el.item_name) : "";
+        // userType === "CUSTOMER" ? (el["order_qty"] = el.productQty) : "";
+        userType === "CUSTOMER" ? (el["order_price"] = el.price) : "";
+
+        // el["new_edit_price"] = 0;
+        // el["discount"] = false;
+      });
+      yield put({
+        type: "ComponentPropsManagement/handleAllDataByCategoryResponse",
+        data: tempSearchArr,
+      });
+      return;
+    }
+    toast.error(jsonData.message);
+
+    yield put({
+      type: "ComponentPropsManagement/handleAllDataByCategoryResponse",
+      data: [],
+    });
+  } else {
+    toast.error(jsonData.message);
+  }
+}
 
 // Invoiced
 function* updateInvoicedRequest(e) {
@@ -2335,10 +2496,10 @@ function* updateInvoicedRequest(e) {
     if (jsonData) {
       if (jsonData.status === true) {
         toast.success(jsonData.message);
-        yield put({
-          type: "ComponentPropsManagement/handleCreateTaxMasterResponse",
-          data: jsonData.data,
-        });
+        // yield put({
+        //   type: "ComponentPropsManagement/handleCreateTaxMasterResponse",
+        //   data: jsonData.data,
+        // });
       } else {
         toast.error(jsonData.message);
       }
@@ -2585,6 +2746,10 @@ export function* helloSaga() {
     handleSalesDashboardChartRequest
   );
   yield takeEvery(
+    "ComponentPropsManagement/handleInventoryMasterRequest",
+    handleInventoryMasterRequest
+  );
+  yield takeEvery(
     "ComponentPropsManagement/handleCreateTaxMasterRequest",
     handleCreateTaxMasterRequest
   );
@@ -2675,6 +2840,22 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/updateInvoicedRequest",
     updateInvoicedRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleViewOrderByCustomerRequest",
+    handleViewOrderByCustomerRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleCategoriesRequest",
+    handleCategoriesRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleAllDataByCategoryRequest",
+    handleAllDataByCategoryRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleXYZRequest",
+    handleXYZRequest
   );
 }
 

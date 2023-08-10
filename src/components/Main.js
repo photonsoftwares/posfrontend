@@ -32,6 +32,7 @@ import UpdatePrice from "./update-price";
 import ViewOrders from "./PendingOrders";
 import video from "../assets/shop.mp4";
 import { useSelector } from "react-redux";
+import ViewOrdersCustomer from "./PendingOrders/ViewOrdersCustomer";
 const Main = () => {
   const {
     get_searched_data,
@@ -51,33 +52,27 @@ const Main = () => {
   const [updateMoqModalIsOpen, setUpdateMoqModalIsOpen] = useState(false);
   const [updatePriceModalIsOpen, setUpdatePriceModalIsOpen] = useState(false);
   const [viewOrderModalIsOpen, setViewOrderModalIsOpen] = useState(false);
+  const [show, setShow] = useState(false);
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const navigate = useNavigate();
 
   useEffect(() => {});
-  const {
-    createdAt,
-    password,
-    registerId,
-    status,
-    saasId,
-    storeId,
-    storeName,
-    userId,
-    userName,
-    userType,
-  } = localStorage.getItem("User_data")
+  let { storeName, userType } = localStorage.getItem("User_data")
     ? JSON.parse(localStorage.getItem("User_data"))
     : {};
   console.log(userType);
-  const checkCustomer = userName.includes("C");
+  const checkCustomer = userType === "CUSTOMER";
+
+  // useEffect(() => {}, [checkCustomer]);
 
   useEffect(() => {
-    if (userType === "CUSTOMER") {
+    if (checkCustomer) {
       navigate("/home");
     }
-  }, [userType]);
-  // console.log("AUTH IN MAIN", checkCustomer);
+  }, [checkCustomer]);
+
+  // console.log("TEST---", checkCustomer);
+
   const create_transaction_arr = [
     {
       id: 1,
@@ -671,11 +666,27 @@ const Main = () => {
         </div>
       </div>
 
+      {
+        checkCustomer
+          ? console.log("CUSTOMER")
+          : // <ViewOrdersCustomer
+            //   show={show}
+            //   setShow={setShow}
+            //   // viewOrderModalIsOpen={viewOrderModalIsOpen}
+            //   // setViewOrderModalIsOpen={setViewOrderModalIsOpen}
+            // />
+            console.log("RETAILER")
+        // <ViewOrders
+        //   viewOrderModalIsOpen={viewOrderModalIsOpen}
+        //   setViewOrderModalIsOpen={setViewOrderModalIsOpen}
+        // />
+      }
+
+      {/* <ViewOrdersCustomer /> */}
       <ViewOrders
         viewOrderModalIsOpen={viewOrderModalIsOpen}
         setViewOrderModalIsOpen={setViewOrderModalIsOpen}
       />
-
       <UpdatePrice
         updatePriceModalIsOpen={updatePriceModalIsOpen}
         setUpdatePriceModalIsOpen={setUpdatePriceModalIsOpen}

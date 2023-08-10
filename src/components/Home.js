@@ -1,7 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { IoIosSearch } from "react-icons/io";
+import { BsCamera } from "react-icons/bs";
 import { BsHandbag, BsArrowRight } from "react-icons/bs";
+import { QrReader } from "react-qr-reader";
 import { FcSalesPerformance, FcSpeaker } from "react-icons/fc";
 import { IoCashOutline } from "react-icons/io5";
 import { SiPaytm } from "react-icons/si";
@@ -14,7 +15,7 @@ import { BsCreditCardFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { FcSms } from "react-icons/fc";
 import Modal from "react-bootstrap/Modal";
-
+import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import { useDispatch, useSelector } from "react-redux";
 import Product from "../components/Product";
 
@@ -30,6 +31,8 @@ import {
   handleEmailNotificationResponse,
   handleRedeemPointRequest,
   handleViewOrderModal,
+  handleCategoriesRequest,
+  handleXYZRequest,
 } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { Button } from "react-bootstrap";
 import pdfFile from "../assets/PDF.pdf";
@@ -44,12 +47,14 @@ import { TextField } from "@mui/material";
 
 import MyCart from "./my-cart/MyCart";
 import { HiCreditCard } from "react-icons/hi2";
-import { RiMoneyDollarCircleFill } from "react-icons/ri";
+import { RiH1, RiMoneyDollarCircleFill } from "react-icons/ri";
 import { AiFillHome } from "react-icons/ai";
 import { BiBox, BiCart, BiCube, BiGroup } from "react-icons/bi";
 import { RxDashboard } from "react-icons/rx";
 import ViewOrders from "./PendingOrders";
-import { WhatsApp } from "@material-ui/icons";
+// import { Category, WhatsApp } from "@material-ui/icons";
+import Category from "../components/Category/Category";
+import ViewOrdersCustomer from "./PendingOrders/ViewOrdersCustomer";
 
 const Home = () => {
   // const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
@@ -69,13 +74,14 @@ const Home = () => {
     // storeName,
     userId,
     userName,
+    categoryReq,
     userType,
   } = localStorage.getItem("User_data")
     ? JSON.parse(localStorage.getItem("User_data"))
     : {};
   console.log(userType);
   const checkCustomer = userName.includes("C");
-
+  console.log("HOME CTGR", categoryReq);
   const userData = JSON.parse(localStorage.getItem("User_data"));
 
   const {
@@ -86,11 +92,22 @@ const Home = () => {
     total_price,
     handle_saveTransaction_data,
     get_recommended_items,
+    xyz_State,
     search_customer_data,
     show_cart_modal,
     show_viewOrder_modal,
   } = useSelector((e) => e.ComponentPropsManagement);
   // console.log("GSD", get_searched_data);
+
+  // useEffect(() => {
+  //   console.log("xyz_State", xyz_State);
+  // }, []);
+
+  console.log("xyz_State", xyz_State);
+
+  // useEffect(() => {
+  //   dispatch(handleXYZRequest({}));
+  // }, []);
 
   useEffect(() => {
     dispatch(handleRecommendedDataRequest());
@@ -133,10 +150,16 @@ const Home = () => {
   const [storeName, setStoreName] = useState("");
   const [checkLoyalty, setcheckLoyalty] = useState(false);
   const [loyalityRedemedValue, setLoyalityRedemedValue] = useState(0);
+
+  const [fileResult, setFileResult] = useState();
   const [emailOpen, setEmailOpen] = useState(false);
   const [WhatsAppOpen, setWhatsAppOpen] = useState(false);
   const [smsOpen, setSmsOpen] = useState(false);
   const [whatsApp, setWhatsApp] = useState("");
+  const [webcamResult, setwebcamResult] = useState();
+  const [showVierCustomerOrderModal, setShowVierCustomerOrderModal] =
+    useState(false);
+  const [qrData, setQrData] = useState(null);
   const [loyaltyAmount, setLoyaltyAmount] = useState(
     link_loyalty_detail.balance_amount
   );
@@ -271,6 +294,10 @@ const Home = () => {
       // );
     }
   }, [handle_saveTransaction_data]);
+
+  // useEffect(() => {
+  //   dispatch(handleCategoriesRequest());
+  // }, []);
 
   // const findtLoyaltyTender = () => {
   //   if (optionTick?.length > 0) {
@@ -745,16 +772,7 @@ const Home = () => {
                       if (item.value === "home") {
                         navigate("/home");
                       } else if (item.value === "order") {
-                        setViewOrderModalIsOpen((state) => !state);
-                        // <ViewOrders
-                        //   viewOrderModalIsOpen={viewOrderModalIsOpen}
-                        //   setViewOrderModalIsOpen={setViewOrderModalIsOpen}
-                        // />;
-                        // dispatch(
-                        //   handleViewOrderModal({
-                        //     viewOrderModalIsOpne: !show_viewOrder_modal,
-                        //   })
-                        // );
+                        setShowVierCustomerOrderModal((state) => !state);
                       } else if (item.value === "cart") {
                         dispatch(
                           handleShowModal({ bagModalIsOpne: !show_cart_modal })
@@ -785,9 +803,14 @@ const Home = () => {
           backgroundColor: "#fff",
         }}
       >
-        <div className="d-flex align-items-center justify-content-center mt-3">
-          <IoIosSearch size={30} opacity={0.4} />
-
+        <div
+          className="d-flex align-items-center justify-content-center mt-3"
+          style={{ display: "flex", flexDirection: "column" }}
+        >
+          {/* <IoIosSearch size={30} opacity={0.4} /> */}
+          <div style={{ marginRight: "10px" }}>
+            <BsCamera size={30} opacity={1} />
+          </div>
           <input
             style={{ border: "1px solid yellowgreen", outline: "none" }}
             type="text"
@@ -804,6 +827,21 @@ const Home = () => {
           />
           {/* // <div style={{ width: "100%" }}>{transcript}</div> */}
           {/* )} */}
+          {/* <div style={{ height: "200px", width: "200px" }}>
+            <QrReader
+              onResult={(result, error) => {
+                if (!!result) {
+                  setQrData(result?.text);
+                }
+
+                if (!!error) {
+                  console.info(error);
+                }
+              }}
+              style={{ width: "100%", height: "200px" }}
+            />
+            <p>{qrData}</p>
+          </div> */}
         </div>
         <div
           style={{
@@ -845,6 +883,10 @@ const Home = () => {
         >
           Recommended Items
         </h5>
+        {xyz_State && xyz_State.length > 0
+          ? xyz_State.map((el) => <h1>{el.customer_party}</h1>)
+          : ""}
+        {/* {categoryReq === "YES" ? <Category /> : <RenderUi />} */}
 
         <RenderUi />
         {/* {searchedData && searchValue?.length > 0
@@ -1539,9 +1581,9 @@ const Home = () => {
       </Modal>
       {/* QR */}
       {/* WhatsApp */}
-      <ViewOrders
-        viewOrderModalIsOpen={viewOrderModalIsOpen}
-        setViewOrderModalIsOpen={setViewOrderModalIsOpen}
+      <ViewOrdersCustomer
+        showVierCustomerOrderModal={showVierCustomerOrderModal}
+        setShowVierCustomerOrderModal={setShowVierCustomerOrderModal}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { FormGroup, TextField } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import AsyncSelect from "react-select/async";
 import ReactDatePicker from "react-datepicker";
@@ -6,24 +6,121 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import Select, { useStateManager } from "react-select";
-import Pricing from "../Addpurchase tabs/Pricing";
-import Stock from "../Addpurchase tabs/Stock";
+
 import {
   handleAddItemSearchRequest,
   handleAddPurchaseRequest,
   handleOpneMenuRequest,
+  handleInventoryMasterRequest,
   handlePartyNameDataRequest,
+  handleBahikhataPartyDropdownRequest,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_Url } from "../../URL";
+import { Label } from "reactstrap";
 
-const AddPurchase = () => {
-  const { handle_party_name_data, handle_add_item_search } = useSelector(
-    (e) => e.ComponentPropsManagement
+const Pricing = () => {
+  return (
+    <div>
+      <TextField
+        type="text"
+        className="form-control my-2"
+        id="customer-name"
+        size="small"
+        // required
+        // value={mrp}
+        // onChange={(e) => set(e.target.value)}
+        // label="MRP"
+      />
+      <TextField
+        type="text"
+        className="form-control my-2"
+        id="customer-name"
+        size="small"
+        // required
+        // value={phoneNumber}
+        // onChange={(e) => {
+        //   optimizedFn(e);
+        //   setPhoneNumber(e.target.value);
+        // }}
+        label="Purchase Price"
+      />
+      <TextField
+        type="text"
+        className="form-control my-2"
+        id="customer-name"
+        size="small"
+        // required
+        // value={phoneNumber}
+        // onChange={(e) => {
+        //   optimizedFn(e);
+        //   setPhoneNumber(e.target.value);
+        // }}
+        label="Cost"
+      />
+      {/* <TextField
+        type="text"
+        className="form-control my-2"
+        id="customer-name"
+        size="small"
+        // required
+        // value={partyName}
+        // onChange={(e) => setPartyName(e.target.value)}
+        label="Selling Price"
+      />
+      <TextField
+        type="text"
+        className="form-control my-2"
+        id="customer-name"
+        size="small"
+        // required
+        // value={phoneNumber}
+        // onChange={(e) => {
+        //   optimizedFn(e);
+        //   setPhoneNumber(e.target.value);
+        // }}
+        label="Purchase Price"
+      /> */}
+    </div>
   );
+};
+const Stock = () => {
+  return (
+    <div>
+      <div>
+        <TextField
+          type="text"
+          className="form-control my-2"
+          id="customer-name"
+          size="small"
+          required
+          // value={partyName}
+          // onChange={(e) => setPartyName(e.target.value)}
+          label="Inventory"
+        />
+      </div>
+    </div>
+  );
+};
+const AddPurchase = () => {
+  const {
+    bahikhata_party_name_dropdown,
+    handle_party_name_data,
+    handle_add_item_search,
+  } = useSelector((e) => e.ComponentPropsManagement);
 
-  // console.log("SEARCH ADD ITEM", handle_add_item_search);
+  console.log("bahikhata_party_name_dropdown", bahikhata_party_name_dropdown);
   const dispatch = useDispatch();
+
+  const [bahikhataArr, setBahikhataArr] = useState({
+    party_name: "",
+    payment_type: "",
+    payment_date: "",
+    payment_mode: "",
+    amount: "",
+    payment_notes: "",
+  });
+
   const TabsData = [
     {
       id: 1,
@@ -50,7 +147,18 @@ const AddPurchase = () => {
   const [tabs] = useState(TabsData);
   const [quantity, setQuantity] = useState();
   const [defaultItemData, setDefaultItemData] = useState([]);
+  const [mrp, setMrp] = useState("");
+  const [purchasePrice, setPurchasePrice] = useState("");
+  const [cost, setCost] = useState("");
   const [itemId, setItemId] = useState("");
+  const [openingQuantity, setOpeningQuantity] = useState("");
+  const [recevedQty, setRecevedQty] = useState("");
+  const [soldQuantity, setSoldQuantity] = useState("");
+  const [closingQuantity, setClosingQuantity] = useState("");
+  const [supplierName, setSupplierName] = useState("");
+  const [barcode, setBarcode] = useState("");
+  const [stockQty, setStockQty] = useState("");
+  const [sellingPrice, setSellingPrice] = useState("");
   const { component } = tabs[value];
   const [itemObj, setItemObj] = useState({});
   const [updatePriceState, setUpdatePriceState] = useState({
@@ -61,7 +169,7 @@ const AddPurchase = () => {
     valid_upto: "",
   });
 
-  console.log("UPDATE PRICE STATE", updatePriceState.item_name);
+  console.log("UPDATE PRICE STATE", itemObj);
 
   const loadOptions = (inputValue) => {
     if (inputValue.length > 0) {
@@ -82,7 +190,7 @@ const AddPurchase = () => {
     try {
       const response = await fetch(
         // `${BASE_Url}/customer/search-customer/${storeId}/${saasId}/${inputValue}`,
-        `${BASE_Url}/search/recommended-items/${storeId}/${saasId}`,
+        `${BASE_Url}/search/recommended-item/${storeId}/${saasId}`,
         {
           method: "GET",
           headers: {
@@ -176,14 +284,38 @@ const AddPurchase = () => {
     // console.log("SUPPLIER ID", supplierId);
     // console.log("ITEM LIST", handle_add_item_search);
     // console.log("QUANTITY", quantity);
+    // dispatch(
+    //   handleAddPurchaseRequest({
+    //     saas_id: saasId,
+    //     store_id: storeId,
+    //     supplier_name: partyName,
+    //     item_list: [
+    //       { productId: Number(itemId), productQty: Number(quantity) },
+    //     ],
+    //   })
+    // );
     dispatch(
-      handleAddPurchaseRequest({
+      handleInventoryMasterRequest({
+        // saas_id: saasId,
+        // store_id: storeId,
+        // supplier_name: partyName,
+        // item_list: [
+        //   { productId: Number(itemId), productQty: Number(quantity) },
+        // ],
+        supplier_name: supplierName,
         saas_id: saasId,
         store_id: storeId,
-        supplier_name: partyName,
-        item_list: [
-          { productId: Number(itemId), productQty: Number(quantity) },
-        ],
+        opening_qty: openingQuantity,
+        item_code: itemObj.item_id,
+        item_name: itemObj.category,
+        received_qty: recevedQty,
+        sold_qty: 0,
+        closing_qty: closingQuantity,
+        mrp: mrp,
+        barcode: barcode,
+        product_cost: purchasePrice,
+        product_price: sellingPrice,
+        product_av_cost: cost,
       })
     );
     setItemName("");
@@ -193,8 +325,20 @@ const AddPurchase = () => {
     setQuantity("");
     setItemCode("");
     setItemCategory("");
+    setMrp("");
+    setPurchasePrice("");
+    setCost("");
+    setOpeningQuantity("");
+    setClosingQuantity("");
+    setBarcode("");
+    setSellingPrice("");
+    setRecevedQty("");
+    setStockQty("");
   };
 
+  useEffect(() => {
+    dispatch(handleBahikhataPartyDropdownRequest());
+  }, []);
   return (
     <>
       <div className="container">
@@ -247,7 +391,7 @@ const AddPurchase = () => {
                 className="form-control my-2"
                 id="customer-name"
                 size="small"
-                required
+                // required
                 value={phoneNumber}
                 onChange={(e) => {
                   optimizedFn(e);
@@ -256,16 +400,25 @@ const AddPurchase = () => {
                 // style={{ zIndex: -2 }}
                 label="Search by Phone Number"
               />
-              <TextField
-                type="text"
-                className="form-control my-2"
-                id="customer-name"
-                size="small"
-                required
-                value={partyName}
-                onChange={(e) => setPartyName(e.target.value)}
-                label="Party Name"
-              />
+              <FormGroup>
+                <Label>
+                  Select Party <span className="text-red"> * </span>
+                </Label>
+                <Select
+                  options={bahikhata_party_name_dropdown}
+                  onChange={(e) => {
+                    const val = e.value;
+                    console.log("kjnbdskja", e.value);
+                    setSupplierName(e.value);
+                    setBahikhataArr({ ...bahikhataArr, party_name: val });
+                  }}
+                  value={bahikhata_party_name_dropdown.filter(
+                    (io) => io.value === bahikhataArr.party_name
+                  )}
+                  required={true}
+                  placeholder="Select Party"
+                />
+              </FormGroup>
 
               <div
                 style={{ width: "100%" }}
@@ -313,6 +466,7 @@ const AddPurchase = () => {
                             onChange={(e) => {
                               const val = e.label;
                               setItemObj(e);
+                              setMrp(e.price);
                               setUpdatePriceState({
                                 ...updatePriceState,
                                 item_name: val,
@@ -354,7 +508,7 @@ const AddPurchase = () => {
                         className="form-control my-2"
                         id="customer-name"
                         size="small"
-                        required
+                        // required
                         value={quantity}
                         onChange={(e) => setQuantity(e.target.value)}
                         label="Quantity"
@@ -403,7 +557,7 @@ const AddPurchase = () => {
                             // width: "500px",
                           }}
                         >
-                          {tabs.map((tab, index) => (
+                          {/* {tabs.map((tab, index) => (
                             <li
                               key={tab.id}
                               // className="border-bottom border border-danger"
@@ -426,14 +580,149 @@ const AddPurchase = () => {
                                 {tab.button}
                               </button>
                             </li>
-                          ))}
+                          ))} */}
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              width: "100%",
+                            }}
+                          >
+                            <p style={{ color: "red" }}>Pricing & Stocks</p>
+                          </div>
                         </ul>
                         <div
                         // className="d-flex justify-content-center"
                         >
-                          {component}
+                          {/* ------------ */}
+
+                          <TextField
+                            type="text"
+                            className="form-control my-2"
+                            id="customer-name"
+                            size="small"
+                            // required
+                            value={mrp}
+                            onChange={(e) => setMrp(e.target.value)}
+                            label="MRP"
+                          />
+                          <TextField
+                            type="text"
+                            className="form-control my-2"
+                            id="customer-name"
+                            size="small"
+                            // required
+                            value={purchasePrice}
+                            onChange={(e) => setPurchasePrice(e.target.value)}
+                            label="Purchase Price"
+                          />
+                          <TextField
+                            type="text"
+                            className="form-control my-2"
+                            id="customer-name"
+                            size="small"
+                            // required
+                            value={cost}
+                            onChange={(e) => setCost(e.target.value)}
+                            label="Cost"
+                          />
+                          <TextField
+                            type="text"
+                            className="form-control my-2"
+                            id="customer-name"
+                            size="small"
+                            // required
+                            value={openingQuantity}
+                            onChange={(e) => setOpeningQuantity(e.target.value)}
+                            label="Opening Quantity"
+                          />
+                          {/* <TextField
+                            type="text"
+                            className="form-control my-2"
+                            id="customer-name"
+                            size="small"
+                            // required
+                            value={soldQuantity}
+                            onChange={(e) => setSoldQuantity(e.target.value)}
+                            label="Sold Quantity"
+                          /> */}
+                          <TextField
+                            type="text"
+                            className="form-control my-2"
+                            id="customer-name"
+                            size="small"
+                            // required
+                            value={closingQuantity}
+                            onChange={(e) => setClosingQuantity(e.target.value)}
+                            label="Clossing Quantity"
+                          />
+                          <TextField
+                            type="text"
+                            className="form-control my-2"
+                            id="customer-name"
+                            size="small"
+                            // required
+                            value={barcode}
+                            onChange={(e) => setBarcode(e.target.value)}
+                            label="Barcode"
+                          />
+                          <TextField
+                            type="text"
+                            className="form-control my-2"
+                            id="customer-name"
+                            size="small"
+                            // required
+                            value={sellingPrice}
+                            onChange={(e) => setSellingPrice(e.target.value)}
+                            label="Selling Price"
+                          />
+                          <TextField
+                            type="text"
+                            className="form-control my-2"
+                            id="customer-name"
+                            size="small"
+                            // required
+                            value={recevedQty}
+                            onChange={(e) => setRecevedQty(e.target.value)}
+                            label="Received Qty"
+                          />
+                          <TextField
+                            type="text"
+                            className="form-control my-2"
+                            id="customer-name"
+                            size="small"
+                            // required
+                            value={stockQty}
+                            onChange={(e) => setStockQty(e.target.value)}
+                            label="Stock Quantity"
+                          />
+
+                          {/* <TextField
+                            type="text"
+                            className="form-control my-2"
+                            id="customer-name"
+                            size="small"
+                            // required
+                            value={productCost}
+                            onChange={(e) => setProductCost(e.target.value)}
+                            label="Cost"
+                          />
+                          <TextField
+                            type="text"
+                            className="form-control my-2"
+                            id="customer-name"
+                            size="small"
+                            // required
+                            value={productPrice}
+                            onChange={(e) => setProductPrice(e.target.value)}
+                            label="Cost"
+                          /> */}
+                          {/* ------------ */}
+
+                          {/* {component} */}
                         </div>
-                        <div
+                        {/* <div
                           className="d-flex flex-row"
                           style={{ width: "100%" }}
                         >
@@ -467,7 +756,7 @@ const AddPurchase = () => {
                               Save
                             </button>
                           </div>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   CardText,
@@ -23,6 +23,9 @@ import Misreport from "../Mis-report/Misreport";
 // import MisReportTable from '../Mis-report/index.js';
 
 function Home() {
+  useEffect(() => {
+    console.log("RETAILER INSIDE HOME");
+  }, []);
   const [headActiveTab, setHeadActiveTab] = useState("1");
   const [activeTab, setActiveTab] = useState("1");
 

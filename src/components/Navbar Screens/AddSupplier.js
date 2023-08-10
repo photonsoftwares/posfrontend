@@ -18,6 +18,7 @@ const AddSupplier = () => {
   // const [partyName, setPatyName] = useState("");
   const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
   const [partyName, setPartyName] = useState("");
+  const [supplierName, setSupplierName] = useState("");
   const [gstIn, setGstIn] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [gstType, setGstType] = useState("");
@@ -66,7 +67,8 @@ const AddSupplier = () => {
     dispatch(
       handleCreateSupplierRequest({
         saas_id: saasId,
-        party_name: partyName,
+        // party_name: partyName,
+        party_name: supplierName,
         gstin: gstIn,
         phone_number: phoneNumber,
         gst_type: gstType.toUpperCase(),
@@ -97,7 +99,7 @@ const AddSupplier = () => {
           <div className="col-lg-5 col-md-9 col-sm-12 px-5">
             <form className="form-box" onSubmit={handleSubmit}>
               <h4>Add Supplier</h4>
-              <div style={{ zIndex: 10 }}>
+              {/* <div style={{ zIndex: 10 }}>
                 <Select
                   options={get_party_name}
                   onChange={(e) => {
@@ -113,8 +115,19 @@ const AddSupplier = () => {
                   required={true}
                   placeholder="Select Party"
                 />
-              </div>
+              </div> */}
 
+              <TextField
+                type="text"
+                className="form-control my-2"
+                id="customer-name"
+                size="small"
+                required
+                // style={{ zIndex: 1 }}
+                value={supplierName}
+                onChange={(e) => setSupplierName(e.target.value)}
+                label="Supplier Name"
+              />
               <TextField
                 type="text"
                 className="form-control my-2"

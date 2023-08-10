@@ -45,21 +45,12 @@ const MyCart = ({
 }) => {
   const [paymenOptions, setPaymentOptions] = useState(false);
   const navigate = useNavigate();
-  const {
-    createdAt,
-    password,
-    registerId,
-    status,
-    saasId,
-    storeId,
-    storeName,
-    userType,
-    userId,
-    userName,
-  } = localStorage.getItem("User_data")
+  const { saasId, storeId, userType, userId, userName } = localStorage.getItem(
+    "User_data"
+  )
     ? JSON.parse(localStorage.getItem("User_data"))
     : {};
-
+  const [returnData, setReturnData] = useState(false);
   console.log("MY CART", userName);
   // const checkCustomer = userName.includes("C");
   const checkCustomer = userType === "CUSTOMER";
@@ -101,8 +92,6 @@ const MyCart = ({
       window.removeEventListener("popstate", disableBackButton);
     };
   }, []);
-
-  useEffect(() => {}, []);
 
   const handleDiscountLarge = (discount_value) => {
     cartData.map((item) => {
@@ -263,7 +252,7 @@ const MyCart = ({
               onClick={() => {
                 confirmBack();
               }}
-            />{" "}
+            />
             My Basket
           </span>
           ({cartData?.length} items)
@@ -292,10 +281,10 @@ const MyCart = ({
                 marginBottom: "10px",
               }}
             >
-              <div style={{ height: "100%", width: "200px", flex: 1 }}>
+              <div style={{ height: "50%", width: "50%", flex: 1 }}>
                 <img
                   style={{ height: "100%", width: "100%" }}
-                  src={`${BASE_Url}/item/get-image/${item && item.imageName}`}
+                  src={`${BASE_Url}/item/get-image/${item && item.image_name}`}
                   class="card-img-top"
                   alt="..."
                 />
@@ -313,8 +302,8 @@ const MyCart = ({
                   style={{
                     display: "flex",
                     flexDirection: "column",
-
                     alignItems: "center",
+                    // flex: 2,
                     justifyContent: "center",
                   }}
                 >
@@ -379,7 +368,12 @@ const MyCart = ({
                         />
                       </div>
                     </div>
-                    <div style={{ flex: 1, marginLeft: "20px" }}>
+                    <div
+                      style={{
+                        //  flex: 1,
+                        marginLeft: "20px",
+                      }}
+                    >
                       {Number(item.price) * Number(item.productQty) === 0 ? (
                         <>
                           <FormControl
@@ -470,29 +464,80 @@ const MyCart = ({
                     </div>
                     {/*  */}
                   </div>
+                  <div style={{ display: "flex" }}>
+                    <div
+                      style={{
+                        color: "#1E1E1E",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                        marginTop: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyItems: "center",
+                      }}
+                    >
+                      <BsTrash3 />
+                      <p
+                        style={{ padding: 0, margin: "0 5px" }}
+                        onClick={() => {
+                          handleDeleteCartItem(item);
+                          // dispatch(handleDeleteCartItem(item));
+                        }}
+                        // onClick={() => handelDeleteProduct(item)}
+                      >
+                        Delete
+                      </p>
+                    </div>
+                    <div
+                      style={{
+                        color: "#1E1E1E",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                        marginTop: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyItems: "center",
+                      }}
+                    >
+                      <p
+                        style={{ padding: 0, margin: "0 5px" }}
+                        // onClick={() => {
+                        //   setReturnData((state) => !state);
+                        //   item.discount_menu_is_open = false;
+                        //   setPopoverIsOpen(false);
+                        //   Number(-item.productQty);
+                        //   // !item.discount_menu_is_open;
+                        // }}
+                      >
+                        {/* Return */}
+                      </p>
+                    </div>
+                  </div>
                   <div
                     style={{
-                      color: "#1E1E1E",
-                      fontWeight: "600",
-                      cursor: "pointer",
-                      marginTop: "10px",
                       display: "flex",
                       alignItems: "center",
-                      justifyItems: "center",
+                      justifyContent: "space-between",
+                      flexDirection: "row",
+                      width: "100%",
                     }}
                   >
-                    <BsTrash3 />
-                    <p
-                      style={{ padding: 0, margin: "0 5px" }}
-                      onClick={() => {
-                        handleDeleteCartItem(item);
-                        // dispatch(handleDeleteCartItem(item));
-                      }}
-                      // onClick={() => handelDeleteProduct(item)}
-                    >
-                      Delete
-                    </p>
+                    {/* <p>MRP:</p>
+                    <p>COST:</p> */}
                   </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      flexDirection: "row",
+                      width: "100%",
+                    }}
+                  >
+                    {/* <p>Purchase Cost:</p> */}
+                  </div>
+                  <div>{/* <p>Supplier</p> */}</div>
+                  <div>{/* <p>Stock</p> */}</div>
                 </div>
               </div>
             </div>
@@ -504,6 +549,7 @@ const MyCart = ({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    display: returnData ? "none" : "block",
                   }}
                 >
                   <div
@@ -753,6 +799,7 @@ const MyCart = ({
                         fontWeight: "bold",
                         padding: "1px 7px",
                         borderRadius: "8px",
+                        display: returnData ? "none" : "block",
                       }}
                       id="pop112"
                       // onClick={() => setPopoverIsOpen(!popoverIsOpen)}

@@ -1,15 +1,3 @@
-// import React from "react";
-// import { useState } from "react";
-// import Purchase from "."
-// import Baikhata from "./Baikhata/Baikhata";
-// import Challan from "./Challan/Challan";
-// import DaySale from "./Day-sales/DaySale";
-// import DebitNote from "./Debit-Note/DebitNote";
-// // import Expences from "./Expenses/Expences";
-// import Expense from "../../expense";
-// import { handleSalesReportRequest, handleGstReportRequest, handleGstReportItemRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
-// import { useDispatch } from 'react-redux'
-
 import React, { useState } from "react";
 import Purchase from "./Purchase/Purchase";
 import Expences from "./Expenses/Expences";
