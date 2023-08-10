@@ -883,9 +883,9 @@ const Home = () => {
         >
           Recommended Items
         </h5>
-        {xyz_State && xyz_State.length > 0
+        {/* {xyz_State && xyz_State.length > 0
           ? xyz_State.map((el) => <h1>{el.customer_party}</h1>)
-          : ""}
+          : ""} */}
         {/* {categoryReq === "YES" ? <Category /> : <RenderUi />} */}
 
         <RenderUi />
