@@ -18,7 +18,7 @@ import InventoryDashboard from "../inventory-dashboard";
 import Navbar from "../navbar";
 import Master from "../master";
 import SalesAndGstReport from "../sales-and-gst-report";
-import Misreport from "../Mis-report/Misreport";
+// import Misreport from "../Mis-report/Misreport";
 // import MisReportTable from '../Mis-report/Misreport';
 // import MisReportTable from '../Mis-report/index.js';
 
@@ -142,9 +142,9 @@ function Home() {
             <Master />
           </TabPane>
 
-          <TabPane tabId="6">
+          {/* <TabPane tabId="6">
             <Misreport />
-          </TabPane>
+          </TabPane> */}
         </TabContent>
       </div>
     </>

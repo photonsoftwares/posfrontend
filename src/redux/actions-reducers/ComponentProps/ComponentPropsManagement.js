@@ -59,6 +59,7 @@ var initialComponentPropsManagementState = {
   pending_order_cart_data: [],
   yesterday_sales: 0,
   tender_report_data: [],
+  purchase_data: {},
   state_dropdown: [
     { label: "Andhra Pradesh", value: "Andhra Pradesh" },
     { label: "Arunachal Pradesh", value: "Arunachal Pradesh" },
@@ -597,6 +598,13 @@ export const ComponentPropsManagement = createSlice({
       // state.xyz_State = payload.data;
     },
 
+    //hadel purchase
+    handelPurchaseRequest: (state, payload) => {},
+    handelPurchaseResponse: (state, payload) => {
+      // console.log("prince saini",payload);
+      state.purchase_data = payload.data;
+    },
+
     // handleSearchedDataRequest2: (state, payload) => { },
     // handleSearchedDataResponse2: (state, payload) => {
     //   let arr = []
@@ -709,6 +717,7 @@ export const {
   handleCreateTaxMasterRequest,
   handleCreateSaasMasterRequest,
   handleLowStockItemListRequest,
+  handelPurchaseRequest,
 } = ComponentPropsManagement.actions;
 
 export default ComponentPropsManagement.reducer;
