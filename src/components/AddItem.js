@@ -97,7 +97,7 @@ const AddItem = () => {
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-10 col-sm-12"> */}
           <form className="form-box" onSubmit={handleAddItem}>
-            <h2>Add Item </h2>
+            <h2>Add Item</h2>
 
             <input
               type="text"

@@ -24,6 +24,8 @@ const {
 // console.log("storeId", storeId, saasId, userId, userName);
 
 function* handleLoginRequest(e) {
+  console.log("SAGA ENTRY");
+  // debugger;
   const response = yield fetch(`${BASE_Url}/auth/user-login`, {
     method: "POST",
     headers: {
@@ -33,6 +35,7 @@ function* handleLoginRequest(e) {
   });
   const jsonData = yield response.json();
   console.log("LOGIN DATA", jsonData);
+  // debugger;
   if (jsonData) {
     if (jsonData.status === true) {
       toast.success("Login Successfully");
@@ -97,15 +100,19 @@ function* handleRegisterRequest(e) {
 
 //get Bahikhata
 function* handleBahikhataPartyDropdownRequest(e) {
-  const response = yield fetch(`${BASE_Url}/bahikhata/get-party-name`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    // body: JSON.stringify({ effective_from, end_date, tax_desc, hsn_code }),
-  });
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const response = yield fetch(
+    `${BASE_Url}/supplier/get-party-name/${saasId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ effective_from, end_date, tax_desc, hsn_code }),
+    }
+  );
   const jsonData = yield response.json();
-
+  console.log("JSONDATA BAHIKHATA", jsonData);
   if (jsonData) {
     if (jsonData && jsonData.data) {
       const arr = [];
@@ -120,6 +127,38 @@ function* handleBahikhataPartyDropdownRequest(e) {
   } else {
     yield put({
       type: "ComponentPropsManagement/handleBahikhataPartyDropdownResponse",
+      data: [],
+    });
+  }
+}
+//get Category Data
+function* handelGetCategoryRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const response = yield fetch(
+    `${BASE_Url}/category/get-list/${saasId}/${storeId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("CATEGORY DROPDOWN", jsonData);
+  if (jsonData) {
+    if (jsonData && jsonData.data) {
+      const arr = [];
+      jsonData.data.map((item) => {
+        arr.push({ label: item.category_name, value: item.category_name });
+      });
+      yield put({
+        type: "ComponentPropsManagement/handelGetCategoryResponse",
+        data: arr,
+      });
+    }
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handelGetCategoryResponse",
       data: [],
     });
   }
@@ -281,9 +320,26 @@ function* handleAddItemSearchRequest(e) {
   const jsonData = yield response.json();
 
   console.log("JSONDATA ADD ITEM SEARCH", jsonData);
+
   if (jsonData) {
     if (jsonData) {
       if (jsonData.data) {
+        // ------
+
+        tempSearchArr.map((el) => {
+          el["productQty"] = 1;
+          el["sku"] = "SKU";
+          // el["department"] = "Dept2";
+          el["bill_qty"] = 0;
+          userType === "CUSTOMER" ? (el["name"] = el.item_name) : "";
+          // userType === "CUSTOMER" ? (el["order_qty"] = el.productQty) : "";
+          // userType === "CUSTOMER" ? (el["order_price"] = el.price) : "";
+
+          // el["new_edit_price"] = 0;
+          // el["discount"] = false;
+        });
+
+        // ------
         yield put({
           type: "ComponentPropsManagement/handleAddItemSearchResponse",
           data: jsonData.data,
@@ -333,6 +389,41 @@ function* handlePartyNameDataRequest(e) {
         data: {},
       });
     }
+  } else if (jsonData) {
+  }
+}
+// handle UOM
+function* handelAddUOMRequest(e) {
+  // const { searchValue } = e.payload;
+  console.log("PARTY NAME DATA E", e);
+  const response = yield fetch(
+    // `${BASE_Url}/search/get-result/Store1/AAAA/${searchValue}`,
+    `${BASE_Url}/omni/create_uom/8`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("JSONDATA UOM", jsonData);
+  if (jsonData.status === true) {
+    toast.success(jsonData.message);
+    // if (jsonData) {
+    //   if (jsonData && jsonData.data) {
+    //     yield put({
+    //       type: "ComponentPropsManagement/handlePartyNameDataResponse",
+    //       data: jsonData.data,
+    //     });
+    //   }
+    // } else {
+    //   yield put({
+    //     type: "ComponentPropsManagement/handlePartyNameDataResponse",
+    //     data: {},
+    //   });
+    // }
   } else if (jsonData) {
   }
 }
@@ -406,7 +497,7 @@ function* handleRecommendedDataRequest() {
         el["bill_qty"] = 0;
         userType === "CUSTOMER" ? (el["name"] = el.item_name) : "";
         // userType === "CUSTOMER" ? (el["order_qty"] = el.productQty) : "";
-        userType === "CUSTOMER" ? (el["order_price"] = el.price) : "";
+        // userType === "CUSTOMER" ? (el["order_price"] = el.price) : "";
 
         // el["new_edit_price"] = 0;
         // el["discount"] = false;
@@ -496,6 +587,41 @@ function* handleEmailNotificationResponse(e) {
   });
   const jsonData = yield response.json();
   console.log("Email Notify JSONDATA", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    toast.success(jsonData.message);
+    // alert(jsonData.message);
+    // const cartData = jsonData.data;
+    // yield put({
+    //   type: "ComponentPropsManagement/handleRegisterUserResponse",
+    //   data: jsonData.data,
+    // });
+    // } else {
+    //   toast.error(jsonData.message);
+    // }
+  } else {
+    toast.error(jsonData.message);
+    // yield put({
+    //   type: "ComponentPropsManagement/handleRegisterUserResponse",
+    //   data: {},
+    // });
+  }
+}
+// SMS
+function* handelSMSRequest(e) {
+  const { storeId, saasId, userName } = JSON.parse(
+    localStorage.getItem("User_data")
+  );
+  const { pdf, number } = e.payload;
+  console.log("PDF & NUMBER", pdf, number);
+  const response = yield fetch(`${host}sms/mobile/${saasId}/${number}/${pdf}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const jsonData = yield response.json();
+  console.log("JSONDATA", jsonData);
   if (jsonData) {
     // if (jsonData && jsonData.data) {
     toast.success(jsonData.message);
@@ -615,12 +741,11 @@ function* handleAddItemToStoreRequest(e) {
 }
 
 function* handleUpdateItemToStoreRequest(e) {
-  const response = yield fetch(`${BASE_Url}/item/update-item/${e.payload.id}`, {
+  const { formData, id } = e.payload;
+  console.log("E FORMDATA", formData);
+  const response = yield fetch(`${BASE_Url}/item/update-item/${id}`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(e.payload.data),
+    body: formData,
   });
   const jsonData = yield response.json();
   console.log("REGISTER JSONDATA", jsonData);
@@ -630,19 +755,19 @@ function* handleUpdateItemToStoreRequest(e) {
       // alert(jsonData.message);
       // const cartData = jsonData.data;
       toast.success(jsonData.message);
-      yield put({
-        type: "ComponentPropsManagement/handleAddItemToStoreResponse",
-        data: jsonData.data.item_id,
-      });
+      // yield put({
+      //   type: "ComponentPropsManagement/handleAddItemToStoreResponse",
+      //   data: jsonData.data.item_id,
+      // });
     } else {
       toast.error(jsonData.message);
     }
   } else {
     toast.error(jsonData.message);
-    yield put({
-      type: "ComponentPropsManagement/handleAddItemToStoreResponse",
-      data: "",
-    });
+    // yield put({
+    //   type: "ComponentPropsManagement/handleAddItemToStoreResponse",
+    //   data: "",
+    // });
   }
 }
 
@@ -780,7 +905,7 @@ function* handleAddPartyRequest(e) {
 // Add Purchase => inventory-master/inventory
 function* handleInventoryMasterRequest(e) {
   // const { searchValue } = e.payload;
-  // console.log("E ADD PARTY", e);
+  console.log("INVENTORY");
   // const { storeId } = e.payload;
   // console.log("STORE ID", storeId);
   const response = yield fetch(`${BASE_Url}/inventory-master/inventory`, {
@@ -794,23 +919,23 @@ function* handleInventoryMasterRequest(e) {
   const jsonData = yield response.json();
   console.log("inventory-master/inventory", jsonData);
 
-  // if (jsonData) {
-  //   if (jsonData.status === true) {
-  //     toast.success(jsonData.message);
-  //     yield put({
-  //       type: "ComponentPropsManagement/handleAddPartyResponse",
-  //       data: jsonData,
-  //     });
-  //   } else {
-  //     toast.error(jsonData.message);
-  //     yield put({
-  //       type: "ComponentPropsManagement/handleAddPartyResponse",
-  //       data: {},
-  //     });
-  //   }
-  // } else {
-  //   toast.error(jsonData.message);
-  // }
+  if (jsonData) {
+    if (jsonData.status === true) {
+      toast.success(jsonData.message);
+      // yield put({
+      //   type: "ComponentPropsManagement/handleAddPartyResponse",
+      //   data: jsonData,
+      // });
+    } else {
+      toast.error(jsonData.message);
+      // yield put({
+      //   type: "ComponentPropsManagement/handleAddPartyResponse",
+      //   data: {},
+      // });
+    }
+  } else {
+    toast.error(jsonData.message);
+  }
 }
 // Handle Tax Rates
 function* handleTaxRatesRequest() {
@@ -902,16 +1027,17 @@ function* handleDeleteCartItemRequest(e) {
 }
 
 function* handleUploadPicRequest(e) {
-  // console.log(object);
-  const { save_product_id, formdata } = e.payload;
+  const { formData, save_product_id } = e.payload;
+
+  console.log("FORM DATA IMAGE", formData);
   const response = yield fetch(
-    `${BASE_Url}/item/save-image/${save_product_id}`,
+    `${BASE_Url}/item/save-image/${save_product_id.item_id}`,
     {
       method: "POST",
       // headers: {
       //   "Content-Type": "application/json",
       // },
-      body: formdata,
+      body: formData,
     }
   );
   const jsonData = yield response.json();
@@ -1320,7 +1446,6 @@ function* handleNoOfItemRequest(e) {
 function* handleLastFourteenDaysSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-
   const response = yield fetch(
     `${host}dashboard/last-fourteen-days-sales/${saasId}`,
     {
@@ -1328,7 +1453,6 @@ function* handleLastFourteenDaysSalesRequest(e) {
       // headers: myHeaders,
     }
   );
-
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
@@ -1351,7 +1475,6 @@ function* handleLastFourteenDaysSalesRequest(e) {
 function* handleLastSixtyDaysSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-
   const response = yield fetch(
     `${host}dashboard/last-sixty-days-sales/${saasId}`,
     {
@@ -1359,7 +1482,6 @@ function* handleLastSixtyDaysSalesRequest(e) {
       // headers: myHeaders,
     }
   );
-
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
@@ -1374,6 +1496,32 @@ function* handleLastSixtyDaysSalesRequest(e) {
       type: "ComponentPropsManagement/handleLastSixtyDaysSalesResponse",
       data: null,
     });
+  } else {
+    toast.error("Something went wrong server side");
+  }
+}
+// ADD CATEGORY
+function* handelAddcategoryRequest(e) {
+  const response = yield fetch(`${host}category/store/category`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(e.payload),
+  });
+  const jsonData = yield response.json();
+  if (jsonData) {
+    if (jsonData.status === true) {
+      toast.success(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleLastSixtyDaysSalesResponse",
+        data: jsonData,
+      });
+    }
+    // yield put({
+    //   type: "ComponentPropsManagement/handleLastSixtyDaysSalesResponse",
+    //   data: null,
+    // });
   } else {
     toast.error("Something went wrong server side");
   }
@@ -1891,41 +2039,37 @@ function* pendingOrderCartDataRequest(e) {
 
 function* handleViewOrderPendingRequest(e) {
   const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
-  try {
-    const date = new Date();
-    const response = yield fetch(
-      `${host}order/view-order/${moment(date).format("Y-MM-DD")}/${saasId}`,
-      // `${host}order/view-order/2023-07-19/${saasId}`,
-      {
-        // const response = yield fetch(`${host}order/view-order/2023-07-13/saas123`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // body: JSON.stringify(e.payload),
-      }
-    );
-    const jsonData = yield response.json();
-    // console.log("ALL LIST ORDERS", jsonData);
-    if (jsonData) {
-      if (jsonData.status === true) {
-        yield put({
-          type: "ComponentPropsManagement/handleViewOrderPendingResponse",
-          data: jsonData.data,
-        });
-        return;
-      } else {
-        yield put({
-          type: "ComponentPropsManagement/handleViewOrderPendingResponse",
-          data: null,
-        });
-        toast.error(jsonData.message);
-      }
-    } else {
-      toast.error("Something went wrong");
+  const date = new Date();
+  const response = yield fetch(
+    // `${host}order/view-order/${moment(date).format("Y-MM-DD")}/${saasId}`,
+    `${host}order/view-order/${saasId}`,
+    {
+      // const response = yield fetch(`${host}order/view-order/2023-07-13/saas123`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify(e.payload),
     }
-  } catch (err) {
-    toast.error(err.message);
+  );
+  const jsonData = yield response.json();
+  console.log("ALL LIST ORDERS CRY", jsonData);
+  if (jsonData) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleViewOrderPendingResponse",
+        data: jsonData.data,
+      });
+      return;
+    } else {
+      yield put({
+        type: "ComponentPropsManagement/handleViewOrderPendingResponse",
+        data: null,
+      });
+      toast.error(jsonData.message);
+    }
+  } else {
+    toast.error("Something went wrong");
   }
 }
 
@@ -2172,6 +2316,37 @@ function* handleGetPatyNameRequest(e) {
   } else {
     yield put({
       type: "ComponentPropsManagement/handleBahikhataPartyDropdownResponse",
+      data: [],
+    });
+  }
+}
+function* handelgetOrderDetailsRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const response = yield fetch(
+    `${BASE_Url}/order/get-order-details/${saasId}/${storeId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("status JSONDATA", jsonData);
+  if (jsonData) {
+    if (jsonData && jsonData.data) {
+      // const arr = [];
+      // jsonData.data.map((item) => {
+      //   arr.push({ label: item, value: item });
+      // });
+      yield put({
+        type: "ComponentPropsManagement/handelgetOrderDetailsResponse",
+        data: jsonData.data,
+      });
+    }
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handelgetOrderDetailsResponse",
       data: [],
     });
   }
@@ -2799,6 +2974,10 @@ export function* helloSaga() {
     handleMemberEnrollmentRequest
   );
   yield takeEvery(
+    "ComponentPropsManagement/handelAddcategoryRequest",
+    handelAddcategoryRequest
+  );
+  yield takeEvery(
     "ComponentPropsManagement/handleAccruvalRequest",
     handleAccruvalRequest
   );
@@ -2886,6 +3065,22 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handelPurchaseRequest",
     handelPurchaseRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handelGetCategoryRequest",
+    handelGetCategoryRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handelgetOrderDetailsRequest",
+    handelgetOrderDetailsRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handelSMSRequest",
+    handelSMSRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handelAddUOMRequest",
+    handelAddUOMRequest
   );
 }
 

@@ -12,22 +12,44 @@ import {
   ModalHeader,
   Row,
 } from "reactstrap";
+import Table from "react-bootstrap/Table";
+
+import Accordion from "react-bootstrap/Accordion";
+import Select, { useStateManager } from "react-select";
 import { HiOutlineArrowSmallLeft } from "react-icons/hi2";
 import Flatpickr from "react-flatpickr";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import MyCart from "./MyCart";
-import { handleViewOrderPendingRequest } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+import {
+  handleViewOrderPendingRequest,
+  handelgetOrderDetailsRequest,
+} from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 
 const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
   const { userName, userType } = localStorage.getItem("User_data")
     ? JSON.parse(localStorage.getItem("User_data"))
     : {};
 
-  console.log("MAIN PENDING ORDER", userType);
-  const checkCustomer = userName.includes("C");
+  // console.log("MAIN PENDING ORDER", userType);
+  const {
+    pending_order_data,
+    bahikhata_party_name_dropdown,
+    view_status_data,
+  } = useSelector((e) => e.ComponentPropsManagement);
 
+  console.log("LINE 40 STATUS", view_status_data);
+
+  const checkCustomer = userName.includes("C");
+  const [bahikhataArr, setBahikhataArr] = useState({
+    party_name: "",
+    payment_type: "",
+    payment_date: "",
+    payment_mode: "",
+    amount: "",
+    payment_notes: "",
+  });
   // useEffect(() => {
   //   if (userType === "CUSTOMER") {
   //     // navigate("/home");
@@ -37,9 +59,8 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
   const [show, setShow] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
   console.log("ORDER NUMBER", orderNumber);
-  const { pending_order_data } = useSelector((e) => e.ComponentPropsManagement);
 
-  console.log("pending_order_data", pending_order_data);
+  // console.log("view_status_data", view_status_data);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -51,6 +72,10 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
       // setOrderNumber(pending_order_data[0].order_id);
     }
   }, [pending_order_data]);
+
+  useEffect(() => {
+    dispatch(handelgetOrderDetailsRequest());
+  }, []);
 
   return (
     <>
@@ -133,6 +158,30 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
               </tbody>
             </table>
           </div>
+          <Accordion defaultActiveKey="0">
+            {view_status_data.data && view_status_data.data.length > 0 ? (
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>Item Name</th>
+                    <th>Value</th>
+                    <th>Quantity</th>
+                  </tr>
+                </thead>
+                {view_status_data.data.map((el) => (
+                  <tbody>
+                    <tr>
+                      <td>{el.item_name}</td>
+                      <td>{el.total_value}</td>
+                      <td>{el.total_quantity}</td>
+                    </tr>
+                  </tbody>
+                ))}
+              </Table>
+            ) : (
+              ""
+            )}
+          </Accordion>
         </ModalBody>
         <ModalFooter></ModalFooter>
       </Modal>

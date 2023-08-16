@@ -20,6 +20,7 @@ var initialComponentPropsManagementState = {
   customer_order: [],
   handle_view_orders: [],
   xyz_State: [],
+  category_list: [],
   login_data: {},
   handel_redeem_point: {},
   register_data: {},
@@ -99,7 +100,7 @@ var initialComponentPropsManagementState = {
   gst_report_item_table_data: [],
   link_loyalty_detail: {},
   no_of_items: 0,
-
+  view_status_data: [],
   expense_category_dropdown: [],
   update_price_item_name_dropdown: [],
   bahikhata_party_name_dropdown: [],
@@ -110,7 +111,9 @@ export const ComponentPropsManagement = createSlice({
   initialState: initialComponentPropsManagementState,
   reducers: {
     // Login User
+
     handleLoginRequest: (state, payload) => {
+      console.log("PAYLOAD", payload);
       state.load = true;
     },
     handleBahikhataCreateRequest: (state, payload) => {},
@@ -122,6 +125,7 @@ export const ComponentPropsManagement = createSlice({
     },
 
     handleLoginResponse: (state, payload) => {
+      console.log("PAYLOAD REQUEST", payload);
       state.login_data = payload.data;
       state.load = false;
       window.location.replace("/");
@@ -604,6 +608,42 @@ export const ComponentPropsManagement = createSlice({
       // console.log("prince saini",payload);
       state.purchase_data = payload.data;
     },
+    //ADD CATEGORY
+    handelAddcategoryRequest: (state, payload) => {},
+    handelAddcategoryResponse: (state, payload) => {
+      // console.log("prince saini",payload);
+      // state.purchase_data = payload.data;
+    },
+    //getCATEGORY
+    handelGetCategoryRequest: (state, payload) => {},
+    handelGetCategoryResponse: (state, payload) => {
+      // console.log("category_list", payload);
+      state.category_list = payload.data;
+    },
+
+    //view Status
+    handelgetOrderDetailsRequest: (state, payload) => {},
+    handelgetOrderDetailsResponse: (state, payload) => {
+      console.log("payload RES STATUS", payload);
+      state.view_status_data = payload;
+    },
+    //SEND SMS
+    handelSMSRequest: (state, payload) => {},
+    handelSMSResponse: (state, payload) => {
+      console.log("payload RES STATUS", payload);
+      // state.view_status_data = payload;
+    },
+
+    resetProductId: (state, payload) => {
+      state.save_product_id = "";
+    },
+
+    //SEND SMS
+    handelAddUOMRequest: (state, payload) => {},
+    handelAddUOMResponse: (state, payload) => {
+      // console.log("payload RES STATUS", payload);
+      // state.view_status_data = payload;
+    },
 
     // handleSearchedDataRequest2: (state, payload) => { },
     // handleSearchedDataResponse2: (state, payload) => {
@@ -634,9 +674,11 @@ export const {
   handleCreateOrderRequest,
   updateInvoicedRequest,
   handleCategoriesRequest,
+  handelSMSRequest,
   handleSearchInvoiceRequest,
   handleCreateSupplierRequest,
   handleRedeemPointRequest,
+  handelAddUOMRequest,
   handleSaveSearchCustomerData,
   handleLinkLoyaltyRequest,
   handleDeliveryNoteRequest,
@@ -661,6 +703,7 @@ export const {
   handleItemMasterListRequest,
   handleNoOfItemRequest,
   handleRegisterRequest,
+  resetProductId,
   handleUpdateMoqRequest,
   handleHSNCODERequest,
   handleCreateRowTaxMasterRequest,
@@ -716,8 +759,11 @@ export const {
   handleViewOrderRequest,
   handleCreateTaxMasterRequest,
   handleCreateSaasMasterRequest,
+  handelAddcategoryRequest,
   handleLowStockItemListRequest,
   handelPurchaseRequest,
+  handelgetOrderDetailsRequest,
+  handelGetCategoryRequest,
 } = ComponentPropsManagement.actions;
 
 export default ComponentPropsManagement.reducer;

@@ -190,7 +190,8 @@ const AddPurchase = () => {
     try {
       const response = await fetch(
         // `${BASE_Url}/customer/search-customer/${storeId}/${saasId}/${inputValue}`,
-        `${BASE_Url}/search/recommended-item/${storeId}/${saasId}`,
+        // `${BASE_Url}/search/recommended-item/${storeId}/${saasId}`,
+        `${BASE_Url}/search/get-result/${storeId}/${saasId}/${inputValue}`,
         {
           method: "GET",
           headers: {
@@ -284,16 +285,14 @@ const AddPurchase = () => {
     // console.log("SUPPLIER ID", supplierId);
     // console.log("ITEM LIST", handle_add_item_search);
     // console.log("QUANTITY", quantity);
-    // dispatch(
-    //   handleAddPurchaseRequest({
-    //     saas_id: saasId,
-    //     store_id: storeId,
-    //     supplier_name: partyName,
-    //     item_list: [
-    //       { productId: Number(itemId), productQty: Number(quantity) },
-    //     ],
-    //   })
-    // );
+    dispatch(
+      handleAddPurchaseRequest({
+        saas_id: saasId,
+        store_id: storeId,
+        supplier_name: supplierName,
+        item_list: [{ item_id: Number(itemId), productQty: quantity }],
+      })
+    );
     dispatch(
       handleInventoryMasterRequest({
         // saas_id: saasId,
@@ -404,20 +403,45 @@ const AddPurchase = () => {
                 <Label>
                   Select Party <span className="text-red"> * </span>
                 </Label>
-                <Select
-                  options={bahikhata_party_name_dropdown}
-                  onChange={(e) => {
-                    const val = e.value;
-                    console.log("kjnbdskja", e.value);
-                    setSupplierName(e.value);
-                    setBahikhataArr({ ...bahikhataArr, party_name: val });
-                  }}
-                  value={bahikhata_party_name_dropdown.filter(
-                    (io) => io.value === bahikhataArr.party_name
-                  )}
-                  required={true}
-                  placeholder="Select Party"
-                />
+                <div styles={{ zIndex: 999 }}>
+                  <Select
+                    options={bahikhata_party_name_dropdown}
+                    onChange={(e) => {
+                      const val = e.value;
+                      console.log("kjnbdskja", e.value);
+                      setSupplierName(e.value);
+                      setBahikhataArr({ ...bahikhataArr, party_name: val });
+                    }}
+                    value={bahikhata_party_name_dropdown.filter(
+                      (io) => io.value === bahikhataArr.party_name
+                    )}
+                    required={true}
+                    styles={{
+                      menu: (baseStyles, state) => ({
+                        ...baseStyles,
+                        // height: "50px",
+                        overflow: "auto",
+                        fontWeight: "900",
+                        zIndex: 999,
+                      }),
+                      option: (baseStyles, state) => ({
+                        ...baseStyles,
+                        height: "50px",
+                        // zIndex: 999,
+                        fontWeight: "300",
+                        overflow: "auto",
+                      }),
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        // zIndex: 999,
+                        // height: "50px",
+                        fontWeight: "800",
+                        // overflow: "auto",
+                      }),
+                    }}
+                    placeholder="Select Party"
+                  />
+                </div>
               </FormGroup>
 
               <div

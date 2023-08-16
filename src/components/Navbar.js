@@ -12,6 +12,7 @@ import { BiArrowBack, BiGroup } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  handleCategoriesRequest,
   handleOpneMenuRequest,
   handleShowModal,
   handlecartCount,
@@ -29,6 +30,8 @@ import cart3 from "../assets/cart3.jpeg";
 import cart4 from "../assets/cart4.jpeg";
 import logout from "../assets/logout.jpeg";
 import logout2 from "../assets/logout2.jpeg";
+import Category from "./Category/Category";
+import { Button } from "react-bootstrap";
 
 const Navbar = () => {
   const {
@@ -45,13 +48,17 @@ const Navbar = () => {
   } = localStorage.getItem("User_data")
     ? JSON.parse(localStorage.getItem("User_data"))
     : {};
-  // console.log("NAVBAR Store name", { shopname: storeName });
+  console.log("NAVBAR Store name", typeof saasId);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
-  const { open_menu, cart_data, show_cart_modal, product_count } = useSelector(
-    (e) => e.ComponentPropsManagement
-  );
+  const {
+    open_menu,
+    cart_data,
+    get_categories,
+    show_cart_modal,
+    product_count,
+  } = useSelector((e) => e.ComponentPropsManagement);
 
   useEffect(() => {
     if (open_menu) {
@@ -130,6 +137,9 @@ const Navbar = () => {
     setCartCount(product_count);
   }, [product_count]);
 
+  useEffect(() => {
+    dispatch(handleCategoriesRequest());
+  }, []);
   return (
     <div
       style={{
@@ -159,7 +169,11 @@ const Navbar = () => {
             flex: 1,
           }}
         >
-          <img src={Logo4} style={{ height: "35px", width: "100%" }} />
+          {saasId === "13" ? (
+            ""
+          ) : (
+            <img src={Logo4} style={{ height: "35px", width: "100%" }} />
+          )}
         </Link>
 
         {!(location.pathname === "/" || location.pathname === "/login") && (
@@ -189,6 +203,7 @@ const Navbar = () => {
             fontWeight: "bolder",
             color: "#fff",
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             // marginLeft: "10px",
             justifyContent: "center",
@@ -206,6 +221,20 @@ const Navbar = () => {
             {/* {localStorage.getItem("User_data") ? storeName : ""} */}
             {storeName}
           </p>
+          {/* <div>
+            {get_categories.map((el) => (
+              <Button
+                size="lg"
+                className="mx-2"
+                variant="warning"
+                onClick={() => {
+                  dispatch(handleAllDataByCategoryRequest({ el }));
+                }}
+              >
+                {el}
+              </Button>
+            ))}
+          </div> */}
         </div>
       </div>
       <div

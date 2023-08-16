@@ -1,6 +1,13 @@
 import React from "react";
-import { Button, ListGroup } from "react-bootstrap";
+import { Button, FormControl, ListGroup } from "react-bootstrap";
 import { BASE_Url } from "../../URL";
+import {
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+} from "@mui/material";
+import { BsFillCheckCircleFill } from "react-icons/bs";
 
 const DataByCategory = ({ get_all_catrgory_data }) => {
   console.log("DataByCategory", get_all_catrgory_data);
@@ -11,11 +18,6 @@ const DataByCategory = ({ get_all_catrgory_data }) => {
         display: "grid",
         gridTemplateColumns: "repeat(2,1fr)",
         placeItems: "center",
-        // alignItems: "center",
-
-        // justifyContent: "center",
-        // flexDirection: "row",
-        // flexWrap: "wrap",
       }}
     >
       {get_all_catrgory_data.map((item) => (
@@ -36,7 +38,7 @@ const DataByCategory = ({ get_all_catrgory_data }) => {
             />
           </div>
           <div class="card-body">
-            <h5 class="card-title">{item.item_name}</h5>
+            <h5 class="card-title">{item.description}</h5>
             {Number(item.price) === 0 ? (
               <>
                 <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
@@ -53,7 +55,6 @@ const DataByCategory = ({ get_all_catrgory_data }) => {
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
-                          // aria-label="toggle password visibility"
                           onClick={() => {
                             item.price = item.new_price;
                             setData([...data]);
@@ -142,6 +143,7 @@ const DataByCategory = ({ get_all_catrgory_data }) => {
                   size="sm"
                   // variant={`${item.price === 0 ? "secondary" : "warning"}`}
                   variant={`warning`}
+                  // onClick={() => console.log("item", item)}
                   style={{
                     width: "100%",
                     fontSize: "10px",

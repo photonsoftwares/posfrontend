@@ -169,7 +169,8 @@ const ItemMaster = () => {
                   color="var(--primary1)"
                   className="mouse-pointer"
                   onClick={() => {
-                    setAddUpdateItemModalIsOpen(!addUpdateItemModalIsOpen);
+                    // setAddUpdateItemModalIsOpen(!addUpdateItemModalIsOpen);
+                    setAddUpdateItemModalIsOpen((state) => !state);
                   }}
                 />
               </div>

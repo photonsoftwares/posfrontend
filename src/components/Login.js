@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { isDev } from "../URL";
+
 const Login = () => {
   const params = useParams();
   console.log("LOGIN PARAMS", params);
@@ -36,7 +37,9 @@ const Login = () => {
     //   username,
     //   password,
     // };
+    console.log("ENTRY");
     localStorage.clear();
+
     dispatch(
       handleLoginRequest({
         user_name: username,

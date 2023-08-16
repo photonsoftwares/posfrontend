@@ -1,8 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { BsCamera } from "react-icons/bs";
+import { AiOutlineSearch } from "react-icons/ai";
 import { BsHandbag, BsArrowRight } from "react-icons/bs";
-import { QrReader } from "react-qr-reader";
 import { FcSalesPerformance, FcSpeaker } from "react-icons/fc";
 import { IoCashOutline } from "react-icons/io5";
 import { SiPaytm } from "react-icons/si";
@@ -15,7 +14,6 @@ import { BsCreditCardFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { FcSms } from "react-icons/fc";
 import Modal from "react-bootstrap/Modal";
-import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import { useDispatch, useSelector } from "react-redux";
 import Product from "../components/Product";
 
@@ -26,6 +24,7 @@ import {
   handleRecommendedDataRequest,
   handleAccruvalRequest,
   handleShowModal,
+  handelSMSRequest,
   handlewhatsAppRequest,
   handleItemsDataRequest,
   handleEmailNotificationResponse,
@@ -142,8 +141,8 @@ const Home = () => {
   const [optionTickSum, setOptionTickSum] = useState(0);
   const [discountPercentVal, setDiscountPercentVal] = useState("");
   const [discountAmountVal, setDiscountAmountVal] = useState("");
-  const [totalDiscountVal, setTotalDiscountVal] = useState(0);
-  const [invoiceValue, setInvoiceValue] = useState(0);
+  const [totalDiscountVal, setTotalDiscountVal] = useState(Math.trunc(0));
+  const [invoiceValue, setInvoiceValue] = useState(Math.trunc(0));
   const [addPrice, setAddPrice] = useState("");
   const [email, setEmail] = useState("");
   const [updatecart, setUpdatecart] = useState(true);
@@ -157,6 +156,7 @@ const Home = () => {
   const [smsOpen, setSmsOpen] = useState(false);
   const [whatsApp, setWhatsApp] = useState("");
   const [webcamResult, setwebcamResult] = useState();
+  const [sms, setSms] = useState("");
   const [showVierCustomerOrderModal, setShowVierCustomerOrderModal] =
     useState(false);
   const [qrData, setQrData] = useState(null);
@@ -354,7 +354,7 @@ const Home = () => {
       setBalanceDue(parseFloat(balance_due).toFixed(2));
       setAmount(parseFloat(balance_due).toFixed(2));
     }
-  }, [optionTickSum, invoiceValue]);
+  }, [optionTickSum, invoiceValue, discountPercentVal, invoiceValue]);
 
   useEffect(() => {
     // if (totalDiscountVal) {
@@ -792,6 +792,19 @@ const Home = () => {
     }
   };
 
+  const handleSMS = (event) => {
+    event.preventDefault();
+    dispatch(
+      handelSMSRequest({
+        number: sms,
+        pdf:
+          handle_saveTransaction_data &&
+          handle_saveTransaction_data.pdf_file_name,
+      })
+    );
+    setSms("");
+  };
+
   return (
     <div className="app">
       <div
@@ -804,12 +817,13 @@ const Home = () => {
         }}
       >
         <div
-          className="d-flex align-items-center justify-content-center mt-3"
+          className="d-flex flex-row align-items-center justify-content-center mt-3"
           style={{ display: "flex", flexDirection: "column" }}
         >
           {/* <IoIosSearch size={30} opacity={0.4} /> */}
           <div style={{ marginRight: "10px" }}>
-            <BsCamera size={30} opacity={1} />
+            {/* <BsCamera size={30} opacity={1} /> */}
+            <AiOutlineSearch size={30} opacity={1} />
           </div>
           <input
             style={{ border: "1px solid yellowgreen", outline: "none" }}
@@ -872,22 +886,14 @@ const Home = () => {
           // paddingBottom: "20px",
         }}
       >
-        <h5
-          // className="my-3"
-          style={{
-            fontWeight: "bold",
-            padding: 0,
-            margin: 0,
-            display: searchValue?.length ? "none" : "block",
-          }}
-        >
-          Recommended Items
-        </h5>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          {categoryReq === "YES" ? <Category /> : <RenderUi />}
+        </div>
+
         {/* {xyz_State && xyz_State.length > 0
           ? xyz_State.map((el) => <h1>{el.customer_party}</h1>)
           : ""} */}
-        {/* {categoryReq === "YES" ? <Category /> : <RenderUi />} */}
-
+        {/* <Category /> */}
         <RenderUi />
         {/* {searchedData && searchValue?.length > 0
           ? searchedData.map((item, index) => (
@@ -1053,7 +1059,7 @@ const Home = () => {
                       textAlign: "center",
                     }}
                   >
-                    Total Invoice Value: {invoiceValue}
+                    Total Invoice Value: {Math.trunc(invoiceValue)}
                   </div>
                   <div className="mt-2">
                     <input
@@ -1502,19 +1508,19 @@ const Home = () => {
               )}
               {smsOpen ? (
                 <form
-                  onSubmit={() => {}}
+                  onSubmit={handleSMS}
                   className="d-flex flex-row align-items-center"
                   style={{ width: "50%" }}
                 >
                   <TextField
-                    type="email"
+                    type="text"
                     className="form-control my-2"
                     id="customer-name"
                     required
                     size="small"
                     label="SMS"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={sms}
+                    onChange={(e) => setSms(e.target.value)}
                   />
                   <div className="mx-2">
                     <button type="submit" className="btn btn-primary">

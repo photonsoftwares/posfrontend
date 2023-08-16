@@ -38,6 +38,7 @@ const Bahikhata = (props) => {
   const [updateItem, setUpdateItem] = useState("");
   const [updateIndexNumber, setUpdateIndexNumber] = useState("");
   const [addBahikhataArr, setAddBahikhataArr] = useState([]);
+
   const [bahikhataArr, setBahikhataArr] = useState({
     party_name: "",
     payment_type: "",

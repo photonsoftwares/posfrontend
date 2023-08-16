@@ -77,7 +77,7 @@ const Product = ({
             <div style={{ height: "100px", width: "100%" }}>
               <img
                 style={{ height: "100%", width: "100%" }}
-                src={`${BASE_Url}/item/get-image/${item && item.image_name}`}
+                src={`${BASE_Url}/item/get-image/${item && item.item_id}`}
                 class="card-img-top"
                 alt="..."
               />
@@ -246,6 +246,7 @@ const Product = ({
 
                     setUpdatecart(!updatecart);
                     setSearchValue("");
+                    window.location.reload();
                   }}
                 >
                   <Button

@@ -34,6 +34,9 @@ import LinkLoyalityCustomer from "./components/Navbar Screens/LinkLoyalityCustom
 import MembePointRedemption from "./components/Navbar Screens/MembePointRedemption";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import DeliveryChalan from "./components/DeliveryChalan";
+import AddCategory from "./components/AddCategory/AddCategory";
+import UOM from "./components/Unit of mesurement/UOM";
+import Marketing from "./components/Marketing/Marketing";
 // import { Navbar } from "react-bootstrap";
 
 const App = () => {
@@ -50,6 +53,7 @@ const App = () => {
       // dispatch(handleGetCountryDropdownRequest());
     }
   }, [login_data]);
+  // "/add-category"
 
   return (
     <>
@@ -75,10 +79,11 @@ const App = () => {
           path="/retailer-dashboard"
           element={<ProtectedRoutingWhenLogin Component={RetailerDashboard} />}
         />
-        <Route
+        {/* <Route
           path="/login"
           element={<ProtectedRoutingWhenLogout Component={Login} />}
-        />
+        /> */}
+        <Route path="/login" element={<Login />} />
 
         {/* <Route path="/register" Component={Register} />
 
@@ -112,6 +117,10 @@ const App = () => {
           element={<ProtectedRoutingWhenLogin Component={AddItem} />}
         />
         <Route
+          path="/add-category"
+          element={<ProtectedRoutingWhenLogin Component={AddCategory} />}
+        />
+        <Route
           path="/return"
           element={<ProtectedRoutingWhenLogin Component={Return} />}
         />
@@ -122,6 +131,14 @@ const App = () => {
         <Route
           path="/delivery-challan"
           element={<ProtectedRoutingWhenLogin Component={DeliveryChalan} />}
+        />
+        <Route
+          path="/marketing"
+          element={<ProtectedRoutingWhenLogin Component={Marketing} />}
+        />
+        <Route
+          path="/uom"
+          element={<ProtectedRoutingWhenLogin Component={UOM} />}
         />
         <Route
           path="/inventory-dashboard"

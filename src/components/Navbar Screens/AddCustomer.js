@@ -7,7 +7,7 @@ import { TextField } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const AddCustomer = ({ openMenu, setOpenMenu }) => {
-  const { storeId } = JSON.parse(localStorage.getItem("User_data"));
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
@@ -17,6 +17,8 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
   const [age, setAge] = useState("");
   const [occupation, setOccupation] = useState("");
   const [startDate, setStartDate] = useState(new Date());
+  const [discount, setDiscount] = useState("");
+
   const onOptionChange = (e) => {
     setGender(e.target.value);
     console.log("E TARGET VALUE", e.target.value);
@@ -38,14 +40,17 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
         mobile_number: mobile,
         email: email,
         name: name,
-        address: address,
+        address_1: address,
         source_of_acq: "Source1",
         dob: startDate,
         gender: gender,
-        occupation: occupation,
+        customer_type: "CUSTOMER",
+        income_level: 0,
+        // occupation: occupation,
         income_level: 600000,
-        saas_id: "EEEE",
+        saas_id: saasId,
         store_id: storeId,
+        discount_percent: discount,
       })
     );
     setName("");
@@ -55,6 +60,7 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
     setAddress("");
     setGender("");
     setOccupation("");
+    setDiscount("");
   };
   return (
     <>
@@ -72,21 +78,22 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
                 className="form-control my-2"
                 id="customer-name"
                 size="small"
-                label="Name"
                 required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                label="Mobile"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
               />
               <TextField
                 type="text"
                 className="form-control my-2"
                 id="customer-name"
                 size="small"
+                label="Name"
                 required
-                label="Mobile"
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
+
               <TextField
                 type="email"
                 className="form-control my-2"
@@ -116,7 +123,17 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
-              <div style={{ width: "200px" }}>
+              <TextField
+                size="small"
+                type="text"
+                className="form-control my-2"
+                id="customer-name"
+                label="Discount"
+                required
+                value={discount}
+                onChange={(e) => setDiscount(e.target.value)}
+              />
+              {/* <div style={{ width: "200px" }}>
                 <TextField
                   type="number"
                   className="form-control my-2"
@@ -127,8 +144,8 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
                 />
-              </div>
-              <div className="d-flex justify-content-center">
+              </div> */}
+              {/* <div className="d-flex justify-content-center">
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-TextField mx-2"
@@ -156,8 +173,8 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
                     Female
                   </label>
                 </div>
-              </div>
-              <TextField
+              </div> */}
+              {/* <TextField
                 type="text"
                 className="form-control my-2"
                 id="customer-name"
@@ -166,7 +183,7 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
                 size="small"
                 value={occupation}
                 onChange={(e) => setOccupation(e.target.value)}
-              />
+              /> */}
               <div className="mt-3">
                 <button
                   type="submit"

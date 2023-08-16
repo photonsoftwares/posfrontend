@@ -7,7 +7,8 @@ import { CiDeliveryTruck } from "react-icons/ci";
 import { GiExpense, GiNotebook, GiStabbedNote } from "react-icons/gi";
 import { IoDocumentTextSharp } from "react-icons/io5";
 import { RiPriceTag3Fill, RiEditCircleFill } from "react-icons/ri";
-import { SiHomeassistantcommunitystore } from "react-icons/si";
+import { SiHomeassistantcommunitystore, SiCoinmarketcap } from "react-icons/si";
+// import { SiCoinmarketcap } from "react-icons/si";
 import { MdEditSquare } from "react-icons/md";
 import { GrUpdate } from "react-icons/gr";
 import { TfiViewListAlt } from "react-icons/tfi";
@@ -195,13 +196,20 @@ const Main = () => {
     },
     {
       id: 4,
+      label: "Marketing",
+      value: "marketing",
+      icon: <SiCoinmarketcap color="#164ba1" size="25" />,
+      isActive: checkCustomer ? false : true,
+    },
+    {
+      id: 5,
       label: "Store",
       value: "online_store",
       icon: <SiHomeassistantcommunitystore color="#dc3545" size="25" />,
       isActive: checkCustomer ? false : true,
     },
     {
-      id: 5,
+      id: 6,
       label: "Help",
       value: "help",
       icon: <MdOutlineHelp color="#007bff80" size="25" />,
@@ -219,7 +227,7 @@ const Main = () => {
     },
     {
       id: 2,
-      label: "Parties",
+      label: "Product & Parties",
       value: "parties",
       icon: <BiGroup color="#ff4949" size="25" />,
       isActive: true,
@@ -236,7 +244,8 @@ const Main = () => {
       label: "Product",
       value: "product",
       icon: <BiCube color="#28a745" size="25" />,
-      isActive: checkCustomer ? false : true,
+      // isActive: checkCustomer ? false : true,
+      isActive: false,
     },
     {
       id: 5,
@@ -267,6 +276,9 @@ const Main = () => {
         setBahikhataModalIsOpen(!bahikhataModalIsOpen);
       } else if (item.value === "delivery_challan") {
         navigate("/delivery-challan");
+      } else if (item.value === "marketing") {
+        console.log(item);
+        navigate("/marketing");
       }
     }
   };
@@ -283,6 +295,8 @@ const Main = () => {
         setUpdatePriceModalIsOpen(!updatePriceModalIsOpen);
       } else if (item.value === "pending_orders") {
         setViewOrderModalIsOpen(!viewOrderModalIsOpen);
+      } else if (item.value === "update_uom") {
+        navigate("/uom");
       }
     }
   };
@@ -501,6 +515,8 @@ const Main = () => {
                           onClick={() => {
                             if (item.value === "dashboard") {
                               navigate("/retailer-dashboard");
+                            } else if (item.value === "marketing") {
+                              navigate("/marketing");
                             }
                           }}
                         >
@@ -615,7 +631,7 @@ const Main = () => {
                         }}
                         onClick={() => {
                           if (item.value === "product") {
-                            navigate("/add-item");
+                            // navigate("/add-item");
                           }
                         }}
                       >
@@ -624,7 +640,7 @@ const Main = () => {
                             <Dropdown
                               isOpen={dropdownOpen}
                               toggle={toggle}
-                              direction={"down"}
+                              direction={"up"}
                             >
                               <DropdownToggle
                                 style={{ textAlign: "center" }}
@@ -647,6 +663,20 @@ const Main = () => {
                                   }}
                                 >
                                   Add Supplier
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={() => {
+                                    navigate("/add-item");
+                                  }}
+                                >
+                                  Add Item
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={() => {
+                                    navigate("/add-category");
+                                  }}
+                                >
+                                  Add Category
                                 </DropdownItem>
                               </DropdownMenu>
                             </Dropdown>

@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Select, { useStateManager } from "react-select";
-import { Button } from "react-bootstrap";
+import { Button, Col, FormGroup, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleAddItemToStoreRequest,
   handleInventoryMasterRequest,
   handleUploadPicRequest,
+  handelGetCategoryRequest,
+  resetProductId,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { FcDepartment } from "react-icons/fc";
 import { TextField } from "@mui/material";
@@ -20,6 +22,7 @@ import { AiFillCamera } from "react-icons/ai";
 
 // import { useHistory } from "react-router-dom";
 import Webcam from "react-webcam";
+import { Label } from "reactstrap";
 const videoConstraints = {
   width: 200,
   facinMode: "enviorment",
@@ -58,9 +61,11 @@ const AddItem = () => {
     // Do stuff with the photo...
     console.log("takePhoto");
   }
-  const { save_product_id } = useSelector((e) => e.ComponentPropsManagement);
+  const { save_product_id, category_list } = useSelector(
+    (e) => e.ComponentPropsManagement
+  );
 
-  console.log("save_product_id", save_product_id);
+  console.log("category_list CMP", category_list);
   const dispatch = useDispatch();
   //
   // const classes = useStyles();
@@ -85,11 +90,20 @@ const AddItem = () => {
   const [purchasePrice, setPurchasePrice] = useState("");
   const [stockQty, setStockQty] = useState("");
   const [soldQuantity, setSoldQuantity] = useState("");
+  const [image, setImage] = useState("");
   const [closingQuantity, setClosingQuantity] = useState("");
   const [openingQuantity, setOpeningQuantity] = useState("");
   const [taxPercenatage, setTaxPercenatage] = useState("0.00");
   const [sellingPrice, setSellingPrice] = useState("");
   const [mrp, setMrp] = useState("");
+  const [categoryArr, setCategoryArr] = useState({
+    party_name: "",
+    payment_type: "",
+    payment_date: "",
+    payment_mode: "",
+    amount: "",
+    payment_notes: "",
+  });
 
   // console.log("UPLOAD ITEM", uploadItem);
 
@@ -108,14 +122,16 @@ const AddItem = () => {
           tax_code: Number(taxPercentage),
           status: "active",
           saas_id: saasId,
-          purchase_pricerice: purchasePrice,
+          product_av_cost: purchasePrice,
+          product_cost: purchasePrice,
           mrp: mrp,
           sold_qty: 0,
-          closing_qty: closingQuantity,
+          // closing_qty: closingQuantity,
+          closing_qty: 0,
           opening_qty: openingQuantity,
           received_qty: receivedQuantity,
           category: itemCategory,
-          selling_price: sellingPrice,
+          product_price: sellingPrice,
           stock_qty: stockQty,
           tax_percentage: taxPercenatage,
           store_id: storeId,
@@ -123,10 +139,27 @@ const AddItem = () => {
           // promo_id: saasId,
         })
       );
+      setTimeout(() => {
+        setItemPrice("");
+        setItemName("");
+        setSelectedOptionDiscount(null);
+        setTaxPercentage("");
+        setSelectedHSNTax(null);
+        setSelectedOptionTax(null);
+        setItemCategory("");
+        setTaxPercenatage("");
+        setPurchasePrice("");
+        setSellingPrice("");
+        setStockQty("");
+        setMrp("");
+        setOpeningQuantity("");
+        setReceivedQuantity("");
+        setClosingQuantity("");
+      }, 3000);
     }
   }, [save_product_id]);
 
-  console.log("PID", productId);
+  // console.log("IMG SOURCE", source.name);
 
   const { saasId, storeId } = JSON.parse(localStorage.getItem("User_data"));
   const webcamRef = useRef(null);
@@ -143,6 +176,8 @@ const AddItem = () => {
 
   const handleAddItem = (e) => {
     e.preventDefault();
+    console.log(itemCategory);
+    console.log("categoryArr", categoryArr);
     dispatch(
       handleAddItemToStoreRequest({
         item_name: itemName,
@@ -154,7 +189,7 @@ const AddItem = () => {
         tax_code: Number(taxPercentage),
         status: "active",
         saas_id: saasId,
-        purchase_pricerice: purchasePrice,
+        product_cost: purchasePrice,
         mrp: mrp,
         category: itemCategory,
         selling_price: sellingPrice,
@@ -166,26 +201,26 @@ const AddItem = () => {
       })
     );
 
-    setItemName("");
-    setItemPrice("");
-    setItemCode("");
-    setItemDesc("");
-    setItemCategory("");
-    setItemDesc("");
-    setDepartment("");
-    setSelectedOptionDiscount(null);
-    setTaxPercentage("");
-    setSelectedHSNTax(null);
-    setSelectedOptionTax(null);
-    setItemCategory("");
-    setTaxPercenatage("");
-    setPurchasePrice("");
-    setSellingPrice("");
-    setStockQty("");
-    setMrp("");
-    setOpeningQuantity("");
-    setReceivedQuantity("");
-    setClosingQuantity("");
+    // setItemName("");
+    // setItemPrice("");
+    // setItemCode("");
+    // setItemDesc("");
+    // setItemCategory("");
+    // setItemDesc("");
+    // setDepartment("");
+    // setSelectedOptionDiscount(null);
+    // setTaxPercentage("");
+    // setSelectedHSNTax(null);
+    // setSelectedOptionTax(null);
+    // setItemCategory("");
+    // setTaxPercenatage("");
+    // setPurchasePrice("");
+    // setSellingPrice("");
+    // setStockQty("");
+    // setMrp("");
+    // setOpeningQuantity("");
+    // setReceivedQuantity("");
+    // setClosingQuantity("");
   };
 
   const onUserMedia = (e) => {
@@ -194,7 +229,8 @@ const AddItem = () => {
 
   const handleCapture = (target) => {
     if (target.files) {
-      if (target.files?.length !== 0) {
+      if (target.files[0]) {
+        console.log("ETF", target.files[0]);
         // const file = target.files[0];
         // const newUrl = URL.createObjectURL(file);
         // setSource(newUrl);
@@ -210,99 +246,52 @@ const AddItem = () => {
       source
       // "/C:/Users/risha/OneDrive/Pictures/Screenshots/Screenshot 2023-05-23 161309.png"
     );
-    dispatch(handleUploadPicRequest({ formdata, save_product_id }));
-    setProductId("");
+    console.log("FORM DATA", formdata);
+    // dispatch(handleUploadPicRequest({ formdata, save_product_id }));
+    // setProductId("");
   };
+
+  useEffect(() => {
+    dispatch(handelGetCategoryRequest());
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("file", image);
+    if (image) {
+      dispatch(handleUploadPicRequest({ formData, save_product_id }));
+    }
+    dispatch(resetProductId());
+    // console.log("FORM DATA", formData);
+    // setAddDeityModalIsOpen(!addDeityModalIsOpen);
+  };
+
   return (
     <section>
       <div className="container">
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-9 col-sm-12 px-5">
-            {false ? (
-              <div>
-                <p>Upload Pic</p>
-
-                <Grid container>
-                  <Grid item xs={12}>
-                    <h5>Capture your image</h5>
-                    {source && (
-                      <div
-                        display="flex"
-                        justifyContent="center"
-                        border={1}
-                        // className={classes.imgBox}
-                      >
-                        <img
-                          src={source}
-                          alt={"snap"}
-                          // className={classes.img}
-                        />
-                      </div>
-                    )}
+            {/* {save_product_id ? ( */}
+            {save_product_id ? (
+              <Col md={12}>
+                <Form onSubmit={handleSubmit}>
+                  <div class="mb-3">
+                    <label for="formFile" class="form-label">
+                      Click Here to upload
+                    </label>
                     <input
-                      accept="image/*"
-                      // className={classes.input}
-                      id="icon-button-file"
+                      class="form-control"
                       type="file"
-                      capture="environment"
-                      onChange={(e) => handleCapture(e.target)}
+                      id="formFile"
+                      onChange={(e) => {
+                        setImage(e.target.files[0]);
+                      }}
                     />
-                    {/* <label htmlFor="icon-button-file">
-                      <IconButton
-                        color="primary"
-                        aria-label="upload picture"
-                        component="span"
-                      >
-                        <AiFillCamera size="large" color="red" />
-                      </IconButton>
-                    </label> */}
-                  </Grid>
-                </Grid>
-                {/*  */}
-                <button
-                  type="button"
-                  className="btn btn-primary my-2"
-                  onClick={() => {
-                    setOpenCam;
-                    handleUploadImage();
-                  }}
-                >
-                  Upload Item Pic
-                </button>
-                <div className="">
-                  <button
-                    style={{
-                      backgroundColor: "#20b9e3",
-                      outline: "none",
-                      border: "none",
-                      fontSize: "20px",
-                      padding: "10px 20px",
-                      borderRadius: "10px",
-                      color: "#fff",
-                    }}
-                  >
-                    Save
-                  </button>
-                  <Link
-                    to="/home"
-                    type="submit"
-                    // onClick={()=>}
-                    className="btn btn-primary"
-                    style={{
-                      backgroundColor: "#fc0202",
-                      outline: "none",
-                      border: "none",
-                      marginLeft: "20px",
-                      fontSize: "20px",
-                      padding: "10px 20px",
-                      borderRadius: "10px",
-                      color: "#fff",
-                    }}
-                  >
-                    Close
-                  </Link>
-                </div>
-              </div>
+                  </div>
+                  <Button type="submit">Upload</Button>
+                </Form>
+              </Col>
             ) : (
               <form className="form-box" onSubmit={handleAddItem}>
                 <h4>Add Item</h4>
@@ -383,19 +372,49 @@ const AddItem = () => {
                     // required
                     rows={1}
                   />
+
+                  {/*  */}
+
+                  <div style={{ zIndex: "999" }}>
+                    <Select
+                      options={category_list}
+                      onChange={(e) => {
+                        const val = e.value;
+                        console.log("CV", e.value);
+                        setItemCategory(e.value);
+                        setCategoryArr({ ...categoryArr, party_name: val });
+                      }}
+                      value={category_list.filter(
+                        (io) => io.value === categoryArr.party_name
+                      )}
+                      required={true}
+                      placeholder="Select Category"
+                      styles={{
+                        menu: (baseStyles, state) => ({
+                          ...baseStyles,
+                          // height: "50px",
+                          overflow: "auto",
+                          // fontWeight: "900",
+                        }),
+                        option: (baseStyles, state) => ({
+                          ...baseStyles,
+                          height: "50px",
+                          // fontWeight: "300",
+                          overflow: "auto",
+                        }),
+                        control: (baseStyles, state) => ({
+                          ...baseStyles,
+                          zIndex: 999,
+                          // height: "50px",
+                          // fontWeight: "800",
+                          // overflow: "auto",
+                        }),
+                      }}
+                    />
+                  </div>
+                  {/*  */}
+
                   {/* <TextField
-                    size="small"
-                    type="text"
-                    className="form-control my-2"
-                    id="customer-name"
-                    required
-                    value={itemName}
-                    onChange={(e) => setItemName(e.target.value)}
-                    label="Item Desc"
-                    multiline
-                    rows={3}
-                  /> */}
-                  <TextField
                     size="small"
                     type="text"
                     className="form-control my-2"
@@ -406,6 +425,16 @@ const AddItem = () => {
                     required
                     multiline
                     rows={1}
+                  /> */}
+                  <TextField
+                    type="text"
+                    className="form-control my-2"
+                    id="customer-name"
+                    size="small"
+                    // required
+                    value={mrp}
+                    onChange={(e) => setMrp(e.target.value)}
+                    label="MRP"
                   />
                   <TextField
                     size="small"
@@ -417,16 +446,7 @@ const AddItem = () => {
                     onChange={(e) => setItemPrice(e.target.value)}
                     label="Item Price"
                   />
-                  <TextField
-                    size="small"
-                    type="text"
-                    className="form-control my-2"
-                    id="customer-name"
-                    value={taxPercentage}
-                    // required
-                    onChange={(e) => setTaxPercentage(e.target.value)}
-                    label="Tax Percentage"
-                  />
+
                   <TextField
                     size="small"
                     type="number"
@@ -438,7 +458,7 @@ const AddItem = () => {
                     label="Purchase Price"
                   />
                 </div>
-                <TextField
+                {/* <TextField
                   type="text"
                   className="form-control my-2"
                   id="customer-name"
@@ -447,8 +467,8 @@ const AddItem = () => {
                   value={sellingPrice}
                   onChange={(e) => setSellingPrice(e.target.value)}
                   label="Selling Price"
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                   type="text"
                   className="form-control my-2"
                   id="customer-name"
@@ -457,17 +477,8 @@ const AddItem = () => {
                   value={stockQty}
                   onChange={(e) => setStockQty(e.target.value)}
                   label="Stock Quantity"
-                />
-                <TextField
-                  type="text"
-                  className="form-control my-2"
-                  id="customer-name"
-                  size="small"
-                  // required
-                  value={mrp}
-                  onChange={(e) => setMrp(e.target.value)}
-                  label="MRP"
-                />
+                /> */}
+
                 <TextField
                   type="text"
                   className="form-control my-2"
@@ -488,7 +499,7 @@ const AddItem = () => {
                   onChange={(e) => setReceivedQuantity(e.target.value)}
                   label="Received Quantity"
                 />
-                <TextField
+                {/* <TextField
                   type="text"
                   className="form-control my-2"
                   id="customer-name"
@@ -497,7 +508,7 @@ const AddItem = () => {
                   value={closingQuantity}
                   onChange={(e) => setClosingQuantity(e.target.value)}
                   label="Clossing Quantity"
-                />
+                /> */}
                 <TextField
                   type="text"
                   className="form-control my-2"

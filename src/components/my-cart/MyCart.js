@@ -62,7 +62,7 @@ const MyCart = ({
     const calculatedVal = (price * discount_value) / 100;
     const t1 = price - calculatedVal;
     item.discount = parseFloat(calculatedVal).toFixed(2);
-    item.new_price = t1;
+    item.new_price = Math.trunc(t1);
     setCartData([...cartData]);
   };
 
@@ -104,7 +104,7 @@ const MyCart = ({
         // const t1 = price - calculatedVal;
         // item.new_price = t1;
         item.discount = parseFloat(calculatedVal).toFixed(2);
-        item.new_price = price - calculatedVal;
+        item.new_price = Math.trunc(price - calculatedVal);
       }
     });
     setCartData([...cartData]);
@@ -284,7 +284,7 @@ const MyCart = ({
               <div style={{ height: "50%", width: "50%", flex: 1 }}>
                 <img
                   style={{ height: "100%", width: "100%" }}
-                  src={`${BASE_Url}/item/get-image/${item && item.image_name}`}
+                  src={`${BASE_Url}/item/get-image/${item && item.item_id}`}
                   class="card-img-top"
                   alt="..."
                 />
@@ -350,7 +350,9 @@ const MyCart = ({
                                 item.productQty = Number(
                                   parseFloat(val).toFixed(3)
                                 );
-                                item.new_price = item.price * item.productQty;
+                                item.new_price = Math.trunc(
+                                  item.price * item.productQty
+                                );
                                 setCartData([...cartData]);
                               } else {
                                 item.productQty = Number(0.001);
@@ -743,7 +745,7 @@ const MyCart = ({
                   textAlign: "center",
                 }}
               >
-                Total Discount: {totalDiscountVal}
+                Total Discount: {Math.trunc(totalDiscountVal)}
               </div>
             </>
           )}
@@ -841,7 +843,7 @@ const MyCart = ({
               <Col md={12}>
                 <FormGroup>
                   <Label>
-                    Percent <span className="text-red"> * </span>
+                    Percent on invoice <span className="text-red"> * </span>
                   </Label>
                   <Input
                     type="text"
@@ -850,9 +852,9 @@ const MyCart = ({
                       const val = Number(e.target.value);
                       if (val) {
                         if (val >= 1 && val <= 99) {
-                          setDiscountPercentVal(val);
+                          Math.trunc(setDiscountPercentVal(val));
                         } else {
-                          setDiscountPercentVal(99);
+                          Math.trunc(setDiscountPercentVal(99));
                         }
                       } else {
                         setDiscountPercentVal("");
@@ -869,7 +871,7 @@ const MyCart = ({
               <Col md={12}>
                 <FormGroup>
                   <Label>
-                    Amount <span className="text-red"> * </span>
+                    Amount on invoice <span className="text-red"> * </span>
                   </Label>
                   <Input
                     type="text"
