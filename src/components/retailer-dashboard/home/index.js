@@ -62,7 +62,7 @@ function Home() {
       name: "Inventory Dashboard",
       className: "active",
       isActive: true,
-    },
+    },  
     {
       id: "5",
       name: "Master",
