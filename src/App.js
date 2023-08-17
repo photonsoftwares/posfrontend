@@ -35,7 +35,6 @@ import MembePointRedemption from "./components/Navbar Screens/MembePointRedempti
 import "react-confirm-alert/src/react-confirm-alert.css";
 import DeliveryChalan from "./components/DeliveryChalan";
 import AddCategory from "./components/AddCategory/AddCategory";
-import UOM from "./components/Unit of mesurement/UOM";
 import Marketing from "./components/Marketing/Marketing";
 // import { Navbar } from "react-bootstrap";
 
@@ -79,11 +78,10 @@ const App = () => {
           path="/retailer-dashboard"
           element={<ProtectedRoutingWhenLogin Component={RetailerDashboard} />}
         />
-        {/* <Route
+        <Route
           path="/login"
           element={<ProtectedRoutingWhenLogout Component={Login} />}
-        /> */}
-        <Route path="/login" element={<Login />} />
+        />
 
         {/* <Route path="/register" Component={Register} />
 
@@ -133,20 +131,16 @@ const App = () => {
           element={<ProtectedRoutingWhenLogin Component={DeliveryChalan} />}
         />
         <Route
-          path="/marketing"
-          element={<ProtectedRoutingWhenLogin Component={Marketing} />}
-        />
-        <Route
-          path="/uom"
-          element={<ProtectedRoutingWhenLogin Component={UOM} />}
-        />
-        <Route
           path="/inventory-dashboard"
           element={<ProtectedRoutingWhenLogin Component={InventoryDashboard} />}
         />
         <Route
           path="/GST-report"
           element={<ProtectedRoutingWhenLogin Component={GSTReport} />}
+        />
+        <Route
+          path="/marketing"
+          element={<ProtectedRoutingWhenLogin Component={Marketing} />}
         />
         <Route
           path="/link-loyality-customer"

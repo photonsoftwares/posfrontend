@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  handelGetCategoryRequest,
   handleAllDataByCategoryRequest,
   handleCategoriesRequest,
+  handeleCategoriesHomeRequest,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { Badge, Button, Stack } from "react-bootstrap";
 import Product from "../Product";
@@ -11,13 +13,14 @@ import DataByCategory from "../DataByCategory/DataByCategory";
 const Category = () => {
   // const [category, setCategory] = useState([]);
   // get_categories
-  const { get_categories, get_all_catrgory_data } = useSelector(
+  const { get_categories, get_all_catrgory_data, home_category } = useSelector(
     (e) => e.ComponentPropsManagement
   );
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(handleCategoriesRequest());
   }, []);
+  console.log("CATEGORY DD", home_category);
 
   useEffect(() => {
     // if (get_categories && get_categories.data) {
@@ -25,44 +28,52 @@ const Category = () => {
     // }
     get_categories.map((el) => console.log("PLPL", el));
   }, [get_categories]);
+  useEffect(() => {
+    dispatch(handeleCategoriesHomeRequest());
+  }, []);
 
   // console.log("CATEGORIES", get_all_catrgory_data);
   return (
     <div>
       <div
         style={{
-          // position: "absolute",
-          left: 0,
-          // zIndex: 900,
           display: "flex",
+          widows: "100%",
           alignItems: "center",
-          justifyContent: "space-evenly",
-          // gap: 20,
-          flexDirection: "row",
-          // backgroundColor: "yellow",
+          justifyContent: "space-between",
         }}
       >
-        {/* <p style={{ fontWeight: "bold", fontSize: "20px" }}>Categories</p> */}
-        {get_categories.map((el) => (
+        {home_category.map((el) => (
           <Button
             size="sm"
-            className="mx-2"
             variant="success"
+            className="mx-2"
             onClick={() => {
-              dispatch(handleAllDataByCategoryRequest({ el }));
+              dispatch(
+                handleAllDataByCategoryRequest({ el: el.category_name })
+              );
             }}
           >
-            {el}
+            {el.category_name}
           </Button>
         ))}
       </div>
 
-      <h5 className="mt-5">Recommanded Items</h5>
-      {get_all_catrgory_data && get_all_catrgory_data.length > 0 ? (
-        <DataByCategory get_all_catrgory_data={get_all_catrgory_data} />
-      ) : (
-        ""
-      )}
+      <div
+        style={
+          {
+            // display: "grid",
+            // gridTemplateColumns: "repeat(2,1fr)",
+            // placeItems: "center",
+          }
+        }
+      >
+        {get_all_catrgory_data && get_all_catrgory_data.length > 0 ? (
+          <DataByCategory get_all_catrgory_data={get_all_catrgory_data} />
+        ) : (
+          ""
+        )}
+      </div>
     </div>
   );
 };

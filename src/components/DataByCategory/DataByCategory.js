@@ -1,23 +1,19 @@
 import React from "react";
 import { Button, FormControl, ListGroup } from "react-bootstrap";
 import { BASE_Url } from "../../URL";
-import {
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-} from "@mui/material";
-import { BsFillCheckCircleFill } from "react-icons/bs";
+import { InputLabel, OutlinedInput } from "@mui/material";
 
 const DataByCategory = ({ get_all_catrgory_data }) => {
   console.log("DataByCategory", get_all_catrgory_data);
   return (
     <div
       style={{
-        // display: "flex",
-        display: "grid",
-        gridTemplateColumns: "repeat(2,1fr)",
-        placeItems: "center",
+        display: "flex",
+        flexDirection: "row",
+        // alignItems: "center",
+        gap: "0 10px",
+        justifyContent: "center",
+        flexWrap: "wrap",
       }}
     >
       {get_all_catrgory_data.map((item) => (
@@ -32,13 +28,13 @@ const DataByCategory = ({ get_all_catrgory_data }) => {
           <div style={{ height: "100px", width: "100%" }}>
             <img
               style={{ height: "100%", width: "100%" }}
-              src={`${BASE_Url}/item/get-image/${item && item.imageName}`}
+              src={`${BASE_Url}/item/get-image/${item && item.productId}`}
               class="card-img-top"
               alt="..."
             />
           </div>
           <div class="card-body">
-            <h5 class="card-title">{item.description}</h5>
+            <h5 class="card-title">{item.itemName}</h5>
             {Number(item.price) === 0 ? (
               <>
                 <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
@@ -55,6 +51,7 @@ const DataByCategory = ({ get_all_catrgory_data }) => {
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
+                          // aria-label="toggle password visibility"
                           onClick={() => {
                             item.price = item.new_price;
                             setData([...data]);
@@ -143,7 +140,6 @@ const DataByCategory = ({ get_all_catrgory_data }) => {
                   size="sm"
                   // variant={`${item.price === 0 ? "secondary" : "warning"}`}
                   variant={`warning`}
-                  // onClick={() => console.log("item", item)}
                   style={{
                     width: "100%",
                     fontSize: "10px",

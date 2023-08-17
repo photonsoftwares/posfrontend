@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Select, { useStateManager } from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 
-import ImageUploading from "react-images-uploading";
 import {
   handleAddItemToStoreRequest,
   handleUploadPicRequest,
@@ -83,7 +82,7 @@ const AddItem = ({
   const [openingQuantity, setOpeningQuantity] = useState("");
   const [receivedQuantity, setReceivedQuantity] = useState("");
   const [clossingQuantity, setClossingQuantity] = useState("");
-  const [image, setImage] = useState();
+  const [image, setImage] = useState("");
   const [uploadItem, setUploadItem] = useState("");
   const [department, setDepartment] = useState("");
   const [itemCode, setItemCode] = useState("");
@@ -241,7 +240,8 @@ const AddItem = ({
     // formdata.append("closing_quantity", 0);
     // formdata.append("received_quantity", receivedQuantity);
     // --
-    formdata.append("image", image);
+    formdata.append("image", image ? image : "");
+    // formdata.append("image", image);
     formdata.append("item_name", itemName);
     formdata.append("item_code", row.item_id);
     formdata.append("description", itemName);
@@ -287,7 +287,10 @@ const AddItem = ({
       .then((response) => {
         response.text();
       })
-      .then((result) => console.log("RESULT", result))
+      .then((result) => {
+        console.log("RESULT", result);
+        alert("Item Updated");
+      })
       .catch((error) => console.log("error", error));
 
     // console.log("Æ");
@@ -320,7 +323,7 @@ const AddItem = ({
         // promo_id: saasId,
       })
     );
-
+    setAddUpdateItemModalIsOpen(false);
     // dispatch(handleUpdateItemToStoreRequest({ formData, id: row.item_id }));
 
     // setTimeout(() => {
@@ -359,7 +362,7 @@ const AddItem = ({
                   style={{ display: "flex", flexDirection: "column" }}
                 >
                   <Col md={12}>
-                    <div class="mb-3">
+                    {/* <div class="mb-3">
                       <label for="formFile" class="form-label">
                         Click Here to upload Product Picture
                       </label>
@@ -374,7 +377,14 @@ const AddItem = ({
                           // setImage(e.target.value);
                         }}
                       />
-                    </div>
+                    </div> */}
+                    {/* <div style={{ height: "100px", width: "100px" }}>
+                      <img
+                        style={{ height: "100px", width: "100px" }}
+                        src={image}
+                        alt=""
+                      />
+                    </div> */}
                   </Col>
                   <TextField
                     size="small"

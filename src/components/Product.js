@@ -52,6 +52,18 @@ const Product = ({
   // console.log("USER DATA", userData.userId);
   return (
     <>
+      {" "}
+      <h5
+        // className="my-3"
+        style={{
+          fontWeight: "bold",
+          padding: 0,
+          margin: 0,
+          // display: searchValue?.length ? "none" : "block",s
+        }}
+      >
+        Recommended Items
+      </h5>
       <div
         style={{
           // display: "flex",
@@ -59,7 +71,6 @@ const Product = ({
           gridTemplateColumns: "repeat(2,1fr)",
           placeItems: "center",
           // alignItems: "center",
-
           // justifyContent: "center",
           // flexDirection: "row",
           // flexWrap: "wrap",

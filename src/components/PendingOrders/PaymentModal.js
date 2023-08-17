@@ -53,7 +53,7 @@ const PaymentModal = (props) => {
     setCartData,
   } = props;
   const userData = JSON.parse(localStorage.getItem("User_data"));
-  //   console.log("ORDER NUMBER PAYMENT", props.orderNumber);
+  console.log(" CARTDATA PAYMENT", cartData);
   const [loyaltyAmount, setLoyaltyAmount] = useState(10000);
   const [handleShowReceipt, setHandleShowReceipt] = useState(false);
   const defaultLayoutPluginInstance = defaultLayoutPlugin();

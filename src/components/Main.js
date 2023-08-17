@@ -301,6 +301,15 @@ const Main = () => {
     }
   };
 
+  useEffect(() => {
+    document.addEventListener("keydown", detectKeyDown);
+  }, []);
+  const detectKeyDown = (e) => {
+    // console.log("CLICKED KEY :", e);
+    if (e.keyCode === 49) {
+      // navigate("/home");
+    }
+  };
   return (
     <>
       {/* <div style={{ height: "100vh", width: "100vw" }}> */}
@@ -330,6 +339,7 @@ const Main = () => {
             maxWidth: "1200px",
             border: "1px solid black",
           }}
+          // onKeyPress={keyDownEvent}
         >
           <div style={{ height: "70vh", overflow: "auto" }}>
             <div

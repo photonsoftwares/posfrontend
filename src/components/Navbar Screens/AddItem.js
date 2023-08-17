@@ -96,6 +96,7 @@ const AddItem = () => {
   const [taxPercenatage, setTaxPercenatage] = useState("0.00");
   const [sellingPrice, setSellingPrice] = useState("");
   const [mrp, setMrp] = useState("");
+  const [ImageName, setImageName] = useState("");
   const [categoryArr, setCategoryArr] = useState({
     party_name: "",
     payment_type: "",
@@ -262,6 +263,10 @@ const AddItem = () => {
     if (image) {
       dispatch(handleUploadPicRequest({ formData, save_product_id }));
     }
+    setImage("");
+    setImageName("");
+    //setProductId(undefined)
+
     dispatch(resetProductId());
     // console.log("FORM DATA", formData);
     // setAddDeityModalIsOpen(!addDeityModalIsOpen);
@@ -272,28 +277,47 @@ const AddItem = () => {
       <div className="container">
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-9 col-sm-12 px-5">
-            {/* {save_product_id ? ( */}
+            {console.log("save_product_id", save_product_id)}
             {save_product_id ? (
               <Col md={12}>
-                <Form onSubmit={handleSubmit}>
-                  <div class="mb-3">
-                    <label for="formFile" class="form-label">
-                      Click Here to upload
-                    </label>
-                    <input
-                      class="form-control"
-                      type="file"
-                      id="formFile"
-                      onChange={(e) => {
-                        setImage(e.target.files[0]);
-                      }}
-                    />
+                <div class="mb-3">
+                  <label
+                    for="formFile"
+                    class="form-label"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "20px",
+                      border: "2px dashed #222",
+                    }}
+                  >
+                    Click Here to upload
+                  </label>
+                  <input
+                    class="form-control"
+                    type="file"
+                    id="formFile"
+                    onChange={(e) => {
+                      console.log("evfdcvfvfvc", e.target.files[0].name);
+                      setImage(e.target.files[0]);
+                      setImageName(e.target.files[0].name);
+                    }}
+                  />
+                </div>
+                {ImageName ? (
+                  <div>
+                    {ImageName}{" "}
+                    <Button type="button" onClick={handleSubmit}>
+                      Upload
+                    </Button>
                   </div>
-                  <Button type="submit">Upload</Button>
-                </Form>
+                ) : (
+                  ""
+                )}
               </Col>
             ) : (
-              <form className="form-box" onSubmit={handleAddItem}>
+              <div className="form-box">
                 <h4>Add Item</h4>
                 <div
                   className="d-flex flex-col"
@@ -531,6 +555,7 @@ const AddItem = () => {
                       borderRadius: "10px",
                       color: "#fff",
                     }}
+                    onClick={handleAddItem}
                   >
                     Save
                   </button>
@@ -553,7 +578,7 @@ const AddItem = () => {
                     Close
                   </Link>
                 </div>
-              </form>
+              </div>
             )}
           </div>
         </div>

@@ -41,6 +41,7 @@ var initialComponentPropsManagementState = {
   save_product_id: "",
   save_transaction_data: {},
   search_customer_data: {},
+  home_category: [],
   open_menu: false,
   email_notification: "",
   user_data: localStorage.getItem("User_data")
@@ -111,9 +112,7 @@ export const ComponentPropsManagement = createSlice({
   initialState: initialComponentPropsManagementState,
   reducers: {
     // Login User
-
     handleLoginRequest: (state, payload) => {
-      console.log("PAYLOAD", payload);
       state.load = true;
     },
     handleBahikhataCreateRequest: (state, payload) => {},
@@ -125,7 +124,6 @@ export const ComponentPropsManagement = createSlice({
     },
 
     handleLoginResponse: (state, payload) => {
-      console.log("PAYLOAD REQUEST", payload);
       state.login_data = payload.data;
       state.load = false;
       window.location.replace("/");
@@ -627,24 +625,21 @@ export const ComponentPropsManagement = createSlice({
       console.log("payload RES STATUS", payload);
       state.view_status_data = payload;
     },
+    //Categories
+    handeleCategoriesHomeRequest: (state, payload) => {},
+    handeleCategoriesHomeResponse: (state, payload) => {
+      console.log("payload RES category", payload);
+      state.home_category = payload.data;
+    },
     //SEND SMS
     handelSMSRequest: (state, payload) => {},
     handelSMSResponse: (state, payload) => {
       console.log("payload RES STATUS", payload);
       // state.view_status_data = payload;
     },
-
     resetProductId: (state, payload) => {
       state.save_product_id = "";
     },
-
-    //SEND SMS
-    handelAddUOMRequest: (state, payload) => {},
-    handelAddUOMResponse: (state, payload) => {
-      // console.log("payload RES STATUS", payload);
-      // state.view_status_data = payload;
-    },
-
     // handleSearchedDataRequest2: (state, payload) => { },
     // handleSearchedDataResponse2: (state, payload) => {
     //   let arr = []
@@ -670,6 +665,7 @@ export const {
   handleBahikhataPartyDropdownRequest,
   handleBahikhataCreateRequest,
   handleUploadPicRequest,
+  resetProductId,
   handleViewOrderBySaasIdAndOrderIdRequest,
   handleCreateOrderRequest,
   updateInvoicedRequest,
@@ -678,7 +674,6 @@ export const {
   handleSearchInvoiceRequest,
   handleCreateSupplierRequest,
   handleRedeemPointRequest,
-  handelAddUOMRequest,
   handleSaveSearchCustomerData,
   handleLinkLoyaltyRequest,
   handleDeliveryNoteRequest,
@@ -703,7 +698,6 @@ export const {
   handleItemMasterListRequest,
   handleNoOfItemRequest,
   handleRegisterRequest,
-  resetProductId,
   handleUpdateMoqRequest,
   handleHSNCODERequest,
   handleCreateRowTaxMasterRequest,
@@ -756,6 +750,7 @@ export const {
   handleGetHsnCodeDropdownRequest,
   handleUpdateItemToStoreRequest,
   handleSalesDashboardChartRequest,
+  handeleCategoriesHomeRequest,
   handleViewOrderRequest,
   handleCreateTaxMasterRequest,
   handleCreateSaasMasterRequest,

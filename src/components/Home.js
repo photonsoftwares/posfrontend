@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { AiOutlineSearch } from "react-icons/ai";
+import { BsCamera } from "react-icons/bs";
 import { BsHandbag, BsArrowRight } from "react-icons/bs";
 import { FcSalesPerformance, FcSpeaker } from "react-icons/fc";
 import { IoCashOutline } from "react-icons/io5";
@@ -9,7 +9,7 @@ import { FaGooglePay } from "react-icons/fa";
 import { SiPhonepe } from "react-icons/si";
 import { GrClose } from "react-icons/gr";
 import { SiContactlesspayment } from "react-icons/si";
-import { AiOutlineMail } from "react-icons/ai";
+import { AiOutlineMail, AiOutlineSearch } from "react-icons/ai";
 import { BsCreditCardFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { FcSms } from "react-icons/fc";
@@ -78,7 +78,8 @@ const Home = () => {
   } = localStorage.getItem("User_data")
     ? JSON.parse(localStorage.getItem("User_data"))
     : {};
-  console.log(userType);
+
+  // console.log('',userType);
   const checkCustomer = userName.includes("C");
   console.log("HOME CTGR", categoryReq);
   const userData = JSON.parse(localStorage.getItem("User_data"));
@@ -94,6 +95,7 @@ const Home = () => {
     xyz_State,
     search_customer_data,
     show_cart_modal,
+    get_all_catrgory_data,
     show_viewOrder_modal,
   } = useSelector((e) => e.ComponentPropsManagement);
   // console.log("GSD", get_searched_data);
@@ -822,7 +824,6 @@ const Home = () => {
         >
           {/* <IoIosSearch size={30} opacity={0.4} /> */}
           <div style={{ marginRight: "10px" }}>
-            {/* <BsCamera size={30} opacity={1} /> */}
             <AiOutlineSearch size={30} opacity={1} />
           </div>
           <input
@@ -886,7 +887,9 @@ const Home = () => {
           // paddingBottom: "20px",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div
+        //  style={{ display: "flex", flexDirection: "row" }}
+        >
           {categoryReq === "YES" ? <Category /> : <RenderUi />}
         </div>
 
@@ -894,7 +897,7 @@ const Home = () => {
           ? xyz_State.map((el) => <h1>{el.customer_party}</h1>)
           : ""} */}
         {/* <Category /> */}
-        <RenderUi />
+        {/* <RenderUi /> */}
         {/* {searchedData && searchValue?.length > 0
           ? searchedData.map((item, index) => (
               <Product item={item} key={index} />
