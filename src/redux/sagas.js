@@ -1156,6 +1156,218 @@ function* handleLowStockItemListRequest(e) {
   }
 }
 
+// Debit note
+
+function* handleDebitNoteMisListRequest() {
+
+  const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/Debit/view-debitnote/8/2023-07-27 `, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const jsonData = yield response.json();
+  console.log("DEBIT NOTE", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleDebitNoteMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleDebitNoteMisListResponse",
+      data: "",
+    });
+  }
+}
+
+// Challan
+
+function* handleChallanMisListRequest() {
+
+  const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/Debit/view-debitchalan/8/2023-07-27 `, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const jsonData = yield response.json();
+  console.log("Challan in saga", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleChallanMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleChallanMisListResponse",
+      data: "",
+    });
+  }
+}
+
+
+// DaySale
+
+function* handleDaySaleMisListRequest() {
+
+  const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/dashboard/get-invoices-detatils/8/2023-07-01/2023-07-30 `, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const jsonData = yield response.json();
+  console.log("DaySale in saga", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleDaySaleMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleDaySaleMisListResponse",
+      data: "",
+    });
+  }
+}
+
+// Purchase
+
+function* handlePurchaseMisListRequest() {
+
+  const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/purchase/purchase-view/3/30001/2023-06-21`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const jsonData = yield response.json();
+  console.log("Purchase in saga", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handlePurchaseMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handlePurchaseMisListResponse",
+      data: "",
+    });
+  }
+}
+
+// Baikhata
+
+function* handleBaikhataMisListRequest() {
+
+  const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/bahikhata/view-bahikhata-details/8/2022-05-25`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const jsonData = yield response.json();
+  console.log("Baikhata in saga", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleBaikhataMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleBaikhataMisListResponse",
+      data: "",
+    });
+  }
+}
+
+// Expenses
+
+function* handleExpensesMisListRequest() {
+
+  const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/expense/view-expenses/8/2023-07-23`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const jsonData = yield response.json();
+  console.log("Expenses in saga", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleExpensesMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleExpensesMisListResponse",
+      data: "",
+    });
+  }
+}
+
+// Ledger
+
+function* handleLedgerMisListRequest() {
+
+  // const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/ledger/getledgerfromto/2023-07-27/2023-07-30/8/80001`, {
+    const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/ledger/getledgerfromto/2023-07-27/2023-07-30/8/80001`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const jsonData = yield response.json();
+  console.log("Ledger in saga", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleLedgerMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleLedgerMisListResponse",
+      data: "",
+    });
+  }
+}
+
 function* handleQuantityInHandRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
@@ -2349,6 +2561,41 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleSearchedDataRequest",
     handleSearchedDataRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleDebitNoteMisListRequest",
+    handleDebitNoteMisListRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleChallanMisListRequest",
+    handleChallanMisListRequest
+  );
+
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleDaySaleMisListRequest",
+    handleDaySaleMisListRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handlePurchaseMisListRequest",
+    handlePurchaseMisListRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleBaikhataMisListRequest",
+    handleBaikhataMisListRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleExpensesMisListRequest",
+    handleExpensesMisListRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleLedgerMisListRequest",
+    handleLedgerMisListRequest
   );
   yield takeEvery(
     "ComponentPropsManagement/handleExpenseCreateRequest",

@@ -6,6 +6,7 @@ import InventoryDashboard from '../inventory-dashboard';
 import Navbar from '../navbar';
 import Master from '../master';
 import SalesAndGstReport from '../sales-and-gst-report';
+import Misreport from "../Mis-report/ReportMis";
 
 function Home() {
     const [headActiveTab, setHeadActiveTab] = useState("1")
@@ -50,7 +51,13 @@ function Home() {
             name: "Master",
             className: "active",
             isActive: true
-        }
+        },
+        {
+          id: "6",
+          name: "MIS Report",
+          className: "active",
+          isActive: true,
+        },
     ]
 
 
@@ -96,6 +103,10 @@ function Home() {
 
                 <TabPane tabId="5">
                     <Master />
+                </TabPane>
+
+                <TabPane tabId="6">
+                   <Misreport />
                 </TabPane>
             </TabContent>
         </div>

@@ -19,6 +19,14 @@ var initialComponentPropsManagementState = {
   register_data: {},
   total_quantity: 0,
   total_price: 0,
+  item_DebitNote_list:[],
+
+  item_Challan_list:[],
+  item_Purchase_list:[],
+  item_Baikhata_list:[],
+  item_Expenses_list:[],
+  item_Ledger_list:[],
+  item_DaySale_list:[],
   handle_saveTransaction_data: {},
   get_recommended_items: [],
   get_return_invoice_data: [],
@@ -522,6 +530,56 @@ export const ComponentPropsManagement = createSlice({
       console.log("BAG", payload.data);
       state.handle_view_order_details = payload.data;
     },
+    // Debit note MIS report
+    handleDebitNoteMisListRequest: (state, payload) => {},
+    handleDebitNoteMisListResponse: (state, payload) => {
+      console.log("nishu", payload);
+        state.item_DebitNote_list = payload.data;
+    },
+
+    // Challan
+    handleChallanMisListRequest: (state, payload) => {},
+    handleChallanMisListResponse: (state, payload) => {
+      console.log("challan handle", payload);
+         state.item_Challan_list = payload.data;
+    },  
+
+
+     // DaySale
+     handleDaySaleMisListRequest: (state, payload) => {},
+     handleDaySaleMisListResponse: (state, payload) => {
+       console.log("daySale handle", payload);
+          state.item_DaySale_list = payload.data;
+     }, 
+
+
+    // Purchase
+    handlePurchaseMisListRequest: (state, payload) => {},
+    handlePurchaseMisListResponse: (state, payload) => {
+      console.log("purchase handle", payload);
+         state.item_Purchase_list = payload.data;
+    },  
+
+    // Baikhata
+    handleBaikhataMisListRequest: (state, payload) => {},
+    handleBaikhataMisListResponse: (state, payload) => {
+      console.log("baikhata handle", payload);
+         state.item_Baikhata_list = payload.data;
+    },
+
+    // Expenses
+    handleExpensesMisListRequest: (state, payload) => {},
+    handleExpensesMisListResponse: (state, payload) => {
+      console.log("expenses handle", payload);
+         state.item_Expenses_list = payload.data;
+    },
+
+     // Ledger
+     handleLedgerMisListRequest: (state, payload) => {},
+     handleLedgerMisListResponse: (state, payload) => {
+       console.log("ledger handle", payload);
+          state.item_Ledger_list = payload.data.list;
+     },
     // View order By orderDate and saasId
     handleViewOrderBySaasIdAndOrderIdRequest: (state, payload) => {},
     handleViewOrderBySaasIdAndOrderIdResponse: (state, payload) => {
@@ -595,6 +653,14 @@ export const {
   handleExpenseCreateRequest,
   handleShowModal,
   handleAccruvalRequest,
+  handleDebitNoteMisListRequest,
+
+  handleChallanMisListRequest,
+  handlePurchaseMisListRequest,
+  handleBaikhataMisListRequest,
+  handleExpensesMisListRequest,
+  handleLedgerMisListRequest,
+  handleDaySaleMisListRequest,
   handleMemberEnrollmentResponse,
   handleUpdatePriceRequest,
   handleTenderReportRequest,
