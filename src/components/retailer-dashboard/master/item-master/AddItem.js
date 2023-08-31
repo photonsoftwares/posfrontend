@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Select, { useStateManager } from "react-select";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   handleAddItemToStoreRequest,
   handleUploadPicRequest,
   handleUpdateItemToStoreRequest,
+  handleInventoryMasterRequest,
 } from "../../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { FcDepartment } from "react-icons/fc";
 import { TextField } from "@mui/material";
@@ -21,6 +23,9 @@ import { AiFillCamera } from "react-icons/ai";
 // import { useHistory } from "react-router-dom";
 import Webcam from "react-webcam";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { Button, Col } from "react-bootstrap";
+import { Label, FormGroup } from "reactstrap";
+import { BASE_Url } from "../../../../URL";
 const videoConstraints = {
   width: 200,
   facinMode: "enviorment",
@@ -62,7 +67,7 @@ const AddItem = ({
   // console.log(save_product_id);
   const dispatch = useDispatch();
   //
-  const classes = useStyles();
+  // const classes = useStyles();
 
   const [source, setSource] = useState("");
   //
@@ -70,6 +75,14 @@ const AddItem = ({
   const [selectedOptionTax, setSelectedOptionTax] = useState(null);
   const [selectedHSNTax, setSelectedHSNTax] = useState(null);
   const [itemName, setItemName] = useState("");
+  const [purchasePrice, setPurchasePrice] = useState("");
+  const [sellingPrice, setSellingPrice] = useState("");
+  const [mrp, setMrp] = useState("");
+  const [stockQuantity, setstockQuantity] = useState("");
+  const [openingQuantity, setOpeningQuantity] = useState("");
+  const [receivedQuantity, setReceivedQuantity] = useState("");
+  const [clossingQuantity, setClossingQuantity] = useState("");
+  const [image, setImage] = useState("");
   const [uploadItem, setUploadItem] = useState("");
   const [department, setDepartment] = useState("");
   const [itemCode, setItemCode] = useState("");
@@ -80,7 +93,14 @@ const AddItem = ({
   const [productId, setProductId] = useState("");
   const [taxPercentage, setTaxPercentage] = useState("0");
   const [itemCategory, setItemCategory] = useState("");
+  const [images, setImages] = React.useState([]);
+  const maxNumber = 69;
 
+  const onChange = (imageList, addUpdateIndex) => {
+    // data for submit
+    console.log(imageList, addUpdateIndex);
+    setImages(imageList);
+  };
   // console.log("UPLOAD ITEM", uploadItem);
   // console.log("rr", row)
   // useEffect(() => {
@@ -99,18 +119,9 @@ const AddItem = ({
     }
   }, [row]);
 
-  // console.log("PID", productId);
-
   const { saasId, storeId } = JSON.parse(localStorage.getItem("User_data"));
-  const webcamRef = useRef(null);
-  const [url, setUrl] = useState(null);
 
-  // console.log(URL, url);
-
-  const capturePhoto = useCallback(async () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    setUrl(imageSrc);
-  });
+  console.log("ROW", row);
 
   // console.log(capturePhoto);
 
@@ -172,27 +183,156 @@ const AddItem = ({
     setProductId("");
   };
 
-  const handleUpdateItem = () => {
-    const obj = {
-      item_name: itemName,
-      description: itemName,
-      price: Number(itemPrice),
-      tax: Number(taxPercentage),
-      tax_code: Number(taxPercentage),
-      status: "active",
-      saas_id: saasId,
-      store_id: storeId,
-      department: itemName,
-      hsn_code: hsnCode,
-      discount: row.discount,
+  const handleUpdateItem = (e) => {
+    
+    console.log("EEEE", e);
+    // console.log(image);
+   
+    // console.log("FORMDATA", formData);
+    // console.log("FORMDATA IMAGE", image);
+    // formData.append("image", image);
+    // formData.append("item_name", itemName);
+    // formData.append("item_code", row.item_id);
+    // formData.append("description", itemName);
+    // formData.append("sku", 0);
+    // formData.append("discount", row.discount);
+    // formData.append("status", row.status);
+    // formData.append("price", itemPrice);
+    // formData.append("barcode", row.barcode);
+    // formData.append("tax", taxPercentage);
+    // formData.append("hsn_code", hsnCode);
+    // formData.append("promo_id", row.promo_id);
+    // formData.append("category", row.category);
+    // formData.append("purchase_price", purchasePrice);
+    // formData.append("saas_id", Number(saasId));
+    // formData.append("mrp", row.mrp);
+    // formData.append("stock_quantity", 0);
+    // // formData.append("opening_quantity", 483)
+    // formData.append("closing_quantity", 0);
+    // formData.append("update_price", itemPrice);
+    // formData.append("selling_price", itemPrice);
+    // formData.append("opening_quantity", openingQuantity);
+    // formData.append("received_quantity", receivedQuantity);
+    // formData.append("store_id", Number(storeId));
+    // console.log("FORMDATA", formData);
+    // ---------
+    var formdata = new FormData();
+    // formdata.append("image", image);
+    // formdata.append("item_name", itemName);
+    // formdata.append("item_code", row.item_id);
+    // formdata.append("description", itemName);
+    // formdata.append("price", itemPrice);
+    // formdata.append("discount", row.discount);
+    // formdata.append("tax", taxPercentage);
+    // formdata.append("status", row.status);
+    // formdata.append("saas_id", saasId);
+    // formdata.append("store_id", storeId);
+    // formdata.append("hsn_code", hsnCode);
+    // formdata.append("promo_id", row.promo_id);
+    // formdata.append("sku", "0");
+    // formdata.append("category", row.category);
+    // formdata.append("barcode", row.barcode);
+    // formdata.append("mrp", row.mrp);
+    // formdata.append("stock_quantity", 0);
+    // formdata.append("update_price", itemPrice);
+    // formdata.append("selling_price", itemPrice);
+    // formdata.append("opening_quantity", openingQuantity);
+    // formdata.append("closing_quantity", 0);
+    // formdata.append("received_quantity", receivedQuantity);
+    // --
+    formdata.append("image", image ? image : "");
+    // formdata.append("image", image);
+    formdata.append("item_name", itemName);
+    formdata.append("item_code", row.item_id);
+    formdata.append("description", itemName);
+    formdata.append("price", itemPrice);
+    formdata.append("discount", row.discount);
+    formdata.append("tax", taxPercentage);
+    formdata.append("status", row.status);
+    formdata.append("saas_id", saasId);
+    formdata.append("store_id", saasId);
+    formdata.append("hsn_code", hsnCode);
+    formdata.append("promo_id", row.promo_id);
+    formdata.append("sku", "0");
+    formdata.append("category", row.category);
+    formdata.append("barcode", row.barcode);
+    formdata.append("mrp", row.mrp);
+    formdata.append("stock_quantity", "0");
+    formdata.append("update_price", itemPrice);
+    formdata.append("selling_price", itemPrice);
+    formdata.append("opening_quantity", openingQuantity);
+    formdata.append("closing_quantity", 0);
+    formdata.append("received_quantity", receivedQuantity);
+    var myHeaders = new Headers();
+    myHeaders.append("Accept", "*/*");
+    myHeaders.append("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8");
+    myHeaders.append("Connection", "keep-alive");
+    myHeaders.append("Origin", "http://3.111.70.84:8088");
+    myHeaders.append("Referer", "http://3.111.70.84:8088/");
+    myHeaders.append(
+      "User-Agent",
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+    );
+    myHeaders.append("Cache-Control", "no-cache");
+    // ---------
+    window.location.reload();
+    // ---------
+    var requestOptions = {
+      method: "PUT",
+      body: formdata,
+      headers: myHeaders,
+      redirect: "follow",
     };
+    fetch(`https://pos.photonsoftwares.com/prod/api/v1/item/update-item/${row.item_id}`, requestOptions)
 
-    dispatch(handleUpdateItemToStoreRequest({ data: obj, id: row.item_id }));
-    setTimeout(() => {
-      // setProductId(row.item_id)
-      setAddUpdateItemModalIsOpen(!addUpdateItemModalIsOpen);
-      setFlag(!flag);
-    }, 500);
+      .then((response) => {
+        response.text();
+      })
+      .then((result) => {
+        console.log("RESULT", result);
+        alert("Updated Successfully");
+       /* window.location.reload(); */
+      })
+      .catch((error) => console.log("error", error));
+    
+    // console.log("Æ");
+    dispatch(
+      handleInventoryMasterRequest({
+        item_name: itemName,
+        // item_code: Number(itemCode),
+        item_code: row.item_id,
+        description: itemName,
+        price: Number(itemPrice),
+        // discount: Number(selectedOptionDiscount.value),
+        tax: Number(taxPercentage),
+        tax_code: Number(0),
+        status: row.status,
+        saas_id: saasId,
+        product_av_cost: purchasePrice,
+        product_cost: purchasePrice,
+        mrp: mrp,
+        sold_qty: 0,
+        // closing_qty: closingQuantity,
+        closing_qty: 0,
+        opening_qty: openingQuantity,
+        received_qty: receivedQuantity,
+        category: row.category,
+        product_price: itemPrice,
+        stock_qty: "0",
+        tax_percentage: taxPercentage,
+        store_id: storeId,
+        department: itemName,
+        // promo_id: saasId,
+      })
+    );
+    setAddUpdateItemModalIsOpen(false);
+    // dispatch(handleUpdateItemToStoreRequest({ formData, id: row.item_id }));
+
+    // setTimeout(() => {
+    //   // setProductId(row.item_id)
+    //   setAddUpdateItemModalIsOpen(!addUpdateItemModalIsOpen);
+    //   setFlag(!flag);
+    // }, 500);
   };
 
   return (
@@ -208,94 +348,46 @@ const AddItem = ({
             }
             className="mouse-pointer"
           />{" "}
-          Update Item
+          Update Item *
         </ModalHeader>
         <ModalBody>
           <div className="row d-flex justify-content-center">
             <div className="">
-              {/* {productId ? (
-              <div>
-                <p>Upload Pic</p>
-
-                <Grid container>
-                  <Grid item xs={12}>
-                    <h5>Capture your image</h5>
-                    {source && (
-                      <div
-                        display="flex"
-                        justifyContent="center"
-                        border={1}
-                        className={classes.imgBox}
-                      >
-                        <img
-                          src={source}
-                          alt={"snap"}
-                          className={classes.img}
-                        />
-                      </div>
-                    )}
-                    <input
-                      accept="image/*"
-                      className={classes.input}
-                      id="icon-button-file"
-                      type="file"
-                      capture="environment"
-                      onChange={(e) => handleCapture(e.target)}
-                    />
-
-                  </Grid>
-                </Grid>
-
-                <button
-                  type="button"
-                  className="btn btn-primary my-2"
-                  onClick={() => {
-                    setOpenCam;
-                    handleUploadImage();
-                  }}
-                >
-                  Upload Item Pic
-                </button>
-                <div className="">
-                  <button
-                    style={{
-                      backgroundColor: "#20b9e3",
-                      outline: "none",
-                      border: "none",
-                      fontSize: "20px",
-                      padding: "10px 20px",
-                      borderRadius: "10px",
-                      color: "#fff",
-                    }}
-                  >
-                    Save
-                  </button>
-                  <Link
-                    to="/retailer-dashboard"
-                    type="submit"
-
-                    className="btn btn-primary"
-                    style={{
-                      backgroundColor: "#fc0202",
-                      outline: "none",
-                      border: "none",
-                      marginLeft: "20px",
-                      fontSize: "20px",
-                      padding: "10px 20px",
-                      borderRadius: "10px",
-                      color: "#fff",
-                    }}
-                  >
-                    Close
-                  </Link>
-                </div>
-              </div>
-            ) : ( */}
-              <form className="form-box" onSubmit={handleAddItem}>
+              <form
+                className="form-box"
+                onSubmit={handleAddItem}
+                // encType="multipart/form-data"
+                encType="Content-Type"
+              >
                 <div
                   className="d-flex flex-col"
                   style={{ display: "flex", flexDirection: "column" }}
                 >
+                  <Col md={12}>
+                    {/* <div class="mb-3">
+                      <label for="formFile" class="form-label">
+                        Click Here to upload Product Picture
+                      </label>
+                      <input
+                        class="form-control"
+                        type="file"
+                        // multiple={true}
+                        accept="image/*"
+                        id="formFile"
+                        onChange={(e) => {
+                          setImage(e.target.files[0]);
+                          // setImage(e.target.value);
+                        }}
+                      />
+                    </div> */}
+                    {/* <div style={{ height: "100px", width: "100px" }}>
+                      <img
+                        style={{ height: "100px", width: "100px" }}
+                        src={image}
+                        alt=""
+                      />
+                    </div> */}
+                  </Col>
                   <TextField
                     size="small"
                     type="text"
@@ -336,11 +428,47 @@ const AddItem = ({
                     onChange={(e) => setTaxPercentage(e.target.value)}
                     label="Tax Percentage"
                   />
+                  <TextField
+                    size="small"
+                    type="text"
+                    className="form-control my-2"
+                    value={purchasePrice}
+                    required
+                    onChange={(e) => setPurchasePrice(e.target.value)}
+                    label="Purchase Price"
+                  />
+                  <TextField
+                    size="small"
+                    type="text"
+                    className="form-control my-2"
+                    value={openingQuantity}
+                    required
+                    onChange={(e) => setOpeningQuantity(e.target.value)}
+                    label="Opening Quantity"
+                  />
+                  <TextField
+                    size="small"
+                    type="text"
+                    className="form-control my-2"
+                    value={receivedQuantity}
+                    required
+                    onChange={(e) => setReceivedQuantity(e.target.value)}
+                    label="Received Quantity"
+                  />
+                  {/* <TextField
+                    size="small"
+                    type="text"
+                    className="form-control my-2"
+                    value={clossingQuantity}
+                    required
+                    onChange={(e) => setClossingQuantity(e.target.value)}
+                    label="Clossing Quantity"
+                  /> */}
                 </div>
 
                 <div className="">
                   <button
-                    type="button"
+                    type="submit"
                     style={{
                       backgroundColor: "#20b9e3",
                       outline: "none",
@@ -394,7 +522,7 @@ const AddItem = ({
             </div>
           </div>
         </ModalBody>
-        <ModalFooter></ModalFooter>
+        <ModalFooter>{/* <h1>FOOTER</h1> */}</ModalFooter>
       </Modal>
     </>
   );

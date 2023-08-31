@@ -49,6 +49,9 @@ const AddExpense = (props) => {
                             <FormGroup>
                                 <Label>Enter Name <span className="text-red"> * </span></Label>
                                 <Input
+
+                                style={{fontStyle: 'italic',
+                                fontFamily: 'Arial, sans-serif',}}
                                     type="text"
                                     onChange={e => {
                                         const val = e.target.value
@@ -65,6 +68,9 @@ const AddExpense = (props) => {
                             <FormGroup>
                                 <Label>Enter Quantity <span className="text-red"> * </span></Label>
                                 <Input
+                                
+                                style={{fontStyle: 'italic',
+                                fontFamily: 'Arial, sans-serif',}}
                                     type="number"
                                     onChange={e => {
                                         const val = e.target.value
@@ -81,6 +87,9 @@ const AddExpense = (props) => {
                             <FormGroup>
                                 <Label>Enter Cost <span className="text-red"> * </span></Label>
                                 <Input
+                                
+                                style={{fontStyle: 'italic',
+                                fontFamily: 'Arial, sans-serif',}}
                                     type="number"
                                     onChange={e => {
                                         const val = e.target.value
@@ -97,6 +106,9 @@ const AddExpense = (props) => {
                             <FormGroup>
                                 <Label>Enter Amount <span className="text-red"> * </span></Label>
                                 <Input
+                                
+                                style={{fontStyle: 'italic',
+                                fontFamily: 'Arial, sans-serif',}}
                                     type="number"
                                     onChange={e => {
                                         const val = e.target.value
@@ -111,10 +123,14 @@ const AddExpense = (props) => {
                     </Row>
                 </ModalBody>
                 <ModalFooter>
-                    <Button
+                <Button
                         type="submit"
-                        color='primary'
 
+                        
+                        style={{
+                            border: "none",
+                            backgroundColor:"#9ADC32"
+                        }}
                     >
                         Save
                     </Button>

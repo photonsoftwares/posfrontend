@@ -56,6 +56,8 @@ const AddCustomer = () => {
     setGender("");
     setOccupation("");
   };
+
+  
   return (
     <section>
       <div className="container">

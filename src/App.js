@@ -34,7 +34,12 @@ import LinkLoyalityCustomer from "./components/Navbar Screens/LinkLoyalityCustom
 import MembePointRedemption from "./components/Navbar Screens/MembePointRedemption";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import DeliveryChalan from "./components/DeliveryChalan";
+import AddCategory from "./components/AddCategory/AddCategory";
+import Marketing from "./components/Marketing/Marketing";
+// import { CategoryData } from "./components/CategoryData";
+import DataByCategory from "./components/DataByCategory/DataByCategory";
 // import { Navbar } from "react-bootstrap";
+import DataByCategorydupilicate from "./components/DataByCategory/DataByCategory";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -50,6 +55,7 @@ const App = () => {
       // dispatch(handleGetCountryDropdownRequest());
     }
   }, [login_data]);
+  // "/add-category"
 
   return (
     <>
@@ -79,10 +85,10 @@ const App = () => {
           path="/login"
           element={<ProtectedRoutingWhenLogout Component={Login} />}
         />
-        <Route
-          path="/register"
-          element={<ProtectedRoutingWhenLogout Component={Register} />}
-        />
+
+        {/* <Route path="/register" Component={Register} />
+
+        <Route path="/:saasId/:storeId" Component={Register} /> */}
         <Route
           path="/loyality-dashboard"
           element={<ProtectedRoutingWhenLogin Component={LoyalityDashboard} />}
@@ -112,6 +118,10 @@ const App = () => {
           element={<ProtectedRoutingWhenLogin Component={AddItem} />}
         />
         <Route
+          path="/add-category"
+          element={<ProtectedRoutingWhenLogin Component={AddCategory} />}
+        />
+        <Route
           path="/return"
           element={<ProtectedRoutingWhenLogin Component={Return} />}
         />
@@ -130,6 +140,10 @@ const App = () => {
         <Route
           path="/GST-report"
           element={<ProtectedRoutingWhenLogin Component={GSTReport} />}
+        />
+        <Route
+          path="/marketing"
+          element={<ProtectedRoutingWhenLogin Component={Marketing} />}
         />
         <Route
           path="/link-loyality-customer"
@@ -169,6 +183,20 @@ const App = () => {
             <ProtectedRoutingWhenLogin Component={MembePointRedemption} />
           }
         />
+        <Route path="/register" Component={Register} />
+
+        <Route path="/:saasId/:storeId" Component={Register} />
+
+        <Route
+          path="/DataByCategory/:catname"
+          element={<ProtectedRoutingWhenLogin Component={DataByCategory} />}
+        />
+
+           <Route
+          path="/hello/"
+          element={<ProtectedRoutingWhenLogin Component={DataByCategorydupilicate} />}
+        />
+
       </Routes>
       {/* </BrowserRouter> */}
     </>

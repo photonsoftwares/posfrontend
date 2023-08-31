@@ -31,6 +31,21 @@ import logout from "../assets/logout.jpeg";
 import logout2 from "../assets/logout2.jpeg";
 
 const Navbar = () => {
+  const {
+    createdAt,
+    password,
+    registerId,
+    status,
+    saasId,
+    storeId,
+    storeName,
+    userId,
+    userName,
+    userType,
+  } = localStorage.getItem("User_data")
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
+  console.log("NAVBAR Store name", typeof saasId);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
@@ -71,7 +86,8 @@ const Navbar = () => {
     },
   ];
   const [openMenu, setOpenMenu] = useState(false);
-  const [storeName, setStoreName] = useState("");
+  // const [storeName, setStoreName] = useState("");
+
   const [value, setValue] = useState(0);
   const [tabs] = useState(TabsData);
   const [cartCount, setCartCount] = useState(0);
@@ -89,13 +105,13 @@ const Navbar = () => {
   };
   useEffect(() => {}, [handleLogout]);
 
-  useEffect(() => {
-    if (localStorage.getItem("Store_data")) {
-      const allData = JSON.parse(localStorage.getItem("Store_data"));
-      // console.log("STORE NAME", storeName);
-      setStoreName(allData?.storeName);
-    }
-  }, [storeName]);
+  // useEffect(() => {
+  //   if (localStorage.getItem("Store_data")) {
+  //     const allData = JSON.parse(localStorage.getItem("Store_data"));
+  //     // console.log("STORE NAME", storeName);
+  //     setStoreName(allData?.storeName);
+  //   }
+  // }, [storeName]);
 
   const footer_arr = [
     {
@@ -143,19 +159,27 @@ const Navbar = () => {
             flex: 1,
           }}
         >
-          <img src={Logo4} style={{ height: "35px", width: "100%" }} />
+          {saasId === "13" ? (
+            ""
+          ) : (
+            <img src={Logo4} style={{ height: "35px", width: "100%" }} />
+          )}
         </Link>
 
         {!(location.pathname === "/" || location.pathname === "/login") && (
           <>
-            <BiArrowBack
-              size={20}
-              color="#fff"
-              onClick={() => {
-                navigate("/");
-              }}
-              style={{ cursor: "pointer" }}
-            />
+            {userType === "CUSTOMER" ? (
+              ""
+            ) : (
+              <BiArrowBack
+                size={20}
+                color="#fff"
+                onClick={() => {
+                  navigate("/");
+                }}
+                style={{ cursor: "pointer" }}
+              />
+            )}
           </>
         )}
       </div>
@@ -183,7 +207,8 @@ const Navbar = () => {
               textTransform: "uppercase",
             }}
           >
-            {localStorage.getItem("User_data") ? storeName : ""}
+            {/* {localStorage.getItem("User_data") ? storeName : ""} */}
+            {storeName}
           </p>
         </div>
       </div>

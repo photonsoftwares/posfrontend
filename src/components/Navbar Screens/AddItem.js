@@ -1,10 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Select, { useStateManager } from "react-select";
-import { Button } from "react-bootstrap";
+import { Button, Col, FormGroup, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleAddItemToStoreRequest,
+  handleInventoryMasterRequest,
   handleUploadPicRequest,
+  handelGetCategoryRequest,
+  resetProductId,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { FcDepartment } from "react-icons/fc";
 import { TextField } from "@mui/material";
@@ -19,6 +22,7 @@ import { AiFillCamera } from "react-icons/ai";
 
 // import { useHistory } from "react-router-dom";
 import Webcam from "react-webcam";
+import { Label } from "reactstrap";
 const videoConstraints = {
   width: 200,
   facinMode: "enviorment",
@@ -57,12 +61,14 @@ const AddItem = () => {
     // Do stuff with the photo...
     console.log("takePhoto");
   }
-  const { save_product_id } = useSelector((e) => e.ComponentPropsManagement);
+  const { save_product_id, category_list } = useSelector(
+    (e) => e.ComponentPropsManagement
+  );
 
-  // console.log(save_product_id);
+  console.log("category_list CMP", category_list);
   const dispatch = useDispatch();
   //
-  const classes = useStyles();
+  // const classes = useStyles();
 
   const [source, setSource] = useState("");
   //
@@ -75,22 +81,86 @@ const AddItem = () => {
   const [itemCode, setItemCode] = useState("");
   const [itemDesc, setItemDesc] = useState("");
   const [ItemTax, setItemTax] = useState("");
-  const [itemPrice, setItemPrice] = useState("");
+  const [itemPrice, setItemPrice] = useState("0.00");
   const [openCam, setOpenCam] = useState(false);
   const [productId, setProductId] = useState("");
   const [taxPercentage, setTaxPercentage] = useState("");
   const [itemCategory, setItemCategory] = useState("");
-  const [purchasePrice, setPurchasePrice] = useState("");
+  const [receivedQuantity, setReceivedQuantity] = useState("0.00");
+  const [purchasePrice, setPurchasePrice] = useState("0.00");
+  const [stockQty, setStockQty] = useState("");
+  const [soldQuantity, setSoldQuantity] = useState("");
+  const [image, setImage] = useState("");
+  const [closingQuantity, setClosingQuantity] = useState("");
+  const [openingQuantity, setOpeningQuantity] = useState("0.00");
+  const [taxPercenatage, setTaxPercenatage] = useState("0.00");
+  const [sellingPrice, setSellingPrice] = useState("");
+  const [mrp, setMrp] = useState("0.00");
+  const [ImageName, setImageName] = useState("");
+  const [categoryArr, setCategoryArr] = useState({
+    party_name: "",
+    payment_type: "",
+    payment_date: "",
+    payment_mode: "",
+    amount: "",
+    payment_notes: "",
+  });
 
   // console.log("UPLOAD ITEM", uploadItem);
 
   useEffect(() => {
     if (save_product_id) {
       setProductId(save_product_id);
+      dispatch(
+        handleInventoryMasterRequest({
+          item_name: save_product_id.item_name,
+          // item_code: Number(itemCode),
+          item_code: save_product_id.item_id,
+          description: itemName,
+          price: Number(itemPrice),
+          // discount: Number(selectedOptionDiscount.value),
+          tax: Number(taxPercentage),
+          tax_code: Number(taxPercentage),
+          status: "active",
+          saas_id: saasId,
+          product_av_cost: purchasePrice,
+          product_cost: purchasePrice,
+          mrp: mrp,
+          sold_qty: 0,
+          // closing_qty: closingQuantity,
+          closing_qty: 0,
+          opening_qty: openingQuantity,
+          received_qty: receivedQuantity,
+          category: itemCategory,
+          product_price: sellingPrice,
+          stock_qty: stockQty,
+          tax_percentage: taxPercenatage,
+          store_id: storeId,
+          department: itemName,
+          // promo_id: saasId,
+        })
+      );
+      setTimeout(() => {
+        setItemPrice("");
+        setItemName("");
+        setSelectedOptionDiscount(null);
+        setTaxPercentage("");
+        setSelectedHSNTax(null);
+        setSelectedOptionTax(null);
+        setItemCategory("");
+        setTaxPercenatage("");
+        setPurchasePrice("");
+        setSellingPrice("");
+        setStockQty("");
+        setMrp("");
+        setOpeningQuantity("");
+        setReceivedQuantity("");
+        setClosingQuantity("");
+      }, 3000);
     }
   }, [save_product_id]);
 
-  // console.log("PID", productId);
+  // console.log("IMG SOURCE", source.name);
 
   const { saasId, storeId } = JSON.parse(localStorage.getItem("User_data"));
   const webcamRef = useRef(null);
@@ -107,6 +177,8 @@ const AddItem = () => {
 
   const handleAddItem = (e) => {
     e.preventDefault();
+    console.log(itemCategory);
+    console.log("categoryArr", categoryArr);
     dispatch(
       handleAddItemToStoreRequest({
         item_name: itemName,
@@ -118,22 +190,38 @@ const AddItem = () => {
         tax_code: Number(taxPercentage),
         status: "active",
         saas_id: saasId,
+        product_cost: purchasePrice,
+        mrp: mrp,
+        category: itemCategory,
+        selling_price: sellingPrice,
+        stock_qty: stockQty,
+        tax_percentage: taxPercenatage,
         store_id: storeId,
         department: itemName,
         // promo_id: saasId,
       })
     );
-    setItemName("");
-    setItemPrice("");
-    setItemCode("");
-    setItemDesc("");
-    setItemCategory("");
-    setItemDesc("");
-    setDepartment("");
-    setSelectedOptionDiscount(null);
-    setTaxPercentage("");
-    setSelectedHSNTax(null);
-    setSelectedOptionTax(null);
+
+    // setItemName("");
+    // setItemPrice("");
+    // setItemCode("");
+    // setItemDesc("");
+    // setItemCategory("");
+    // setItemDesc("");
+    // setDepartment("");
+    // setSelectedOptionDiscount(null);
+    // setTaxPercentage("");
+    // setSelectedHSNTax(null);
+    // setSelectedOptionTax(null);
+    // setItemCategory("");
+    // setTaxPercenatage("");
+    // setPurchasePrice("");
+    // setSellingPrice("");
+    // setStockQty("");
+    // setMrp("");
+    // setOpeningQuantity("");
+    // setReceivedQuantity("");
+    // setClosingQuantity("");
   };
 
   const onUserMedia = (e) => {
@@ -142,7 +230,8 @@ const AddItem = () => {
 
   const handleCapture = (target) => {
     if (target.files) {
-      if (target.files?.length !== 0) {
+      if (target.files[0]) {
+        console.log("ETF", target.files[0]);
         // const file = target.files[0];
         // const newUrl = URL.createObjectURL(file);
         // setSource(newUrl);
@@ -158,101 +247,77 @@ const AddItem = () => {
       source
       // "/C:/Users/risha/OneDrive/Pictures/Screenshots/Screenshot 2023-05-23 161309.png"
     );
-    dispatch(handleUploadPicRequest({ formdata, save_product_id }));
-    setProductId("");
+    console.log("FORM DATA", formdata);
+    // dispatch(handleUploadPicRequest({ formdata, save_product_id }));
+    // setProductId("");
   };
+
+  useEffect(() => {
+    dispatch(handelGetCategoryRequest());
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("file", image);
+    if (image) {
+      dispatch(handleUploadPicRequest({ formData, save_product_id }));
+    }
+    setImage("");
+    setImageName("");
+    //setProductId(undefined)
+
+    dispatch(resetProductId());
+    // console.log("FORM DATA", formData);
+    // setAddDeityModalIsOpen(!addDeityModalIsOpen);
+  };
+
   return (
     <section>
       <div className="container">
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-9 col-sm-12 px-5">
-            {productId ? (
-              <div>
-                <p>Upload Pic</p>
-
-                <Grid container>
-                  <Grid item xs={12}>
-                    <h5>Capture your image</h5>
-                    {source && (
-                      <div
-                        display="flex"
-                        justifyContent="center"
-                        border={1}
-                        className={classes.imgBox}
-                      >
-                        <img
-                          src={source}
-                          alt={"snap"}
-                          className={classes.img}
-                        />
-                      </div>
-                    )}
-                    <input
-                      accept="image/*"
-                      className={classes.input}
-                      id="icon-button-file"
-                      type="file"
-                      capture="environment"
-                      onChange={(e) => handleCapture(e.target)}
-                    />
-                    {/* <label htmlFor="icon-button-file">
-                      <IconButton
-                        color="primary"
-                        aria-label="upload picture"
-                        component="span"
-                      >
-                        <AiFillCamera size="large" color="red" />
-                      </IconButton>
-                    </label> */}
-                  </Grid>
-                </Grid>
-                {/*  */}
-                <button
-                  type="button"
-                  className="btn btn-primary my-2"
-                  onClick={() => {
-                    setOpenCam;
-                    handleUploadImage();
-                  }}
-                >
-                  Upload Item Pic
-                </button>
-                <div className="">
-                  <button
+            {console.log("save_product_id", save_product_id)}
+            {save_product_id ? (
+              <Col md={12}>
+                <div class="mb-3">
+                  <label
+                    for="formFile"
+                    class="form-label"
                     style={{
-                      backgroundColor: "#20b9e3",
-                      outline: "none",
-                      border: "none",
-                      fontSize: "20px",
-                      padding: "10px 20px",
-                      borderRadius: "10px",
-                      color: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "20px",
+                      border: "2px dashed #222",
                     }}
                   >
-                    Save
-                  </button>
-                  <Link
-                    to="/home"
-                    type="submit"
-                    // onClick={()=>}
-                    className="btn btn-primary"
-                    style={{
-                      backgroundColor: "#fc0202",
-                      outline: "none",
-                      border: "none",
-                      marginLeft: "20px",
-                      fontSize: "20px",
-                      padding: "10px 20px",
-                      borderRadius: "10px",
-                      color: "#fff",
+                    Click Here to upload
+                  </label>
+                  <input
+                    class="form-control"
+                    type="file"
+                    id="formFile"
+                    onChange={(e) => {
+                      // console.log("evfdcvfvfvc", e.target.files[0].name);
+                      setImage(e.target.files[0]);
+                      setImageName(e.target.files[0].name);
                     }}
-                  >
-                    Close
-                  </Link>
+                  />
                 </div>
-              </div>
+                {ImageName ? (
+                  <div>
+                    {ImageName}{" "}
+                    <Button type="button" onClick={handleSubmit}>
+                      Upload
+                    </Button>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </Col>
             ) : (
-              <form className="form-box" onSubmit={handleAddItem}>
+              <div className="form-box">
                 <h4>Add Item</h4>
                 <div
                   className="d-flex flex-col"
@@ -328,65 +393,159 @@ const AddItem = () => {
                     onChange={(e) => setItemName(e.target.value)}
                     label="Item Name"
                     multiline
-                    required
+                    // required
                     rows={1}
                   />
+
+                  {/*  */}
+
+                  <div style={{ zIndex: "999" }}>
+                    <Select
+                      options={category_list}
+                      onChange={(e) => {
+                        const val = e.value;
+                        console.log("CV", e.value);
+                        setItemCategory(e.value);
+                        setCategoryArr({ ...categoryArr, party_name: val });
+                      }}
+                      // value={category_list.filter(
+                      //   (io) => io.value === categoryArr.party_name
+                      // )}
+                      defaultInputValue={category_list.party_name}
+                      value={category_list.party_name}
+                      required={true}
+                      placeholder="Select Category"
+                      styles={{
+                        menu: (baseStyles, state) => ({
+                          ...baseStyles,
+                          // height: "50px",
+                          overflow: "auto",
+                          // fontWeight: "900",
+                        }),
+                        option: (baseStyles, state) => ({
+                          ...baseStyles,
+                          height: "50px",
+                          // fontWeight: "300",
+                          overflow: "auto",
+                        }),
+                        control: (baseStyles, state) => ({
+                          ...baseStyles,
+                          zIndex: 999,
+                          // height: "50px",
+                          // fontWeight: "800",
+                          // overflow: "auto",
+                        }),
+                      }}
+                    />
+                  </div>
+                  {/*  */}
+
                   {/* <TextField
                     size="small"
                     type="text"
                     className="form-control my-2"
                     id="customer-name"
-                    required
-                    value={itemName}
-                    onChange={(e) => setItemName(e.target.value)}
-                    label="Item Desc"
-                    multiline
-                    rows={3}
-                  />
-                  <TextField
-                    size="small"
-                    type="text"
-                    className="form-control my-2"
-                    id="customer-name"
-                    value={itemName}
-                    onChange={(e) => setItemName(e.target.value)}
+                    value={itemCategory}
+                    onChange={(e) => setItemCategory(e.target.value)}
                     label="Item Category"
                     required
                     multiline
                     rows={1}
                   /> */}
                   <TextField
-                    size="small"
                     type="text"
                     className="form-control my-2"
                     id="customer-name"
-                    value={itemPrice}
-                    required
-                    onChange={(e) => setItemPrice(e.target.value)}
-                    label="Item Price"
+                    size="small"
+                    // required
+                    value={mrp}
+                    onChange={(e) => setMrp(e.target.value)}
+                    label="MRP"
                   />
                   <TextField
                     size="small"
                     type="text"
                     className="form-control my-2"
                     id="customer-name"
-                    value={taxPercentage}
-                    required
-                    onChange={(e) => setTaxPercentage(e.target.value)}
-                    label="Tax Percentage"
+                    value={itemPrice}
+                    // required
+                    onChange={(e) => setItemPrice(e.target.value)}
+                    label="Item Price"
                   />
+
                   <TextField
                     size="small"
                     type="number"
                     className="form-control my-2"
                     id="customer-name"
                     value={purchasePrice}
-                    required
+                    // required
                     onChange={(e) => setPurchasePrice(e.target.value)}
                     label="Purchase Price"
                   />
                 </div>
+                {/* <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
+                  value={sellingPrice}
+                  onChange={(e) => setSellingPrice(e.target.value)}
+                  label="Selling Price"
+                /> */}
+                {/* <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
+                  value={stockQty}
+                  onChange={(e) => setStockQty(e.target.value)}
+                  label="Stock Quantity"
+                /> */}
 
+                <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
+                  value={openingQuantity}
+                  onChange={(e) => setOpeningQuantity(e.target.value)}
+                  label="Opening Quantity"
+                />
+                <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
+                  value={receivedQuantity}
+                  onChange={(e) => setReceivedQuantity(e.target.value)}
+                  label="Received Quantity"
+                />
+                {/* <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
+                  value={closingQuantity}
+                  onChange={(e) => setClosingQuantity(e.target.value)}
+                  label="Clossing Quantity"
+                /> */}
+                <TextField
+                  type="text"
+                  className="form-control my-2"
+                  id="customer-name"
+                  size="small"
+                  // required
+
+                  value={taxPercenatage}
+                  onChange={(e) => setTaxPercenatage(e.target.value)}
+                  label="Tax Percentage"
+                />
                 <div className="">
                   <button
                     style={{
@@ -398,6 +557,7 @@ const AddItem = () => {
                       borderRadius: "10px",
                       color: "#fff",
                     }}
+                    onClick={handleAddItem}
                   >
                     Save
                   </button>
@@ -420,7 +580,7 @@ const AddItem = () => {
                     Close
                   </Link>
                 </div>
-              </form>
+              </div>
             )}
           </div>
         </div>

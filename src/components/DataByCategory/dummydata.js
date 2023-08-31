@@ -1,67 +1,164 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { BsCamera } from "react-icons/bs";
-import { BsHandbag, BsArrowRight } from "react-icons/bs";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { FormControl, ListGroup, Modal } from "react-bootstrap";
+import { BASE_Url } from "../../URL";
+import { InputLabel, OutlinedInput, TextField } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { handlecartCount,
+   handleCategoriesRequest, 
+   handleAllDataByCategoryRequest,
+    handleRecommendedDataRequest,
+     handleShowModal, 
+     handleSaveTransactionRequest, 
+     handleAccruvalRequest,
+     handlewhatsAppRequest,
+     handleEmailNotificationResponse,
+     handleRedeemPointRequest,
+     handelSMSRequest,
+ } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+//import { BsCreditCardFill, BsFillCheckCircleFill } from "react-icons/bs";
+import { useNavigate, useParams } from "react-router-dom";
+import { Row, Col, Container, Card, Button, Image } from "react-bootstrap";
+import axios from "axios";
+import { Warning } from "@material-ui/icons";
+import MyCart from "../my-cart/MyCart";
+
+
+
+
+//---------------------------------
+// import "bootstrap/dist/css/bootstrap.min.css";
+
+// import { BsCamera } from "react-icons/bs";
+// import { BsHandbag, BsArrowRight } from "react-icons/bs";
 import { FcSalesPerformance, FcSpeaker } from "react-icons/fc";
 import { IoCashOutline } from "react-icons/io5";
 import { SiPaytm } from "react-icons/si";
 import { FaGooglePay } from "react-icons/fa";
 import { SiPhonepe } from "react-icons/si";
-import { GrClose } from "react-icons/gr";
+// import { GrClose } from "react-icons/gr";
 import { SiContactlesspayment } from "react-icons/si";
-import { AiOutlineMail, AiOutlineSearch } from "react-icons/ai";
+import { AiFillHome, AiOutlineMail, AiOutlineSearch } from "react-icons/ai";
 import { BsCreditCardFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { FcSms } from "react-icons/fc";
-import Modal from "react-bootstrap/Modal";
-import { useDispatch, useSelector } from "react-redux";
-import Product from "../components/Product";
+import pdfFile from "../../assets/PDF.pdf";
+import ViewOrdersCustomer from "../PendingOrders/ViewOrdersCustomer";
 
-import qrData from "../assets/QR.jpeg";
-import {
-  handleSearchedDataRequest,
-  handleSaveTransactionRequest,
-  handleRecommendedDataRequest,
-  handleAccruvalRequest,
-  handleShowModal,
-  handelSMSRequest,
-  handlewhatsAppRequest,
-  handleItemsDataRequest,
-  handleEmailNotificationResponse,
-  handleRedeemPointRequest,
-  handleViewOrderModal,
-  handleCategoriesRequest,
-  handleXYZRequest,
-} from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-import { Button } from "react-bootstrap";
-import pdfFile from "../assets/PDF.pdf";
 
-//assets\PDF.pdf
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import { BiBox, BiCart, BiGroup ,BiCube } from "react-icons/bi";
 
-import { BASE_Url } from "../URL";
-import { useNavigate } from "react-router-dom";
-import { TextField } from "@mui/material";
 
-import MyCart from "./my-cart/MyCart";
-import { HiCreditCard } from "react-icons/hi2";
-import { RiH1, RiMoneyDollarCircleFill } from "react-icons/ri";
-import { AiFillHome } from "react-icons/ai";
-import { BiBox, BiCart, BiCube, BiGroup } from "react-icons/bi";
-import { RxDashboard } from "react-icons/rx";
-import ViewOrders from "./PendingOrders";
-//import { Category, WhatsApp } from "@material-ui/icons";
-import Category from "../components/Category/Category";
-import ViewOrdersCustomer from "./PendingOrders/ViewOrdersCustomer";
 
-const Home = () => {
-  // const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
+//import Modal from "react-bootstrap/Modal";
+//import { useDispatch, useSelector } from "react-redux";
+
+
+const DataByCategory = ({
+  // setSearchValue,
+   //data,
+  // setData,
+  // setUpdatecart,
+  // updatecart,
+  
+  // //setInvoiceValue,
+  // //invoiceValue,
+  // popoverIsOpen,
+  // setPopoverIsOpen,
+  // discountAmountVal,
+  // discountPercentVal, setDiscountPercentVal, totalDiscountVal,
+  //  //paymentModal, setPaymentModal,
+  //   //setCartData, 
+  // //sumValue, setSumValue,
+  //  setTotalDiscountVal,
+  // setDiscountAmountVal, totalSum, setTotalSum, optionTickSum, balanceDue,
+
+}) => {
+  // ---------------------------------
+  const {
+     cart_data,
+     get_categories, 
+     get_all_catrgory_data, 
+     category_list,
+     get_QR_img, 
+    link_loyalty_detail, 
+    handle_saveTransaction_data }
+ = useSelector((e) => e.ComponentPropsManagement);
+  const [myPrice, setMyPrice] = useState({ productId: "", price: "" });
+  const [showButton, setShowButton] = useState(true);
+  // const [qty, setQty] = useState(1);
+  const dispatch = useDispatch();
+  //console.log("**DATA", data);
+  console.log("this is get category data", category_list)
+
+  useEffect(() => {
+    const el = JSON.parse(localStorage.getItem("my-cart"));
+    console.log("EL", el);
+    //console.log("DATA", data);
+    if (el) {
+      dispatch(handlecartCount(el?.length));
+    } else {
+      dispatch(handlecartCount(0));
+    }
+    dispatch(handleCategoriesRequest())
+    dispatch(handleAllDataByCategoryRequest())
+  }, []);
+  // ---------------------------------
+  console.log("DataByCategory", get_all_catrgory_data);
+
+  const addToCart = (item) => {
+    const cart = JSON.parse(localStorage.getItem("my-cart")) || [];
+    console.log('cart ddddd', cart)
+    console.log('sssssss', item)
+    const existingItem = cart.find(
+      (cartItem) => cartItem.item_id === item.item_id
+    );
+
+    if (existingItem) {
+      existingItem.productQty += 1;
+
+    } else {
+      const newItem = { ...item, productQty: 1 };
+      cart.push(newItem);
+
+    }
+
+    localStorage.setItem("my-cart", JSON.stringify(cart));
+
+    dispatch(handlecartCount(cart.length));
+
+    // setUpdatecart(!updatecart);
+    // setSearchValue("");
+  };
+
+
+
+
+  //-------------------------------------
+  //-------------cartwork-------
+  const {
+    get_searched_data,
+    // cart_data,
+    
+   
+    total_price,
+    
+    get_recommended_items,
+    xyz_State,
+    search_customer_data,
+    show_cart_modal,
+  
+    show_viewOrder_modal,
+  } = useSelector((e) => e.ComponentPropsManagement);
+
   const navigate = useNavigate();
   const [popoverIsOpen, setPopoverIsOpen] = useState(false);
-  const dispatch = useDispatch();
+  
   const [defaultPdfFile] = useState(pdfFile);
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
@@ -86,20 +183,11 @@ const Home = () => {
   console.log("HOME CTGR", categoryReq);
   const userData = JSON.parse(localStorage.getItem("User_data"));
 
-  const {
-    get_searched_data,
-    // cart_data,
-    get_QR_img,
-    link_loyalty_detail,
-    total_price,
-    handle_saveTransaction_data,
-    get_recommended_items,
-    xyz_State,
-    search_customer_data,
-    show_cart_modal,
-    get_all_catrgory_data,
-    show_viewOrder_modal,
-  } = useSelector((e) => e.ComponentPropsManagement);
+
+  // console.log('',userType);
+  
+
+ 
   // console.log("GSD", get_searched_data);
 
   // useEffect(() => {
@@ -126,7 +214,7 @@ const Home = () => {
   const [cartData, setCartData] = useState(null);
   const [percentOff, setPercentOff] = useState(1);
   const [amountOff, setAmountOff] = useState("");
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const [speachModal, setSpechModal] = useState(false);
   const [visibleVoiceCommand, setVisibleVoiceCommand] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -807,231 +895,99 @@ const Home = () => {
     setSms("");
   };
 
+
+
+
+    //----------------
+
+
+
+
+
+
+
+
+
+
+  const { catname } = useParams();
+
+
+  const [filterdetails, setFilterdetails] = useState([]);
+  const [category2, setCategory2] = useState([])
+  const [FilterCategory, setFilterCategory] = useState('')
+
+
+
+  // const { storeId, saasId, userName } = JSON.parse(
+  //   localStorage.getItem("User_data")
+  // );
+
+  useEffect(() => {
+    axios.get(`${BASE_Url}/search/get-result/${storeId}/${saasId}/${catname}`)
+      .then((res) => setFilterdetails(res.data.data));
+    axios
+      .get(`${BASE_Url}/category/get-list/${saasId}/${storeId}`)
+      .then((res) => setCategory2(res.data.data));
+
+  }, []);
+
+
+
+
+  const filterres = category2.filter((ele) => ele.category_name == catname)
+
+  console.log(filterres)
+
   return (
     <div className="app">
-      <div
-        style={{
-          // position: "sticky",
-          // top: 0,
-          width: "",
-          // height: "85px",
-          backgroundColor: "#fff",
-        }}>
-        <div
-          className="d-flex flex-row align-items-center justify-content-center mt-3"
-          style={{ display: "flex", flexDirection: "column" }}>
-          {/* <IoIosSearch size={30} opacity={0.4} /> */}
-          <div style={{ marginRight: "10px" }}>
-            <AiOutlineSearch size={30} opacity={1} />
-          </div>
-          <input
-            style={{ border: "1px solid yellowgreen", outline: "none" }}
-            type="text"
-            value={searchValue}
-            autoFocus
-            onChange={(e) => {
-              const val = e.target.value;
-              // optimizedFn(val)
-              setSearchValue(val);
-            }}
-            className="form-control"
-            aria-describedby="emailHelp"
-            placeholder="Search for items..."
-          />
-          {/* // <div style={{ width: "100%" }}>{transcript}</div> */}
-          {/* )} */}
-          {/* <div style={{ height: "200px", width: "200px" }}>
-            <QrReader
-              onResult={(result, error) => {
-                if (!!result) {
-                  setQrData(result?.text);
-                }
+      <div className="d-flex align-items-center justify-content-center  mt-3">
 
-                if (!!error) {
-                  console.info(error);
-                }
-              }}
-              style={{ width: "100%", height: "200px" }}
-            />
-            <p>{qrData}</p>
-          </div> */}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            // marginTop: "10px",
-            justifyContent: "center",
-          }}>
-          <FcSpeaker
-            size={30}
-            opacity={0.9}
-            // onClick={() => setSpechModal(true)}
-            onClick={handleVoiceCommand}
-            // onClick={() => {
-            //   setVisibleVoiceCommand(true);
-            //   startListening;
-            // }}
-          />
+        {
+          filterres[0] &&
+          <Card style={{ boxShadow: '0 4px 6px rgba(0, 0, 0, 0,)', borderRadius: '10px', width: '20rem' }} className="cardCategory ">
+            <div className="d-flex align-items-center justify-content-center">
+              <Image src={filterres[0].image_path} roundedCircle style={{ width: "100px", height: '100px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.' }} className="m-1" />
+              <h1 className="text-center">{filterres[0].category_name}</h1>
+            </div>
+          </Card>
+        }
+
+      </div>
+
+
+      <div >
+        <div className="d-flex align-items-center justify-content-center mt-2 ">
+          <Container>
+            <Row xs={2} sm={4} md={4}>
+              {filterdetails.map((ele) => {
+                return (
+                  <Col className="mt-5">
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Card style={{ borderRadius: "10px", width: "12rem", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", }}
+                        className="cardCategory">
+                        <Card.Img src={"https://pos.photonsoftwares.com/prod/api/v1/item/get-image/7044"}></Card.Img>
+                        <div>
+                          <div className="text-center">
+                            <Card.Body>
+                              <h6>{ele.description}</h6>
+                              <p><span >₹</span>{' '}{ele.price}</p>
+                              <Button variant="warning" onClick={() => addToCart(ele)} >Add to cart</Button>
+                            </Card.Body>
+                          </div>
+
+                        </div>
+                      </Card>
+                    </div>
+                  </Col>
+                );
+              })}
+            </Row>
+          </Container>
         </div>
       </div>
 
-      <ul
-        style={{
-          paddingLeft: "20px",
-          paddingRight: "20px",
-          overflowY: "scroll",
-          Height: "auto",
-          // paddingBottom: "20px",
-        }}>
-        <div>
-          {!searchValue ? (
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <Category
-                style={{ zIndex: 2 }}
-                setSearchValue={setSearchValue}
-                setData={setSearchedData}
-                cartData={cartData}
-                setCartData={setCartData}
-                data={searchedData}
-                setUpdatecart={setUpdatecart}
-                updatecart={updatecart}
-                searchValue={searchValue}
-                handleVoiceCommand={handleVoiceCommand}
-              />
-
-              <RenderUi />
-            </div>
-          ) : (
-            <div>
-              <RenderUi />
-              <Category
-                style={{ zIndex: 2 }}
-                setSearchValue={setSearchValue}
-                setData={setSearchedData}
-                cartData={cartData}
-                setCartData={setCartData}
-                data={searchedData}
-                setUpdatecart={setUpdatecart}
-                updatecart={updatecart}
-                searchValue={searchValue}
-                handleVoiceCommand={handleVoiceCommand}
-              />
-            </div>
-          )}
-        </div>
-        {/* {xyz_State && xyz_State.length > 0
-          ? xyz_State.map((el) => <h1>{el.customer_party}</h1>)
-          : ""} */}
-        {/* <Category /> */}
-        {/* <RenderUi /> */}
-        {/* {searchedData && searchValue?.length > 0
-          ? searchedData.map((item, index) => (
-              <Product item={item} key={index} />
-            ))
-          : recommendedData &&
-            recommendedData?.length > 0 &&
-            recommendedData.map((item, index) => (
-              <>
-                <Product item={item} key={index} />
-              </>
-            ))} */}
-      </ul>
-      <div
-        style={{
-          position: "absolute",
-          bottom: "0",
-          backgroundColor: "#fff",
-          width: "100%",
-          height: "50px",
-          borderRadius: "5px",
-        }}>
-        {/* {cart_data && ( */}
-        <div
-          style={{
-            paddingLeft: "20px",
-            paddingRight: "20px",
-            display: "flex",
-            width: "100%",
-            alignItems: "center",
-            // justifyContent: "space-around",
-            color: "#fff",
-          }}>
-          <div
-            style={{
-              color: "#eee",
-              fontWeight: "bolder",
-              color: "#8f0707",
-              // display: "flex",
-              // alignItems: "center",
-              // justifyContent: "space-between",
-              width: "100%",
-            }}>
-            {link_loyalty_detail && link_loyalty_detail.customer_name ? (
-              <div
-                className="d-flex flex-row text-center"
-                style={{ width: "100%" }}>
-                <p style={{ padding: 0, margin: 0, marginRight: "30px" }}>
-                  Cutomer Name
-                </p>
-                <p style={{ padding: 0, margin: 0 }}>
-                  {link_loyalty_detail.customer_name}
-                </p>
-              </div>
-            ) : (
-              // ""
-              handleUserCheck()
-            )}
-          </div>
-          <div
-            style={{
-              fontWeight: "lighter",
-              color: "#fff",
-              position: "relative",
-              cursor: "pointer",
-            }}>
-            <div style={{ margin: "5px 0px" }}>
-              {/* <BsHandbag color="#000" fontSize={30} opacity={0.8} /> */}
-            </div>
-            <h6
-              style={{
-                fontSize: "15px",
-                padding: 0,
-                margin: 0,
-                position: "absolute",
-                color: "red",
-                right: "11px",
-                top: "16px",
-              }}>
-              {/* {cartData?.length} */}
-            </h6>
-          </div>
-          <h2
-            style={{
-              padding: 0,
-              margin: 0,
-              fontWeight: "400",
-              color: "#000",
-              textDecoration: "none",
-              fontSize: "20px",
-              cursor: "pointer",
-            }}
-            // onClick={() => {
-            //   if (cartData && cartData?.length > 0) {
-            //     setShow(true);
-            //   } else {
-            //     .error("Please add atleast one item in cart");
-            //   }
-            // }}
-          >
-            {/* View Cart <BsArrowRight /> */}
-          </h2>
-        </div>
-        {/* )} */}
-      </div>
-      {/* MY CART */}
-      {show === true && (
-        <MyCart
+      {
+        show == true && (<MyCart
           show={show}
           cartData={cartData}
           setInvoiceValue={setInvoiceValue}
@@ -1052,7 +1008,10 @@ const Home = () => {
           totalSum={totalSum}
           setTotalSum={setTotalSum}
         />
-      )}
+
+
+
+        )}
 
       <Modal
         size="lg"
@@ -1060,7 +1019,7 @@ const Home = () => {
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-        // style={{ position: "relative" }}
+      // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -1183,29 +1142,28 @@ const Home = () => {
                                   }
                                 }
                               }}
-                              className={`option-item ${
-                                optionTick.filter(
-                                  (io) => io.name === item.value
-                                )?.length > 0 && ""
-                              }`}
+                              className={`option-item ${optionTick.filter(
+                                (io) => io.name === item.value
+                              )?.length > 0 && ""
+                                }`}
                               style={{
                                 width: "90%",
                                 backgroundColor:
                                   item.name === "Cash"
                                     ? "#fed813"
                                     : item.name === "Paytm"
-                                    ? "#00B9F1"
-                                    : item.name === "Google Pay"
-                                    ? "#2DA94F"
-                                    : item.name === "Phone Pay"
-                                    ? "#5f259f"
-                                    : item.name === "UPI"
-                                    ? "#ff7909"
-                                    : item.name === "Credit Sale"
-                                    ? "#1741b2"
-                                    : item.name === "Loyalty"
-                                    ? "#c8030e"
-                                    : "silver",
+                                      ? "#00B9F1"
+                                      : item.name === "Google Pay"
+                                        ? "#2DA94F"
+                                        : item.name === "Phone Pay"
+                                          ? "#5f259f"
+                                          : item.name === "UPI"
+                                            ? "#ff7909"
+                                            : item.name === "Credit Sale"
+                                              ? "#1741b2"
+                                              : item.name === "Loyalty"
+                                                ? "#c8030e"
+                                                : "silver",
                               }}>
                               <div style={{ position: "relative", top: "2px" }}>
                                 {item.icon}
@@ -1217,18 +1175,18 @@ const Home = () => {
                                     item.name === "Cash"
                                       ? "black"
                                       : item.name === "Paytm"
-                                      ? "black"
-                                      : item.name === "Google Pay"
-                                      ? "white"
-                                      : item.name === "Phone Pay"
-                                      ? "white"
-                                      : item.name === "UPI"
-                                      ? "white"
-                                      : item.name === "Credit Sale"
-                                      ? "#fff"
-                                      : item.name === "Loyalty"
-                                      ? "#fff"
-                                      : "black",
+                                        ? "black"
+                                        : item.name === "Google Pay"
+                                          ? "white"
+                                          : item.name === "Phone Pay"
+                                            ? "white"
+                                            : item.name === "UPI"
+                                              ? "white"
+                                              : item.name === "Credit Sale"
+                                                ? "#fff"
+                                                : item.name === "Loyalty"
+                                                  ? "#fff"
+                                                  : "black",
                                 }}>
                                 {item.name}
                               </div>
@@ -1302,9 +1260,8 @@ const Home = () => {
                         register_id: userData && userData.registerId,
                         total_invoice_amount: Number(invoiceValue),
                         store_id: Number(userData && userData.storeId),
-                        business_date: `${year}-${
-                          month < 10 ? "0" + month : month
-                        }-${day < 10 ? "0" + day : day}`,
+                        business_date: `${year}-${month < 10 ? "0" + month : month
+                          }-${day < 10 ? "0" + day : day}`,
                         invoice_no:
                           handle_saveTransaction_data.transaction_id + "",
                         source_app: "POS",
@@ -1322,6 +1279,7 @@ const Home = () => {
                         tender: handleTander3(),
                       })
                     );
+                    //---------------------------------------------------------------------------------
                     // dispatch(
                     //   handleAccruvalRequest({
                     //     client_id: userData && userData.saasId,
@@ -1344,18 +1302,19 @@ const Home = () => {
                     //     program_name: "campaign name",
                     //     base_currency: loyalty_data.data.base_currency,
                     //     tender: handleTenderAmount(),
-                    //     //  [
-                    //     //   {
-                    //     //     tender_name: "check",
-                    //     //     tender_value: 300,
-                    //     //   },
-                    //     //   {
-                    //     //     tender_name: "cash",
-                    //     //     tender_value: 300,
-                    //     //   },
-                    //     // ],
+                        //  [
+                        //   {
+                        //     tender_name: "check",
+                        //     tender_value: 300,
+                        //   },
+                        //   {
+                        //     tender_name: "cash",
+                        //     tender_value: 300,
+                        //   },
+                        // ],
                     //   })
                     // );
+                    //-----------------------------------------------------------------------------------
                   }}>
                   Receipts
                 </button>
@@ -1394,10 +1353,9 @@ const Home = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${
-                      handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                    }`}
+                      }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -1578,10 +1536,9 @@ const Home = () => {
                   marginBottom: "20px",
                 }}>
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${
-                    handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                  }`}
+                    }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />
@@ -1597,8 +1554,144 @@ const Home = () => {
         showVierCustomerOrderModal={showVierCustomerOrderModal}
         setShowVierCustomerOrderModal={setShowVierCustomerOrderModal}
       />
-    </div>
-  );
-};
 
-export default Home;
+
+
+
+    </div>
+  )
+}
+//     <div
+//       style={{
+//         display: "flex",
+//         flexDirection: "row",
+//         // alignItems: "center",
+//         gap: "0 10px",
+//         justifyContent: "center",
+//         flexWrap: "wrap",
+//       }}
+//     >
+//       {get_all_catrgory_data.map((item) => (
+//         <div
+//           class="card"
+//           key={item.productId}
+//           style={{
+//             width: "10rem",
+//             margin: "5px",
+//             display: "flex",
+//           }}
+//         >
+//           <div style={{ height: "100px", width: "100%" }}>
+//             <img
+//               style={{ height: "100%", width: "100%" }}
+//               src={`${BASE_Url}/item/get-image/${item && item.productId}`}
+//               class="card-img-top"
+//               alt="..."
+//             />
+//           </div>
+//           <div class="card-body">
+//             <h5 class="card-title">{item.itemName}</h5>
+//             {Number(item.price) === 0 ? (
+//               <>
+//                 <FormControl  sx={{ m: 1, width: "25ch" }} variant="outlined">
+//                   <InputLabel>Amount</InputLabel>
+//                   <OutlinedInput
+//                     type="number"
+//                     size="small"
+//                     onKeyDown={(e) => {
+//                       if (e.key === "Enter") {
+//                         item.price = item.new_price;
+//                         setData([...data]);
+//                       }
+//                     }}
+//                     endAdornment={
+//                       <InputAdornment position="end">
+//                         <IconButton
+//                           // aria-label="toggle password visibility"
+//                           onClick={() => {
+//                             item.price = item.new_price;
+//                             setData([...data]);
+//                           }}
+//                           edge="end"
+//                         >
+//                           <BsFillCheckCircleFill
+//                             color={
+//                               item.new_price === "" || item.new_price === 0
+//                                 ? "#979797"
+//                                 : "green"
+//                             }
+//                           />
+//                         </IconButton>
+//                       </InputAdornment>
+//                     }
+//                     label="Amount"
+//                     className="w-50"
+//                     onChange={(e) => {
+//                       const val = e.target.value;
+//                       if (val) {
+//                         setMyPrice({
+//                           productId: item.productId,
+//                           price: Number(val),
+//                         });
+//                         item.new_price = Number(val);
+//                         // setMyPrice(Number(val))
+//                       } else {
+//                         item.new_price = "";
+//                         setMyPrice({
+//                           productId: item.productId,
+//                           price: val,
+//                         });
+//                         // setMyPrice(val)
+//                       }
+//                       // setData([...data])
+//                     }}
+//                     value={
+//                       item.productId === myPrice.productId ? myPrice.price : ""
+//                     }
+//                   />
+//                 </FormControl>
+//               </>
+//             ) : (
+//               <>
+//                 <p style={{ fontWeight:"500", fontSize:"24px" }}>₹&nbsp;{item.price}</p>
+//               </>
+//             )}
+//             {/* <a href="#" class="btn btn-sm btn-warning">
+//                 Add to Cart
+//               </a> */}
+//             <div
+//               style={{
+//                 display: "flex",
+//                 flex: 1,
+//                 alignItems: "center",
+//                 // justifyContent: "flex-end",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display:
+//                     item.price === 0 || item.price === 0 ? "none" : "block",
+//                 }}
+//               >
+//                 <Button
+//                   size="sm"
+//                   variant={`warning`}
+//                   style={{
+//                     width: "100%",
+//                     fontSize: "10px",
+//                     display: item.price === 0 ? "hidden" : "block",
+//                   }}
+//                   onClick={() => addToCart(item)}
+//                 >
+//                   Add to cart
+//                 </Button>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+export default DataByCategory;

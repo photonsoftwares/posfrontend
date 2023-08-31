@@ -14,13 +14,14 @@ const {
   storeId,
   storeName,
   userId,
+  userType,
   userName,
 } = localStorage.getItem("User_data")
   ? JSON.parse(localStorage.getItem("User_data"))
   : {};
 
 // console.log("LOYALTY DATA", data.loyalty_id);
-console.log("storeId", storeId);
+// console.log("storeId", storeId, saasId, userId, userName);
 
 function* handleLoginRequest(e) {
   const response = yield fetch(`${BASE_Url}/auth/user-login`, {
@@ -32,7 +33,6 @@ function* handleLoginRequest(e) {
   });
   const jsonData = yield response.json();
   console.log("LOGIN DATA", jsonData);
-
   if (jsonData) {
     if (jsonData.status === true) {
       toast.success("Login Successfully");
@@ -61,7 +61,7 @@ function* handleLoginRequest(e) {
 }
 // REGISTER USER
 function* handleRegisterRequest(e) {
-  const response = yield fetch(`${BASE_Url}/auth/user-registration`, {
+  const response = yield fetch(`${BASE_Url}/user-master/customer-sign-up`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -74,18 +74,19 @@ function* handleRegisterRequest(e) {
   if (jsonData) {
     if (jsonData.status === true) {
       toast.success("Register User Successfully");
-      localStorage.setItem(
-        "login_data",
-        JSON.stringify(jsonData.data.user_data)
-      );
-      localStorage.setItem("Token", JSON.stringify(jsonData.data.jwt_response));
+      // localStorage.setItem(
+      //   "login_data",
+      //   JSON.stringify(jsonData.data.user_data)
+      // );
+      // localStorage.setItem("Token", JSON.stringify(jsonData.data.jwt_response));
       // window.location.href("/");
-      yield put({
-        type: "ComponentPropsManagement/handleLoginResponse",
-        data: jsonData.data.user_data,
-      });
+      // yield put({
+      //   type: "ComponentPropsManagement/handleLoginResponse",
+      //   data: jsonData.data.user_data,
+      // });
     } else {
-      toast.error("Please enter correct username and password");
+      // toast.error("Please enter correct username and password");
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleLoginResponse",
         data: {},
@@ -94,27 +95,30 @@ function* handleRegisterRequest(e) {
   }
 }
 
-
 //get Bahikhata
 function* handleBahikhataPartyDropdownRequest(e) {
-  const response = yield fetch(`${BASE_Url}/bahikhata/get-party-name`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    // body: JSON.stringify({ effective_from, end_date, tax_desc, hsn_code }),
-  });
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const response = yield fetch(
+    `${BASE_Url}/supplier/get-party-name/${saasId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ effective_from, end_date, tax_desc, hsn_code }),
+    }
+  );
   const jsonData = yield response.json();
-
+  console.log("JSONDATA BAHIKHATA", jsonData);
   if (jsonData) {
     if (jsonData && jsonData.data) {
-      const arr = []
+      const arr = [];
       jsonData.data.map((item) => {
-        arr.push({ label: item, value: item })
-      })
+        arr.push({ label: item, value: item });
+      });
       yield put({
         type: "ComponentPropsManagement/handleBahikhataPartyDropdownResponse",
-        data: arr
+        data: arr,
       });
     }
   } else {
@@ -123,20 +127,80 @@ function* handleBahikhataPartyDropdownRequest(e) {
       data: [],
     });
   }
-
+}
+//get Category Data
+function* handelGetCategoryRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const response = yield fetch(
+    `${BASE_Url}/category/get-list/${saasId}/${storeId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("CATEGORY DROPDOWN", jsonData);
+  if (jsonData) {
+    if (jsonData && jsonData.data) {
+      const arr = [];
+      jsonData.data.map((item) => {
+        arr.push({ label: item.category_name, value: item.category_name });
+      });
+      yield put({
+        type: "ComponentPropsManagement/handelGetCategoryResponse",
+        data: arr,
+      });
+    }
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handelGetCategoryResponse",
+      data: [],
+    });
+  }
+}
+//get Category HOME
+function* handeleCategoriesHomeRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const response = yield fetch(
+    `${BASE_Url}/category/get-list/${saasId}/${storeId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("CATEGORY DROPDOWN", jsonData);
+  if (jsonData) {
+    if (jsonData && jsonData.data) {
+      yield put({
+        type: "ComponentPropsManagement/handeleCategoriesHomeResponse",
+        data: jsonData.data,
+      });
+    }
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handeleCategoriesHomeResponse",
+      data: [],
+    });
+  }
 }
 
 //..............create Bahikhata............................
 function* handleBahikhataCreateRequest(e) {
+  console.log("handleBahikhataCreateRequest", e);
   try {
-    const response = yield fetch(`${host}/bahikhata/create-bahikhata`, {
+    const response = yield fetch(`${host}bahikhata/create-bahikhata`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(e.payload),
     });
-    const jsonData = yield response.json()
+    const jsonData = yield response.json();
     if (jsonData) {
       if (jsonData.status === true) {
         toast.success(jsonData.message);
@@ -144,7 +208,7 @@ function* handleBahikhataCreateRequest(e) {
           type: "ComponentPropsManagement/handleBahikhataCreateResponse",
           data: jsonData.data,
         });
-        return
+        return;
       } else {
         yield put({
           type: "ComponentPropsManagement/handleBahikhataCreateResponse",
@@ -153,10 +217,10 @@ function* handleBahikhataCreateRequest(e) {
         toast.error(jsonData.message);
       }
     } else {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -239,6 +303,7 @@ function* handleSearchedDataRequest1(e) {
       }
     );
     const jsonData = yield response.json();
+    console.log("SEARCH VALUE", jsonData);
     if (jsonData) {
       if (jsonData.status === true) {
         yield put({
@@ -247,13 +312,13 @@ function* handleSearchedDataRequest1(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleSearchedDataResponse1",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
     console.log(err);
@@ -263,12 +328,12 @@ function* handleSearchedDataRequest1(e) {
 // HANDLE ADD ITEM SEARCH
 function* handleAddItemSearchRequest(e) {
   // const navigate = useNavigate();
-
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
   const { searchValue } = e.payload;
   // console.log("SEARCH VALUE", e);
   const response = yield fetch(
     // `${BASE_Url}/search/get-result/Store1/AAAA/${searchValue}`,
-    `${BASE_Url}/search/get-result/Store1/AAAA/${searchValue}`,
+    `${BASE_Url}/search/get-result/${storeId}/${saasId}/${searchValue}`,
     {
       method: "GET",
       headers: {
@@ -280,13 +345,32 @@ function* handleAddItemSearchRequest(e) {
   const jsonData = yield response.json();
 
   console.log("JSONDATA ADD ITEM SEARCH", jsonData);
+
   if (jsonData) {
     if (jsonData) {
       if (jsonData.data) {
+        // ------
+
+        tempSearchArr.map((el) => {
+          el["productQty"] = 1;
+          el["sku"] = "SKU";
+          // el["department"] = "Dept2";
+          el["bill_qty"] = 0;
+          userType === "CUSTOMER" ? (el["name"] = el.item_name) : "";
+          // userType === "CUSTOMER" ? (el["order_qty"] = el.productQty) : "";
+          // userType === "CUSTOMER" ? (el["order_price"] = el.price) : "";
+
+          // el["new_edit_price"] = 0;
+          // el["discount"] = false;
+        });
+
+        // ------
         yield put({
           type: "ComponentPropsManagement/handleAddItemSearchResponse",
           data: jsonData.data,
         });
+      } else {
+        // toast.error(jsonData.message);
       }
     } else {
       yield put({
@@ -294,6 +378,8 @@ function* handleAddItemSearchRequest(e) {
         data: [],
       });
     }
+  } else {
+    // toast.error(jsonData.message);
   }
 }
 
@@ -372,9 +458,13 @@ function* handleCreateSupplierRequest(e) {
 }
 function* handleRecommendedDataRequest() {
   // console.log("***", e.payload);
-  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const { storeId, saasId, userName } = JSON.parse(
+    localStorage.getItem("User_data")
+  );
+  const checkCustomer = userName.includes("C");
+  console.log("SAGA CHECK CUSTOMER", checkCustomer);
   const response = yield fetch(
-    `${BASE_Url}/search/recommended-items/${storeId}/${saasId}`,
+    `${BASE_Url}/search/recommended-item/${storeId}/${saasId}`,
     {
       method: "GET",
       headers: {
@@ -393,7 +483,12 @@ function* handleRecommendedDataRequest() {
       tempSearchArr.map((el) => {
         el["productQty"] = 1;
         el["sku"] = "SKU";
-        el["department"] = "Dept2";
+        // el["department"] = "Dept2";
+        el["bill_qty"] = 0;
+        userType === "CUSTOMER" ? (el["name"] = el.item_name) : "";
+        // userType === "CUSTOMER" ? (el["order_qty"] = el.productQty) : "";
+        // userType === "CUSTOMER" ? (el["order_price"] = el.price) : "";
+
         // el["new_edit_price"] = 0;
         // el["discount"] = false;
       });
@@ -426,7 +521,6 @@ function* handleQRImageRequest(e) {
 
   console.log("FILE", jsonData.url);
   if (jsonData && jsonData.url) {
-    //   const cartData = jsonData.data;
     yield put({
       type: "ComponentPropsManagement/handleQRImageResponse",
       data: jsonData.url,
@@ -437,6 +531,34 @@ function* handleQRImageRequest(e) {
       data: "",
     });
   }
+}
+// GET STORE NAME
+function* handleStoreNameRequest(e) {
+  const { saasId, storeId } = e.payload;
+  console.log("saga", saasId);
+  console.log("saga", storeId);
+  const response = yield fetch(
+    `${BASE_Url}/user-master/get-retailer-store-name/${saasId}/${storeId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response;
+  console.log("STORE JSONDATA", jsonData);
+  // if (jsonData) {
+  //   yield put({
+  //     type: "ComponentPropsManagement/handleStoreNameResponse",
+  //     data: jsonData,
+  //   });
+  // } else {
+  //   yield put({
+  //     type: "ComponentPropsManagement/handleStoreNameResponse",
+  //     data: "",
+  //   });
+  // }
 }
 
 function* handleRegisterUserRequest(e) {
@@ -461,10 +583,10 @@ function* handleRegisterUserRequest(e) {
       //   data: jsonData.data,
       // });
     } else {
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
     }
   } else {
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     // yield put({
     //   type: "ComponentPropsManagement/handleRegisterUserResponse",
     //   data: {},
@@ -503,6 +625,74 @@ function* handleEmailNotificationResponse(e) {
     // });
   }
 }
+// SMS
+function* handelSMSRequest(e) {
+  const { storeId, saasId, userName } = JSON.parse(
+    localStorage.getItem("User_data")
+  );
+  const { pdf, number } = e.payload;
+  console.log("PDF & NUMBER", pdf, number);
+  const response = yield fetch(`${host}sms/mobile/${saasId}/${number}/${pdf}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const jsonData = yield response.json();
+  console.log("JSONDATA", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    toast.success(jsonData.message);
+    // alert(jsonData.message);
+    // const cartData = jsonData.data;
+    // yield put({
+    //   type: "ComponentPropsManagement/handleRegisterUserResponse",
+    //   data: jsonData.data,
+    // });
+    // } else {
+    //   toast.error(jsonData.message);
+    // }
+  } else {
+    // toast.error(jsonData.message);
+    // yield put({
+    //   type: "ComponentPropsManagement/handleRegisterUserResponse",
+    //   data: {},
+    // });
+  }
+}
+// WhatsApp
+function* handlewhatsAppRequest(e) {
+  // console.log("E WAPP", e.payload);
+  const response = yield fetch(`${BASE_Url}/whatsapk/send/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify(e.payload),
+  });
+  const jsonData = yield response.json();
+  console.log("WHATSAPP JSONDATA", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    toast.success(jsonData.message);
+    // alert(jsonData.message);
+    // const cartData = jsonData.data;
+    // yield put({
+    //   type: "ComponentPropsManagement/handleRegisterUserResponse",
+    //   data: jsonData.data,
+    // });
+    // } else {
+    //   toast.error(jsonData.message);
+    // }
+  } else {
+    // toast.error(jsonData.message);
+    // yield put({
+    //   type: "ComponentPropsManagement/handleRegisterUserResponse",
+    //   data: {},
+    // });
+  }
+}
 // ADD Purchase
 function* handleAddPurchaseRequest(e) {
   console.log("E PAYLOAD ADDPURCHASE", e.payload);
@@ -526,10 +716,10 @@ function* handleAddPurchaseRequest(e) {
       //   data: jsonData.data,
       // });
     } else {
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
     }
   } else {
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     // yield put({
     //   type: "ComponentPropsManagement/handleRegisterUserResponse",
     //   data: {},
@@ -554,13 +744,13 @@ function* handleAddItemToStoreRequest(e) {
       toast.success(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleAddItemToStoreResponse",
-        data: jsonData.data.productId,
+        data: jsonData.data,
       });
     } else {
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
     }
   } else {
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleAddItemToStoreResponse",
       data: "",
@@ -589,10 +779,10 @@ function* handleUpdateItemToStoreRequest(e) {
         data: jsonData.data.item_id,
       });
     } else {
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
     }
   } else {
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleAddItemToStoreResponse",
       data: "",
@@ -656,8 +846,7 @@ function* handleCreateRowTaxMasterRequest(e) {
       // });
     }
   } else {
-    toast.error(jsonData.message);
-
+    // toast.error(jsonData.message);
     // yield put({
     //   type: "ComponentPropsManagement/handleSavaTransactionResponse",
     //   data: {},
@@ -693,6 +882,7 @@ function* handleHSNCODERequest() {
     });
   }
 }
+
 // Handle ADD Party
 function* handleAddPartyRequest(e) {
   // const { searchValue } = e.payload;
@@ -720,22 +910,121 @@ function* handleAddPartyRequest(e) {
         data: jsonData,
       });
     } else {
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleAddPartyResponse",
         data: {},
       });
     }
   } else {
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
   }
+}
+// Digital Promotion detail
+function* handelCreateDigitalPromotionRequest(e) {
+  // const { searchValue } = e.payload;
+  // console.log("DIGITAL PROMOTION DETAIL", e);
+  // const { storeId } = e.payload;
+  // console.log("STORE ID", storeId);
+  const response = yield fetch(
+    `${host}digital-promotion/create-digital-promotion-details`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("", jsonData);
+  // if (jsonData) {
+  //   if (jsonData.status === true) {
+  //     toast.success(jsonData.message);
+  //     yield put({
+  //       type: "ComponentPropsManagement/handelCreateDigitalPromotionResponse",
+  //       data: jsonData,
+  //     });
+  //   } else {
+  //     toast.error(jsonData.message);
+  //     yield put({
+  //       type: "ComponentPropsManagement/handelCreateDigitalPromotionResponse",
+  //       data: {},
+  //     });
+  //   }
+  // } else {
+  //   toast.error(jsonData.message);
+  // }
+}
+// PROMOTION ASSETS
+function* handelPromotionAssetsRequest(e) {
+  const response = yield fetch(
+    `${host}digital-promotion/create-digital-promotion-master`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("", jsonData);
+  // if (jsonData) {
+  //   if (jsonData.status === true) {
+  //     toast.success(jsonData.message);
+  //     yield put({
+  //       type: "ComponentPropsManagement/handelCreateDigitalPromotionResponse",
+  //       data: jsonData,
+  //     });
+  //   } else {
+  //     toast.error(jsonData.message);
+  //     yield put({
+  //       type: "ComponentPropsManagement/handelCreateDigitalPromotionResponse",
+  //       data: {},
+  //     });
+  //   }
+  // } else {
+  //   toast.error(jsonData.message);
+  // }
+}
+// Add Purchase => inventory-master/inventory
+function* handleInventoryMasterRequest(e) {
+  // const { searchValue } = e.payload;
+  // console.log("E ADD PARTY", e);
+  // const { storeId } = e.payload;
+  // console.log("STORE ID", storeId);
+  const response = yield fetch(`${BASE_Url}/inventory-master/inventory`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify(e.payload),
+  });
+  const jsonData = yield response.json();
+  console.log("inventory-master/inventory", jsonData);
+
+  // if (jsonData) {
+  //   if (jsonData.status === true) {
+  //     toast.success(jsonData.message);
+  //     yield put({
+  //       type: "ComponentPropsManagement/handleAddPartyResponse",
+  //       data: jsonData,
+  //     });
+  //   } else {
+  //     toast.error(jsonData.message);
+  //     yield put({
+  //       type: "ComponentPropsManagement/handleAddPartyResponse",
+  //       data: {},
+  //     });
+  //   }
+  // } else {
+  //   toast.error(jsonData.message);
+  // }
 }
 // Handle Tax Rates
 function* handleTaxRatesRequest() {
-  // const { searchValue } = e.payload;
-  // console.log("E SAVE TRANSACTION", e);
-  // const { storeId } = e.payload;
-  // console.log("STORE ID", storeId);
   const response = yield fetch(`${BASE_Url}/tax/get-taxes`, {
     method: "GET",
     headers: {
@@ -761,6 +1050,34 @@ function* handleTaxRatesRequest() {
     yield put({
       type: "ComponentPropsManagement/handleTaxRatesResponse",
       data: "",
+    });
+  }
+}
+// Handle Debit note
+function* handleXYZRequest() {
+  const response = yield fetch(
+    `http://3.111.70.84:8088/test/api/v1/Debit/view-debitnote/8/2023-07-27`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("DEBITNOTE JSONSDATA", jsonData);
+  // console.log("TAX RATE JSONDATA", jsonData);
+  if (jsonData) {
+    if (jsonData && jsonData.data) {
+      yield put({
+        type: "ComponentPropsManagement/handleXYZResponse",
+        data: jsonData.data,
+      });
+    }
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleXYZResponse",
+      data: [],
     });
   }
 }
@@ -796,16 +1113,17 @@ function* handleDeleteCartItemRequest(e) {
 }
 
 function* handleUploadPicRequest(e) {
-  // console.log(object);
-  const { save_product_id, formdata } = e.payload;
+  const { formData, save_product_id } = e.payload;
+
+  console.log("FORM DATA IMAGE", formData);
   const response = yield fetch(
-    `${BASE_Url}/item/save-image/${save_product_id}`,
+    `${BASE_Url}/item/save-image/${save_product_id.item_id}`,
     {
       method: "POST",
       // headers: {
       //   "Content-Type": "application/json",
       // },
-      body: formdata,
+      body: formData,
     }
   );
   const jsonData = yield response.json();
@@ -851,16 +1169,16 @@ function* handleUploadItemRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleUploadItemResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - dashboard/upload-items`);
+    // toast.error(`${err.message} - dashboard/upload-items`);
   }
 }
 
@@ -890,16 +1208,16 @@ function* handleUploadInventoryRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleUploadInventoryResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - dashboard/upload-inventory`);
+    // toast.error(`${err.message} - dashboard/upload-inventory`);
   }
 }
 
@@ -933,16 +1251,16 @@ function* handleSalesOverviewRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleSalesOverviewResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - inventory-master/inventory-dashboard`);
+    // toast.error(`${err.message} - inventory-master/inventory-dashboard`);
   }
 }
 
@@ -970,16 +1288,16 @@ function* handleLastWeekSalesRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleLastWeekSalesResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - dashboard/last-week-sales`);
+    // toast.error(`${err.message} - dashboard/last-week-sales`);
   }
 }
 
@@ -1010,16 +1328,16 @@ function* handleLastMonthSalesRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleLastMonthSalesResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - dashboard/last-month-sales`);
+    // toast.error(`${err.message} - dashboard/last-month-sales`);
   }
 }
 
@@ -1058,16 +1376,16 @@ function* handleTodaySalesRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleTodaySalesResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - dashboard/today-sales`);
+    // toast.error(`${err.message} - dashboard/today-sales`);
   }
 }
 
@@ -1088,27 +1406,24 @@ function* handleNumberOfCustomerRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleNumberOfCustomerResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(`${err.message} - inventory-master/total-customer`);
+    // toast.error(`${err.message} - inventory-master/total-customer`);
   }
 }
 
 function* handleLowStockItemsRequest(e) {
-  // var myHeaders = new Headers();
-  // myHeaders.append("Authorization", `Bearer ${ token }`)
   const response = yield fetch(
     `${host}inventory-master/inventory-less-closing-quantity`,
     {
       method: "GET",
-      // headers: myHeaders,
     }
   );
   const jsonData = yield response.json();
@@ -1120,13 +1435,41 @@ function* handleLowStockItemsRequest(e) {
       });
       return;
     }
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleLowStockItemsResponse",
       data: null,
     });
   } else {
-    toast.error("Something went wrong server side");
+    // toast.error("Something went wrong server side");
+  }
+}
+// Customer List for Marketing
+function* handelCustomerListRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const response = yield fetch(
+    `${host}digital-promotion/get-customer-list/${saasId}`,
+    {
+      method: "GET",
+    }
+  );
+  const jsonData = yield response.json();
+  // console.log("Customer List for Marketing", jsonData);
+  if (jsonData) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handelCustomerListResponse",
+        data: jsonData.data,
+      });
+      return;
+    }
+    // toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handelCustomerListResponse",
+      data: [],
+    });
+  } else {
+    // toast.error("Something went wrong server side");
   }
 }
 
@@ -1146,225 +1489,13 @@ function* handleLowStockItemListRequest(e) {
       });
       return;
     }
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleLowStockItemListResponse",
       data: null,
     });
   } else {
-    toast.error("Something went wrong server side");
-  }
-}
-
-// Debit note
-
-function* handleDebitNoteMisListRequest() {
-
-  const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/Debit/view-debitnote/8/2023-07-27 `, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const jsonData = yield response.json();
-  console.log("DEBIT NOTE", jsonData);
-  if (jsonData) {
-    // if (jsonData && jsonData.data) {
-    if (jsonData.status === true) {
-      yield put({
-        type: "ComponentPropsManagement/handleDebitNoteMisListResponse",
-        // data: jsonData,
-        data: { list: jsonData.data, totalCount: jsonData.count },
-      });
-    }
-    toast.error(jsonData.message);
-  } else {
-    yield put({
-      type: "ComponentPropsManagement/handleDebitNoteMisListResponse",
-      data: "",
-    });
-  }
-}
-
-// Challan
-
-function* handleChallanMisListRequest() {
-
-  const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/Debit/view-debitchalan/8/2023-07-27 `, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const jsonData = yield response.json();
-  console.log("Challan in saga", jsonData);
-  if (jsonData) {
-    // if (jsonData && jsonData.data) {
-    if (jsonData.status === true) {
-      yield put({
-        type: "ComponentPropsManagement/handleChallanMisListResponse",
-        // data: jsonData,
-        data: { list: jsonData.data, totalCount: jsonData.count },
-      });
-    }
-    toast.error(jsonData.message);
-  } else {
-    yield put({
-      type: "ComponentPropsManagement/handleChallanMisListResponse",
-      data: "",
-    });
-  }
-}
-
-
-// DaySale
-
-function* handleDaySaleMisListRequest() {
-
-  const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/dashboard/get-invoices-detatils/8/2023-07-01/2023-07-30 `, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const jsonData = yield response.json();
-  console.log("DaySale in saga", jsonData);
-  if (jsonData) {
-    // if (jsonData && jsonData.data) {
-    if (jsonData.status === true) {
-      yield put({
-        type: "ComponentPropsManagement/handleDaySaleMisListResponse",
-        // data: jsonData,
-        data: { list: jsonData.data, totalCount: jsonData.count },
-      });
-    }
-    toast.error(jsonData.message);
-  } else {
-    yield put({
-      type: "ComponentPropsManagement/handleDaySaleMisListResponse",
-      data: "",
-    });
-  }
-}
-
-// Purchase
-
-function* handlePurchaseMisListRequest() {
-
-  const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/purchase/purchase-view/3/30001/2023-06-21`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const jsonData = yield response.json();
-  console.log("Purchase in saga", jsonData);
-  if (jsonData) {
-    // if (jsonData && jsonData.data) {
-    if (jsonData.status === true) {
-      yield put({
-        type: "ComponentPropsManagement/handlePurchaseMisListResponse",
-        // data: jsonData,
-        data: { list: jsonData.data, totalCount: jsonData.count },
-      });
-    }
-    toast.error(jsonData.message);
-  } else {
-    yield put({
-      type: "ComponentPropsManagement/handlePurchaseMisListResponse",
-      data: "",
-    });
-  }
-}
-
-// Baikhata
-
-function* handleBaikhataMisListRequest() {
-
-  const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/bahikhata/view-bahikhata-details/8/2022-05-25`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const jsonData = yield response.json();
-  console.log("Baikhata in saga", jsonData);
-  if (jsonData) {
-    // if (jsonData && jsonData.data) {
-    if (jsonData.status === true) {
-      yield put({
-        type: "ComponentPropsManagement/handleBaikhataMisListResponse",
-        // data: jsonData,
-        data: { list: jsonData.data, totalCount: jsonData.count },
-      });
-    }
-    toast.error(jsonData.message);
-  } else {
-    yield put({
-      type: "ComponentPropsManagement/handleBaikhataMisListResponse",
-      data: "",
-    });
-  }
-}
-
-// Expenses
-
-function* handleExpensesMisListRequest() {
-
-  const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/expense/view-expenses/8/2023-07-23`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const jsonData = yield response.json();
-  console.log("Expenses in saga", jsonData);
-  if (jsonData) {
-    // if (jsonData && jsonData.data) {
-    if (jsonData.status === true) {
-      yield put({
-        type: "ComponentPropsManagement/handleExpensesMisListResponse",
-        // data: jsonData,
-        data: { list: jsonData.data, totalCount: jsonData.count },
-      });
-    }
-    toast.error(jsonData.message);
-  } else {
-    yield put({
-      type: "ComponentPropsManagement/handleExpensesMisListResponse",
-      data: "",
-    });
-  }
-}
-
-// Ledger
-
-function* handleLedgerMisListRequest() {
-
-  // const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/ledger/getledgerfromto/2023-07-27/2023-07-30/8/80001`, {
-    const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/ledger/getledgerfromto/2023-07-27/2023-07-30/8/80001`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const jsonData = yield response.json();
-  console.log("Ledger in saga", jsonData);
-  if (jsonData) {
-    // if (jsonData && jsonData.data) {
-    if (jsonData.status === true) {
-      yield put({
-        type: "ComponentPropsManagement/handleLedgerMisListResponse",
-        // data: jsonData,
-        data: { list: jsonData.data, totalCount: jsonData.count },
-      });
-    }
-    toast.error(jsonData.message);
-  } else {
-    yield put({
-      type: "ComponentPropsManagement/handleLedgerMisListResponse",
-      data: "",
-    });
+    // toast.error("Something went wrong server side");
   }
 }
 
@@ -1387,13 +1518,13 @@ function* handleQuantityInHandRequest(e) {
       });
       return;
     }
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleQuantityInHandResponse",
       data: null,
     });
   } else {
-    toast.error("Something went wrong server side");
+    // toast.error("Something went wrong server side");
   }
 }
 
@@ -1416,20 +1547,19 @@ function* handleNoOfItemRequest(e) {
       });
       return;
     }
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleNoOfItemResponse",
       data: null,
     });
   } else {
-    toast.error("Something went wrong server side");
+    // toast.error("Something went wrong server side");
   }
 }
 
 function* handleLastFourteenDaysSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-
   const response = yield fetch(
     `${host}dashboard/last-fourteen-days-sales/${saasId}`,
     {
@@ -1437,7 +1567,6 @@ function* handleLastFourteenDaysSalesRequest(e) {
       // headers: myHeaders,
     }
   );
-
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
@@ -1447,20 +1576,19 @@ function* handleLastFourteenDaysSalesRequest(e) {
       });
       return;
     }
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleLastFourteenDaysSalesResponse",
       data: null,
     });
   } else {
-    toast.error("Something went wrong server side");
+    // toast.error("Something went wrong server side");
   }
 }
 
 function* handleLastSixtyDaysSalesRequest(e) {
   // var myHeaders = new Headers();
   // myHeaders.append("Authorization", `Bearer ${ token }`)
-
   const response = yield fetch(
     `${host}dashboard/last-sixty-days-sales/${saasId}`,
     {
@@ -1468,7 +1596,6 @@ function* handleLastSixtyDaysSalesRequest(e) {
       // headers: myHeaders,
     }
   );
-
   const jsonData = yield response.json();
   if (jsonData) {
     if (jsonData.status === true) {
@@ -1478,13 +1605,39 @@ function* handleLastSixtyDaysSalesRequest(e) {
       });
       return;
     }
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleLastSixtyDaysSalesResponse",
       data: null,
     });
   } else {
-    toast.error("Something went wrong server side");
+    // toast.error("Something went wrong server side");
+  }
+}
+// ADD CATEGORY
+function* handelAddcategoryRequest(e) {
+  const response = yield fetch(`${host}category/store/category`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(e.payload),
+  });
+  const jsonData = yield response.json();
+  if (jsonData) {
+    if (jsonData.status === true) {
+      toast.success(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleLastSixtyDaysSalesResponse",
+        data: jsonData,
+      });
+    }
+    // yield put({
+    //   type: "ComponentPropsManagement/handleLastSixtyDaysSalesResponse",
+    //   data: null,
+    // });
+  } else {
+    // toast.error("Something went wrong server side");
   }
 }
 
@@ -1504,13 +1657,238 @@ function* handleYesterdaySalesRequest(e) {
       });
       return;
     }
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleYesterdaySalesResponse",
       data: null,
     });
   } else {
-    toast.error("Something went wrong server side");
+    // toast.error("Something went wrong server side");
+  }
+}
+
+// Debit note
+
+function* handleDebitNoteMisListRequest() {
+  const response = yield fetch(
+    `${BASE_Url}/Debit/view-debitnote/8/2023-07-27 `,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("DEBIT NOTE", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleDebitNoteMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    // toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleDebitNoteMisListResponse",
+      data: "",
+    });
+  }
+}
+
+// Challan
+
+function* handleChallanMisListRequest() {
+  const response = yield fetch(
+    `${BASE_Url}/Debit/view-debitchalan/8/2023-07-27 `,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("Challan in saga", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleChallanMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    // toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleChallanMisListResponse",
+      data: "",
+    });
+  }
+}
+
+// DaySale
+
+function* handleDaySaleMisListRequest() {
+  const response = yield fetch(
+    `${BASE_Url}/dashboard/get-invoices-detatils/8/2023-07-01/2023-07-30 `,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("DaySale in saga", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleDaySaleMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    // toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleDaySaleMisListResponse",
+      data: "",
+    });
+  }
+}
+
+// Purchase
+
+function* handlePurchaseMisListRequest() {
+  const response = yield fetch(
+    `${BASE_Url}/purchase/purchase-view/3/30001/2023-06-21`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("Purchase in saga", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handlePurchaseMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    // toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handlePurchaseMisListResponse",
+      data: "",
+    });
+  }
+}
+
+// Baikhata
+
+function* handleBaikhataMisListRequest() {
+  const response = yield fetch(
+    `${BASE_Url}/bahikhata/view-bahikhata-details/8/2022-05-25`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("Baikhata in saga", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleBaikhataMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    // toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleBaikhataMisListResponse",
+      data: "",
+    });
+  }
+}
+
+// Expenses
+
+function* handleExpensesMisListRequest() {
+  const response = yield fetch(
+    `${BASE_Url}/expense/view-expenses/8/2023-07-23`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("Expenses in saga", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleExpensesMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    // toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleExpensesMisListResponse",
+      data: "",
+    });
+  }
+}
+
+// Ledger
+
+function* handleLedgerMisListRequest() {
+  // const response = yield fetch(`http://3.111.70.84:8088/test/api/v1/ledger/getledgerfromto/2023-07-27/2023-07-30/8/80001`, {
+  const response = yield fetch(
+    `${BASE_Url}/ledger/getledgerfromto/2023-07-27/2023-07-30/8/80001`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("Ledger in saga", jsonData);
+  if (jsonData) {
+    // if (jsonData && jsonData.data) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleLedgerMisListResponse",
+        // data: jsonData,
+        data: { list: jsonData.data, totalCount: jsonData.count },
+      });
+    }
+    // toast.error(jsonData.message);
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handleLedgerMisListResponse",
+      data: "",
+    });
   }
 }
 
@@ -1542,13 +1920,13 @@ function* handleGstTypeDropdownRequest(e) {
       });
       return;
     }
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleGstTypeDropdownResponse",
       data: null,
     });
   } else {
-    toast.error("Something went wrong server side");
+    // toast.error("Something went wrong server side");
   }
 }
 
@@ -1570,13 +1948,13 @@ function* handleGetHsnCodeDropdownRequest(e) {
       });
       return;
     }
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleGetHsnCodeDropdownResponse",
       data: null,
     });
   } else {
-    toast.error("Something went wrong server side");
+    // toast.error("Something went wrong server side");
   }
 }
 
@@ -1595,23 +1973,23 @@ function* handleSalesDashboardChartRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleSalesDashboardChartResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
 function* handleSalesReportRequest(e) {
   try {
     const response = yield fetch(
-      `${host}tax/get-sales-report/${e.payload}/${storeId}/${saasId}`,
+      `https://pos.photonsoftwares.com/prod/api/v1/tax/get-sales-report/${e.payload}/${storeId}/${saasId}`,
       {
         method: "GET",
       }
@@ -1626,16 +2004,16 @@ function* handleSalesReportRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleSalesReportResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -1654,16 +2032,16 @@ function* handleGstReportRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleGstReportResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -1682,16 +2060,16 @@ function* handleGstReportItemRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleGstReportItemResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -1699,7 +2077,7 @@ function* handleItemMasterListRequest(e) {
   try {
     const { currentPage } = e.payload;
     const response = yield fetch(
-      `${host}item/get-item-list/${saasId}/${currentPage}`,
+      `https://pos.photonsoftwares.com/prod/api/v1/item/get-item-list/${saasId}/${currentPage}`,
       {
         method: "GET",
       }
@@ -1714,16 +2092,16 @@ function* handleItemMasterListRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleItemMasterListResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -1751,16 +2129,16 @@ function* handleTenderReportRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleTenderReportResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -1783,16 +2161,16 @@ function* handleUpdateMoqRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleUpdateMoqResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -1815,16 +2193,16 @@ function* handleUpdatePriceRequest(e) {
         });
         return;
       }
-      toast.error(jsonData.message);
+      // toast.error(jsonData.message);
       yield put({
         type: "ComponentPropsManagement/handleUpdatePriceResponse",
         data: null,
       });
     } else {
-      toast.error("Something went wrong server side");
+      // toast.error("Something went wrong server side");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 // Create Row in Tax Master
@@ -1847,13 +2225,43 @@ function* handleCreateTaxMasterRequest(e) {
           data: jsonData.data,
         });
       } else {
-        toast.error(jsonData.message);
+        // toast.error(jsonData.message);
       }
     } else {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
+  }
+}
+//  Saas Master.......... handleCreateSaasMasterRequest
+
+function* handleCreateSaasMasterRequest(e) {
+  try {
+    const response = yield fetch(`${BASE_Url}/saas-master/add-saas`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(e.payload),
+    });
+    const jsonData = yield response.json();
+    console.log("E TAX MASTER JSONDATA", jsonData);
+    if (jsonData) {
+      if (jsonData.status === true) {
+        toast.success(jsonData.message);
+        yield put({
+          type: "ComponentPropsManagement/handleCreateSaasMasterResponse",
+          data: jsonData.data,
+        });
+      } else {
+        // toast.error(jsonData.message);
+      }
+    } else {
+      // toast.error("Something went wrong");
+    }
+  } catch (err) {
+    // toast.error(err.message);
   }
 }
 
@@ -1881,13 +2289,13 @@ function* handleExpenseCategoryDropdownRequest(e) {
           data: [],
         });
       } else {
-        toast.error(jsonData.message);
+        // toast.error(jsonData.message);
       }
     } else {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -1914,19 +2322,18 @@ function* handleExpenseCreateRequest(e) {
           type: "ComponentPropsManagement/handleExpenseCreateResponse",
           data: null,
         });
-        toast.error(jsonData.message);
+        // toast.error(jsonData.message);
       }
     } else {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 // --------------
 
 function* pendingOrderCartDataRequest(e) {
-  const { order_id } = e.payload;
   const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
   console.log("E ORDER=>", e);
   console.log("E FOR ORDER ID", e);
@@ -1934,7 +2341,7 @@ function* pendingOrderCartDataRequest(e) {
     const { order_id } = e.payload;
     const response = yield fetch(
       // `${host}order/view-order-detail/${storeId}/${saasId}${order_id}`,
-      `http://3.111.70.84:8088/test/api/v1/order/view-order-detail/${storeId}/${saasId}/${order_id}`,
+      `${host}order/view-order-detail/${storeId}/${saasId}/${order_id}`,
       {
         method: "GET",
         headers: {
@@ -1957,13 +2364,13 @@ function* pendingOrderCartDataRequest(e) {
           type: "ComponentPropsManagement/pendingOrderCartDataResponse",
           data: null,
         });
-        toast.error(jsonData.message);
+        // toast.error(jsonData.message);
       }
     } else {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -1974,8 +2381,8 @@ function* handleViewOrderPendingRequest(e) {
   try {
     const date = new Date();
     const response = yield fetch(
-      `${host}order/view-order/${moment(date).format("Y-MM-DD")}/${saasId}`,
-      // `${host}order/view-order/2023-07-19/${saasId}`,
+      // `${host}order/view-order/${moment(date).format("Y-MM-DD")}/${saasId}`,
+      `${host}order/view-order/${saasId}`,
       {
         // const response = yield fetch(`${host}order/view-order/2023-07-13/saas123`, {
         method: "GET",
@@ -1986,7 +2393,7 @@ function* handleViewOrderPendingRequest(e) {
       }
     );
     const jsonData = yield response.json();
-    // console.log("ALL LIST ORDERS", jsonData);
+    console.log("ALL LIST ORDERS", jsonData);
     if (jsonData) {
       if (jsonData.status === true) {
         yield put({
@@ -1999,13 +2406,13 @@ function* handleViewOrderPendingRequest(e) {
           type: "ComponentPropsManagement/handleViewOrderPendingResponse",
           data: null,
         });
-        toast.error(jsonData.message);
+        // toast.error(jsonData.message);
       }
     } else {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -2015,7 +2422,7 @@ function* handleViewOrderPendingRequest(e) {
 function* handleMemberEnrollmentRequest(e) {
   console.log("E PAYLOAD ENROLLMENT", e.payload);
 
-  const response = yield fetch(`${BASE_Url}loyalty/customer`, {
+  const response = yield fetch(`${LOYALTY_BASE_URL}/loyalty/customer`, {
     // const response = yield fetch(`${BASE_Url}/loyalty/customer`, {
     method: "POST",
     headers: {
@@ -2025,23 +2432,23 @@ function* handleMemberEnrollmentRequest(e) {
   });
   const jsonData = yield response.json();
   console.log("JSONDATA MEMBER ENRL", jsonData);
-  // if (jsonData) {
-  //   if (jsonData.status === true) {
-  //     toast.success(jsonData.messag);
-  //     // yield put({
-  //     //   type: "ComponentPropsManagement/handleYesterdaySalesResponse",
-  //     //   data: jsonData,
-  //     // });
-  //     // return;
-  //   }
-  //   toast.error(jsonData.message);
-  //   yield put({
-  //     type: "ComponentPropsManagement/handleYesterdaySalesResponse",
-  //     data: null,
-  //   });
-  // } else {
-  //   toast.error("Something went wrong server side");
-  // }
+  if (jsonData) {
+    if (jsonData.status === true) {
+      toast.success(jsonData.message);
+      // yield put({
+      //   type: "ComponentPropsManagement/handleYesterdaySalesResponse",
+      //   data: jsonData,
+      // });
+      // return;
+    }
+    // toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleYesterdaySalesResponse",
+      data: null,
+    });
+  } else {
+    // toast.error("Something went wrong server side");
+  }
 }
 
 // Accruval Loyalty
@@ -2106,13 +2513,49 @@ function* handleDebitNoteRequest(e) {
           data: jsonData.data,
         });
       } else {
-        toast.error(jsonData.message);
+        // toast.error(jsonData.message);
       }
     } else {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
+  }
+}
+
+//user master
+
+function* handleCreateUserMasterRequest(e) {
+  // const { searchValue } = e.payload;
+  console.log("E ADD PARTY", e);
+  // const { storeId } = e.payload;
+  // console.log("STORE ID", storeId);
+  const response = yield fetch(`${BASE_Url}/user-master/add-user`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify(e.payload),
+  });
+  const jsonData = yield response.json();
+  console.log("ADD PARTY DATA", jsonData);
+  if (jsonData) {
+    if (jsonData.status === true) {
+      toast.success(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleAddPartyResponse",
+        data: jsonData,
+      });
+    } else {
+      // toast.error(jsonData.message);
+      yield put({
+        type: "ComponentPropsManagement/handleAddPartyResponse",
+        data: {},
+      });
+    }
+  } else {
+    // toast.error(jsonData.message);
   }
 }
 // Delivery node
@@ -2136,13 +2579,13 @@ function* handleDeliveryNoteRequest(e) {
           data: jsonData.data,
         });
       } else {
-        toast.error(jsonData.message);
+        // toast.error(jsonData.message);
       }
     } else {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -2178,13 +2621,13 @@ function* handleDelGetUserRequest(e) {
           data: arr,
         });
       } else {
-        toast.error(jsonData.message);
+        // toast.error(jsonData.message);
       }
     } else {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -2220,6 +2663,37 @@ function* handleGetPatyNameRequest(e) {
     });
   }
 }
+function* handelgetOrderDetailsRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const response = yield fetch(
+    `${BASE_Url}/order/get-order-details/${saasId}/${storeId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("status JSONDATA", jsonData);
+  if (jsonData) {
+    if (jsonData && jsonData.data) {
+      // const arr = [];
+      // jsonData.data.map((item) => {
+      //   arr.push({ label: item, value: item });
+      // });
+      yield put({
+        type: "ComponentPropsManagement/handelgetOrderDetailsResponse",
+        data: jsonData.data,
+      });
+    }
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handelgetOrderDetailsResponse",
+      data: [],
+    });
+  }
+}
 // handleLinkLoyaltyRequest
 function* handleLinkLoyaltyRequest(e) {
   console.log("SEARCH LINK MOBILE", e);
@@ -2237,17 +2711,18 @@ function* handleLinkLoyaltyRequest(e) {
       }
     );
     const jsonData = yield response.json();
-    console.log("JSONDATA E USER", jsonData);
-    if (jsonData) {
+    console.log("JSONDATA loyalty data", jsonData);
+    // 9877678
+    if (jsonData && jsonData.data) {
       yield put({
         type: "ComponentPropsManagement/handleLinkLoyaltyResponse",
         data: jsonData,
       });
     } else {
-      // toast.error("Something went wrong");
+      // toast.error(jsonData.error_message);
     }
   } catch (err) {
-    // toast.error(err.message);
+    // toast.error("No data Found");
   }
 }
 function* handleLinkCustomerRequest(e) {
@@ -2307,7 +2782,7 @@ function* handleRedeemPointRequest(e) {
     //     toast.error("Something went wrong");
     //   }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -2330,13 +2805,38 @@ function* handleSearchInvoiceRequest(e) {
       });
       return;
     }
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleSearchInvoiceResponse",
       data: [],
     });
   } else {
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
+  }
+}
+
+// Search handlePurchaseRequest
+function* handelPurchaseRequest(e) {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
+  const date = new Date();
+  const response = yield fetch(
+    `http://3.111.70.84:8088/test/api/v1/ledger/getLedger/2023-07-27/8/80001`,
+    {
+      method: "GET",
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("Done by prince", jsonData);
+  if (jsonData) {
+    yield put({
+      type: "ComponentPropsManagement/handelPurchaseResponse",
+      data: jsonData.data,
+    });
+  } else {
+    yield put({
+      type: "ComponentPropsManagement/handelPurchaseResponse",
+      data: "",
+    });
   }
 }
 
@@ -2354,35 +2854,35 @@ function* handleViewOrderRequest(e) {
   );
   const jsonData = yield response.json();
   console.log("JSONDATA VIEW ORDER", jsonData.data);
-  if (jsonData) {
-    const arr = jsonData.data;
-    arr.map((el) => {
-      el["discount"] = 0;
-      el["sku"] = "SKU";
-      el["description"] = "description";
-      el["tax"] = 0.0;
-      el["department"] = "Dept2";
-      el["promoId"] = "123";
-      el["discount_menu_is_open"] = false;
-      el["discount_value"] = 0;
-      // item["discount_menu_is_open"] = false;
-    });
-    if (jsonData.status === true) {
-      yield put({
-        type: "ComponentPropsManagement/handleViewOrderResponse",
-        // data: jsonData.data,
-        data: arr,
-      });
-      return;
-    }
-    toast.error(jsonData.message);
-    yield put({
-      type: "ComponentPropsManagement/handleViewOrderResponse",
-      data: [],
-    });
-  } else {
-    toast.error(jsonData.message);
-  }
+  // if (jsonData) {
+  //   const arr = jsonData.data;
+  //   arr.map((el) => {
+  //     el["discount"] = 0;
+  //     el["sku"] = "SKU";
+  //     el["description"] = "description";
+  //     el["tax"] = 0.0;
+  //     el["department"] = "Dept2";
+  //     el["promoId"] = "123";
+  //     el["discount_menu_is_open"] = false;
+  //     el["discount_value"] = 0;
+  //     // item["discount_menu_is_open"] = false;
+  //   });
+  //   if (jsonData.status === true) {
+  //     yield put({
+  //       type: "ComponentPropsManagement/handleViewOrderResponse",
+  //       // data: jsonData.data,
+  //       data: arr,
+  //     });
+  //     return;
+  //   }
+  //   toast.error(jsonData.message);
+  //   yield put({
+  //     type: "ComponentPropsManagement/handleViewOrderResponse",
+  //     data: [],
+  //   });
+  // } else {
+  //   toast.error(jsonData.message);
+  // }
 }
 
 // View order By orderDate and saasId
@@ -2404,13 +2904,132 @@ function* handleViewOrderBySaasIdAndOrderIdRequest(e) {
       });
       return;
     }
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
     yield put({
       type: "ComponentPropsManagement/handleViewOrderBySaasIdAndOrderIdResponse",
       data: [],
     });
   } else {
-    toast.error(jsonData.message);
+    // toast.error(jsonData.message);
+  }
+}
+// View order By Customer
+function* handleViewOrderByCustomerRequest(e) {
+  const { storeId, saasId, userName } = JSON.parse(
+    localStorage.getItem("User_data")
+  );
+  const response = yield fetch(
+    `${BASE_Url}/order/view-order-customer/${saasId}/${userName}`,
+    {
+      method: "GET",
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("__CUSTOMER", jsonData);
+  if (jsonData) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleViewOrderByCustomerResponse",
+        data: jsonData.data,
+      });
+      return;
+    }
+    // toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleViewOrderBySaasIdAndOrderIdResponse",
+      data: [],
+    });
+  } else {
+    // toast.error(jsonData.message);
+  }
+}
+// Category
+function* handleCategoriesRequest(e) {
+  const { storeId, saasId, userName } = JSON.parse(
+    localStorage.getItem("User_data")
+  );
+  const response = yield fetch(`${BASE_Url}/item/get/category/${saasId}`, {
+    method: "GET",
+  });
+  const jsonData = yield response.json();
+  console.log("__CATEGORY", jsonData);
+  if (jsonData) {
+    if (jsonData.status === true) {
+      yield put({
+        type: "ComponentPropsManagement/handleCategoriesResponse",
+        data: jsonData.data,
+      });
+      return;
+    }
+    // toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleCategoriesResponse",
+      data: [],
+    });
+  } else {
+    // toast.error(jsonData.message);
+  }
+}
+
+// get all data by category
+function* handleAllDataByCategoryRequest(e) {
+  console.log(e.payload);
+  const { el } = e.payload;
+  const { storeId, saasId, userName } = JSON.parse(
+    localStorage.getItem("User_data")
+  );
+  const response = yield fetch(
+    // `${BASE_Url}/item/get/item/List/${"GROCERY"}/${saasId}`,
+    `${BASE_Url}/item/get/item/List/${el}/${saasId}`,
+    {
+      method: "GET",
+    }
+  );
+  const jsonData = yield response.json();
+  console.log("CATEGORIES_____-_", jsonData);
+  if (jsonData) {
+    if (jsonData.status === true) {
+      const tempSearchArr = jsonData.data;
+      tempSearchArr.map((el) => {
+        el["productQty"] = 1;
+        el["item_id"] = el.productId;
+        el["item_name"] = el.category;
+        el["tax_percent"] = el.taxPercent;
+        el["saas_id"] = el.saasId;
+        el["store_id"] = el.storeId;
+        el["promo_id"] = el.promoId;
+        el["image_name"] = el.imageName;
+        el["hsn_code"] = el.hsnCode;
+        el["tax_rate"] = el.taxRate;
+        el["tax_code"] = el.taxCode;
+        el["new_price"] = el.price;
+        el["discount_menu_is_open"] = false;
+        el["discount_value"] = "";
+        el["amount_value"] = "";
+        el["zero_price"] = "";
+        el["sku"] = "SKU";
+        // el["department"] = "Dept2";
+        el["bill_qty"] = 0;
+        userType === "CUSTOMER" ? (el["name"] = el.item_name) : "";
+        // userType === "CUSTOMER" ? (el["order_qty"] = el.productQty) : "";
+        // userType === "CUSTOMER" ? (el["order_price"] = el.price) : "";
+
+        // el["new_edit_price"] = 0;
+        // el["discount"] = false;
+      });
+      yield put({
+        type: "ComponentPropsManagement/handleAllDataByCategoryResponse",
+        data: tempSearchArr,
+      });
+      return;
+    }
+    // toast.error(jsonData.message);
+    yield put({
+      type: "ComponentPropsManagement/handleAllDataByCategoryResponse",
+      data: [],
+    });
+  } else {
+    // toast.error(jsonData.message);
   }
 }
 
@@ -2437,18 +3056,18 @@ function* updateInvoicedRequest(e) {
     if (jsonData) {
       if (jsonData.status === true) {
         toast.success(jsonData.message);
-        yield put({
-          type: "ComponentPropsManagement/handleCreateTaxMasterResponse",
-          data: jsonData.data,
-        });
+        // yield put({
+        //   type: "ComponentPropsManagement/handleCreateTaxMasterResponse",
+        //   data: jsonData.data,
+        // });
       } else {
-        toast.error(jsonData.message);
+        // toast.error(jsonData.message);
       }
     } else {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     }
   } catch (err) {
-    toast.error(err.message);
+    // toast.error(err.message);
   }
 }
 
@@ -2470,9 +3089,13 @@ function* handleCreateOrderRequest(e) {
   //       type: "ComponentPropsManagement/handleCreateOrderResponse",
   //       data: jsonData.data,
   //     });
-  //     return;
+  //     toast.success(jsonData.message);
+  //     // setTimeout(() => {
+  //     //   window.location.reload();
+  //     // }, 1000);
+  //     // return;
   //   }
-  //   toast.error(jsonData.message);
+  //   // toast.error(jsonData.message);
   //   yield put({
   //     type: "ComponentPropsManagement/handleCreateOrderResponse",
   //     data: [],
@@ -2519,6 +3142,42 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleGstReportItemRequest",
     handleGstReportItemRequest
   );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleDebitNoteMisListRequest",
+    handleDebitNoteMisListRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleChallanMisListRequest",
+    handleChallanMisListRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleDaySaleMisListRequest",
+    handleDaySaleMisListRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handlePurchaseMisListRequest",
+    handlePurchaseMisListRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleBaikhataMisListRequest",
+    handleBaikhataMisListRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleExpensesMisListRequest",
+    handleExpensesMisListRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleLedgerMisListRequest",
+    handleLedgerMisListRequest
+  );
+
   yield takeEvery(
     "ComponentPropsManagement/handleRegisterRequest",
     handleRegisterRequest
@@ -2531,6 +3190,10 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handlePartyNameDataRequest",
     handlePartyNameDataRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handelCustomerListRequest",
+    handelCustomerListRequest
   );
   yield takeEvery(
     "ComponentPropsManagement/handleRegisterUserRequest",
@@ -2561,41 +3224,6 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleSearchedDataRequest",
     handleSearchedDataRequest
-  );
-  yield takeEvery(
-    "ComponentPropsManagement/handleDebitNoteMisListRequest",
-    handleDebitNoteMisListRequest
-  );
-
-  yield takeEvery(
-    "ComponentPropsManagement/handleChallanMisListRequest",
-    handleChallanMisListRequest
-  );
-
-
-  yield takeEvery(
-    "ComponentPropsManagement/handleDaySaleMisListRequest",
-    handleDaySaleMisListRequest
-  );
-
-  yield takeEvery(
-    "ComponentPropsManagement/handlePurchaseMisListRequest",
-    handlePurchaseMisListRequest
-  );
-
-  yield takeEvery(
-    "ComponentPropsManagement/handleBaikhataMisListRequest",
-    handleBaikhataMisListRequest
-  );
-
-  yield takeEvery(
-    "ComponentPropsManagement/handleExpensesMisListRequest",
-    handleExpensesMisListRequest
-  );
-
-  yield takeEvery(
-    "ComponentPropsManagement/handleLedgerMisListRequest",
-    handleLedgerMisListRequest
   );
   yield takeEvery(
     "ComponentPropsManagement/handleExpenseCreateRequest",
@@ -2631,6 +3259,10 @@ export function* helloSaga() {
     handleAddPartyRequest
   );
   yield takeEvery(
+    "ComponentPropsManagement/handleCreateUserMasterRequest",
+    handleCreateUserMasterRequest
+  );
+  yield takeEvery(
     "ComponentPropsManagement/handleAddPurchaseRequest",
     handleAddPurchaseRequest
   );
@@ -2638,6 +3270,11 @@ export function* helloSaga() {
     "ComponentPropsManagement/handleCreateRowTaxMasterRequest",
     handleCreateRowTaxMasterRequest
   );
+  yield takeEvery(
+    "ComponentPropsManagement/handleStoreNameRequest",
+    handleStoreNameRequest
+  );
+
   yield takeEvery(
     "ComponentPropsManagement/handleAddItemSearchRequest",
     handleAddItemSearchRequest
@@ -2662,6 +3299,10 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleLastWeekSalesRequest",
     handleLastWeekSalesRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handelCreateDigitalPromotionRequest",
+    handelCreateDigitalPromotionRequest
   );
   yield takeEvery(
     "ComponentPropsManagement/handleLastMonthSalesRequest",
@@ -2713,12 +3354,24 @@ export function* helloSaga() {
     handleSalesDashboardChartRequest
   );
   yield takeEvery(
+    "ComponentPropsManagement/handleInventoryMasterRequest",
+    handleInventoryMasterRequest
+  );
+  yield takeEvery(
     "ComponentPropsManagement/handleCreateTaxMasterRequest",
     handleCreateTaxMasterRequest
   );
   yield takeEvery(
+    "ComponentPropsManagement/handleCreateSaasMasterRequest",
+    handleCreateSaasMasterRequest
+  );
+  yield takeEvery(
     "ComponentPropsManagement/handleEmailNotificationResponse",
     handleEmailNotificationResponse
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handlewhatsAppRequest",
+    handlewhatsAppRequest
   );
   yield takeEvery(
     "ComponentPropsManagement/handleLowStockItemListRequest",
@@ -2727,6 +3380,10 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/handleMemberEnrollmentRequest",
     handleMemberEnrollmentRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handelAddcategoryRequest",
+    handelAddcategoryRequest
   );
   yield takeEvery(
     "ComponentPropsManagement/handleAccruvalRequest",
@@ -2795,6 +3452,47 @@ export function* helloSaga() {
   yield takeEvery(
     "ComponentPropsManagement/updateInvoicedRequest",
     updateInvoicedRequest
+  );
+
+  yield takeEvery(
+    "ComponentPropsManagement/handleViewOrderByCustomerRequest",
+    handleViewOrderByCustomerRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handelPromotionAssetsRequest",
+    handelPromotionAssetsRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleCategoriesRequest",
+    handleCategoriesRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleAllDataByCategoryRequest",
+    handleAllDataByCategoryRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handleXYZRequest",
+    handleXYZRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handelPurchaseRequest",
+    handelPurchaseRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handelGetCategoryRequest",
+    handelGetCategoryRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handelgetOrderDetailsRequest",
+    handelgetOrderDetailsRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handelSMSRequest",
+    handelSMSRequest
+  );
+  yield takeEvery(
+    "ComponentPropsManagement/handeleCategoriesHomeRequest",
+    handeleCategoriesHomeRequest
   );
 }
 

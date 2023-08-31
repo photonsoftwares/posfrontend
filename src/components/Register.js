@@ -1,10 +1,20 @@
 import { TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { handleRegisterRequest } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+import { Link, json, useParams } from "react-router-dom";
+import {
+  handleRegisterRequest,
+  handleStoreNameRequest,
+} from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { toast } from "react-toastify";
+// import { Email } from "@material-ui/icons";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_Url } from "../URL";
 const Register = () => {
+  const navigate = useNavigate();
+  const [storeData, setStoreData] = useState("");
+  const params = useParams();
   const dispatch = useDispatch();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +31,8 @@ const Register = () => {
   const [gstCode, setGstCode] = useState("");
   const [hsnCode, setHsnCode] = useState("");
   const [storeType, setStoreType] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [email, setEmail] = useState("");
 
   const onOptionChange = (e) => {
     setTaxable(e.target.value);
@@ -31,32 +43,40 @@ const Register = () => {
     console.log("E TARGET VALUE", e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  console.log("PARAMS", params);
+
+  // useEffect(() => {
+  //   if (params.saasId && params.storeId) {
+  //     navigate("/login");
+  //   }
+  // }, [saasId, storeId]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
     if (password === confirmPassword) {
       dispatch(
         handleRegisterRequest({
-          user_name: userName,
+          mobile_number: mobile,
           password: password,
-          store_name: storeName,
-          store_id: storeId,
-          saas_id: saasId,
-          register_id: registerId,
-          city: city,
-          state: state,
-          country: country,
-          brand_logo: brandLogo,
-          tax_able: taxable,
-          gst_code: gstCode,
-          hsn_code: hsnCode,
-          store_type: storeType,
+          customer_name: userName,
+          store_id: params.storeId,
+          email: email,
+          saas_id: params.saasId,
         })
+      );
+      console.log(
+        userName,
+        params.saasId,
+        params.storeId,
+        password,
+        email,
+        mobile
       );
     } else {
       toast.error("Password Did'nt Match!");
     }
-    setUserName("");
-    setPassword("");
+    // setUserName("");
+    // setPassword("");
     setConfirmPassword("");
     setStoreName("");
     setSaasId("");
@@ -69,17 +89,63 @@ const Register = () => {
     setGstCode("");
     setHsnCode("");
     setStoreType("");
-    setTimeout(() => {
-      window.location.replace("/");
-    }, 500);
+    // setTimeout(() => {
+    //   window.location.replace("/");
+    // }, 500);
   };
+
+  // useEffect(() => {
+  //   var requestOptions = {
+  //     method: "GET",
+  //     redirect: "follow",
+  //   };
+
+  //   fetch(
+  //     `http://3.111.70.84:8088/test/api/v1/user-master/get-retailer-store-name/${params.saasId}/${params.storeId}`,
+  //     requestOptions
+  //   )
+  //     .then((response) => response.text())
+  //     .then((result) => JSON.parse(result))
+  //     .then((data) => {
+  //       console.log(data);
+  //       if (data) {
+  //         setName(data.store_name);
+  //       }
+  //     })
+  //     .catch((error) => console.log("error", error));
+  // });
+
+  // console.log("NAME", name);
+
+  const userData = async () => {
+    axios
+      .get(
+        `${BASE_Url}/user-master/get-retailer-store-name/${params.saasId}/${params.storeId}`
+      )
+      .then((res) => {
+        console.log("RESPONSE STORE DATA", res.data.data.store_name);
+        setStoreData(res.data.data.store_name);
+      });
+  };
+
+  useEffect(() => {
+    userData();
+  }, []);
+
+  // useEffect(() => {
+  //   dispatch(
+  //     handleStoreNameRequest({ saasId: params.saasId, storeId: params.storeId })
+  //   );
+  // }, []);
+
   return (
     <section>
       <div className="container">
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-10 col-sm-12">
             <form className="form-box" onSubmit={handleSubmit}>
-              <h2>Registration</h2>
+              <h1 style={{ textAlign: "center" }}>{storeData}</h1>
+              <h2 style={{ textAlign: "center" }}>Register</h2>
               <div
                 className="d-flex flex-col"
                 style={{ display: "flex", flexDirection: "column" }}
@@ -87,16 +153,21 @@ const Register = () => {
                 <TextField
                   size="small"
                   type="text"
-                  className="form-control mt-2"
+                  className="form-control my-2"
                   id="customer-name"
-                  label="User Name"
-                  value={userName}
+                  label="User Id"
+                  //   multiline
                   required
-                  onChange={(e) => setUserName(e.target.value)}
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value)}
+                  //   rows={3}
                 />
+
+                {/*  */}
+
                 <div
                   className="d-flex flex-column"
-                // style={{ borderBottom: "1px solid #000" }}
+                  // style={{ borderBottom: "1px solid #000" }}
                 >
                   <TextField
                     size="small"
@@ -127,14 +198,12 @@ const Register = () => {
                 <TextField
                   size="small"
                   type="text"
-                  className="form-control my-2"
+                  className="form-control mt-2"
                   id="customer-name"
-                  label="Store Name"
-                  //   multiline
+                  label="Customer Name"
+                  value={userName}
                   required
-                  value={storeName}
-                  onChange={(e) => setStoreName(e.target.value)}
-                //   rows={3}
+                  onChange={(e) => setUserName(e.target.value)}
                 />
                 <TextField
                   size="small"
@@ -142,12 +211,12 @@ const Register = () => {
                   className="form-control my-2"
                   id="customer-name"
                   required
-                  value={storeId}
-                  onChange={(e) => setStoreId(e.target.value)}
-                  label="Store Id"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  label="Email"
                 />
 
-                <TextField
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -156,9 +225,9 @@ const Register = () => {
                   required
                   onChange={(e) => setSaasId(e.target.value)}
                   label="Saas Id"
-                />
+                /> */}
 
-                <TextField
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -167,8 +236,8 @@ const Register = () => {
                   required
                   onChange={(e) => setRegisterId(e.target.value)}
                   label="Register Id"
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -177,8 +246,8 @@ const Register = () => {
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   label="City"
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -187,8 +256,8 @@ const Register = () => {
                   value={state}
                   onChange={(e) => setState(e.target.value)}
                   label="State"
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -197,8 +266,8 @@ const Register = () => {
                   required
                   onChange={(e) => setCountry(e.target.value)}
                   label="Country"
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -207,8 +276,8 @@ const Register = () => {
                   required
                   onChange={(e) => setBrandLogo(e.target.value)}
                   label="Brand Logo"
-                />
-                <div
+                /> */}
+                {/* <div
                   className="d-flex flex-column align-items-center justify-content-center my-2 pb-2"
                   style={{ border: "1px solid #e2e2e2" }}
                 >
@@ -225,7 +294,7 @@ const Register = () => {
                         required
                         onChange={onOptionChange}
                         id="inlineRadio4"
-                      // value="option1"
+                        // value="option1"
                       />
                       <label className="form-check-label" for="inlineRadio4">
                         Yes
@@ -246,8 +315,8 @@ const Register = () => {
                       </label>
                     </div>
                   </div>
-                </div>
-                <TextField
+                </div> */}
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -256,8 +325,8 @@ const Register = () => {
                   required
                   onChange={(e) => setGstCode(e.target.value)}
                   label="GST Code"
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                   size="small"
                   type="text"
                   className="form-control my-2"
@@ -266,8 +335,8 @@ const Register = () => {
                   required
                   onChange={(e) => setHsnCode(e.target.value)}
                   label="HSN Code"
-                />
-                <div
+                /> */}
+                {/* <div
                   className="d-flex flex-column align-items-center justify-content-center my-2 pb-2"
                   style={{ border: "1px solid #e2e2e2" }}
                 >
@@ -284,7 +353,7 @@ const Register = () => {
                         required
                         onChange={onOptionStoreChange}
                         id="inlineRadio2"
-                      // value="option1"
+                        // value="option1"
                       />
                       <label className="form-check-label" for="inlineRadio2">
                         Medium
@@ -305,7 +374,7 @@ const Register = () => {
                       </label>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <div className="">
@@ -316,13 +385,14 @@ const Register = () => {
                     border: "none",
                     fontSize: "20px",
                     padding: "10px 20px",
-                    borderRadius: "10px",
-                    color: "#fff",
+                    borderRadius: "8px",
+                    background: "#ECE447",
+                    width: "100%",
                   }}
                 >
                   Register
                 </button>
-                <Link
+                {/* <Link
                   to="/login"
                   type="submit"
                   // onClick={()=>}
@@ -339,7 +409,24 @@ const Register = () => {
                   }}
                 >
                   Login
-                </Link>
+                </Link> */}
+                <p
+                  className="mt-3"
+                  style={{
+                    color: "#808080",
+                    fontFamily: "Segoe UI",
+                    fontSize: "16px",
+                    fontStyle: "normal",
+                    fontWeight: "400",
+                    lineHight: "normal",
+                    textAlign: "center",
+                  }}
+                >
+                  Already have an account?{" "}
+                  <Link to="/login" style={{ textDecoration: "none" }}>
+                    Login
+                  </Link>
+                </p>
               </div>
             </form>
           </div>

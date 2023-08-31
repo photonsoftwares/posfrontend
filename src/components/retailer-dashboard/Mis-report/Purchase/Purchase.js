@@ -99,14 +99,14 @@ const columns = [
    
     
     
-    {
+    /* {
       name: "Action",
       center: true,
       selector: (row) => {
         const [addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen] =
           useState(false);
         const handleDelete = async () => {
-          try {
+          
             const response = await fetch(
               `http://3.111.70.84:8088/test/api/v1/purchase/purchase-view/3/30001/2023-06-21`,
               {
@@ -120,15 +120,15 @@ const columns = [
                 setFlag(!flag);
                 return;
               }
-              toast.error(jsonData.message);
+             toast.error(jsonData.message);
               setFlag(!flag);
-            } else {
+            }  else {
               toast.error("Something went wrong server side");
-            }
-          } catch (err) {
+            } 
+          }  catch (err) {
             toast.error(err.message);
           }
-        };
+        }; 
 
         console.log("from insdie Action", item_Purchase_list);
 
@@ -175,7 +175,7 @@ const columns = [
           </>
         );
       },
-    },
+    }, */
   ];
 
   const handleSearch = () => {
@@ -248,7 +248,7 @@ const columns = [
 
         data={item_Purchase_list ? item_Purchase_list?.list : []}
         // progressPending={loading}
-        pagination
+        //pagination
         paginationServer
         paginationTotalRows={item_Purchase_list ? item_Purchase_list.totalCount : 1}
         // onChangeRowsPerPage={10}

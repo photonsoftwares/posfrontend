@@ -98,14 +98,14 @@ const columns = [
    
     
     
-    {
+   /*  {
       name: "Action",
       center: true,
       selector: (row) => {
         const [addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen] =
           useState(false);
         const handleDelete = async () => {
-          try {
+          
             const response = await fetch(
               `http://3.111.70.84:8088/test/api/v1/Debit/view-debitchalan/8/2023-07-27`,
               {
@@ -120,14 +120,14 @@ const columns = [
                 return;
               }
               toast.error(jsonData.message);
-              setFlag(!flag);
-            } else {
+              setFlag(!flag); 
+            }  else {
               toast.error("Something went wrong server side");
-            }
-          } catch (err) {
+            } 
+          }  catch (err) {
             toast.error(err.message);
-          }
-        };
+          } 
+        
 
         console.log("from insdie Action", item_Challan_list);
 
@@ -174,7 +174,7 @@ const columns = [
           </>
         );
       },
-    },
+    }, */
   ];
 
   const handleSearch = () => {
@@ -247,7 +247,7 @@ const columns = [
 
         data={item_Challan_list ? item_Challan_list?.list : []}
         // progressPending={loading}
-        pagination
+        //pagination
         paginationServer
         paginationTotalRows={item_Challan_list ? item_Challan_list.totalCount : 1}
         // onChangeRowsPerPage={10}

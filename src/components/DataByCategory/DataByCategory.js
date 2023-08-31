@@ -15,9 +15,9 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import { FcSms } from "react-icons/fc";
 import Modal from "react-bootstrap/Modal";
 import { useDispatch, useSelector } from "react-redux";
-import Product from "../components/Product";
+import Product from "../../components/Product";
 
-import qrData from "../assets/QR.jpeg";
+import qrData from "../../assets/QR.jpeg";
 import {
   handleSearchedDataRequest,
   handleSaveTransactionRequest,
@@ -32,9 +32,10 @@ import {
   handleViewOrderModal,
   handleCategoriesRequest,
   handleXYZRequest,
-} from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-import { Button } from "react-bootstrap";
-import pdfFile from "../assets/PDF.pdf";
+  handlecartCount,
+} from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+import { Button, Card, Col, Container, Row ,Image} from "react-bootstrap";
+import pdfFile from "../../assets/PDF.pdf";
 
 //assets\PDF.pdf
 import { Viewer, Worker } from "@react-pdf-viewer/core";
@@ -42,22 +43,23 @@ import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
-import { BASE_Url } from "../URL";
-import { useNavigate } from "react-router-dom";
+import { BASE_Url } from "../../URL";
+import { useNavigate, useParams } from "react-router-dom";
 import { TextField } from "@mui/material";
 
-import MyCart from "./my-cart/MyCart";
+import MyCart from "../my-cart/MyCart";
 import { HiCreditCard } from "react-icons/hi2";
 import { RiH1, RiMoneyDollarCircleFill } from "react-icons/ri";
 import { AiFillHome } from "react-icons/ai";
 import { BiBox, BiCart, BiCube, BiGroup } from "react-icons/bi";
 import { RxDashboard } from "react-icons/rx";
-import ViewOrders from "./PendingOrders";
+//import ViewOrders from "./PendingOrders";
 //import { Category, WhatsApp } from "@material-ui/icons";
-import Category from "../components/Category/Category";
-import ViewOrdersCustomer from "./PendingOrders/ViewOrdersCustomer";
+import Category from "../../components/Category/Category";
+import ViewOrdersCustomer from "../PendingOrders/ViewOrdersCustomer";
+import axios from "axios";
 
-const Home = () => {
+const DataByCategory = () => {
   // const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
   const navigate = useNavigate();
   const [popoverIsOpen, setPopoverIsOpen] = useState(false);
@@ -602,37 +604,7 @@ const Home = () => {
 
   console.log(recommendedData);
 
-  const RenderUi = () => {
-    if (searchedData && searchValue?.length > 0) {
-      return (
-        <>
-          <Product
-            setSearchValue={setSearchValue}
-            data={searchedData}
-            cartData={cartData}
-            setCartData={setCartData}
-            setData={setSearchedData}
-            setUpdatecart={setUpdatecart}
-            updatecart={updatecart}
-          />
-        </>
-      );
-    } else if (recommendedData && recommendedData?.length > 0) {
-      return (
-        <>
-          <Product
-            setSearchValue={setSearchValue}
-            data={recommendedData}
-            cartData={cartData}
-            setCartData={setCartData}
-            setData={setRecommendedData}
-            setUpdatecart={setUpdatecart}
-            updatecart={updatecart}
-          />
-        </>
-      );
-    }
-  };
+  
   console.log(searchValue);
 
   const handleTenderAmount = () => {
@@ -806,137 +778,123 @@ const Home = () => {
     );
     setSms("");
   };
+  //----------------------------------------------------
+  const addToCart = (item) => {
+    const cart = JSON.parse(localStorage.getItem("my-cart")) || [];
+    console.log('cart ddddd', cart)
+    console.log('sssssss', item)
+    const existingItem = cart.find(
+      (cartItem) => cartItem.item_id === item.item_id
+    );
+
+    if (existingItem) {
+      existingItem.productQty += 1;
+
+    } else {
+      const newItem = { ...item, productQty: 1 };
+      cart.push(newItem);
+
+    }
+
+    localStorage.setItem("my-cart", JSON.stringify(cart));
+
+    dispatch(handlecartCount(cart.length));
+
+    // setUpdatecart(!updatecart);
+    // setSearchValue("");
+  };
+
+  const { catname } = useParams();
+
+
+  const [filterdetails, setFilterdetails] = useState([]);
+  const [category2, setCategory2] = useState([])
+  
+
+
+
+  // const { storeId, saasId, userName } = JSON.parse(
+  //   localStorage.getItem("User_data")
+  // );
+
+  useEffect(() => {
+    axios.get(`${BASE_Url}/search/get-result/${storeId}/${saasId}/${catname}`)
+      .then((res) => setFilterdetails(res.data.data));
+    axios
+      .get(`${BASE_Url}/category/get-list/${saasId}/${storeId}`)
+      .then((res) => setCategory2(res.data.data));
+
+  }, []);
+
+
+
+
+  const filterres = category2.filter((ele) => ele.category_name == catname)
+
+  console.log(filterres)
 
   return (
     <div className="app">
-      <div
-        style={{
-          // position: "sticky",
-          // top: 0,
-          width: "",
-          // height: "85px",
-          backgroundColor: "#fff",
-        }}>
-        <div
-          className="d-flex flex-row align-items-center justify-content-center mt-3"
-          style={{ display: "flex", flexDirection: "column" }}>
-          {/* <IoIosSearch size={30} opacity={0.4} /> */}
-          <div style={{ marginRight: "10px" }}>
-            <AiOutlineSearch size={30} opacity={1} />
-          </div>
-          <input
-            style={{ border: "1px solid yellowgreen", outline: "none" }}
-            type="text"
-            value={searchValue}
-            autoFocus
-            onChange={(e) => {
-              const val = e.target.value;
-              // optimizedFn(val)
-              setSearchValue(val);
-            }}
-            className="form-control"
-            aria-describedby="emailHelp"
-            placeholder="Search for items..."
-          />
-          {/* // <div style={{ width: "100%" }}>{transcript}</div> */}
-          {/* )} */}
-          {/* <div style={{ height: "200px", width: "200px" }}>
-            <QrReader
-              onResult={(result, error) => {
-                if (!!result) {
-                  setQrData(result?.text);
-                }
+        <div className="d-flex align-items-center justify-content-center  mt-3">
 
-                if (!!error) {
-                  console.info(error);
-                }
-              }}
-              style={{ width: "100%", height: "200px" }}
-            />
-            <p>{qrData}</p>
-          </div> */}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            // marginTop: "10px",
-            justifyContent: "center",
-          }}>
-          <FcSpeaker
-            size={30}
-            opacity={0.9}
-            // onClick={() => setSpechModal(true)}
-            onClick={handleVoiceCommand}
-            // onClick={() => {
-            //   setVisibleVoiceCommand(true);
-            //   startListening;
-            // }}
-          />
-        </div>
-      </div>
+{
+  filterres[0] &&
+  <Card style={{ boxShadow: '0 4px 6px rgba(0, 0, 0, 0,)', borderRadius: '10px', width: '20rem' }} className="cardCategory ">
+    <div className="d-flex align-items-center justify-content-center">
+      <Image src={filterres[0].image_path} roundedCircle style={{ width: "100px", height: '100px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.' }} className="m-1" />
+      <h1 className="text-center">{filterres[0].category_name}</h1>
+    </div>
+  </Card>
+}
 
-      <ul
-        style={{
-          paddingLeft: "20px",
-          paddingRight: "20px",
-          overflowY: "scroll",
-          Height: "auto",
-          // paddingBottom: "20px",
-        }}>
-        <div>
-          {!searchValue ? (
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <Category
-                style={{ zIndex: 2 }}
-                setSearchValue={setSearchValue}
-                setData={setSearchedData}
-                cartData={cartData}
-                setCartData={setCartData}
-                data={searchedData}
-                setUpdatecart={setUpdatecart}
-                updatecart={updatecart}
-                searchValue={searchValue}
-                handleVoiceCommand={handleVoiceCommand}
-              />
+</div>
 
-              <RenderUi />
+
+<div >
+<div className="d-flex align-items-center justify-content-center mt-2 ">
+  <Container>
+    <Row xs={2} sm={4} md={4}>
+      {filterdetails.map((ele) => {
+        return (
+          <Col className="mt-5">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Card style={{ borderRadius: "10px", width: "12rem", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", }}
+                className="cardCategory">
+                <Card.Img src={"https://pos.photonsoftwares.com/prod/api/v1/item/get-image/7044"}></Card.Img>
+                <div>
+                  <div className="text-center">
+                    <Card.Body>
+                      <h6>{ele.description}</h6>
+                      <p><span >₹</span>{' '}100</p>
+                      <Button variant="warning" onClick={() => addToCart(ele)} >Add to cart</Button>
+                    </Card.Body>
+                  </div>
+
+                </div>
+              </Card>
             </div>
-          ) : (
-            <div>
-              <RenderUi />
-              <Category
-                style={{ zIndex: 2 }}
-                setSearchValue={setSearchValue}
-                setData={setSearchedData}
-                cartData={cartData}
-                setCartData={setCartData}
-                data={searchedData}
-                setUpdatecart={setUpdatecart}
-                updatecart={updatecart}
-                searchValue={searchValue}
-                handleVoiceCommand={handleVoiceCommand}
-              />
-            </div>
-          )}
-        </div>
-        {/* {xyz_State && xyz_State.length > 0
-          ? xyz_State.map((el) => <h1>{el.customer_party}</h1>)
-          : ""} */}
-        {/* <Category /> */}
-        {/* <RenderUi /> */}
-        {/* {searchedData && searchValue?.length > 0
-          ? searchedData.map((item, index) => (
-              <Product item={item} key={index} />
-            ))
-          : recommendedData &&
-            recommendedData?.length > 0 &&
-            recommendedData.map((item, index) => (
-              <>
-                <Product item={item} key={index} />
-              </>
-            ))} */}
-      </ul>
+          </Col>
+        );
+      })}
+    </Row>
+  </Container>
+</div>
+</div>
+         
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     {/* carddata */}
       <div
         style={{
           position: "absolute",
@@ -1601,4 +1559,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default DataByCategory;

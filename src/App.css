@@ -294,3 +294,14 @@ input[type="file"] {
 .modal-title {
   width: 100% !important;
 }
+
+.cardCategory:hover{
+transform:scale(1.15);
+
+}
+.cardCategory{
+  transition: all 0.3s ;
+}
+.cardCategoryBtn{
+  color: #27374d;
+}

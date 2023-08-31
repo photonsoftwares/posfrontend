@@ -2,16 +2,23 @@ import React, { useState } from 'react'
 import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label, Row } from 'reactstrap'
 import Flatpickr from "react-flatpickr";
 import DataTable, { createTheme } from 'react-data-table-component';
-import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { handleUploadItemRequest, handleUploadInventoryRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement"
 import moment from 'moment';
+import { handleLoginRequest } from '../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
+import { useSelector } from "react-redux";
+import { BASE_Url } from '../../../URL';
+
 
 const ProductUpload = () => {
     const [businessDate, setBusinessDate] = useState(new Date())
     const [fileFlag, setFileFlag] = useState("item")
     const [csvFile, setCsvFile] = useState("")
-    const dispatch = useDispatch()
+  
+    const { saasId, storeId } = JSON.parse(localStorage.getItem("User_data"));
+
+ /*    const saasId = useSelector(state => state.saasId); 
+    const storeId = useSelector(state => state.storeId); */
 
     createTheme('solarized', {
         text: {
@@ -68,17 +75,38 @@ const ProductUpload = () => {
         },
     ]
 
-    const handleUploadFile = () => {
+    const handleUploadFile = async () => {
         if (fileFlag && csvFile) {
-            if (fileFlag === "item") {
-                dispatch(handleUploadItemRequest({ csvFile }))
-            } else if (fileFlag === "inventory") {
-                dispatch(handleUploadInventoryRequest({ csvFile }))
+            const formData = new FormData();
+            formData.append("file", csvFile);
+            formData.append("saas-id", saasId); 
+            formData.append("store-id", storeId); 
+    
+            const apiUrl = `${BASE_Url}/dashboard/upload-items`
+    
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    body: formData,
+                });
+    
+                if (response.ok) {
+                    const jsonResponse = await response.json(); 
+                    console.log("Response:", jsonResponse); 
+                    toast.success("File uploaded successfully!");
+                } else {
+                    toast.error("Failed to upload file. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error uploading file:", error);
+                toast.error("An error occurred. Please try again later.");
             }
         } else {
-            toast.error("Please upload csv file")
+            toast.error("Please select a file and an option.");
         }
-    }
+    };
+    
+    
 
     return (<>
         <div >

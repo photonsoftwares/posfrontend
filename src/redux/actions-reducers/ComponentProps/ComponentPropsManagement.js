@@ -3,33 +3,43 @@ import { json } from "react-router-dom";
 // import { toast } from "react-toastify";
 // import { useHistory } from "react-router-dom";
 
+
 var initialComponentPropsManagementState = {
   load: false,
   product_count: 0,
+  store_name: "",
   get_searched_data: [],
+  view_orderModal_customer: false,
   get_QR_img: "",
   show_cart_modal: false,
+  show_viewOrder_modal: false,
+  get_categories: [],
+  get_all_catrgory_data: [],
   cart_data: [],
   get_party_name: [],
   handle_view_order_details: [],
   order_statue: {},
+  customer_order: [],
   handle_view_orders: [],
+  xyz_State: [],
+  category_list: [],
   login_data: {},
   handel_redeem_point: {},
   register_data: {},
   total_quantity: 0,
   total_price: 0,
-  item_DebitNote_list:[],
-
-  item_Challan_list:[],
-  item_Purchase_list:[],
-  item_Baikhata_list:[],
-  item_Expenses_list:[],
-  item_Ledger_list:[],
-  item_DaySale_list:[],
   handle_saveTransaction_data: {},
   get_recommended_items: [],
   get_return_invoice_data: [],
+  item_DebitNote_list: [],
+
+  item_Challan_list: [],
+  item_Purchase_list: [],
+  item_Baikhata_list: [],
+  item_Expenses_list: [],
+  item_Ledger_list: [],
+  item_DaySale_list: [],
+
   handle_pdf_bill: "",
   handle_tax_rate: "",
   get_register_user: {},
@@ -42,6 +52,7 @@ var initialComponentPropsManagementState = {
   save_product_id: "",
   save_transaction_data: {},
   search_customer_data: {},
+  home_category: [],
   open_menu: false,
   email_notification: "",
   user_data: localStorage.getItem("User_data")
@@ -61,6 +72,7 @@ var initialComponentPropsManagementState = {
   pending_order_cart_data: [],
   yesterday_sales: 0,
   tender_report_data: [],
+  purchase_data: {},
   state_dropdown: [
     { label: "Andhra Pradesh", value: "Andhra Pradesh" },
     { label: "Arunachal Pradesh", value: "Arunachal Pradesh" },
@@ -100,10 +112,11 @@ var initialComponentPropsManagementState = {
   gst_report_item_table_data: [],
   link_loyalty_detail: {},
   no_of_items: 0,
-
+  customer_list: [],
+  view_status_data: [],
   expense_category_dropdown: [],
   update_price_item_name_dropdown: [],
-  bahikhata_party_name_dropdown: []
+  bahikhata_party_name_dropdown: [],
 };
 
 export const ComponentPropsManagement = createSlice({
@@ -114,13 +127,10 @@ export const ComponentPropsManagement = createSlice({
     handleLoginRequest: (state, payload) => {
       state.load = true;
     },
-    handleBahikhataCreateRequest: (state, payload) => {
-    },
-    handleBahikhataCreateResponse: (state, payload) => {
-    },
-    
-    handleBahikhataPartyDropdownRequest: (state, payload) => {
-    },
+    handleBahikhataCreateRequest: (state, payload) => {},
+    handleBahikhataCreateResponse: (state, payload) => {},
+
+    handleBahikhataPartyDropdownRequest: (state, payload) => {},
     handleBahikhataPartyDropdownResponse: (state, payload) => {
       state.bahikhata_party_name_dropdown = payload.data;
     },
@@ -346,6 +356,12 @@ export const ComponentPropsManagement = createSlice({
       const data = payload?.data?.data;
       state.last_month_sales = data ? data : 0;
     },
+    // HANDLE STORE NAME
+    handleStoreNameRequest: (state, payload) => {},
+    handleStoreNameResponse: (state, payload) => {
+      const data = payload;
+      // state.store_name = payload;
+    },
     handleTodaySalesRequest: (state, payload) => {
       // state.add_temple_modal_close_flag = true
     },
@@ -388,6 +404,10 @@ export const ComponentPropsManagement = createSlice({
     handleEmailNotificationResponse: (state, payload) => {
       // state.email_notification = payload.data;
     },
+    handlewhatsAppRequest: (state, payload) => {},
+    handlewhatsAppResponse: (state, payload) => {
+      // state.email_notification = payload.data;
+    },
     handleSalesDashboardChartRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
     },
@@ -397,6 +417,7 @@ export const ComponentPropsManagement = createSlice({
     handleCreateTaxMasterRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
     },
+    handleCreateSaasMasterRequest: (state, payload) => {},
     handleCreateTaxMasterResponse: (state, payload) => {},
     handleLowStockItemListRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
@@ -421,6 +442,10 @@ export const ComponentPropsManagement = createSlice({
 
     handleShowModal: (state, payload) => {
       state.show_cart_modal = payload.payload.bagModalIsOpne;
+    },
+
+    handleViewOrderModal: (state, payload) => {
+      state.show_viewOrder_modal = payload.payload.viewOrderModalIsOpne;
     },
 
     handleSalesReportRequest: (state, payload) => {},
@@ -468,6 +493,55 @@ export const ComponentPropsManagement = createSlice({
       state.link_loyalty_detail = payload.data;
     },
 
+    // Debit note MIS report
+    handleDebitNoteMisListRequest: (state, payload) => {},
+    handleDebitNoteMisListResponse: (state, payload) => {
+      console.log("nishu", payload);
+      state.item_DebitNote_list = payload.data;
+    },
+
+    // Challan
+    handleChallanMisListRequest: (state, payload) => {},
+    handleChallanMisListResponse: (state, payload) => {
+      console.log("challan handle", payload);
+      state.item_Challan_list = payload.data;
+    },
+
+    // DaySale
+    handleDaySaleMisListRequest: (state, payload) => {},
+    handleDaySaleMisListResponse: (state, payload) => {
+      console.log("daySale handle", payload);
+      state.item_DaySale_list = payload.data;
+    },
+
+    // Purchase
+    handlePurchaseMisListRequest: (state, payload) => {},
+    handlePurchaseMisListResponse: (state, payload) => {
+      console.log("purchase handle", payload);
+      state.item_Purchase_list = payload.data;
+    },
+
+    // Baikhata
+    handleBaikhataMisListRequest: (state, payload) => {},
+    handleBaikhataMisListResponse: (state, payload) => {
+      console.log("baikhata handle", payload);
+      state.item_Baikhata_list = payload.data;
+    },
+
+    // Expenses
+    handleExpensesMisListRequest: (state, payload) => {},
+    handleExpensesMisListResponse: (state, payload) => {
+      console.log("expenses handle", payload);
+      state.item_Expenses_list = payload.data;
+    },
+
+    // Ledger
+    handleLedgerMisListRequest: (state, payload) => {},
+    handleLedgerMisListResponse: (state, payload) => {
+      console.log("ledger handle", payload);
+      state.item_Ledger_list = payload.data.list;
+    },
+
     handleSearchedDataRequest1: (state, payload) => {},
     handleSearchedDataResponse1: (state, payload) => {
       state.item_master_list = payload.data;
@@ -494,6 +568,12 @@ export const ComponentPropsManagement = createSlice({
     handleLinkCustomerRequest: (state, payload) => {},
     handleLinkCustomerResponse: (state, payload) => {
       state.tender_report_data = payload.data ? [payload.data] : [];
+    },
+    // Categories
+    handleCategoriesRequest: (state, payload) => {},
+    handleCategoriesResponse: (state, payload) => {
+      state.get_categories = payload.data;
+      // state.tender_report_data = payload.data ? [payload.data] : [];
     },
 
     handleSearchedDataRequest1: (state, payload) => {},
@@ -530,56 +610,6 @@ export const ComponentPropsManagement = createSlice({
       console.log("BAG", payload.data);
       state.handle_view_order_details = payload.data;
     },
-    // Debit note MIS report
-    handleDebitNoteMisListRequest: (state, payload) => {},
-    handleDebitNoteMisListResponse: (state, payload) => {
-      console.log("nishu", payload);
-        state.item_DebitNote_list = payload.data;
-    },
-
-    // Challan
-    handleChallanMisListRequest: (state, payload) => {},
-    handleChallanMisListResponse: (state, payload) => {
-      console.log("challan handle", payload);
-         state.item_Challan_list = payload.data;
-    },  
-
-
-     // DaySale
-     handleDaySaleMisListRequest: (state, payload) => {},
-     handleDaySaleMisListResponse: (state, payload) => {
-       console.log("daySale handle", payload);
-          state.item_DaySale_list = payload.data;
-     }, 
-
-
-    // Purchase
-    handlePurchaseMisListRequest: (state, payload) => {},
-    handlePurchaseMisListResponse: (state, payload) => {
-      console.log("purchase handle", payload);
-         state.item_Purchase_list = payload.data;
-    },  
-
-    // Baikhata
-    handleBaikhataMisListRequest: (state, payload) => {},
-    handleBaikhataMisListResponse: (state, payload) => {
-      console.log("baikhata handle", payload);
-         state.item_Baikhata_list = payload.data;
-    },
-
-    // Expenses
-    handleExpensesMisListRequest: (state, payload) => {},
-    handleExpensesMisListResponse: (state, payload) => {
-      console.log("expenses handle", payload);
-         state.item_Expenses_list = payload.data;
-    },
-
-     // Ledger
-     handleLedgerMisListRequest: (state, payload) => {},
-     handleLedgerMisListResponse: (state, payload) => {
-       console.log("ledger handle", payload);
-          state.item_Ledger_list = payload.data.list;
-     },
     // View order By orderDate and saasId
     handleViewOrderBySaasIdAndOrderIdRequest: (state, payload) => {},
     handleViewOrderBySaasIdAndOrderIdResponse: (state, payload) => {
@@ -602,6 +632,11 @@ export const ComponentPropsManagement = createSlice({
     handleViewOrderPendingResponse: (state, payload) => {
       state.pending_order_data = payload.data;
     },
+    handleViewOrderByCustomerRequest: (state, payload) => {},
+    handleViewOrderByCustomerResponse: (state, payload) => {
+      console.log("customer_order", payload);
+      state.customer_order = payload.data;
+    },
     pendingOrderCartDataRequest: (state, payload) => {},
     pendingOrderCartDataResponse: (state, payload) => {
       state.pending_order_cart_data = payload.data;
@@ -613,6 +648,83 @@ export const ComponentPropsManagement = createSlice({
       // state.pending_order_cart_data = payload.data;
     },
 
+    // get all data by category
+    handleAllDataByCategoryRequest: (state, payload) => {},
+    handleAllDataByCategoryResponse: (state, payload) => {
+      console.log(payload);
+      state.get_all_catrgory_data = payload.data;
+    },
+    // Handle Debit note
+    handleXYZRequest: (state, payload) => {},
+    handleXYZResponse: (state, payload) => {
+      console.log("---------------", payload);
+      state.xyz_State = payload.data;
+    },
+    // Add Purchase => inventory-master/inventory
+    handleInventoryMasterRequest: (state, payload) => {},
+    handleInventoryMasterResponse: (state, payload) => {
+      console.log("---------------", payload);
+      // state.xyz_State = payload.data;
+    },
+
+    //hadel purchase
+    handelPurchaseRequest: (state, payload) => {},
+    handelPurchaseResponse: (state, payload) => {
+      // console.log("prince saini",payload);
+      state.purchase_data = payload.data;
+    },
+    //ADD CATEGORY
+    handelAddcategoryRequest: (state, payload) => {},
+    handelAddcategoryResponse: (state, payload) => {
+      // console.log("prince saini",payload);
+      // state.purchase_data = payload.data;
+    },
+    //getCATEGORY
+    handelGetCategoryRequest: (state, payload) => {},
+    handelGetCategoryResponse: (state, payload) => {
+      // console.log("category_list", payload);
+      state.category_list = payload.data;
+    },
+
+    //view Status
+    handelgetOrderDetailsRequest: (state, payload) => {},
+    handelgetOrderDetailsResponse: (state, payload) => {
+      console.log("payload RES STATUS", payload);
+      state.view_status_data = payload;
+    },
+    //Categories
+    handeleCategoriesHomeRequest: (state, payload) => {},
+    handeleCategoriesHomeResponse: (state, payload) => {
+      console.log("payload RES category", payload);
+      state.home_category = payload.data;
+    },
+    //SEND SMS
+    handelSMSRequest: (state, payload) => {},
+    handelSMSResponse: (state, payload) => {
+      // console.log("payload RES STATUS", payload);
+      // state.customer_list = payload;
+    },
+    //customer List For marketing
+    handelCustomerListRequest: (state, payload) => {},
+    handelCustomerListResponse: (state, payload) => {
+      // console.log("PAYLOAD FOR CUSTOMER LIST", payload);
+      state.customer_list = payload.data;
+    },
+    //Digital Promotion detail
+    handelCreateDigitalPromotionRequest: (state, payload) => {},
+    handelCreateDigitalPromotionResponse: (state, payload) => {
+      // console.log("PAYLOAD FOR CUSTOMER LIST", payload);
+      // state.customer_list = payload.data;
+    },
+    //PROMOTION ASSETS
+    handelPromotionAssetsRequest: (state, payload) => {},
+    handelPromotionAssetsResponse: (state, payload) => {
+      // console.log("PAYLOAD FOR CUSTOMER LIST", payload);
+      // state.customer_list = payload.data;
+    },
+    resetProductId: (state, payload) => {
+      state.save_product_id = "";
+    },
     // handleSearchedDataRequest2: (state, payload) => { },
     // handleSearchedDataResponse2: (state, payload) => {
     //   let arr = []
@@ -638,9 +750,13 @@ export const {
   handleBahikhataPartyDropdownRequest,
   handleBahikhataCreateRequest,
   handleUploadPicRequest,
+  resetProductId,
   handleViewOrderBySaasIdAndOrderIdRequest,
   handleCreateOrderRequest,
   updateInvoicedRequest,
+  handleCategoriesRequest,
+  handelCustomerListRequest,
+  handelSMSRequest,
   handleSearchInvoiceRequest,
   handleCreateSupplierRequest,
   handleRedeemPointRequest,
@@ -650,23 +766,25 @@ export const {
   handleDelGetUserRequest,
   handleDebitNoteRequest,
   handlecartCount,
-  handleExpenseCreateRequest,
-  handleShowModal,
-  handleAccruvalRequest,
   handleDebitNoteMisListRequest,
-
   handleChallanMisListRequest,
   handlePurchaseMisListRequest,
   handleBaikhataMisListRequest,
   handleExpensesMisListRequest,
   handleLedgerMisListRequest,
   handleDaySaleMisListRequest,
+  handelPromotionAssetsRequest,
+  handleExpenseCreateRequest,
+  handleShowModal,
+  handleAccruvalRequest,
+  handleAllDataByCategoryRequest,
   handleMemberEnrollmentResponse,
   handleUpdatePriceRequest,
   handleTenderReportRequest,
   handleViewOrderPendingRequest,
   handleEmailNotificationResponse,
   handleEmailNotificationRequest,
+  handlewhatsAppRequest,
   handleLoginRequest,
   handleOpneMenuRequest,
   handleSearchedDataRequest1,
@@ -696,12 +814,15 @@ export const {
   handleRecommendedDataRequest,
   handleDiscountItem,
   handleAddtoCart,
+  handleInventoryMasterRequest,
   handleInc,
   handleEmptyCartItem,
   handleEmptyCartData,
+  handleViewOrderModal,
   handleSalesReportRequest,
   handleQRImageRequest,
   getCartTotal,
+  handelCreateDigitalPromotionRequest,
   handleUploadItemRequest,
   handleUploadInventoryRequest,
   handleSalesOverviewRequest,
@@ -709,6 +830,7 @@ export const {
   handleLastWeekSalesRequest,
   handleGetPatyNameRequest,
   handleLastMonthSalesRequest,
+  handleViewOrderByCustomerRequest,
   handleTodaySalesRequest,
   handleNumberOfCustomerRequest,
   handleGstReportRequest,
@@ -718,13 +840,22 @@ export const {
   handleLastSixtyDaysSalesRequest,
   handleGstReportItemRequest,
   handleYesterdaySalesRequest,
+  handleXYZRequest,
   handleGstTypeDropdownRequest,
   handleGetHsnCodeDropdownRequest,
   handleUpdateItemToStoreRequest,
   handleSalesDashboardChartRequest,
+  handeleCategoriesHomeRequest,
   handleViewOrderRequest,
   handleCreateTaxMasterRequest,
+  handleCreateSaasMasterRequest,
+  handelAddcategoryRequest,
   handleLowStockItemListRequest,
+  handelPurchaseRequest,
+  handelgetOrderDetailsRequest,
+  handleStoreNameRequest,
+  handelGetCategoryRequest,
+  handleAllDataByCategoryResponse,
 } = ComponentPropsManagement.actions;
 
 export default ComponentPropsManagement.reducer;

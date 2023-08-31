@@ -125,7 +125,7 @@ const Ledger = () => {
         const [addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen] =
           useState(false);
         const handleDelete = async () => {
-          try {
+          
             const response = await fetch(
               `http://3.111.70.84:8088/test/api/v1/ledger/getledgerfromto/2023-07-27/2023-07-30/8/80001`,
               {
@@ -139,15 +139,14 @@ const Ledger = () => {
                 setFlag(!flag);
                 return;
               }
-              toast.error(jsonData.message);
-              setFlag(!flag);
-            } else {
+              
+            } /* else {
               toast.error("Something went wrong server side");
-            }
-          } catch (err) {
+            } */
+          } /* catch (err) {
             toast.error(err.message);
           }
-        };
+        }; */
 
         console.log("from insdie Action", item_Ledger_list);
 
@@ -284,7 +283,7 @@ const Ledger = () => {
 
         data={item_Ledger_list && item_Ledger_list.length > 0 ? item_Ledger_list : ""}
         // progressPending={loading}
-        pagination
+       // pagination
         paginationServer
         paginationTotalRows={item_Ledger_list ? item_Ledger_list.totalCount : 1}
         // onChangeRowsPerPage={10}

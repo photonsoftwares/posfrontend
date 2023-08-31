@@ -94,14 +94,14 @@ const columns = [
     // },
    
     
-    {
+   /*  {
       name: "Action",
       center: true,
       selector: (row) => {
         const [addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen] =
           useState(false);
         const handleDelete = async () => {
-          try {
+          
             const response = await fetch(
               `http://3.111.70.84:8088/test/api/v1/Debit/view-debitnote/8/2023-07-27`,
               {
@@ -115,15 +115,15 @@ const columns = [
                 setFlag(!flag);
                 return;
               }
-              toast.error(jsonData.message);
-              setFlag(!flag);
-            } else {
+               toast.error(jsonData.message);
+              setFlag(!flag); 
+            }  else {
               toast.error("Something went wrong server side");
-            }
-          } catch (err) {
+            } 
+          }  catch (err) {
             toast.error(err.message);
-          }
-        };
+          } 
+        
 
         console.log("from insdie Action", item_DebitNote_list);
 
@@ -170,7 +170,7 @@ const columns = [
           </>
         );
       },
-    },
+    }, */
   ];
 
   const handleSearch = () => {
@@ -244,7 +244,7 @@ const columns = [
 
         data={item_DebitNote_list ? item_DebitNote_list?.list : []}
         // progressPending={loading}
-        pagination
+        //pagination
         paginationServer
         paginationTotalRows={item_DebitNote_list ? item_DebitNote_list.totalCount : 1}
         // onChangeRowsPerPage={10}

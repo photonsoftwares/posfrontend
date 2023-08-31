@@ -10,7 +10,7 @@ import "flatpickr/dist/flatpickr.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-import "react-toggle/style.css" // for ES6 modules
+import "react-toggle/style.css"; // for ES6 modules
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -18,18 +18,18 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <ToastContainer
+         <ToastContainer
           position="top-right"
           autoClose={3000}
           hideProgressBar={true}
           newestOnTop={true}
-        // closeOnClick
-        // rtl={false}
-        // pauseOnFocusLoss
-        // draggable
-        // pauseOnHover
-        // theme="light"
-        />
+          // closeOnClick
+          // rtl={false}
+          // pauseOnFocusLoss
+          // draggable
+          // pauseOnHover
+          // theme="light"
+        /> 
 
         <App />
       </Provider>

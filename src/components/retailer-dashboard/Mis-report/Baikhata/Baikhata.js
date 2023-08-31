@@ -98,14 +98,14 @@ const columns = [
    
     
     
-    {
+    /* {
       name: "Action",
       center: true,
       selector: (row) => {
         const [addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen] =
           useState(false);
         const handleDelete = async () => {
-          try {
+          
             const response = await fetch(
               `http://3.111.70.84:8088/test/api/v1/bahikhata/view-bahikhata-details/8/2022-05-25`,
               {
@@ -119,15 +119,15 @@ const columns = [
                 setFlag(!flag);
                 return;
               }
-              toast.error(jsonData.message);
-              setFlag(!flag);
-            } else {
+               toast.error(jsonData.message);
+              setFlag(!flag); 
+            }  else {
               toast.error("Something went wrong server side");
-            }
-          } catch (err) {
+            } 
+            catch (err) {
             toast.error(err.message);
-          }
-        };
+          } 
+        }
 
         console.log("from insdie Action", item_Baikhata_list);
 
@@ -174,7 +174,7 @@ const columns = [
           </>
         );
       },
-    },
+    }, */
   ];
 
   const handleSearch = () => {
@@ -247,7 +247,7 @@ const columns = [
 
         data={item_Baikhata_list ? item_Baikhata_list?.list : []}
         // progressPending={loading}
-        pagination
+        //pagination
         paginationServer
         paginationTotalRows={item_Baikhata_list ? item_Baikhata_list.totalCount : 1}
         // onChangeRowsPerPage={10}
