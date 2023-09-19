@@ -39,9 +39,10 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
     view_status_data,
   } = useSelector((e) => e.ComponentPropsManagement);
 
-  console.log("LINE 40 STATUS", view_status_data);
+  console.log("view_status_data ", view_status_data);
+  console.log("pending_order_data", pending_order_data);
 
-  const checkCustomer = userName.includes("C");
+  const checkCustomer = userName.includes("CUSTOMER");
   const [bahikhataArr, setBahikhataArr] = useState({
     party_name: "",
     payment_type: "",
@@ -57,7 +58,10 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
   // }, [userType]);
 
   const [show, setShow] = useState(false);
+  // const [openSummery, setOpenSummery] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
+  const [openSummery, setOpenSummery] = useState(false);
+
   console.log("ORDER NUMBER", orderNumber);
 
   // console.log("view_status_data", view_status_data);
@@ -80,21 +84,59 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
   return (
     <>
       <Modal
+        fullscreen={true}
         isOpen={viewOrderModalIsOpen}
         toggle={() => setViewOrderModalIsOpen(!viewOrderModalIsOpen)}
         className="modal-xl"
       >
         <ModalHeader>
           <div className="w-100">
-            <div className="d-flex justify-content-between">
-              <div style={{ fontWeight: "bold" }}>
-                <HiOutlineArrowSmallLeft
-                  className="mouse-pointer"
-                  onClick={() => {
-                    setViewOrderModalIsOpen(!viewOrderModalIsOpen);
-                  }}
-                />
-                &nbsp; Pending Orders
+            <div className="">
+              <div
+                style={{
+                  fontWeight: "bold",
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div>
+                  <HiOutlineArrowSmallLeft
+                    className="mouse-pointer"
+                    onClick={() => {
+                      setViewOrderModalIsOpen(!viewOrderModalIsOpen);
+                    }}
+                  />
+                  &nbsp;{" "}
+                  <span
+                    style={{
+                      color: "#ff8b00",
+                      fontSize: 19,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Pending Orders
+                  </span>
+                </div>
+                <div onClick={() => setOpenSummery((state) => !state)}>
+                  <button
+                    color="primary"
+                    style={{
+                      color: "#ff8b00",
+                      border: "none",
+                      outline: "none",
+                      backgroundColor: "#fff",
+                      // border: "1px solid #ff8b00",
+                      borderRight: 10,
+                      padding: 5,
+                      fontSize: 18,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Order Summery
+                  </button>
+                </div>
               </div>
               <div>
                 {/* <Button type='button' className='btn btn-sm' color='primary'>To Bill</Button> */}
@@ -102,86 +144,246 @@ const ViewOrders = ({ viewOrderModalIsOpen, setViewOrderModalIsOpen }) => {
             </div>
           </div>
         </ModalHeader>
-        <ModalBody>
-          <div></div>
-          <div className="table-responsive">
-            <table className="table text-center table-bordered">
-              <thead>
-                <tr>
-                  <th scope="col">Order Id</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">No. of Items</th>
-                  <th scope="col">Value</th>
-                  {/* <th scope="col">Order Discount</th> */}
-                  <th scope="col">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pending_order_data.map((item) => {
-                  return (
-                    <>
-                      <tr>
-                        <th scope="row">{item.order_id}</th>
-                        <td>{item.order_date}</td>
-                        <td>{item.customer_name}</td>
-                        <td>{item.order_qty}</td>
-                        <td>{item.order_value}</td>
-                        {/* <td>{item.order_discount}</td> */}
-                        <td>
-                          {userType === "CUSTOMER" ? (
-                            <Button
-                              type="button"
-                              className="btn btn-sm disabled"
-                            >
-                              {item.status.toUpperCase()}
-                            </Button>
-                          ) : (
-                            <Button
-                              type="button"
-                              className="btn btn-sm "
-                              color="primary"
-                              // onClick={() => setShow(true)}
-                              onClick={() => {
-                                setShow(true);
-                                setOrderNumber(item.order_id);
-                              }}
-                            >
-                              To Bill
-                            </Button>
-                          )}
-                        </td>
-                      </tr>
-                    </>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          <Accordion defaultActiveKey="0">
-            {view_status_data.data && view_status_data.data.length > 0 ? (
-              <Table striped bordered hover>
+        <ModalBody
+          style={{
+            background: "#FDEECC",
+            // justifyContent: "center",
+            width: "100%",
+          }}
+        >
+          <div style={{}}>
+            {openSummery ? (
+              <Table striped bordered hover variant="light">
                 <thead>
                   <tr>
-                    <th>Item Name</th>
-                    <th>Value</th>
-                    <th>Quantity</th>
+                    <th
+                      style={{
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        fontSize: 20,
+                      }}
+                    >
+                      Item Name
+                    </th>
+                    <th
+                      style={{
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        fontSize: 20,
+                      }}
+                    >
+                      Quantity
+                    </th>
                   </tr>
                 </thead>
-                {view_status_data.data.map((el) => (
-                  <tbody>
-                    <tr>
-                      <td>{el.item_name}</td>
-                      <td>{el.total_value}</td>
-                      <td>{el.total_quantity}</td>
-                    </tr>
-                  </tbody>
-                ))}
+                {view_status_data.data &&
+                  view_status_data.data.map((el) => (
+                    <tbody>
+                      <tr>
+                        <td style={{ textAlign: "center" }}>{el.item_name}</td>
+                        <td style={{ textAlign: "center" }}>
+                          {el.total_quantity}
+                        </td>
+                      </tr>
+                    </tbody>
+                  ))}
               </Table>
             ) : (
-              ""
+              false
             )}
-          </Accordion>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                flexDirection: "row",
+                justifyContent: "center",
+                // margin: "auto",
+              }}
+            >
+              {pending_order_data.map((item) => (
+                <>
+                  <div
+                    style={{
+                      backgroundColor: "white",
+                      // margin: 20,
+                      // marginTop: 20,
+                      marginLeft: 20,
+                      marginRight: 20,
+                      marginTop: 20,
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        padding: 20,
+                        borderRadius: "8px",
+                        border: "2px solid #BFBFBF",
+                        width: "350px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <p
+                            style={{
+                              color: "#808080",
+                              fontSize: "14px",
+                              fontWeight: 400,
+                              lineHeight: "normal",
+                            }}
+                          >
+                            Order Id
+                          </p>
+                          <p
+                            style={{
+                              color: "#1E1E1E",
+                              fontSize: "16px",
+                              fontWeight: 400,
+                              lineHeight: "normal",
+                            }}
+                          >
+                            {item.order_id}
+                          </p>
+                        </div>
+                        <Button
+                          style={{ backgroundColor: "#FFDCA8", color: "#000" }}
+                        >
+                          Pending
+                        </Button>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <p
+                          style={{
+                            color: "#808080",
+                            fontSize: "14px",
+                            fontWeight: 400,
+                            lineHeight: "normal",
+                          }}
+                        >
+                          Date
+                        </p>
+                        <p
+                          style={{
+                            color: "#1E1E1E",
+                            fontSize: "16px",
+                            fontWeight: 400,
+                            lineHeight: "normal",
+                          }}
+                        >
+                          {item.order_date}
+                        </p>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <p
+                          style={{
+                            color: "#808080",
+                            fontSize: "14px",
+                            fontWeight: 400,
+                            lineHeight: "normal",
+                          }}
+                        >
+                          Name
+                        </p>
+                        <p
+                          style={{
+                            color: "#1E1E1E",
+                            fontSize: "16px",
+                            fontWeight: 400,
+                            lineHeight: "normal",
+                          }}
+                        >
+                          {item.customer_name}
+                        </p>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <p
+                            style={{
+                              color: "#808080",
+                              fontSize: "14px",
+                              fontWeight: 400,
+                              lineHeight: "normal",
+                            }}
+                          >
+                            Quantity
+                          </p>
+                          <p
+                            style={{
+                              color: "#1E1E1E",
+                              fontSize: "16px",
+                              fontWeight: 400,
+                              lineHeight: "normal",
+                            }}
+                          >
+                            {item.order_qty}
+                          </p>
+                        </div>{" "}
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <p
+                            style={{
+                              color: "#808080",
+                              fontSize: "14px",
+                              fontWeight: 400,
+                              lineHeight: "normal",
+                            }}
+                          >
+                            Value
+                          </p>
+                          <p
+                            style={{
+                              color: "#1E1E1E",
+                              fontSize: "16px",
+                              fontWeight: 400,
+                              lineHeight: "normal",
+                            }}
+                          >
+                            {item.order_value}
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        style={{ width: "100%" }}
+                        onClick={() => {
+                          setShow(true);
+                          setOrderNumber(item.order_id);
+                        }}
+                      >
+                        <Button
+                          style={{
+                            width: "100%",
+                            backgroundColor: "#457FD4",
+                            fontWeight: 600,
+                          }}
+                        >
+                          Process Order
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ))}
+            </div>
+          </div>
         </ModalBody>
         <ModalFooter></ModalFooter>
       </Modal>

@@ -9,6 +9,9 @@ import { useDispatch } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { isDev } from "../URL";
+
+import AddToHomeScreenButton from "./AddToHome";
+import axios from "axios";
 const Login = () => {
   const params = useParams();
   console.log("LOGIN PARAMS", params);
@@ -26,12 +29,31 @@ const Login = () => {
     }
   }, [isDev]);
 
+  const userData = async () => {
+    axios
+      .get(
+        `http://3.111.70.84:8088/test/api/v1/register/business-name/${params.BU}`
+      )
+      .then((res) => {
+        console.log("RESPONSE STORE DATA", res);
+        setUsername(res.data.data.username);
+        setPassword(res.data.data.password);
+        // setStoreData(res.data.data.store_name);
+      });
+  };
+
+  useEffect(() => {
+    if (params.BU) {
+      console.log("INN");
+      userData();
+    }
+  }, []);
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
     console.log("USERNAME", username);
     console.log("PASSWORD", password);
-  
 
     // const params = {
     //   username,
@@ -126,7 +148,7 @@ const Login = () => {
             <h2>Sign Up</h2>
           </Link>
         </div> */}
-        <p
+        {/* <p
           className="mt-3"
           style={{
             color: "#808080",
@@ -146,7 +168,17 @@ const Login = () => {
           >
             Signup
           </Link>
-        </p>
+        </p> */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginTop: 10,
+            justifyContent: "center",
+          }}
+        >
+          <AddToHomeScreenButton />
+        </div>
       </div>
     </div>
   );

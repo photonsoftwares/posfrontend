@@ -9,7 +9,11 @@ import { FaGooglePay } from "react-icons/fa";
 import { SiPhonepe } from "react-icons/si";
 import { GrClose } from "react-icons/gr";
 import { SiContactlesspayment } from "react-icons/si";
-import { AiOutlineMail, AiOutlineSearch } from "react-icons/ai";
+import {
+  AiOutlineArrowLeft,
+  AiOutlineMail,
+  AiOutlineSearch,
+} from "react-icons/ai";
 import { BsCreditCardFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { FcSms } from "react-icons/fc";
@@ -78,12 +82,12 @@ const Home = () => {
     categoryReq,
     userType,
   } = localStorage.getItem("User_data")
-    ? JSON.parse(localStorage.getItem("User_data"))
-    : {};
+      ? JSON.parse(localStorage.getItem("User_data"))
+      : {};
 
   // console.log('',userType);
   const checkCustomer = userName.includes("C");
-  console.log("HOME CTGR", categoryReq);
+
   const userData = JSON.parse(localStorage.getItem("User_data"));
 
   const {
@@ -96,6 +100,7 @@ const Home = () => {
     get_recommended_items,
     xyz_State,
     search_customer_data,
+    cart_data,
     show_cart_modal,
     get_all_catrgory_data,
     show_viewOrder_modal,
@@ -106,7 +111,7 @@ const Home = () => {
   //   console.log("xyz_State", xyz_State);
   // }, []);
 
-  console.log("xyz_State", xyz_State);
+  console.log("cart_data", cart_data);
 
   // useEffect(() => {
   //   dispatch(handleXYZRequest({}));
@@ -161,6 +166,7 @@ const Home = () => {
   const [whatsApp, setWhatsApp] = useState("");
   const [webcamResult, setwebcamResult] = useState();
   const [sms, setSms] = useState("");
+  const [error, setErrorMsg] = useState("");
   const [showVierCustomerOrderModal, setShowVierCustomerOrderModal] =
     useState(false);
   const [qrData, setQrData] = useState(null);
@@ -344,6 +350,7 @@ const Home = () => {
 
   useEffect(() => {
     setShow(show_cart_modal);
+
   }, [show_cart_modal]);
 
   useEffect(() => {
@@ -368,6 +375,7 @@ const Home = () => {
     setInvoiceValue(parseFloat(sumValue).toFixed(2));
   }, [sumValue, totalDiscountVal]);
 
+  console.log("HOME RECOMMENDED", get_recommended_items);
   useEffect(() => {
     if (get_recommended_items && get_recommended_items?.data) {
       if (get_recommended_items?.data?.length > 0) {
@@ -587,7 +595,7 @@ const Home = () => {
     if (balanceDue === 0) {
       setHandleShowReceipt(true);
     } else {
-      success("Pay Due Amount!");
+      setErrorMsg("Please Select A Valid Payment Method");
     }
   };
 
@@ -749,46 +757,68 @@ const Home = () => {
     if (userType === "CUSTOMER") {
       return (
         <div
-          className="d-flex flex-row"
           style={{
+            maxWidth: "800px",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
-          }}>
-          {customerTab
-            .filter((io) => io.isActive === true)
-            .map((item) => {
-              return (
-                <>
-                  <div
-                    style={{
-                      display: "flex",
-                      // justifyContent: "space-between",
-                      alignItems: "center",
-                      flexDirection: "column",
-                      // margin: "10px",
-                      // marginBottom: "20px",
-                      cursor: "pointer",
-                      color: "#3d2b2b",
-                    }}
-                    onClick={() => {
-                      if (item.value === "home") {
-                        navigate("/home");
-                      } else if (item.value === "order") {
-                        setShowVierCustomerOrderModal((state) => !state);
-                      } else if (item.value === "cart") {
-                        dispatch(
-                          handleShowModal({ bagModalIsOpne: !show_cart_modal })
-                        );
-                      } else if (item.value === "profile") {
-                      }
-                    }}>
-                    <div>{item.icon}</div>
-                    <div style={{ color: "#D64046" }}>{item.label}</div>
-                  </div>
-                </>
-              );
-            })}
+            justifyContent: "center",
+          }}
+        >
+          <div
+            className=""
+            style={{
+              backgroundColor: "#FDEECC",
+              position: "fixed",
+              bottom: 0,
+              zIndex: 88,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            {customerTab
+              .filter((io) => io.isActive === true)
+              .map((item) => {
+                return (
+                  <>
+                    <div
+                      style={{
+                        display: "flex",
+                        zIndex: 99,
+                        // width: "100%",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        flexDirection: "column",
+                        // margin: "10px",
+                        // marginBottom: "20px",
+                        cursor: "pointer",
+                        color: "#3d2b2b",
+                      }}
+                      onClick={() => {
+                        if (item.value === "home") {
+                          navigate("/home");
+                        } else if (item.value === "order") {
+                          setShowVierCustomerOrderModal((state) => !state);
+                        } else if (item.value === "cart") {
+                          dispatch(
+                            handleShowModal({
+                              bagModalIsOpne: !show_cart_modal,
+                            })
+                          );
+                        } else if (item.value === "profile") {
+                          navigate("/profile");
+                        }
+                      }}
+                    >
+                      <div>{item.icon}</div>
+                      <div style={{ color: "#D64046" }}>{item.label}</div>
+                    </div>
+                  </>
+                );
+              })}
+          </div>
         </div>
       );
     }
@@ -809,6 +839,7 @@ const Home = () => {
 
   return (
     <div className="app">
+
       <div
         style={{
           // position: "sticky",
@@ -816,10 +847,12 @@ const Home = () => {
           width: "",
           // height: "85px",
           backgroundColor: "#fff",
-        }}>
+        }}
+      >
         <div
           className="d-flex flex-row align-items-center justify-content-center mt-3"
-          style={{ display: "flex", flexDirection: "column" }}>
+          style={{ display: "flex", flexDirection: "column" }}
+        >
           {/* <IoIosSearch size={30} opacity={0.4} /> */}
           <div style={{ marginRight: "10px" }}>
             <AiOutlineSearch size={30} opacity={1} />
@@ -862,20 +895,32 @@ const Home = () => {
             alignItems: "center",
             // marginTop: "10px",
             justifyContent: "center",
-          }}>
+          }}
+        >
           <FcSpeaker
             size={30}
             opacity={0.9}
             // onClick={() => setSpechModal(true)}
             onClick={handleVoiceCommand}
-            // onClick={() => {
-            //   setVisibleVoiceCommand(true);
-            //   startListening;
-            // }}
+          // onClick={() => {
+          //   setVisibleVoiceCommand(true);
+          //   startListening;
+          // }}
           />
         </div>
       </div>
-
+      <AiOutlineArrowLeft
+        onClick={() => navigate("/")}
+        size={20}
+        color="#000"
+        style={{
+          // marginLeft: "-250px",
+          width: "30px",
+          height: "30px",
+          cursor: "pointer",
+          marginBottom: "-150px"
+        }}
+      />
       <ul
         style={{
           paddingLeft: "20px",
@@ -883,7 +928,8 @@ const Home = () => {
           overflowY: "scroll",
           Height: "auto",
           // paddingBottom: "20px",
-        }}>
+        }}
+      >
         <div>
           {!searchValue ? (
             <div style={{ position: "relative", zIndex: 1 }}>
@@ -945,7 +991,8 @@ const Home = () => {
           width: "100%",
           height: "50px",
           borderRadius: "5px",
-        }}>
+        }}
+      >
         {/* {cart_data && ( */}
         <div
           style={{
@@ -956,7 +1003,8 @@ const Home = () => {
             alignItems: "center",
             // justifyContent: "space-around",
             color: "#fff",
-          }}>
+          }}
+        >
           <div
             style={{
               color: "#eee",
@@ -966,11 +1014,13 @@ const Home = () => {
               // alignItems: "center",
               // justifyContent: "space-between",
               width: "100%",
-            }}>
+            }}
+          >
             {link_loyalty_detail && link_loyalty_detail.customer_name ? (
               <div
                 className="d-flex flex-row text-center"
-                style={{ width: "100%" }}>
+                style={{ width: "100%" }}
+              >
                 <p style={{ padding: 0, margin: 0, marginRight: "30px" }}>
                   Cutomer Name
                 </p>
@@ -989,7 +1039,8 @@ const Home = () => {
               color: "#fff",
               position: "relative",
               cursor: "pointer",
-            }}>
+            }}
+          >
             <div style={{ margin: "5px 0px" }}>
               {/* <BsHandbag color="#000" fontSize={30} opacity={0.8} /> */}
             </div>
@@ -1002,7 +1053,8 @@ const Home = () => {
                 color: "red",
                 right: "11px",
                 top: "16px",
-              }}>
+              }}
+            >
               {/* {cartData?.length} */}
             </h6>
           </div>
@@ -1016,13 +1068,13 @@ const Home = () => {
               fontSize: "20px",
               cursor: "pointer",
             }}
-            // onClick={() => {
-            //   if (cartData && cartData?.length > 0) {
-            //     setShow(true);
-            //   } else {
-            //     .error("Please add atleast one item in cart");
-            //   }
-            // }}
+          // onClick={() => {
+          //   if (cartData && cartData?.length > 0) {
+          //     setShow(true);
+          //   } else {
+          //     .error("Please add atleast one item in cart");
+          //   }
+          // }}
           >
             {/* View Cart <BsArrowRight /> */}
           </h2>
@@ -1060,7 +1112,7 @@ const Home = () => {
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-        // style={{ position: "relative" }}
+      // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -1068,20 +1120,23 @@ const Home = () => {
               className="main-container1"
               style={{
                 backgroundColor: "#f8f8f8",
-              }}>
+              }}
+            >
               <div
                 style={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                }}>
+                }}
+              >
                 <div>
                   <div
                     style={{
                       fontSize: "24px",
                       fontWeight: 700,
                       textAlign: "center",
-                    }}>
+                    }}
+                  >
                     Total Invoice Value: {totalSum}
                   </div>
                   <div className="mt-2">
@@ -1116,7 +1171,8 @@ const Home = () => {
                   marginRight: "26px",
                   alignItems: "center",
                   justifyContent: "center",
-                }}>
+                }}
+              >
                 <div className="option-item-container">
                   {optionArray
                     .filter((el) => el.isActive === false)
@@ -1147,7 +1203,7 @@ const Home = () => {
                                     }
                                   }
                                 }
-                                console.log(item);
+
                                 if (item.value === "loyalty") {
                                   setcheckLoyalty(true);
                                   let newLoyaltyAmount = loyaltyAmount;
@@ -1183,30 +1239,30 @@ const Home = () => {
                                   }
                                 }
                               }}
-                              className={`option-item ${
-                                optionTick.filter(
-                                  (io) => io.name === item.value
-                                )?.length > 0 && ""
-                              }`}
+                              className={`option-item ${optionTick.filter(
+                                (io) => io.name === item.value
+                              )?.length > 0 && ""
+                                }`}
                               style={{
                                 width: "90%",
                                 backgroundColor:
                                   item.name === "Cash"
                                     ? "#fed813"
                                     : item.name === "Paytm"
-                                    ? "#00B9F1"
-                                    : item.name === "Google Pay"
-                                    ? "#2DA94F"
-                                    : item.name === "Phone Pay"
-                                    ? "#5f259f"
-                                    : item.name === "UPI"
-                                    ? "#ff7909"
-                                    : item.name === "Credit Sale"
-                                    ? "#1741b2"
-                                    : item.name === "Loyalty"
-                                    ? "#c8030e"
-                                    : "silver",
-                              }}>
+                                      ? "#00B9F1"
+                                      : item.name === "Google Pay"
+                                        ? "#2DA94F"
+                                        : item.name === "Phone Pay"
+                                          ? "#5f259f"
+                                          : item.name === "UPI"
+                                            ? "#ff7909"
+                                            : item.name === "Credit Sale"
+                                              ? "#1741b2"
+                                              : item.name === "Loyalty"
+                                                ? "#c8030e"
+                                                : "silver",
+                              }}
+                            >
                               <div style={{ position: "relative", top: "2px" }}>
                                 {item.icon}
                               </div>
@@ -1217,19 +1273,20 @@ const Home = () => {
                                     item.name === "Cash"
                                       ? "black"
                                       : item.name === "Paytm"
-                                      ? "black"
-                                      : item.name === "Google Pay"
-                                      ? "white"
-                                      : item.name === "Phone Pay"
-                                      ? "white"
-                                      : item.name === "UPI"
-                                      ? "white"
-                                      : item.name === "Credit Sale"
-                                      ? "#fff"
-                                      : item.name === "Loyalty"
-                                      ? "#fff"
-                                      : "black",
-                                }}>
+                                        ? "black"
+                                        : item.name === "Google Pay"
+                                          ? "white"
+                                          : item.name === "Phone Pay"
+                                            ? "white"
+                                            : item.name === "UPI"
+                                              ? "white"
+                                              : item.name === "Credit Sale"
+                                                ? "#fff"
+                                                : item.name === "Loyalty"
+                                                  ? "#fff"
+                                                  : "black",
+                                }}
+                              >
                                 {item.name}
                               </div>
                             </div>
@@ -1245,7 +1302,8 @@ const Home = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                }}>
+                }}
+              >
                 <div className="calculated_amount-container">
                   {optionTick && optionTick?.length > 0 && (
                     <>
@@ -1266,7 +1324,9 @@ const Home = () => {
               <div className="due-blnce-container">
                 Balance Due = {balanceDue}
               </div>
-
+              <div className="text-center">
+                <p className="text-sm text-black">{error}</p>
+              </div>
               <div className="btn-container">
                 <button
                   type="submit"
@@ -1279,7 +1339,6 @@ const Home = () => {
                     let year = date.getFullYear();
 
                     handleToQR();
-
                     dispatch(
                       handleSaveTransactionRequest({
                         registerId: userData && userData.registerId,
@@ -1302,9 +1361,8 @@ const Home = () => {
                         register_id: userData && userData.registerId,
                         total_invoice_amount: Number(invoiceValue),
                         store_id: Number(userData && userData.storeId),
-                        business_date: `${year}-${
-                          month < 10 ? "0" + month : month
-                        }-${day < 10 ? "0" + day : day}`,
+                        business_date: `${year}-${month < 10 ? "0" + month : month
+                          }-${day < 10 ? "0" + day : day}`,
                         invoice_no:
                           handle_saveTransaction_data.transaction_id + "",
                         source_app: "POS",
@@ -1356,7 +1414,8 @@ const Home = () => {
                     //     // ],
                     //   })
                     // );
-                  }}>
+                  }}
+                >
                   Receipts
                 </button>
                 <Button
@@ -1369,7 +1428,8 @@ const Home = () => {
                     outline: "none",
                     border: "none",
                     fontSize: "20px",
-                  }}>
+                  }}
+                >
                   Close
                 </Button>
               </div>
@@ -1384,7 +1444,8 @@ const Home = () => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
         show={handleShowReceipt}
-        style={{ height: "100%" }}>
+        style={{ height: "100%" }}
+      >
         <Modal.Header>
           <Modal.Title>Your Receipt! </Modal.Title>
         </Modal.Header>
@@ -1394,10 +1455,9 @@ const Home = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${
-                      handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                    }`}
+                      }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -1412,7 +1472,8 @@ const Home = () => {
                 alignItems: "center",
                 justifyContent: "space-evenly",
                 marginTop: "20px",
-              }}>
+              }}
+            >
               <div
                 style={{
                   width: "100%",
@@ -1420,7 +1481,8 @@ const Home = () => {
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "space-evenly",
-                }}>
+                }}
+              >
                 <div
                 // style={{ flex: 1 }}
                 >
@@ -1432,7 +1494,8 @@ const Home = () => {
                       setWhatsAppOpen((state) => !state);
                       setSmsOpen(false);
                       setEmailOpen(false);
-                    }}>
+                    }}
+                  >
                     WhatsApp <IoLogoWhatsapp size={25} />
                   </Button>
                 </div>
@@ -1447,7 +1510,8 @@ const Home = () => {
                       setEmailOpen((state) => !state);
                       setWhatsAppOpen(false);
                       setSmsOpen(false);
-                    }}>
+                    }}
+                  >
                     Email <AiOutlineMail size={25} />
                   </Button>
                 </div>
@@ -1461,7 +1525,8 @@ const Home = () => {
                       setSmsOpen((state) => !state);
                       setEmailOpen(false);
                       setWhatsAppOpen(false);
-                    }}>
+                    }}
+                  >
                     SMS <FcSms size={25} />
                   </Button>
                 </div>
@@ -1470,7 +1535,8 @@ const Home = () => {
                 <form
                   onSubmit={handleNotifyEmail}
                   className="d-flex flex-row align-items-center"
-                  style={{ width: "50%" }}>
+                  style={{ width: "50%" }}
+                >
                   <TextField
                     type="email"
                     className="form-control my-2"
@@ -1494,7 +1560,8 @@ const Home = () => {
                 <form
                   onSubmit={handleWhatsApp}
                   className="d-flex flex-row align-items-center"
-                  style={{ width: "50%" }}>
+                  style={{ width: "50%" }}
+                >
                   <TextField
                     type="number"
                     className="form-control my-2"
@@ -1519,7 +1586,8 @@ const Home = () => {
                 <form
                   onSubmit={handleSMS}
                   className="d-flex flex-row align-items-center"
-                  style={{ width: "50%" }}>
+                  style={{ width: "50%" }}
+                >
                   <TextField
                     type="text"
                     className="form-control my-2"
@@ -1564,7 +1632,8 @@ const Home = () => {
                   setTimeout(() => {
                     window.location.reload();
                   }, 500);
-                }}>
+                }}
+              >
                 Close
               </Button>
               <div
@@ -1576,12 +1645,12 @@ const Home = () => {
                   justifyContent: "center",
                   // marginTop: "20px",
                   marginBottom: "20px",
-                }}>
+                }}
+              >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${
-                    handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                  }`}
+                    }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />

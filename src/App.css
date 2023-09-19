@@ -218,7 +218,7 @@ input[type="number"] {
   margin-left: 16px;
   font-weight: bolder;
   border-radius: 10px;
-  color: #c41a1a;
+  color:green;
 }
 
 .btn-container {
@@ -296,7 +296,7 @@ input[type="file"] {
 }
 
 .cardCategory:hover{
-transform:scale(1.15);
+transform:scale(1.5);
 
 }
 .cardCategory{
@@ -304,4 +304,7 @@ transform:scale(1.15);
 }
 .cardCategoryBtn{
   color: #27374d;
+}
+.category{
+  font-style: none;
 }

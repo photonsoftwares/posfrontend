@@ -13,6 +13,8 @@ import { AiOutlineMail, AiOutlineSearch } from "react-icons/ai";
 import { FcSalesPerformance, FcSpeaker } from "react-icons/fc";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { BASE_Url } from "../../URL";
+import { Style } from "@material-ui/icons";
 
 const Category = ({
   setSearchValue,
@@ -26,17 +28,32 @@ const Category = ({
   searchValue,
   handleVoiceCommand,
 }) => {
-
+  const {
+    createdAt,
+    password,
+    registerId,
+    status,
+    saasId,
+    storeId,
+    storeName,
+    userId,
+    userName,
+    userType,
+  } = localStorage.getItem("User_data")
+      ? JSON.parse(localStorage.getItem("User_data"))
+      : {};
 
   const [category, setCategory] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://3.111.70.84:8088/test/api/v1/category/get-list/8/80001")
-      .then((res) => setCategory(res.data.data));
+      .get(`${BASE_Url}/category/get-list/${saasId}/${storeId}/${userName}`)
+      .then((res) => {
+        console.log("RES CATEGORY", res);
+        setCategory(res.data.data);
+      });
   }, []);
 
- 
   // console.log("this is category data",category)
   // const [category, setCategory] = useState([]);
   // // get_categories
@@ -61,7 +78,6 @@ const Category = ({
 
   // console.log("CATEGORIES", get_all_catrgory_data);
   return (
-
     <div>
       <div>
         {/* <div
@@ -87,44 +103,43 @@ const Category = ({
             </Button>
           ))}
         </div> */}
-        <div>
-          {/* <FilterCategory /> */}
-        </div>
-
+        <div>{/* <FilterCategory /> */}</div>
 
         <div>
-        <div className="d-flex justify-content-center gap-5 m-auto">
-      
-        {category.map((ele) => {
-          return (
-           
-              <Link to={`/DataByCategory/${ele.category_name}`}>
-                    <div className="m-2 d-flex j-center">
-                    <Image src={ele.image_path} className="cardCategory" roundedCircle style={{width:"100px",height:'100px',margin:'3px',padding:"1px" ,boxShadow:'0 4px 6px rgba(0, 0, 0, 0.)'}} />
+          <div className="d-flex justify-content-center gap-5 m-auto">
+            {category.map((ele) => {
+              return (
+                <Link style={{ textDecoration: "none", color: "black" }} to={`/DataByCategory/${ele.category_name}`}>
+                  <Card style={{
+                    borderRadius: "10px",
+                    width: "18rem",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  }}>
+
+
+                    <div className="m-2 d-flex j-center" style={{ textAlign: "center", justifyContent: "center", display: "flex" }}>
+                      <Image
+                        src={ele.image_path}
+                        className="cardCategory"
+                        roundedCircle
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          margin: "3px",
+                          padding: "1px",
+                          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.)",
+                        }}
+                      />
                     </div>
                     <div className="cardCategory d-flex justify-content-center">
-                  
-                    <h6 className="cardCategoryBtn">{ele.category_name}</h6>
-                   
                     </div>
-                 
-                   
-              </Link>
-           
-          );
-        })}
-       
+                    <h4 style={{ textDecoration: "none", textAlign: "center" }}>{ele.category_name}</h4>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
         </div>
-            </div>
-
-
-
-
-
-
-
-
-
         {/* <div>
           {category.map((ele) => {
             return (
@@ -153,7 +168,8 @@ const Category = ({
             // gridTemplateColumns: "repeat(2,1fr)",
             // placeItems: "center",
           }
-        }>
+        }
+      >
         {/* {get_all_catrgory_data && get_all_catrgory_data.length > 0 ? (
           <DataByCategory
             get_all_catrgory_data={get_all_catrgory_data}
@@ -169,11 +185,8 @@ const Category = ({
           ""
         )} */}
       </div>
-
-     
     </div>
   );
 };
-
 
 export default Category;

@@ -116,29 +116,27 @@ const ItemMaster = () => {
         const [addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen] =
           useState(false);
         const handleDelete = async () => {
-         
-            const response = await fetch(
-              `${host}item/inactive-item/${row.item_id}/${saasId}`,
-              {
-                method: "PUT",
-              }
-            );
-            const jsonData = await response.json();
-            if (jsonData) {
-              if (jsonData.status === true) {
-                toast.success(jsonData.message);
-                setFlag(!flag);
-                return;
-              }
-              /* toast.error(jsonData.message);
+          const response = await fetch(
+            `${host}item/inactive-item/${row.item_id}/${saasId}`,
+            {
+              method: "PUT",
+            }
+          );
+          const jsonData = await response.json();
+          if (jsonData) {
+            if (jsonData.status === true) {
+              toast.success(jsonData.message);
+              setFlag(!flag);
+              return;
+            }
+            /* toast.error(jsonData.message);
               setFlag(!flag); */
-            }/*  else {
+          } /*  else {
               toast.error("Something went wrong server side");
             } */
-          } /* catch (err) {
+        }; /* catch (err) {
             toast.error(err.message);
           } */
-        
 
         console.log("ITEM", item_master_list);
 

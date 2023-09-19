@@ -16,13 +16,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   handleSearchedDataRequest,
   handleSaveTransactionRequest,
-  handleRecommendedDataRequest,
-  handleAccruvalRequest,
-  handleShowModal,
-  handleItemsDataRequest,
   handleEmailNotificationResponse,
   updateInvoicedRequest,
   handlewhatsAppRequest,
+  handelSMSRequest
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { Button } from "react-bootstrap";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
@@ -33,7 +30,9 @@ import { useNavigate } from "react-router-dom";
 import { TextField } from "@mui/material";
 import { HiCreditCard } from "react-icons/hi2";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
-import { AiOutlineMail } from "react-icons/ai";
+import { AiOutlineDollarCircle, AiOutlineMail } from "react-icons/ai";
+import axios from "axios";
+import { Sms } from "@material-ui/icons";
 
 const PaymentModal = (props) => {
   const {
@@ -51,10 +50,15 @@ const PaymentModal = (props) => {
     optionTick,
     cartData,
     setCartData,
+    state
   } = props;
   const userData = JSON.parse(localStorage.getItem("User_data"));
+  console.log("this is state", state)
+
   console.log(" CARTDATA PAYMENT", cartData);
   const [loyaltyAmount, setLoyaltyAmount] = useState(10000);
+  const [saveTransactionRes, setSaveTransactionRes] = useState({});
+
   const [handleShowReceipt, setHandleShowReceipt] = useState(false);
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const dispatch = useDispatch();
@@ -74,6 +78,7 @@ const PaymentModal = (props) => {
     get_recommended_items,
     show_cart_modal,
   } = useSelector((e) => e.ComponentPropsManagement);
+
   const handleToQR = () => {
     if (balanceDue === 0) {
       setHandleShowReceipt(true);
@@ -82,6 +87,51 @@ const PaymentModal = (props) => {
     }
   };
 
+  const handleGenerateReceipt = () => {
+    // debugger;
+    // console.log("asas");
+    axios
+      .post(`${BASE_Url}/transaction/save-transaction`, {
+        registerId: userData && userData.registerId,
+        storeId: userData && userData.storeId,
+        saasId: userData && userData.saasId,
+        tenderId: "TENDER1",
+        tender: handleTenderAmount(),
+        cartItems: cartData,
+      })
+      .then((res) => {
+        console.log("AXIS SAVE TRANSACTION", res);
+        if (res.status === 200) {
+          // console.log("AXIS SAVE TRANSACTION", res);
+          setSaveTransactionRes(res.data.data);
+        }
+      });
+    axios
+      .put(`${BASE_Url}/order/update/order/master/${props.orderNumber}`, {
+        order_id: props.orderNumber,
+        status: "Invoiced",
+      })
+      .then(console.log((res) => console.log("AXIOS STATUS", res)));
+    setHandleShowReceipt(true);
+
+    // dispatch(
+    //   handleSaveTransactionRequest({
+    //     registerId: userData && userData.registerId,
+    //     storeId: userData && userData.storeId,
+    //     saasId: userData && userData.saasId,
+    //     tenderId: "TENDER1",
+    //     tender: handleTenderAmount(),
+    //     cartItems: cartData,
+    //   })
+    // );
+    // dispatch(
+    //   updateInvoicedRequest({
+    //     order_id: props.orderNumber,
+    //     status: "Invoiced",
+    //   })
+    // );
+  };
+  // console.log("SATTE", saveTransactionRes);
   const optionArray = [
     {
       id: 1,
@@ -91,45 +141,9 @@ const PaymentModal = (props) => {
     },
     {
       id: 2,
-      name: "Paytm",
-      icon: <SiPaytm size={25} />,
-      value: "paytm",
-    },
-    {
-      id: 3,
-      name: "Google Pay",
-      icon: <FaGooglePay size={25} color="white" />,
-      value: "googlepay",
-    },
-    {
-      id: 4,
-      name: "Phone Pay",
-      icon: <SiPhonepe size={25} color="white" />,
-      value: "phonepay",
-    },
-    {
-      id: 5,
-      name: "UPI",
-      icon: <SiContactlesspayment size={25} color="white" />,
-      value: "upi",
-    },
-    {
-      id: 6,
-      name: "Card",
-      icon: <BsCreditCardFill size={25} />,
-      value: "card",
-    },
-    {
-      id: 7,
-      name: "Credit Sale",
-      icon: <FcSalesPerformance size={25} />,
-      value: "credit_sale",
-    },
-    {
-      id: 8,
-      name: "Loyalty",
-      icon: <RiMoneyDollarCircleFill color="#F1C40F" size={25} />,
-      value: "loyalty",
+      name: "Online Payment",
+      icon: <AiOutlineDollarCircle size={25} />,
+      value: "Online Payment",
     },
   ];
 
@@ -144,7 +158,7 @@ const PaymentModal = (props) => {
     }
     return {};
   };
-
+  console.log(handleTenderAmount());
   const handleNotifyEmail = (e) => {
     e.preventDefault();
     if (email) {
@@ -177,21 +191,42 @@ const PaymentModal = (props) => {
     setEmail("");
   };
 
+
+  const handelSMS = (e) => {
+    e.preventDefault();
+    console.log("handlesms", e);
+    // if (whatsApp) {
+    dispatch(
+      handelSMSRequest({
+        number: smsOpen,
+        pdf:
+          handle_saveTransaction_data &&
+          handle_saveTransaction_data.pdf_file_name,
+      })
+    );
+    setSmsOpen("");
+    // }
+    setEmail("");
+  };
+
   return (
     <>
       <Modal
+        fullscreen={true}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
         show={paymentModalIsOpen}
       >
-        <Modal.Body>
+        <Modal.Body style={{ backgroundColor: "#FDEECC" }}>
           <div className="main-container">
             <div
               className="main-container1"
-              style={{
-                backgroundColor: "#f8f8f8",
-              }}
+              style={
+                {
+                  // backgroundColor: "#f8f8f8",
+                }
+              }
             >
               <div
                 style={{
@@ -203,15 +238,46 @@ const PaymentModal = (props) => {
                 <div>
                   <div
                     style={{
-                      fontSize: "24px",
+                      // fontSize: "24px",
+                      padding: 20,
+                      borderRadius: 10,
+                      border: "1 px solid #BFBFBF",
                       fontWeight: 700,
+                      backgroundColor: "#fff",
                       textAlign: "center",
                     }}
                   >
-                    Total Invoice Value: {invoiceValue}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <p
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: 400,
+                          padding: 0,
+                          margin: 0,
+                        }}
+                      >
+                        Total Invoice Value:
+                      </p>
+                      <p
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: 400,
+                          padding: 0,
+                          margin: 0,
+                        }}
+                      >
+                        {invoiceValue}
+                      </p>
+                    </div>
                   </div>
-                  <div className="mt-2">
-                    <input
+                  {/* <div className="mt-2">
+                    <TextField
                       type="number"
                       className="input-style"
                       onChange={(e) => {
@@ -232,7 +298,7 @@ const PaymentModal = (props) => {
                       required={true}
                       placeholder="Enter Amount"
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div
@@ -241,6 +307,7 @@ const PaymentModal = (props) => {
                   display: "flex",
                   marginRight: "26px",
                   alignItems: "center",
+
                   justifyContent: "center",
                 }}
               >
@@ -248,7 +315,11 @@ const PaymentModal = (props) => {
                   {optionArray.map((item, i) => {
                     return (
                       <>
-                        <div className="mb-2 d-flex px-0" key={item.id}>
+                        <div
+                          className="mb-2 d-flex px-0"
+                          key={item.id}
+                          style={{ backgroundColor: "#fff", padding: 20 }}
+                        >
                           <div
                             onClick={() => {
                               if (item.value !== "loyalty") {
@@ -310,28 +381,20 @@ const PaymentModal = (props) => {
                                 // setAmount(r1)
                               }
                             }}
-                            className={`option-item ${
-                              optionTick.filter((io) => io.name === item.value)
-                                ?.length > 0 && ""
-                            }`}
+                            className={`option-item ${optionTick.filter((io) => io.name === item.value)
+                              ?.length > 0 && ""
+                              }`}
                             style={{
                               width: "90%",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
                               backgroundColor:
                                 item.name === "Cash"
-                                  ? "#fed813"
+                                  ? "#f7f7f7"
                                   : item.name === "Paytm"
-                                  ? "#00B9F1"
-                                  : item.name === "Google Pay"
-                                  ? "#2DA94F"
-                                  : item.name === "Phone Pay"
-                                  ? "#5f259f"
-                                  : item.name === "UPI"
-                                  ? "#ff7909"
-                                  : item.name === "Credit Sale"
-                                  ? "#1741b2"
-                                  : item.name === "Loyalty"
-                                  ? "#c8030e"
-                                  : "silver",
+                                    ? "#f7f7f7"
+                                    : "#f7f7f7",
                             }}
                           >
                             <div style={{ position: "relative", top: "2px" }}>
@@ -344,18 +407,8 @@ const PaymentModal = (props) => {
                                   item.name === "Cash"
                                     ? "black"
                                     : item.name === "Paytm"
-                                    ? "black"
-                                    : item.name === "Google Pay"
-                                    ? "white"
-                                    : item.name === "Phone Pay"
-                                    ? "white"
-                                    : item.name === "UPI"
-                                    ? "white"
-                                    : item.name === "Credit Sale"
-                                    ? "#fff"
-                                    : item.name === "Loyalty"
-                                    ? "#fff"
-                                    : "black",
+                                      ? "black"
+                                      : "black",
                               }}
                             >
                               {item.name}
@@ -392,50 +445,88 @@ const PaymentModal = (props) => {
                 </div>
               </div>
 
-              <div className="due-blnce-container">
-                Balance Due = {balanceDue}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  marginTop: 10,
+                }}
+              //  className="due-blnce-container"
+              >
+                <p
+                  style={{
+                    fontSize: 20,
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: 400,
+                    color: "#1E1E1E",
+                  }}
+                >
+                  Balance Due = {balanceDue}
+                </p>
               </div>
 
-              <div className="btn-container">
-                <button
-                  type="submit"
-                  className="btn-style"
-                  onClick={() => {
-                    handleToQR();
-                    dispatch(
-                      handleSaveTransactionRequest({
-                        registerId: userData && userData.registerId,
-                        storeId: userData && userData.storeId,
-                        saasId: userData && userData.saasId,
-                        tenderId: "TENDER1",
-                        tender: handleTenderAmount(),
-                        cartItems: cartData,
-                      })
-                    );
-                    dispatch(
-                      updateInvoicedRequest({
-                        order_id: props.orderNumber,
-                        status: "Invoiced",
-                      })
-                    );
-                  }}
-                >
-                  Receipts
-                </button>
-                <Button
-                  onClick={() => setPaymentModalIsOpen(false)}
-                  style={{
-                    backgroundColor: "#20b9e3",
-                    fontSize: "20px",
-                    marginLeft: "20px",
-                    padding: "10px 20px",
-                    outline: "none",
-                    border: "none",
-                    fontSize: "20px",
-                  }}
-                >
-                  Close
-                </Button>
+              <div
+                className=""
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContentL: "center",
+                }}
+              >
+                <div style={{ width: "100%" }}>
+                  <Button
+                    type="submit"
+                    style={{ width: "100%", backgroundColor: "#457FD4" }}
+                    onClick={() => {
+                      handleToQR();
+                      dispatch(
+                        handleSaveTransactionRequest({
+                          registerId: userData && userData.registerId,
+                          storeId: userData && userData.storeId,
+                          saasId: userData && userData.saasId,
+                          tenderId: "TENDER1",
+                          tender: handleTenderAmount(),
+                          cartItems: cartData,
+                          orderId: props.orderNumber,
+                          orderMobileNumber: props.state.customer_name
+                        })
+                      );
+                      dispatch(
+                        updateInvoicedRequest({
+                          orderId: props.orderNumber,
+                          orderMobileNumber: props.state.customer_name,
+                          status: "Invoiced",
+                        })
+                      );
+                      handleGenerateReceipt();
+                    }}
+                  >
+                    Send Receipts
+                  </Button>
+                </div>
+                <div style={{ width: "100%" }}>
+                  <Button
+                    onClick={() => setPaymentModalIsOpen(false)}
+                    style={{
+                      backgroundColor: "#20b9e3",
+                      fontSize: "20px",
+                      marginTop: "20px",
+                      // padding: "10px 20px",
+                      outline: "none",
+                      border: "none",
+                      fontSize: "20px",
+                      width: "100%",
+                    }}
+                  >
+                    Close
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -459,10 +550,11 @@ const PaymentModal = (props) => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${
-                      handle_saveTransaction_data &&
-                      handle_saveTransaction_data.pdf_file_name
-                    }`}
+                    // fileUrl={`${BASE_Url}/transaction/pdf/${
+                    //   handle_saveTransaction_data &&
+                    //   handle_saveTransaction_data.pdf_file_name
+                    // }`}
+                    fileUrl={`${BASE_Url}/transaction/pdf/${saveTransactionRes.pdf_file_name}`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -589,19 +681,19 @@ const PaymentModal = (props) => {
               )}
               {smsOpen ? (
                 <form
-                  onSubmit={() => {}}
+                  onSubmit={handelSMS}
                   className="d-flex flex-row align-items-center"
                   style={{ width: "50%" }}
                 >
                   <TextField
-                    type="email"
+                    type="number"
                     className="form-control my-2"
                     id="customer-name"
                     required
                     size="small"
                     label="SMS"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={smsOpen}
+                    onChange={(e) => setSmsOpen(e.target.value)}
                   />
                   <div className="mx-2">
                     <button type="submit" className="btn btn-primary">
@@ -643,10 +735,7 @@ const PaymentModal = (props) => {
                 }}
               >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${
-                    handle_saveTransaction_data &&
-                    handle_saveTransaction_data.qr_file_name
-                  }`}
+                  src={`${BASE_Url}/transaction/pdf-qr/${saveTransactionRes.qr_file_name}`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />

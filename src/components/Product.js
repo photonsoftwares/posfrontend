@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { AiOutlinePlus } from "react-icons/ai";
+
+import { AiOutlineArrowLeft, AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
 import God from "../assets/god.jpeg";
 import noImg1 from "../assets/noImg1.png";
@@ -15,10 +16,12 @@ import {
   handleAddCartDataRequest,
   handlecartCount,
 } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
+
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_Url } from "../URL";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
+import PaginationComponent from "../PaginationComponent";
 
 const Product = ({
   setSearchValue,
@@ -27,6 +30,7 @@ const Product = ({
   setUpdatecart,
   updatecart,
 }) => {
+  const { storeId, saasId } = JSON.parse(localStorage.getItem("User_data"));
   const { cart_data } = useSelector((e) => e.ComponentPropsManagement);
   const [myPrice, setMyPrice] = useState({ productId: "", price: "" });
   const [showButton, setShowButton] = useState(true);
@@ -36,14 +40,14 @@ const Product = ({
 
   useEffect(() => {
     const el = JSON.parse(localStorage.getItem("my-cart"));
-    console.log("EL", el);
-    console.log("DATA", data);
     if (el) {
       dispatch(handlecartCount(el?.length));
     } else {
       dispatch(handlecartCount(0));
     }
+    console.log("this is element from product.js", el)
   }, []);
+
 
   // useEffect(() => {
 
@@ -61,6 +65,7 @@ const Product = ({
           margin: 0,
           // display: searchValue?.length ? "none" : "block",s
         }}
+        onClick={() => { console.log("this is producte page 🤷‍♀️🤷‍♀️🤷‍♀️") }}
       >
         Recommended Items
       </h5>
@@ -85,11 +90,25 @@ const Product = ({
               display: "flex",
             }}
           >
-            <div style={{ height: "100px", width: "100%" }}>
+            <div
+              style={{
+                height: "200px",
+                width: "100%",
+                backgroundAttachment: "fixed",
+                backgroundRepeat: "no-repeat",
+                objectFit: "cover",
+                backgroundPosition: "center",
+              }}
+            >
               <img
-                style={{ height: "100%", width: "100%" }}
-                 src={`${BASE_Url}/item/get-image/${item && item.item_id}`} 
-                class="card-img-top"
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  backgroundPosition: "center",
+                }}
+                className="cardCategory"
+                src={`${BASE_Url}/item/get-image/${item && item.item_id}`}
+                // class="card-img-top"
                 alt="..."
               />
             </div>
@@ -113,9 +132,93 @@ const Product = ({
                           <IconButton
                             // aria-label="toggle password visibility"
                             onClick={() => {
+                              toast.success("Item Added");
                               item.price = item.new_price;
                               setData([...data]);
-                            }}
+                              const el = JSON.parse(localStorage.getItem("my-cart"));
+                              if (el) {
+                                if (el?.length > 0) {
+                                  let flag = 0;
+                                  el.map((el1) => {
+                                    console.log("this is el1", el1)
+                                    if (
+                                      el1.productId === item.productId &&
+                                      el1.item_name === item.item_name
+                                    ) {
+                                      if (el1.price === item.price) {
+                                        el1.productQty = el1.productQty + 1;
+                                        flag = 1;
+                                      } else {
+                                        item["discount_menu_is_open"] = false;
+                                        item["discount_value"] = "";
+                                        item["amount_value"] = "";
+                                        item["new_price"] =
+                                          Number(item.price) * Number(item.productQty);
+                                        item["zero_price"] =
+                                          Number(item.price) * Number(item.productQty);
+                                        const c = localStorage.setItem(
+                                          "my-cart",
+                                          JSON.stringify([...el, item])
+                                        );
+                                      }
+                                    }
+                                  });
+                                  el.map((item) => {
+                                    item["discount_menu_is_open"] = false;
+                                    item["discount_value"] = "";
+                                    item["amount_value"] = "";
+                                    item["new_price"] =
+                                      Number(item.price) * Number(item.productQty);
+                                    item["zero_price"] =
+                                      Number(item.price) * Number(item.productQty);
+                                  });
+                                  localStorage.setItem("my-cart", JSON.stringify(el));
+                                  if (flag === 0) {
+                                    item["discount_menu_is_open"] = false;
+                                    item["discount_value"] = "";
+                                    item["amount_value"] = "";
+                                    item["new_price"] =
+                                      Number(item.price) * Number(item.productQty);
+                                    item["zero_price"] =
+                                      Number(item.price) * Number(item.productQty);
+                                    localStorage.setItem(
+                                      "my-cart",
+                                      JSON.stringify([...el, item])
+                                    );
+                                  }
+                                  dispatch(handlecartCount([...el, item]?.length));
+                                } else {
+                                  item["discount_menu_is_open"] = false;
+                                  item["discount_value"] = "";
+                                  item["amount_value"] = "";
+                                  item["new_price"] =
+                                    Number(item.price) * Number(item.productQty);
+                                  item["zero_price"] =
+                                    Number(item.price) * Number(item.productQty);
+                                  localStorage.setItem("my-cart", JSON.stringify([item]));
+                                  dispatch(handlecartCount(1));
+                                }
+                              } else {
+                                item["discount_menu_is_open"] = false;
+                                item["discount_value"] = "";
+                                item["amount_value"] = "";
+                                item["new_price"] =
+                                  Number(item.price) * Number(item.productQty);
+                                item["zero_price"] =
+                                  Number(item.price) * Number(item.productQty);
+                                localStorage.setItem("my-cart", JSON.stringify([item]));
+                                dispatch(handlecartCount(1));
+                              }
+
+                              setUpdatecart(!updatecart);
+                              setSearchValue("");
+                              // window.location.reload();
+                            }
+
+                              // console.log("this is new pice",item.new_price)
+
+
+                            }
                             edge="end"
                           >
                             <BsFillCheckCircleFill
@@ -133,9 +236,11 @@ const Product = ({
                       onChange={(e) => {
                         const val = e.target.value;
                         if (val) {
+                          console.log("this is value of inpute", val)
                           setMyPrice({
                             productId: item.productId,
                             price: Number(val),
+
                           });
                           item.new_price = Number(val);
                           // setMyPrice(Number(val))
@@ -159,7 +264,10 @@ const Product = ({
                 </>
               ) : (
                 <>
-                  <p style={{ fontWeight: "400" }}>₹ {item.price}</p>
+                  <p style={{ fontWeight: "400" }}>
+                    <span>{saasId !== 15 ? "₹" : "रु."}</span>
+                    <span style={{ marginLeft: 10 }}>{item.price}</span>
+                  </p>
                 </>
               )}
               {/* <a href="#" class="btn btn-sm btn-warning">
@@ -179,12 +287,14 @@ const Product = ({
                       item.price === 0 || item.price === 0 ? "none" : "block",
                   }}
                   onClick={() => {
+                    toast.success("Item Added");
                     const el = JSON.parse(localStorage.getItem("my-cart"));
                     if (el) {
+                      console.log("cart me kuch toh pada hai", el)
                       if (el?.length > 0) {
                         let flag = 0;
-                        console.log("ELSSS", el);
                         el.map((el1) => {
+                          console.log("this add to cart 😘😘😘😘😘😘", el1)
                           if (
                             el1.productId === item.productId &&
                             el1.item_name === item.item_name
@@ -204,7 +314,6 @@ const Product = ({
                                 "my-cart",
                                 JSON.stringify([...el, item])
                               );
-                              console.log("C JSON DATA", c);
                             }
                           }
                         });
@@ -244,6 +353,7 @@ const Product = ({
                         dispatch(handlecartCount(1));
                       }
                     } else {
+                      console.log("this item 🤷‍♀️🤷‍♀️🤷‍♀️🤷‍♀️🤷‍♀️🤷‍♀️", item)
                       item["discount_menu_is_open"] = false;
                       item["discount_value"] = "";
                       item["amount_value"] = "";
@@ -278,6 +388,7 @@ const Product = ({
           </div>
         ))}
       </div>
+      {/* <PaginationComponent /> */}
     </>
   );
 };

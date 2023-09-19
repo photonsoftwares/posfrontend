@@ -36,6 +36,7 @@
     "react-dom": "^18.2.0",
     "react-flatpickr": "^3.10.13",
     "react-icons": "^4.10.1",
+    "react-paginate": "^8.2.0",
     "react-pdf": "^7.1.1",
     "react-radio-buttons": "^1.2.2",
     "react-redux": "^8.0.5",

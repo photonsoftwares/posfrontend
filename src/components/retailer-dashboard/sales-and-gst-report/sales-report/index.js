@@ -30,14 +30,20 @@ import moment from "moment";
 import DataTable from "react-data-table-component";
 import { CSVLink } from "react-csv";
 import Flatpickr from "react-flatpickr";
+import axios from "axios";
+import { BASE_Url } from "../../../../URL";
 
 const SalesReport = () => {
+  const { saasId, storeId } = localStorage.getItem("User_data")
+    ? JSON.parse(localStorage.getItem("User_data"))
+    : {};
   const dispatch = useDispatch();
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   // const dispatch = useDispatch()
-  const { sales_report_table_data } = useSelector(
-    (state) => state.ComponentPropsManagement
-  );
+  // const { sales_report_table_data } = useSelector(
+  //   (state) => state.ComponentPropsManagement
+  // );
+  const [sales_report_table_data, setSales_report_table_data] = useState([]);
   const [date, setDate] = useState(new Date());
 
   const debounce = (func) => {
@@ -51,18 +57,33 @@ const SalesReport = () => {
       }, 1000);
     };
   };
-
+  // console.log(date);
   const handleFunCall = (date) => {
     const t1 = moment(date).format("Y-MM-DD");
+    // console.log(t1);
     dispatch(handleSalesReportRequest(t1));
   };
 
   const optimizedFn = useCallback(debounce(handleFunCall), []);
+
   useEffect(() => {
     if (date) {
-      optimizedFn(date);
+      const t1 = moment(date).format("Y-MM-DD");
+      dispatch(handleSalesReportRequest(t1));
     }
   }, [date]);
+
+  const getReport = () => {
+    const t1 = moment(date).format("Y-MM-DD");
+    axios
+      .get(`${BASE_Url}/tax/get-sales-report/${t1}/${storeId}/${saasId}`)
+      .then((res) => {
+        console.log("--0", res);
+        if (res.status === 200) {
+          setSales_report_table_data(res.data.list_sales_report);
+        }
+      });
+  };
 
   // const debounce = (func) => {
   //     let timer;
@@ -200,9 +221,7 @@ const SalesReport = () => {
     <>
       <Card className="my-3">
         <CardBody>
-          {`Sales Report (Business Date: ${moment(new Date()).format(
-            "DD-MMM-Y"
-          )})`}
+          {`Sales Report (Business Date: ${moment(date).format("DD-MMM-Y")})`}
         </CardBody>
       </Card>
 
@@ -214,16 +233,38 @@ const SalesReport = () => {
                 <Label className="m-0 p-0">
                   Select Date <span className="text-red"> * </span>
                 </Label>
-                <Flatpickr
-                  className="form-control"
-                  onChange={(e) => {
-                    setDate(e[0]);
+                <div
+                  style={{
+                    width: "500px",
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "row",
                   }}
-                  options={{ allowInput: true, dateFormat: "d-M-Y" }}
-                  value={date}
-                  required={true}
-                  placeholder="Select Date"
-                />
+                >
+                  <div>
+                    <Flatpickr
+                      className="form-control"
+                      onChange={(e) => {
+                        setDate(e[0]);
+                      }}
+                      options={{ allowInput: true, dateFormat: "d-M-Y" }}
+                      value={date}
+                      required={true}
+                      placeholder="Select Date"
+                    />
+                  </div>
+                  <div>
+                    <Button
+                      onClick={() => {
+                        // const t1 = moment(date).format("Y-MM-DD");
+                        // dispatch(handleSalesReportRequest(t1));
+                        getReport();
+                      }}
+                    >
+                      Send
+                    </Button>
+                  </div>
+                </div>
               </FormGroup>
             </Col>
           </Row>

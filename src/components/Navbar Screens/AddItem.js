@@ -141,20 +141,20 @@ const AddItem = () => {
         })
       );
       setTimeout(() => {
-        setItemPrice("");
+        setItemPrice("0.00");
         setItemName("");
         setSelectedOptionDiscount(null);
         setTaxPercentage("");
         setSelectedHSNTax(null);
         setSelectedOptionTax(null);
         setItemCategory("");
-        setTaxPercenatage("");
-        setPurchasePrice("");
+        setTaxPercenatage("0.00");
+        setPurchasePrice("0.00");
         setSellingPrice("");
         setStockQty("");
-        setMrp("");
-        setOpeningQuantity("");
-        setReceivedQuantity("");
+        setMrp("0.00");
+        setOpeningQuantity("0.00");
+        setReceivedQuantity("0.00");
         setClosingQuantity("");
       }, 3000);
     }
@@ -307,10 +307,20 @@ const AddItem = () => {
                 </div>
                 {ImageName ? (
                   <div>
-                    {ImageName}{" "}
-                    <Button type="button" onClick={handleSubmit}>
-                      Upload
-                    </Button>
+                    <div>
+                      {ImageName}
+                      <Button type="button" onClick={handleSubmit}>
+                        Upload
+                      </Button>
+                    </div>
+                    <button
+                      onClick={() => {
+                        dispatch(resetProductId(""));
+                      }}
+                      className="btn btn-danger"
+                    >
+                      Cancel
+                    </button>
                   </div>
                 ) : (
                   ""
@@ -318,7 +328,7 @@ const AddItem = () => {
               </Col>
             ) : (
               <div className="form-box">
-                <h4>Add Item</h4>
+                <h4>Add Item *</h4>
                 <div
                   className="d-flex flex-col"
                   style={{ display: "flex", flexDirection: "column" }}

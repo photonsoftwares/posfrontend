@@ -9,7 +9,11 @@ import { FaGooglePay } from "react-icons/fa";
 import { SiPhonepe } from "react-icons/si";
 import { GrClose } from "react-icons/gr";
 import { SiContactlesspayment } from "react-icons/si";
-import { AiOutlineMail, AiOutlineSearch } from "react-icons/ai";
+import {
+  AiOutlineArrowLeft,
+  AiOutlineMail,
+  AiOutlineSearch,
+} from "react-icons/ai";
 import { BsCreditCardFill } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { FcSms } from "react-icons/fc";
@@ -33,8 +37,11 @@ import {
   handleCategoriesRequest,
   handleXYZRequest,
   handlecartCount,
+  totalPageCount,
+  upcommig,
+  previous,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-import { Button, Card, Col, Container, Row ,Image} from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Image } from "react-bootstrap";
 import pdfFile from "../../assets/PDF.pdf";
 
 //assets\PDF.pdf
@@ -42,7 +49,7 @@ import { Viewer, Worker } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-
+import Pagination from "../../PaginationComponent";
 import { BASE_Url } from "../../URL";
 import { useNavigate, useParams } from "react-router-dom";
 import { TextField } from "@mui/material";
@@ -58,6 +65,7 @@ import { RxDashboard } from "react-icons/rx";
 import Category from "../../components/Category/Category";
 import ViewOrdersCustomer from "../PendingOrders/ViewOrdersCustomer";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const DataByCategory = () => {
   // const loyalty_data = JSON.parse(localStorage.getItem("Loyalty_data"));
@@ -76,16 +84,17 @@ const DataByCategory = () => {
     storeId,
     // storeName,
     userId,
+
     userName,
     categoryReq,
     userType,
   } = localStorage.getItem("User_data")
-    ? JSON.parse(localStorage.getItem("User_data"))
-    : {};
+      ? JSON.parse(localStorage.getItem("User_data"))
+      : {};
 
   // console.log('',userType);
   const checkCustomer = userName.includes("C");
-  console.log("HOME CTGR", categoryReq);
+  // console.log("HOME CTGR", categoryReq);
   const userData = JSON.parse(localStorage.getItem("User_data"));
 
   const {
@@ -98,17 +107,21 @@ const DataByCategory = () => {
     get_recommended_items,
     xyz_State,
     search_customer_data,
+    page_number,
     show_cart_modal,
     get_all_catrgory_data,
+    total_count_page,
     show_viewOrder_modal,
   } = useSelector((e) => e.ComponentPropsManagement);
-  // console.log("GSD", get_searched_data);
+  console.log("page_number", page_number);
+  console.log("total_count_page", total_count_page);
+  console.log("LOGIC", total_count_page % page_number);
 
   // useEffect(() => {
   //   console.log("xyz_State", xyz_State);
   // }, []);
 
-  console.log("xyz_State", xyz_State);
+  // console.log("xyz_State", xyz_State);
 
   // useEffect(() => {
   //   dispatch(handleXYZRequest({}));
@@ -170,8 +183,9 @@ const DataByCategory = () => {
     link_loyalty_detail.balance_amount
   );
   const [viewOrderModalIsOpen, setViewOrderModalIsOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState();
 
-  console.log("recommended DATA", recommendedData);
+  // console.log("recommended DATA", recommendedData);
 
   useEffect(() => {
     if (localStorage.getItem("Store_data")) {
@@ -183,15 +197,27 @@ const DataByCategory = () => {
 
   const getDataFromStorage = () => {
     try {
-      const t1 = JSON.parse(localStorage.getItem("my-cart"));
-      setCartData(t1);
+      const t1 = localStorage.getItem("my-cart");
+      if (t1) {
+        // Parse the retrieved data (assuming it's an array)
+        const parsedData = JSON.parse(t1);
+        // Update cartData with the parsed data
+        setCartData(parsedData);
+        // console.log("Cart data check:", parsedData);
+      } else {
+        console.log("No data found in localStorage");
+      }
+      // console.log("cart data check",t1);
+
+      // setCartData(t1);   // Update cartData with the parsed data
+      // console.log(t1);
     } catch (err) {
-      console.log(err);
+      console.error("Error while retrieving data:", err);
     }
   };
   useEffect(() => {
     getDataFromStorage();
-  }, [updatecart]);
+  }, [show]);
 
   // console.log("handle_saveTransaction_data", handle_saveTransaction_data);
 
@@ -204,7 +230,7 @@ const DataByCategory = () => {
 
     var MyDate = new Date();
     var MyDateString;
-    console.log("inside effect", cartData);
+    // console.log("inside effect", cartData);
     if (link_loyalty_detail && Object.keys(link_loyalty_detail.length > 0)) {
       if (checkLoyalty === true) {
         dispatch(
@@ -321,7 +347,7 @@ const DataByCategory = () => {
     if (cartData?.length > 0) {
       let arr = [];
       cartData.map((item) => {
-        console.log("ITEM", item);
+        // console.log("ITEM is where", item);
 
         arr.push({
           product_name: item.category,
@@ -345,6 +371,7 @@ const DataByCategory = () => {
   // cartDataAcc();
 
   useEffect(() => {
+    console.log("hi me", show_cart_modal)
     setShow(show_cart_modal);
   }, [show_cart_modal]);
 
@@ -393,19 +420,22 @@ const DataByCategory = () => {
   };
 
   useEffect(() => {
-    console.log("cartData", cartData);
+    const cartData = JSON.parse(localStorage.getItem("my-cart"));
+
+    // console.log("cartData", cartData);
     const arr = [];
     let sum = 0;
     cartData?.map((el) => {
       // const totalCart = Number(el.price) * Number(el.productQty);
       // arr.push(totalCart);
       // const r =  el.new_price* el.productQty
-      arr.push(el.new_price);
+      arr.push(el.price);
+      // console.log(el);
     });
     arr?.map((el) => {
       sum = sum + el;
     });
-    console.log("SUM", sum);
+    // console.log("SUM", sum);
     // setBalanceDue(sum);
     setSumValue(sum);
     setAmount(sum);
@@ -498,7 +528,7 @@ const DataByCategory = () => {
       isActive: link_loyalty_detail.balance_amount > 0 ? false : true,
     },
   ];
-  console.log("RECOMMENDED", recommendedData);
+  // console.log("RECOMMENDED", recommendedData);
   const debounce = (func) => {
     let timer;
     return function (...args) {
@@ -589,7 +619,7 @@ const DataByCategory = () => {
     if (balanceDue === 0) {
       setHandleShowReceipt(true);
     } else {
-      success("Pay Due Amount!");
+      setErrorMsg("Please Select A Valid Payment Method");
     }
   };
 
@@ -599,13 +629,12 @@ const DataByCategory = () => {
     // alert("Form Sumbited!");
     // window.location.reload();
   };
-  console.log(searchedData);
-  console.log(searchValue);
+  // console.log(searchedData);
+  // console.log(searchValue);
 
-  console.log(recommendedData);
+  // console.log(recommendedData);
 
-  
-  console.log(searchValue);
+  // console.log(searchValue);
 
   const handleTenderAmount = () => {
     if (optionTick?.length > 0) {
@@ -665,7 +694,7 @@ const DataByCategory = () => {
   };
   const handleWhatsApp = (e) => {
     e.preventDefault();
-    console.log("handleWhatsApp", e);
+    // console.log("handleWhatsApp", e);
     // if (whatsApp) {
     dispatch(
       handlewhatsAppRequest({
@@ -680,11 +709,11 @@ const DataByCategory = () => {
     setEmail("");
   };
 
-  console.log("HOME CARTDATA", cartData);
+  // console.log("HOME CARTDATA", cartData);
 
   // console.log("DISCOUNT AMOUNT", discountAmountVal);
   // console.log("OPTION TICK", optionTick);
-  console.log("TENDER 3", handleTander3());
+  // console.log("TENDER 3", handleTander3());
 
   // console.log("HANDLE TENDER", handleTenderAmount());
   const customerTab = [
@@ -723,10 +752,17 @@ const DataByCategory = () => {
         <div
           className="d-flex flex-row"
           style={{
+            backgroundColor: "#FDEECC",
+            position: "fixed",
+            bottom: 0,
+            zIndex: 88,
             display: "flex",
+            flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-          }}>
+            width: "100%",
+          }}
+        >
           {customerTab
             .filter((io) => io.isActive === true)
             .map((item) => {
@@ -735,7 +771,9 @@ const DataByCategory = () => {
                   <div
                     style={{
                       display: "flex",
-                      // justifyContent: "space-between",
+                      zIndex: 99,
+                      // width: "100%",
+                      justifyContent: "space-between",
                       alignItems: "center",
                       flexDirection: "column",
                       // margin: "10px",
@@ -754,7 +792,8 @@ const DataByCategory = () => {
                         );
                       } else if (item.value === "profile") {
                       }
-                    }}>
+                    }}
+                  >
                     <div>{item.icon}</div>
                     <div style={{ color: "#D64046" }}>{item.label}</div>
                   </div>
@@ -779,201 +818,263 @@ const DataByCategory = () => {
     setSms("");
   };
   //----------------------------------------------------
-  const addToCart = (item) => {
-    const cart = JSON.parse(localStorage.getItem("my-cart")) || [];
-    console.log('cart ddddd', cart)
-    console.log('sssssss', item)
-    const existingItem = cart.find(
-      (cartItem) => cartItem.item_id === item.item_id
-    );
+  // const addToCart = (item) => {
+  //   const cart = JSON.parse(localStorage.getItem("my-cart")) || [];
+  //   // console.log("cart ddddd", cart);
+  //   // console.log("sssssss", item);
+  //   const existingItem = cart.find(
+  //     (cartItem) => cartItem.item_id === item.item_id
+  //   );
 
-    if (existingItem) {
-      existingItem.productQty += 1;
+  //   if (existingItem) {
+  //     existingItem.productQty += 1;
+  //   } else {
+  //     window.location.reload();
+  //     toast.success("Item Added");
+  //     const newItem = { ...item, productQty: 1 };
+  //     cart.push(newItem);
+  //   }
 
-    } else {
-      const newItem = { ...item, productQty: 1 };
-      cart.push(newItem);
+  //   localStorage.setItem("my-cart", JSON.stringify(cart));
 
-    }
+  //   dispatch(handlecartCount(cart.length));
 
-    localStorage.setItem("my-cart", JSON.stringify(cart));
-
-    dispatch(handlecartCount(cart.length));
-
-    // setUpdatecart(!updatecart);
-    // setSearchValue("");
-  };
+  //   // setUpdatecart(!updatecart);
+  //   // setSearchValue("");
+  // };
 
   const { catname } = useParams();
 
-
   const [filterdetails, setFilterdetails] = useState([]);
-  const [category2, setCategory2] = useState([])
-  
-
-
+  const [category2, setCategory2] = useState([]);
 
   // const { storeId, saasId, userName } = JSON.parse(
   //   localStorage.getItem("User_data")
   // );
 
   useEffect(() => {
-    axios.get(`${BASE_Url}/search/get-result/${storeId}/${saasId}/${catname}`)
-      .then((res) => setFilterdetails(res.data.data));
     axios
-      .get(`${BASE_Url}/category/get-list/${saasId}/${storeId}`)
+      .get(
+        `${BASE_Url}/item/get-category-list/${saasId}/${storeId}/${catname}/${page_number}`
+      )
+      .then((res) => {
+        if (res.status == 200) {
+          console.log("RES CATEGORY", res.data.data);
+          dispatch(upcommig(res.data.next));
+          dispatch(previous(res.data.prev));
+          dispatch(totalPageCount(res.data.count));
+          const tempArr = res.data.data;
+          tempArr.map((el) => {
+            el["bill_qty"] = 0;
+          });
+          // console.log("RES DEALER & Retailer", tempArr);
+          setFilterdetails(tempArr);
+          console.log("TEMPARR", tempArr);
+        }
+      });
+    axios
+      .get(`${BASE_Url}/category/get-list/${saasId}/${storeId}/${userName}`)
       .then((res) => setCategory2(res.data.data));
+  }, [page_number]);
 
-  }, []);
+  const filterres = category2.filter((ele) => ele.category_name == catname);
 
-
-
-
-  const filterres = category2.filter((ele) => ele.category_name == catname)
-
-  console.log(filterres)
+  // console.log(filterres);
 
   return (
     <div className="app">
-        <div className="d-flex align-items-center justify-content-center  mt-3">
 
-{
-  filterres[0] &&
-  <Card style={{ boxShadow: '0 4px 6px rgba(0, 0, 0, 0,)', borderRadius: '10px', width: '20rem' }} className="cardCategory ">
-    <div className="d-flex align-items-center justify-content-center">
-      <Image src={filterres[0].image_path} roundedCircle style={{ width: "100px", height: '100px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.' }} className="m-1" />
-      <h1 className="text-center">{filterres[0].category_name}</h1>
-    </div>
-  </Card>
-}
-
-</div>
-
-
-<div >
-<div className="d-flex align-items-center justify-content-center mt-2 ">
-  <Container>
-    <Row xs={2} sm={4} md={4}>
-      {filterdetails.map((ele) => {
-        return (
-          <Col className="mt-5">
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Card style={{ borderRadius: "10px", width: "12rem", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", }}
-                className="cardCategory">
-                <Card.Img src={"https://pos.photonsoftwares.com/prod/api/v1/item/get-image/7044"}></Card.Img>
-                <div>
-                  <div className="text-center">
-                    <Card.Body>
-                      <h6>{ele.description}</h6>
-                      <p><span >₹</span>{' '}100</p>
-                      <Button variant="warning" onClick={() => addToCart(ele)} >Add to cart</Button>
-                    </Card.Body>
-                  </div>
-
-                </div>
-              </Card>
+      <div className="d-flex align-items-center justify-content-center  mt-3">
+        <AiOutlineArrowLeft
+          onClick={() => navigate("/Home")}
+          size={20}
+          color="#000"
+          style={{
+            marginLeft: "-30px",
+            width: "30px",
+            height: "30px",
+            cursor: "pointer",
+          }}
+        />
+        {filterres[0] && (
+          <Card
+            style={{
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0,)",
+              borderRadius: "10px",
+              width: "20rem",
+            }}
+          // className="cardCategory"
+          >
+            <div
+              className="d-flex flex-col align-items-center justify-content-center"
+              style={{ display: "flex", flexDirection: "column" }}
+            >
+              <Image
+                src={filterres[0].image_path}
+                roundedCircle
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.",
+                }}
+                className=" cardCategory m-1"
+              />
+              <h4 className="text-center">{filterres[0].category_name}</h4>
             </div>
-          </Col>
-        );
-      })}
-    </Row>
-  </Container>
-</div>
-</div>
-         
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     {/* carddata */}
+          </Card>
+        )}
+      </div>
+
+      {/* <div>
+        <div className="d-flex align-items-center justify-content-center mt-2 ">
+          <Container>
+            <Row xs={2} sm={4} md={4}>
+              {filterdetails.map((ele) => {
+                return (
+                  <Col className="mt-5">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Card
+                        style={{
+                          borderRadius: "10px",
+                          width: "12rem",
+                          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                        }}
+                        className="cardCategory"
+                      >
+                        <Card.Img
+                          src={
+                            "https://pos.photonsoftwares.com/prod/api/v1/item/get-image/7044"
+                          }
+                        ></Card.Img>
+                        <div>
+                          <div className="text-center">
+                            <Card.Body>
+                              <h6>{ele.description}</h6>
+                              <p>
+                                <span>₹</span> {ele.price}
+                              </p>
+                              <Button
+                                variant="warning"
+                                onClick={() => addToCart(ele)}
+                              >
+                                Add to cart
+                              </Button>
+                            </Card.Body>
+                          </div>
+                        </div>
+                      </Card>
+                    </div>
+                  </Col>
+                );
+              })}
+            </Row>
+          </Container>
+        </div>
+      </div> */}
+
       <div
         style={{
-          position: "absolute",
-          bottom: "0",
-          backgroundColor: "#fff",
-          width: "100%",
-          height: "50px",
-          borderRadius: "5px",
-        }}>
-        {/* {cart_data && ( */}
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <Pagination filterdetails={filterdetails} />
+      </div>
+      {/* carddata */}
+      {link_loyalty_detail && link_loyalty_detail.customer_name ? (
         <div
           style={{
-            paddingLeft: "20px",
-            paddingRight: "20px",
-            display: "flex",
+            position: "absolute",
+            bottom: "0",
+            backgroundColor: "#fff",
             width: "100%",
-            alignItems: "center",
-            // justifyContent: "space-around",
-            color: "#fff",
-          }}>
+            height: "50px",
+            borderRadius: "5px",
+          }}
+        >
+          {/* {cart_data && ( */}
           <div
             style={{
-              color: "#eee",
-              fontWeight: "bolder",
-              color: "#8f0707",
-              // display: "flex",
-              // alignItems: "center",
-              // justifyContent: "space-between",
+              paddingLeft: "20px",
+              paddingRight: "20px",
+              display: "flex",
               width: "100%",
-            }}>
-            {link_loyalty_detail && link_loyalty_detail.customer_name ? (
-              <div
-                className="d-flex flex-row text-center"
-                style={{ width: "100%" }}>
-                <p style={{ padding: 0, margin: 0, marginRight: "30px" }}>
-                  Cutomer Name
-                </p>
-                <p style={{ padding: 0, margin: 0 }}>
-                  {link_loyalty_detail.customer_name}
-                </p>
-              </div>
-            ) : (
-              // ""
-              handleUserCheck()
-            )}
-          </div>
-          <div
-            style={{
-              fontWeight: "lighter",
+              alignItems: "center",
+              // justifyContent: "space-around",
               color: "#fff",
-              position: "relative",
-              cursor: "pointer",
-            }}>
-            <div style={{ margin: "5px 0px" }}>
-              {/* <BsHandbag color="#000" fontSize={30} opacity={0.8} /> */}
-            </div>
-            <h6
+            }}
+          >
+            <div
               style={{
-                fontSize: "15px",
+                color: "#eee",
+                fontWeight: "bolder",
+                color: "#8f0707",
+                // display: "flex",
+                // alignItems: "center",
+                // justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              {link_loyalty_detail && link_loyalty_detail.customer_name ? (
+                <div
+                  className="d-flex flex-row text-center"
+                  style={{ width: "100%" }}
+                >
+                  <p style={{ padding: 0, margin: 0, marginRight: "30px" }}>
+                    Cutomer Name
+                  </p>
+                  <p style={{ padding: 0, margin: 0 }}>
+                    {link_loyalty_detail.customer_name}
+                  </p>
+                </div>
+              ) : (
+                // ""
+                handleUserCheck()
+              )}
+            </div>
+            <div
+              style={{
+                fontWeight: "lighter",
+                color: "#fff",
+                position: "relative",
+                cursor: "pointer",
+              }}
+            >
+              <div style={{ margin: "5px 0px" }}>
+                {/* <BsHandbag color="#000" fontSize={30} opacity={0.8} /> */}
+              </div>
+              <h6
+                style={{
+                  fontSize: "15px",
+                  padding: 0,
+                  margin: 0,
+                  position: "absolute",
+                  color: "red",
+                  right: "11px",
+                  top: "16px",
+                }}
+              >
+                {/* {cartData?.length} */}
+              </h6>
+            </div>
+            <h2
+              style={{
                 padding: 0,
                 margin: 0,
-                position: "absolute",
-                color: "red",
-                right: "11px",
-                top: "16px",
-              }}>
-              {/* {cartData?.length} */}
-            </h6>
-          </div>
-          <h2
-            style={{
-              padding: 0,
-              margin: 0,
-              fontWeight: "400",
-              color: "#000",
-              textDecoration: "none",
-              fontSize: "20px",
-              cursor: "pointer",
-            }}
+                fontWeight: "400",
+                color: "#000",
+                textDecoration: "none",
+                fontSize: "20px",
+                cursor: "pointer",
+              }}
             // onClick={() => {
             //   if (cartData && cartData?.length > 0) {
             //     setShow(true);
@@ -981,12 +1082,16 @@ const DataByCategory = () => {
             //     .error("Please add atleast one item in cart");
             //   }
             // }}
-          >
-            {/* View Cart <BsArrowRight /> */}
-          </h2>
+            >
+              {/* View Cart <BsArrowRight /> */}
+            </h2>
+          </div>
+          {/* )} */}
         </div>
-        {/* )} */}
-      </div>
+      ) : (
+        ""
+      )}
+
       {/* MY CART */}
       {show === true && (
         <MyCart
@@ -1018,7 +1123,7 @@ const DataByCategory = () => {
         centered
         // id="contained-modal-title-vcenter"
         show={paymentModal}
-        // style={{ position: "relative" }}
+      // style={{ position: "relative" }}
       >
         <Modal.Body>
           <div className="main-container">
@@ -1026,20 +1131,23 @@ const DataByCategory = () => {
               className="main-container1"
               style={{
                 backgroundColor: "#f8f8f8",
-              }}>
+              }}
+            >
               <div
                 style={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                }}>
+                }}
+              >
                 <div>
                   <div
                     style={{
                       fontSize: "24px",
                       fontWeight: 700,
                       textAlign: "center",
-                    }}>
+                    }}
+                  >
                     Total Invoice Value: {totalSum}
                   </div>
                   <div className="mt-2">
@@ -1074,7 +1182,8 @@ const DataByCategory = () => {
                   marginRight: "26px",
                   alignItems: "center",
                   justifyContent: "center",
-                }}>
+                }}
+              >
                 <div className="option-item-container">
                   {optionArray
                     .filter((el) => el.isActive === false)
@@ -1105,7 +1214,7 @@ const DataByCategory = () => {
                                     }
                                   }
                                 }
-                                console.log(item);
+                                // console.log(item);
                                 if (item.value === "loyalty") {
                                   setcheckLoyalty(true);
                                   let newLoyaltyAmount = loyaltyAmount;
@@ -1141,30 +1250,30 @@ const DataByCategory = () => {
                                   }
                                 }
                               }}
-                              className={`option-item ${
-                                optionTick.filter(
-                                  (io) => io.name === item.value
-                                )?.length > 0 && ""
-                              }`}
+                              className={`option-item ${optionTick.filter(
+                                (io) => io.name === item.value
+                              )?.length > 0 && ""
+                                }`}
                               style={{
                                 width: "90%",
                                 backgroundColor:
                                   item.name === "Cash"
                                     ? "#fed813"
                                     : item.name === "Paytm"
-                                    ? "#00B9F1"
-                                    : item.name === "Google Pay"
-                                    ? "#2DA94F"
-                                    : item.name === "Phone Pay"
-                                    ? "#5f259f"
-                                    : item.name === "UPI"
-                                    ? "#ff7909"
-                                    : item.name === "Credit Sale"
-                                    ? "#1741b2"
-                                    : item.name === "Loyalty"
-                                    ? "#c8030e"
-                                    : "silver",
-                              }}>
+                                      ? "#00B9F1"
+                                      : item.name === "Google Pay"
+                                        ? "#2DA94F"
+                                        : item.name === "Phone Pay"
+                                          ? "#5f259f"
+                                          : item.name === "UPI"
+                                            ? "#ff7909"
+                                            : item.name === "Credit Sale"
+                                              ? "#1741b2"
+                                              : item.name === "Loyalty"
+                                                ? "#c8030e"
+                                                : "silver",
+                              }}
+                            >
                               <div style={{ position: "relative", top: "2px" }}>
                                 {item.icon}
                               </div>
@@ -1175,19 +1284,20 @@ const DataByCategory = () => {
                                     item.name === "Cash"
                                       ? "black"
                                       : item.name === "Paytm"
-                                      ? "black"
-                                      : item.name === "Google Pay"
-                                      ? "white"
-                                      : item.name === "Phone Pay"
-                                      ? "white"
-                                      : item.name === "UPI"
-                                      ? "white"
-                                      : item.name === "Credit Sale"
-                                      ? "#fff"
-                                      : item.name === "Loyalty"
-                                      ? "#fff"
-                                      : "black",
-                                }}>
+                                        ? "black"
+                                        : item.name === "Google Pay"
+                                          ? "white"
+                                          : item.name === "Phone Pay"
+                                            ? "white"
+                                            : item.name === "UPI"
+                                              ? "white"
+                                              : item.name === "Credit Sale"
+                                                ? "#fff"
+                                                : item.name === "Loyalty"
+                                                  ? "#fff"
+                                                  : "black",
+                                }}
+                              >
                                 {item.name}
                               </div>
                             </div>
@@ -1203,7 +1313,8 @@ const DataByCategory = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                }}>
+                }}
+              >
                 <div className="calculated_amount-container">
                   {optionTick && optionTick?.length > 0 && (
                     <>
@@ -1223,6 +1334,10 @@ const DataByCategory = () => {
 
               <div className="due-blnce-container">
                 Balance Due = {balanceDue}
+              </div>
+
+              <div className="text-center">
+                <p className="text-sm text-red">{errorMsg}</p>
               </div>
 
               <div className="btn-container">
@@ -1260,9 +1375,8 @@ const DataByCategory = () => {
                         register_id: userData && userData.registerId,
                         total_invoice_amount: Number(invoiceValue),
                         store_id: Number(userData && userData.storeId),
-                        business_date: `${year}-${
-                          month < 10 ? "0" + month : month
-                        }-${day < 10 ? "0" + day : day}`,
+                        business_date: `${year}-${month < 10 ? "0" + month : month
+                          }-${day < 10 ? "0" + day : day}`,
                         invoice_no:
                           handle_saveTransaction_data.transaction_id + "",
                         source_app: "POS",
@@ -1314,7 +1428,8 @@ const DataByCategory = () => {
                     //     // ],
                     //   })
                     // );
-                  }}>
+                  }}
+                >
                   Receipts
                 </button>
                 <Button
@@ -1327,7 +1442,8 @@ const DataByCategory = () => {
                     outline: "none",
                     border: "none",
                     fontSize: "20px",
-                  }}>
+                  }}
+                >
                   Close
                 </Button>
               </div>
@@ -1342,7 +1458,8 @@ const DataByCategory = () => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
         show={handleShowReceipt}
-        style={{ height: "100%" }}>
+        style={{ height: "100%" }}
+      >
         <Modal.Header>
           <Modal.Title>Your Receipt! </Modal.Title>
         </Modal.Header>
@@ -1352,10 +1469,9 @@ const DataByCategory = () => {
               <>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={`${BASE_Url}/transaction/pdf/${
-                      handle_saveTransaction_data &&
+                    fileUrl={`${BASE_Url}/transaction/pdf/${handle_saveTransaction_data &&
                       handle_saveTransaction_data.pdf_file_name
-                    }`}
+                      }`}
                     plugins={[defaultLayoutPluginInstance]}
                   />
                 </Worker>
@@ -1370,7 +1486,8 @@ const DataByCategory = () => {
                 alignItems: "center",
                 justifyContent: "space-evenly",
                 marginTop: "20px",
-              }}>
+              }}
+            >
               <div
                 style={{
                   width: "100%",
@@ -1378,7 +1495,8 @@ const DataByCategory = () => {
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "space-evenly",
-                }}>
+                }}
+              >
                 <div
                 // style={{ flex: 1 }}
                 >
@@ -1390,7 +1508,8 @@ const DataByCategory = () => {
                       setWhatsAppOpen((state) => !state);
                       setSmsOpen(false);
                       setEmailOpen(false);
-                    }}>
+                    }}
+                  >
                     WhatsApp <IoLogoWhatsapp size={25} />
                   </Button>
                 </div>
@@ -1405,7 +1524,8 @@ const DataByCategory = () => {
                       setEmailOpen((state) => !state);
                       setWhatsAppOpen(false);
                       setSmsOpen(false);
-                    }}>
+                    }}
+                  >
                     Email <AiOutlineMail size={25} />
                   </Button>
                 </div>
@@ -1419,7 +1539,8 @@ const DataByCategory = () => {
                       setSmsOpen((state) => !state);
                       setEmailOpen(false);
                       setWhatsAppOpen(false);
-                    }}>
+                    }}
+                  >
                     SMS <FcSms size={25} />
                   </Button>
                 </div>
@@ -1428,7 +1549,8 @@ const DataByCategory = () => {
                 <form
                   onSubmit={handleNotifyEmail}
                   className="d-flex flex-row align-items-center"
-                  style={{ width: "50%" }}>
+                  style={{ width: "50%" }}
+                >
                   <TextField
                     type="email"
                     className="form-control my-2"
@@ -1452,7 +1574,8 @@ const DataByCategory = () => {
                 <form
                   onSubmit={handleWhatsApp}
                   className="d-flex flex-row align-items-center"
-                  style={{ width: "50%" }}>
+                  style={{ width: "50%" }}
+                >
                   <TextField
                     type="number"
                     className="form-control my-2"
@@ -1477,7 +1600,8 @@ const DataByCategory = () => {
                 <form
                   onSubmit={handleSMS}
                   className="d-flex flex-row align-items-center"
-                  style={{ width: "50%" }}>
+                  style={{ width: "50%" }}
+                >
                   <TextField
                     type="text"
                     className="form-control my-2"
@@ -1522,7 +1646,8 @@ const DataByCategory = () => {
                   setTimeout(() => {
                     window.location.reload();
                   }, 500);
-                }}>
+                }}
+              >
                 Close
               </Button>
               <div
@@ -1534,12 +1659,12 @@ const DataByCategory = () => {
                   justifyContent: "center",
                   // marginTop: "20px",
                   marginBottom: "20px",
-                }}>
+                }}
+              >
                 <img
-                  src={`${BASE_Url}/transaction/pdf-qr/${
-                    handle_saveTransaction_data &&
+                  src={`${BASE_Url}/transaction/pdf-qr/${handle_saveTransaction_data &&
                     handle_saveTransaction_data.qr_file_name
-                  }`}
+                    }`}
                   alt=""
                   style={{ height: "100%", width: "80%" }}
                 />

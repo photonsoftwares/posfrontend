@@ -139,14 +139,13 @@ const MemberEnrollment = () => {
     setAddress2("");
   };
 
-
   // const AddMoreDetails =()=>{
-    
+
   // }
 
-  const handleShowMoreToggle=()=>{
-    setShowMore(!showMore)
-  }
+  const handleShowMoreToggle = () => {
+    setShowMore(!showMore);
+  };
 
   return (
     <section>
@@ -154,7 +153,7 @@ const MemberEnrollment = () => {
         <div className="row d-flex justify-content-center">
           <div className="col-lg-5 col-md-10 col-sm-12 px-5">
             <form className="form-box" onSubmit={handleSubmit}>
-              <h4>Member Enrollment</h4>
+              <h4>Member Enrollment </h4>
               {/* <TextField
                 size="small"
                 type="number"
@@ -173,16 +172,7 @@ const MemberEnrollment = () => {
                 label="Client ID"
                 required
               /> */}
-              <TextField
-                size="small"
-                type="text"
-                className="form-control mt-2"
-                id="customer-name"
-                value={baseCurrecy}
-                onChange={(e) => setBaseCurrency(e.target.value)}
-                label="Bace Currency"
-                required
-              />
+
               <TextField
                 size="small"
                 type="number"
@@ -191,7 +181,6 @@ const MemberEnrollment = () => {
                 label="Mobile"
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value)}
-                required
               />
               <TextField
                 size="small"
@@ -201,7 +190,6 @@ const MemberEnrollment = () => {
                 label="Customer Name"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                required
               />
               <TextField
                 size="small"
@@ -211,7 +199,6 @@ const MemberEnrollment = () => {
                 label="Email Id"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
               />
               <TextField
                 size="small"
@@ -221,7 +208,6 @@ const MemberEnrollment = () => {
                 label="POS"
                 value={sourceChannel}
                 onChange={(e) => setSourceChannel(e.target.value)}
-                required
               />
               <div className="d-flex flex-row items-center justify-content-between mt-3">
                 {/* <p>Business created date</p> */}
@@ -231,12 +217,12 @@ const MemberEnrollment = () => {
                     onChange={(date) => setBusinessCreatedDate(date)}
                   /> */}
                   {/* <input */}
-                    {/* type="date" */}
-                    {/* name="" */}
-                    {/* id="" */}
-                    {/* // placeholder="Date of Birth" */}
-                    {/* value={businessCreatedDate} */}
-                    {/* onChange={(e) => setBusinessCreatedDate(e.target.value)} */}
+                  {/* type="date" */}
+                  {/* name="" */}
+                  {/* id="" */}
+                  {/* // placeholder="Date of Birth" */}
+                  {/* value={businessCreatedDate} */}
+                  {/* onChange={(e) => setBusinessCreatedDate(e.target.value)} */}
                   {/* /> */}
                 </div>
               </div>
@@ -245,10 +231,9 @@ const MemberEnrollment = () => {
                 type="text"
                 className="form-control mt-2"
                 id="customer-name"
-                label="Nationality" 
+                label="Nationality"
                 value={nationality}
                 onChange={(e) => setNationality(e.target.value)}
-                required
               />
               <TextField
                 size="small"
@@ -258,7 +243,15 @@ const MemberEnrollment = () => {
                 label="Language"
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                required
+              />
+              <TextField
+                size="small"
+                type="text"
+                className="form-control mt-2"
+                id="customer-name"
+                value={baseCurrecy}
+                onChange={(e) => setBaseCurrency(e.target.value)}
+                label="Bace Currency"
               />
               <div className="d-flex flex-row items-center justify-content-between mt-3">
                 <p>Date of Birth</p>
@@ -303,141 +296,126 @@ const MemberEnrollment = () => {
                 </div>
               </div>
 
-             <button style={{
-              padding: '10px 20px',
-              borderRadius: '5px',
-              background: '#4CAF50',
-              color: '#fff',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-              transition: 'transform 0.2s ease-in-out',
-             }}
-             onClick={handleShowMoreToggle}
-             >
-                      {showMore ? 'Show Less' : 'Add more Details'}
-
-             </button>
-
-
-
-
-
-
-
-
-               {
-                showMore ?
-
-                <div>
-                       
-              <div
-                className="d-flex flex-row items-center justify-content-between mt-3"
-                // style={{ width: "100%" }}
+              <button
+                style={{
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  background: "#4CAF50",
+                  color: "#fff",
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  border: "none",
+                  cursor: "pointer",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                  transition: "transform 0.2s ease-in-out",
+                }}
+                onClick={handleShowMoreToggle}
               >
-                <p>Anniversary Date</p>
-                <div style={{ opacity: "0.5" }}>
-                  {" "}
-                  {/* <ReactDatePicker
+                {showMore ? "Show Less" : "Add more Details"}
+              </button>
+
+              {showMore ? (
+                <div>
+                  <div
+                    className="d-flex flex-row items-center justify-content-between mt-3"
+                    // style={{ width: "100%" }}
+                  >
+                    <p>Anniversary Date</p>
+                    <div style={{ opacity: "0.5" }}>
+                      {" "}
+                      {/* <ReactDatePicker
                     selected={anniversaryDate}
                     onChange={(date) => setAnniversaryDate(date)}
                   /> */}
-                  <input
-                    type="date"
-                    name=""
-                    id=""
-                    value={anniversaryDate}
-                    onChange={(e) => setAnniversaryDate(e.target.value)}
+                      <input
+                        type="date"
+                        name=""
+                        id=""
+                        value={anniversaryDate}
+                        onChange={(e) => setAnniversaryDate(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <TextField
+                    size="small"
+                    type="text"
+                    className="form-control mt-2"
+                    id="customer-name"
+                    value={preferredAddress}
+                    onChange={(e) => setPreferredAddress(e.target.value)}
+                    label="Preferred Address"
+                  />
+                  <TextField
+                    size="small"
+                    type="text"
+                    className="form-control mt-2"
+                    id="customer-name"
+                    value={address1}
+                    onChange={(e) => setAddress1(e.target.value)}
+                    label="Address 1"
+                  />
+                  <TextField
+                    size="small"
+                    type="text"
+                    className="form-control mt-2"
+                    id="customer-name"
+                    label="Address 2"
+                    value={address2}
+                    onChange={(e) => setAddress2(e.target.value)}
+                  />
+                  <div className="mt-2">
+                    <Select
+                      defaultValue={selectedSuffixOption}
+                      onChange={handleSelectedSuffix}
+                      options={optionsforSuffix}
+                      placeholder="Suffix"
+                    />
+                  </div>
+                  <div className="my-3">
+                    <Select
+                      defaultValue={selectedMaritalOption}
+                      onChange={handleMaritalOption}
+                      options={optionsforMaritalStatusOption}
+                      placeholder="Marital Status"
+                    />
+                  </div>
+                  <div className="my-3">
+                    <Select
+                      defaultValue={selectedLocationOption}
+                      onChange={handleLocationOption}
+                      options={optionsforLocationOption}
+                      placeholder="Location"
+                    />
+                  </div>
+                  <div className="my-3">
+                    <Select
+                      defaultValue={selectedCityOption}
+                      onChange={handleCityOption}
+                      options={optionsForCity}
+                      placeholder="City"
+                    />
+                  </div>
+                  <div className="my-3">
+                    <Select
+                      defaultValue={selectedCountryOption}
+                      onChange={handleCountryOption}
+                      options={optionsForCountry}
+                      placeholder="Country"
+                    />
+                  </div>
+                  <TextField
+                    size="small"
+                    type="number"
+                    className="form-control mt-2"
+                    id="customer-name"
+                    label="Pin Code"
+                    value={pinCode}
+                    onChange={(e) => setPincode(e.target.value)}
                   />
                 </div>
-              </div>
-              <TextField
-                size="small"
-                type="text"
-                className="form-control mt-2"
-                id="customer-name"
-                value={preferredAddress}
-                onChange={(e) => setPreferredAddress(e.target.value)}
-                label="Preferred Address"
-                required
-              />
-              <TextField
-                size="small"
-                type="text"
-                className="form-control mt-2"
-                id="customer-name"
-                value={address1}
-                onChange={(e) => setAddress1(e.target.value)}
-                label="Address 1"
-                required
-              />
-              <TextField
-                size="small"
-                type="text"
-                className="form-control mt-2"
-                id="customer-name"
-                label="Address 2"
-                value={address2}
-                onChange={(e) => setAddress2(e.target.value)}
-                required
-              />
-              <div className="mt-2">
-                <Select
-                  defaultValue={selectedSuffixOption}
-                  onChange={handleSelectedSuffix}
-                  options={optionsforSuffix}
-                  placeholder="Suffix"
-                />
-              </div>
-              <div className="my-3">
-                <Select
-                  defaultValue={selectedMaritalOption}
-                  onChange={handleMaritalOption}
-                  options={optionsforMaritalStatusOption}
-                  placeholder="Marital Status"
-                />
-              </div>
-              <div className="my-3">
-                <Select
-                  defaultValue={selectedLocationOption}
-                  onChange={handleLocationOption}
-                  options={optionsforLocationOption}
-                  placeholder="Location"
-                />
-              </div>
-              <div className="my-3">
-                <Select
-                  defaultValue={selectedCityOption}
-                  onChange={handleCityOption}
-                  options={optionsForCity}
-                  placeholder="City"
-                />
-              </div>
-              <div className="my-3">
-                <Select
-                  defaultValue={selectedCountryOption}
-                  onChange={handleCountryOption}
-                  options={optionsForCountry}
-                  placeholder="Country"
-                />
-              </div>
-              <TextField
-                size="small"
-                type="number"
-                className="form-control mt-2"
-                id="customer-name"
-                label="Pin Code"
-                value={pinCode}
-                onChange={(e) => setPincode(e.target.value)}
-                required
-              />
-                </div> : <></>
-               }   
-               
-               
-
+              ) : (
+                <></>
+              )}
 
               <div className="my-3">
                 <button
@@ -451,7 +429,7 @@ const MemberEnrollment = () => {
                     padding: "10px 20px",
                     borderRadius: "10px",
                     color: "#fff",
-                    marginBottom:"15px"
+                    marginBottom: "15px",
                   }}
                 >
                   Save
@@ -470,7 +448,7 @@ const MemberEnrollment = () => {
                     padding: "10px 20px",
                     borderRadius: "10px",
                     color: "#fff",
-                    marginBottom:"15px"
+                    marginBottom: "15px",
                   }}
                 >
                   Close

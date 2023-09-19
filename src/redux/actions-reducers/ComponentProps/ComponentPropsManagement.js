@@ -3,19 +3,26 @@ import { json } from "react-router-dom";
 // import { toast } from "react-toastify";
 // import { useHistory } from "react-router-dom";
 
-
 var initialComponentPropsManagementState = {
   load: false,
   product_count: 0,
   store_name: "",
   get_searched_data: [],
+  customers_all_addresses: [],
   view_orderModal_customer: false,
+  customer_detail_pending_order: {},
   get_QR_img: "",
   show_cart_modal: false,
   show_viewOrder_modal: false,
   get_categories: [],
   get_all_catrgory_data: [],
   cart_data: [],
+  // ------------------
+  page_number: 1,
+  up_next: null,
+  down_prev: null,
+  total_count_page: 0,
+  // ------------------
   get_party_name: [],
   handle_view_order_details: [],
   order_statue: {},
@@ -23,10 +30,13 @@ var initialComponentPropsManagementState = {
   handle_view_orders: [],
   xyz_State: [],
   category_list: [],
+  customer_address_pending_order: {},
   login_data: {},
   handel_redeem_point: {},
   register_data: {},
   total_quantity: 0,
+  dispatch_address: {},
+  dispatch_temp_address: {},
   total_price: 0,
   handle_saveTransaction_data: {},
   get_recommended_items: [],
@@ -36,6 +46,7 @@ var initialComponentPropsManagementState = {
   item_Challan_list: [],
   item_Purchase_list: [],
   item_Baikhata_list: [],
+
   item_Expenses_list: [],
   item_Ledger_list: [],
   item_DaySale_list: [],
@@ -127,10 +138,10 @@ export const ComponentPropsManagement = createSlice({
     handleLoginRequest: (state, payload) => {
       state.load = true;
     },
-    handleBahikhataCreateRequest: (state, payload) => {},
-    handleBahikhataCreateResponse: (state, payload) => {},
+    handleBahikhataCreateRequest: (state, payload) => { },
+    handleBahikhataCreateResponse: (state, payload) => { },
 
-    handleBahikhataPartyDropdownRequest: (state, payload) => {},
+    handleBahikhataPartyDropdownRequest: (state, payload) => { },
     handleBahikhataPartyDropdownResponse: (state, payload) => {
       state.bahikhata_party_name_dropdown = payload.data;
     },
@@ -331,33 +342,33 @@ export const ComponentPropsManagement = createSlice({
       // state.handle_hsn_codes = payload.data;
     },
 
-    handleUploadItemRequest: (state, payload) => {},
+    handleUploadItemRequest: (state, payload) => { },
     handleUploadItemResponse: (state, payload) => {
       // state.flag = !state.flag
     },
-    handleUploadInventoryRequest: (state, payload) => {},
+    handleUploadInventoryRequest: (state, payload) => { },
     handleUploadInventoryResponse: (state, payload) => {
       // state.flag = !state.flag
     },
-    handleSalesOverviewRequest: (state, payload) => {},
+    handleSalesOverviewRequest: (state, payload) => { },
     handleSalesOverviewResponse: (state, payload) => {
       const data = payload?.data?.data;
       state.sales_overview_data = data;
       // state.flag = !state.flag
     },
-    handleLastWeekSalesRequest: (state, payload) => {},
+    handleLastWeekSalesRequest: (state, payload) => { },
     handleLastWeekSalesResponse: (state, payload) => {
       const data = payload?.data?.data;
       state.last_week_sales = data ? data : 0;
     },
 
-    handleLastMonthSalesRequest: (state, payload) => {},
+    handleLastMonthSalesRequest: (state, payload) => { },
     handleLastMonthSalesResponse: (state, payload) => {
       const data = payload?.data?.data;
       state.last_month_sales = data ? data : 0;
     },
     // HANDLE STORE NAME
-    handleStoreNameRequest: (state, payload) => {},
+    handleStoreNameRequest: (state, payload) => { },
     handleStoreNameResponse: (state, payload) => {
       const data = payload;
       // state.store_name = payload;
@@ -368,43 +379,43 @@ export const ComponentPropsManagement = createSlice({
     handleTodaySalesResponse: (state, payload) => {
       state.today_sales = payload.data.data ? payload.data.data : 0;
     },
-    handleNumberOfCustomerRequest: (state, payload) => {},
+    handleNumberOfCustomerRequest: (state, payload) => { },
     handleNumberOfCustomerResponse: (state, payload) => {
       state.number_of_customer = payload.data.data ? payload.data.data : 0;
     },
-    handleLowStockItemsRequest: (state, payload) => {},
+    handleLowStockItemsRequest: (state, payload) => { },
     handleLowStockItemsResponse: (state, payload) => {
       state.low_stock_items = payload.data.data ? payload.data.data : 0;
     },
-    handleQuantityInHandRequest: (state, payload) => {},
+    handleQuantityInHandRequest: (state, payload) => { },
     handleQuantityInHandResponse: (state, payload) => {
       state.quantity_in_hand = payload?.data?.data ? payload?.data?.data : 0;
     },
-    handleLastFourteenDaysSalesRequest: (state, payload) => {},
+    handleLastFourteenDaysSalesRequest: (state, payload) => { },
     handleLastFourteenDaysSalesResponse: (state, payload) => {
       state.last_fourteen_days = payload.data.data ? payload.data.data : 0;
     },
-    handleLastSixtyDaysSalesRequest: (state, payload) => {},
+    handleLastSixtyDaysSalesRequest: (state, payload) => { },
     handleLastSixtyDaysSalesResponse: (state, payload) => {
       state.last_sixty_days = payload.data.data ? payload.data.data : 0;
     },
-    handleYesterdaySalesRequest: (state, payload) => {},
+    handleYesterdaySalesRequest: (state, payload) => { },
     handleYesterdaySalesResponse: (state, payload) => {
       state.yesterday_sales = payload.data.data ? payload.data.data : 0;
     },
-    handleGstTypeDropdownRequest: (state, payload) => {},
+    handleGstTypeDropdownRequest: (state, payload) => { },
     handleGstTypeDropdownResponse: (state, payload) => {
       state.gst_type_dropdown = payload.data;
     },
-    handleGetHsnCodeDropdownRequest: (state, payload) => {},
+    handleGetHsnCodeDropdownRequest: (state, payload) => { },
     handleGetHsnCodeDropdownResponse: (state, payload) => {
       state.hsn_code_dropdown = payload.data;
     },
-    handleEmailNotificationRequest: (state, payload) => {},
+    handleEmailNotificationRequest: (state, payload) => { },
     handleEmailNotificationResponse: (state, payload) => {
       // state.email_notification = payload.data;
     },
-    handlewhatsAppRequest: (state, payload) => {},
+    handlewhatsAppRequest: (state, payload) => { },
     handlewhatsAppResponse: (state, payload) => {
       // state.email_notification = payload.data;
     },
@@ -417,8 +428,8 @@ export const ComponentPropsManagement = createSlice({
     handleCreateTaxMasterRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
     },
-    handleCreateSaasMasterRequest: (state, payload) => {},
-    handleCreateTaxMasterResponse: (state, payload) => {},
+    handleCreateSaasMasterRequest: (state, payload) => { },
+    handleCreateTaxMasterResponse: (state, payload) => { },
     handleLowStockItemListRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
     },
@@ -429,18 +440,19 @@ export const ComponentPropsManagement = createSlice({
     handleMemberEnrollmentRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
     },
-    handleMemberEnrollmentResponse: (state, payload) => {},
+    handleMemberEnrollmentResponse: (state, payload) => { },
     // accruval Loyalty
     handleAccruvalRequest: (state, payload) => {
       // state.hsn_code_dropdown = payload.data
     },
-    handleAccruvalResponse: (state, payload) => {},
+    handleAccruvalResponse: (state, payload) => { },
 
     handleEmptyCartData: (state, payload) => {
       state.cart_data = [];
     },
 
     handleShowModal: (state, payload) => {
+      // console.log("this is payload", payload)
       state.show_cart_modal = payload.payload.bagModalIsOpne;
     },
 
@@ -448,39 +460,39 @@ export const ComponentPropsManagement = createSlice({
       state.show_viewOrder_modal = payload.payload.viewOrderModalIsOpne;
     },
 
-    handleSalesReportRequest: (state, payload) => {},
+    handleSalesReportRequest: (state, payload) => { },
     handleSalesReportResponse: (state, payload) => {
       state.sales_report_table_data = payload.data ? payload.data : [];
     },
-    handleGstReportRequest: (state, payload) => {},
+    handleGstReportRequest: (state, payload) => { },
     handleGstReportResponse: (state, payload) => {
       state.gst_report_table_data = payload.data ? payload.data : [];
     },
-    handleGstReportItemRequest: (state, payload) => {},
+    handleGstReportItemRequest: (state, payload) => { },
     handleGstReportItemResponse: (state, payload) => {
       state.gst_report_item_table_data = payload.data ? payload.data : [];
     },
-    handleNoOfItemRequest: (state, payload) => {},
+    handleNoOfItemRequest: (state, payload) => { },
     handleNoOfItemResponse: (state, payload) => {
       state.no_of_items = payload?.data?.data ? payload?.data?.data : 0;
     },
-    handleDebitNoteRequest: (state, payload) => {},
+    handleDebitNoteRequest: (state, payload) => { },
     handleDebitNoteResponse: (state, payload) => {
       state.no_of_items = payload?.data?.data ? payload?.data?.data : 0;
     },
     // Handle CREATE Delivery NOTE
-    handleDeliveryNoteRequest: (state, payload) => {},
+    handleDeliveryNoteRequest: (state, payload) => { },
     handleDeliveryResponse: (state, payload) => {
       state.no_of_items = payload?.data?.data ? payload?.data?.data : 0;
     },
     // handleDelGetUserRequest
-    handleDelGetUserRequest: (state, payload) => {},
+    handleDelGetUserRequest: (state, payload) => { },
     handleDelGetUserResponse: (state, payload) => {
       // console.log("_*_*", payload.data);
       state.handle_user_dropdown = payload.data;
     },
 
-    handleItemMasterListRequest: (state, payload) => {},
+    handleItemMasterListRequest: (state, payload) => { },
     handleItemMasterListResponse: (state, payload) => {
       state.item_master_list = payload.data;
     },
@@ -494,65 +506,65 @@ export const ComponentPropsManagement = createSlice({
     },
 
     // Debit note MIS report
-    handleDebitNoteMisListRequest: (state, payload) => {},
+    handleDebitNoteMisListRequest: (state, payload) => { },
     handleDebitNoteMisListResponse: (state, payload) => {
       console.log("nishu", payload);
       state.item_DebitNote_list = payload.data;
     },
 
     // Challan
-    handleChallanMisListRequest: (state, payload) => {},
+    handleChallanMisListRequest: (state, payload) => { },
     handleChallanMisListResponse: (state, payload) => {
       console.log("challan handle", payload);
       state.item_Challan_list = payload.data;
     },
 
     // DaySale
-    handleDaySaleMisListRequest: (state, payload) => {},
+    handleDaySaleMisListRequest: (state, payload) => { },
     handleDaySaleMisListResponse: (state, payload) => {
       console.log("daySale handle", payload);
       state.item_DaySale_list = payload.data;
     },
 
     // Purchase
-    handlePurchaseMisListRequest: (state, payload) => {},
+    handlePurchaseMisListRequest: (state, payload) => { },
     handlePurchaseMisListResponse: (state, payload) => {
       console.log("purchase handle", payload);
       state.item_Purchase_list = payload.data;
     },
 
     // Baikhata
-    handleBaikhataMisListRequest: (state, payload) => {},
+    handleBaikhataMisListRequest: (state, payload) => { },
     handleBaikhataMisListResponse: (state, payload) => {
       console.log("baikhata handle", payload);
       state.item_Baikhata_list = payload.data;
     },
 
     // Expenses
-    handleExpensesMisListRequest: (state, payload) => {},
+    handleExpensesMisListRequest: (state, payload) => { },
     handleExpensesMisListResponse: (state, payload) => {
       console.log("expenses handle", payload);
       state.item_Expenses_list = payload.data;
     },
 
     // Ledger
-    handleLedgerMisListRequest: (state, payload) => {},
+    handleLedgerMisListRequest: (state, payload) => { },
     handleLedgerMisListResponse: (state, payload) => {
       console.log("ledger handle", payload);
       state.item_Ledger_list = payload.data.list;
     },
 
-    handleSearchedDataRequest1: (state, payload) => {},
+    handleSearchedDataRequest1: (state, payload) => { },
     handleSearchedDataResponse1: (state, payload) => {
       state.item_master_list = payload.data;
     },
     // Redeam Point
-    handleRedeemPointRequest: (state, payload) => {},
+    handleRedeemPointRequest: (state, payload) => { },
     handleRedeemPointResponse: (state, payload) => {
       // state.item_master_list = payload.data;
     },
 
-    handleTenderReportRequest: (state, payload) => {},
+    handleTenderReportRequest: (state, payload) => { },
     handleTenderReportResponse: (state, payload) => {
       state.tender_report_data = payload.data ? [payload.data] : [];
     },
@@ -565,39 +577,39 @@ export const ComponentPropsManagement = createSlice({
       state.get_party_name = payload.data;
     },
     // LINK CUSTOMER
-    handleLinkCustomerRequest: (state, payload) => {},
+    handleLinkCustomerRequest: (state, payload) => { },
     handleLinkCustomerResponse: (state, payload) => {
       state.tender_report_data = payload.data ? [payload.data] : [];
     },
     // Categories
-    handleCategoriesRequest: (state, payload) => {},
+    handleCategoriesRequest: (state, payload) => { },
     handleCategoriesResponse: (state, payload) => {
       state.get_categories = payload.data;
       // state.tender_report_data = payload.data ? [payload.data] : [];
     },
 
-    handleSearchedDataRequest1: (state, payload) => {},
+    handleSearchedDataRequest1: (state, payload) => { },
     handleSearchedDataResponse1: (state, payload) => {
       state.item_master_list = payload.data;
     },
     // Add / Create Supplier
-    handleCreateSupplierRequest: (state, payload) => {},
+    handleCreateSupplierRequest: (state, payload) => { },
     handleCreateSupplierResponse: (state, payload) => {
       // state.item_master_list = payload.data;
     },
     // Search Invoice By Invoice No /Return
-    handleSearchInvoiceRequest: (state, payload) => {},
+    handleSearchInvoiceRequest: (state, payload) => { },
     handleSearchInvoiceResponse: (state, payload) => {
       // console.log("Comming Payload", payload);
       state.get_return_invoice_data = payload.data;
     },
 
-    handleExpenseCategoryDropdownRequest: (state, payload) => {},
+    handleExpenseCategoryDropdownRequest: (state, payload) => { },
     handleExpenseCategoryDropdownResponse: (state, payload) => {
       state.expense_category_dropdown = payload.data;
     },
     // Create Order Master
-    handleCreateOrderRequest: (state, payload) => {},
+    handleCreateOrderRequest: (state, payload) => { },
     handleCreateOrderResponse: (state, payload) => {
       console.log(payload);
       // state.handle_create_order_data = payload.data;
@@ -611,117 +623,173 @@ export const ComponentPropsManagement = createSlice({
       state.handle_view_order_details = payload.data;
     },
     // View order By orderDate and saasId
-    handleViewOrderBySaasIdAndOrderIdRequest: (state, payload) => {},
+    handleViewOrderBySaasIdAndOrderIdRequest: (state, payload) => { },
     handleViewOrderBySaasIdAndOrderIdResponse: (state, payload) => {
       // console.log(payload);
       state.handle_view_orders = payload.data;
     },
-    handleExpenseCreateRequest: (state, payload) => {},
-    handleExpenseCreateResponse: (state, payload) => {},
-    handleUpdateMoqRequest: (state, payload) => {},
-    handleUpdateMoqResponse: (state, payload) => {},
-    handleUpdatePriceRequest: (state, payload) => {},
-    handleUpdatePriceResponse: (state, payload) => {},
+    // UPDATE ADDRESS FOR USER
+    handleUpdateAddressforUserRequest: (state, payload) => {
+      // console.log("IN RES PAYLOAD", payload);
+    },
+    handleUpdateAddressforUserResponse: (state, payload) => {
+      // console.log("IN RES PAYLOAD", payload);
+      state.dispatch_address = payload;
+      state.dispatch_temp_address = payload;
+    },
+    handleExpenseCreateRequest: (state, payload) => { },
+    handleExpenseCreateResponse: (state, payload) => { },
+    handleUpdateMoqRequest: (state, payload) => { },
+    handleUpdateMoqResponse: (state, payload) => { },
+    handleUpdatePriceRequest: (state, payload) => { },
+    handleUpdatePriceResponse: (state, payload) => { },
     // Handle Save Search CustomerData
     handleSaveSearchCustomerData: (state, payload) => {
       console.log("-|-|-", payload);
       state.search_customer_data = payload.payload.e;
     },
 
-    handleViewOrderPendingRequest: (state, payload) => {},
+    handleViewOrderPendingRequest: (state, payload) => { },
     handleViewOrderPendingResponse: (state, payload) => {
       state.pending_order_data = payload.data;
     },
-    handleViewOrderByCustomerRequest: (state, payload) => {},
+    handleViewOrderByCustomerRequest: (state, payload) => { },
     handleViewOrderByCustomerResponse: (state, payload) => {
       console.log("customer_order", payload);
       state.customer_order = payload.data;
     },
-    pendingOrderCartDataRequest: (state, payload) => {},
+    pendingOrderCartDataRequest: (state, payload) => { },
     pendingOrderCartDataResponse: (state, payload) => {
+      console.log("(000)", payload);
       state.pending_order_cart_data = payload.data;
     },
     // update status
-    updateInvoicedRequest: (state, payload) => {},
+    updateInvoicedRequest: (state, payload) => { },
     updateInvoicedResponse: (state, payload) => {
       console.log(payload);
       // state.pending_order_cart_data = payload.data;
     },
 
     // get all data by category
-    handleAllDataByCategoryRequest: (state, payload) => {},
+    handleAllDataByCategoryRequest: (state, payload) => { },
     handleAllDataByCategoryResponse: (state, payload) => {
       console.log(payload);
       state.get_all_catrgory_data = payload.data;
     },
     // Handle Debit note
-    handleXYZRequest: (state, payload) => {},
+    handleXYZRequest: (state, payload) => { },
     handleXYZResponse: (state, payload) => {
       console.log("---------------", payload);
       state.xyz_State = payload.data;
     },
     // Add Purchase => inventory-master/inventory
-    handleInventoryMasterRequest: (state, payload) => {},
+    handleInventoryMasterRequest: (state, payload) => { },
     handleInventoryMasterResponse: (state, payload) => {
       console.log("---------------", payload);
       // state.xyz_State = payload.data;
     },
 
     //hadel purchase
-    handelPurchaseRequest: (state, payload) => {},
+    handelPurchaseRequest: (state, payload) => { },
     handelPurchaseResponse: (state, payload) => {
       // console.log("prince saini",payload);
       state.purchase_data = payload.data;
     },
     //ADD CATEGORY
-    handelAddcategoryRequest: (state, payload) => {},
+    handelAddcategoryRequest: (state, payload) => { },
     handelAddcategoryResponse: (state, payload) => {
       // console.log("prince saini",payload);
       // state.purchase_data = payload.data;
     },
     //getCATEGORY
-    handelGetCategoryRequest: (state, payload) => {},
+    handelGetCategoryRequest: (state, payload) => { },
     handelGetCategoryResponse: (state, payload) => {
       // console.log("category_list", payload);
       state.category_list = payload.data;
     },
 
     //view Status
-    handelgetOrderDetailsRequest: (state, payload) => {},
+    handelgetOrderDetailsRequest: (state, payload) => { },
     handelgetOrderDetailsResponse: (state, payload) => {
       console.log("payload RES STATUS", payload);
       state.view_status_data = payload;
     },
     //Categories
-    handeleCategoriesHomeRequest: (state, payload) => {},
+    handeleCategoriesHomeRequest: (state, payload) => { },
     handeleCategoriesHomeResponse: (state, payload) => {
       console.log("payload RES category", payload);
       state.home_category = payload.data;
     },
     //SEND SMS
-    handelSMSRequest: (state, payload) => {},
+    handelSMSRequest: (state, payload) => { },
     handelSMSResponse: (state, payload) => {
       // console.log("payload RES STATUS", payload);
       // state.customer_list = payload;
     },
     //customer List For marketing
-    handelCustomerListRequest: (state, payload) => {},
+    handelCustomerListRequest: (state, payload) => { },
     handelCustomerListResponse: (state, payload) => {
       // console.log("PAYLOAD FOR CUSTOMER LIST", payload);
       state.customer_list = payload.data;
     },
     //Digital Promotion detail
-    handelCreateDigitalPromotionRequest: (state, payload) => {},
+    handelCreateDigitalPromotionRequest: (state, payload) => { },
     handelCreateDigitalPromotionResponse: (state, payload) => {
       // console.log("PAYLOAD FOR CUSTOMER LIST", payload);
       // state.customer_list = payload.data;
     },
     //PROMOTION ASSETS
-    handelPromotionAssetsRequest: (state, payload) => {},
+    handelPromotionAssetsRequest: (state, payload) => { },
     handelPromotionAssetsResponse: (state, payload) => {
       // console.log("PAYLOAD FOR CUSTOMER LIST", payload);
       // state.customer_list = payload.data;
     },
+
+    // HandleCustomerProductDetailforpendingorder
+    handelCustomerDetailforPendingRequest: (state, payload) => { },
+    handelCustomerDetailforPendingResponse: (state, payload) => {
+      console.log("PENDING ORDER RES PYLOAD", payload);
+      state.customer_detail_pending_order = payload.data;
+    },
+
+    // GETALL CUSTOMER ADDRESS
+    handelCustomerAllAddressRequest: (state, payload) => { },
+    handelCustomerAllAddressResponse: (state, payload) => {
+      console.log("ARR PAYLOAD", payload);
+      state.customers_all_addresses = payload.data;
+    },
+    // handle Total count Page
+    totalPageCount: (state, payload) => {
+      state.total_count_page = payload.payload;
+    },
+    // Handle Next Page
+    nextPage: (state, payload) => {
+      state.page_number = state.page_number + 1;
+      console.log("STATE", state.page_number);
+    },
+    upcommig: (state, payload) => {
+      console.log("UPCOMMING PAYLOAD", payload);
+      state.up_next = payload.payload;
+    },
+    previous: (state, payload) => {
+      console.log("UPCOMMING PAYLOAD", payload);
+      state.down_prev = payload.payload;
+    },
+    prevPage: (state, payload) => {
+      console.log("these are pages numbers from cpm", payload)
+      if (state.page_number === 1) {
+        state.page_number = 1;
+      } else {
+        state.page_number = state.page_number - 1;
+      }
+    },
+    // HandleCustomerDetailforAddress
+    handelCustomerDetailforAddressRequest: (state, payload) => { },
+    handelCustomerDetailforAddressResponse: (state, payload) => {
+      // console.log("ADDRESS MY CART PAYLOAD", payload);
+      state.customer_address_pending_order = payload.data;
+    },
+
     resetProductId: (state, payload) => {
       state.save_product_id = "";
     },
@@ -745,12 +813,15 @@ export const ComponentPropsManagement = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-
+// customers_all_addresses
 export const {
   handleBahikhataPartyDropdownRequest,
   handleBahikhataCreateRequest,
   handleUploadPicRequest,
   resetProductId,
+  prevPage,
+  previous,
+  upcommig,
   handleViewOrderBySaasIdAndOrderIdRequest,
   handleCreateOrderRequest,
   updateInvoicedRequest,
@@ -761,9 +832,11 @@ export const {
   handleCreateSupplierRequest,
   handleRedeemPointRequest,
   handleSaveSearchCustomerData,
+  nextPage,
   handleLinkLoyaltyRequest,
   handleDeliveryNoteRequest,
   handleDelGetUserRequest,
+  handelCustomerDetailforAddressRequest,
   handleDebitNoteRequest,
   handlecartCount,
   handleDebitNoteMisListRequest,
@@ -814,6 +887,7 @@ export const {
   handleRecommendedDataRequest,
   handleDiscountItem,
   handleAddtoCart,
+  handelCustomerDetailforPendingRequest,
   handleInventoryMasterRequest,
   handleInc,
   handleEmptyCartItem,
@@ -843,6 +917,7 @@ export const {
   handleXYZRequest,
   handleGstTypeDropdownRequest,
   handleGetHsnCodeDropdownRequest,
+  handelCustomerAllAddressRequest,
   handleUpdateItemToStoreRequest,
   handleSalesDashboardChartRequest,
   handeleCategoriesHomeRequest,
@@ -852,9 +927,12 @@ export const {
   handelAddcategoryRequest,
   handleLowStockItemListRequest,
   handelPurchaseRequest,
+  handleUpdateAddressforUserRequest,
+  handleUpdateAddressforUserResponse,
   handelgetOrderDetailsRequest,
   handleStoreNameRequest,
   handelGetCategoryRequest,
+  totalPageCount,
   handleAllDataByCategoryResponse,
 } = ComponentPropsManagement.actions;
 

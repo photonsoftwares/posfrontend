@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_Url } from "../URL";
+import AddToHomeScreenButton from "./AddToHome";
 const Register = () => {
   const navigate = useNavigate();
   const [storeData, setStoreData] = useState("");
@@ -51,8 +52,8 @@ const Register = () => {
   //   }
   // }, [saasId, storeId]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (password === confirmPassword) {
       dispatch(
         handleRegisterRequest({
@@ -64,14 +65,18 @@ const Register = () => {
           saas_id: params.saasId,
         })
       );
-      console.log(
-        userName,
-        params.saasId,
-        params.storeId,
-        password,
-        email,
-        mobile
-      );
+      setConfirmPassword("");
+      setStoreName("");
+      setSaasId("");
+      setRegisterId("");
+      setCity("");
+      setState("");
+      setCountry("");
+      setBrandLogo("");
+      setTaxable("");
+      setGstCode("");
+      setHsnCode("");
+      setStoreType("");
     } else {
       toast.error("Password Did'nt Match!");
     }
@@ -429,6 +434,15 @@ const Register = () => {
                 </p>
               </div>
             </form>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <AddToHomeScreenButton />
+            </div>
           </div>
         </div>
       </div>
