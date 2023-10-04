@@ -40,6 +40,7 @@ import Marketing from "./components/Marketing/Marketing";
 import DataByCategory from "./components/DataByCategory/DataByCategory";
 // import { Navbar } from "react-bootstrap";
 import DataByCategorydupilicate from "./components/DataByCategory/DataByCategory";
+import CustomerProfile from "./components/CustomerProfile/CustomerProfile";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -174,6 +175,10 @@ const App = () => {
           element={<ProtectedRoutingWhenLogin Component={Hsn} />}
         />
         <Route
+          path="/profile"
+          element={<ProtectedRoutingWhenLogin Component={CustomerProfile} />}
+        />
+        <Route
           path="/inventory-dashboard"
           element={<ProtectedRoutingWhenLogin Component={InventoryDashboard} />}
         />
@@ -187,16 +192,19 @@ const App = () => {
 
         <Route path="/:saasId/:storeId" Component={Register} />
 
+        <Route path="/:BU" Component={Login} />
+
         <Route
           path="/DataByCategory/:catname"
           element={<ProtectedRoutingWhenLogin Component={DataByCategory} />}
         />
 
-           <Route
+        <Route
           path="/hello/"
-          element={<ProtectedRoutingWhenLogin Component={DataByCategorydupilicate} />}
+          element={
+            <ProtectedRoutingWhenLogin Component={DataByCategorydupilicate} />
+          }
         />
-
       </Routes>
       {/* </BrowserRouter> */}
     </>

@@ -7,7 +7,7 @@ import { TextField } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const AddCustomer = ({ openMenu, setOpenMenu }) => {
-  const { storeId } = JSON.parse(localStorage.getItem("User_data"));
+  const { storeId,saasId } = JSON.parse(localStorage.getItem("User_data"));
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
@@ -38,13 +38,14 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
         mobile_number: mobile,
         email: email,
         name: name,
-        address: address,
-        source_of_acq: "Source1",
-        dob: startDate,
-        gender: gender,
-        occupation: occupation,
+        address_1: address,
+        customer_type:"CUSTOMER",
+        // source_of_acq: "Source1",
+        // dob: startDate,
+        // gender: gender,
+        // occupation: occupation,
         income_level: 600000,
-        saas_id: "EEEE",
+        saas_id: saasId,
         store_id: storeId,
       })
     );
@@ -117,7 +118,7 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
                 onChange={(e) => setAddress(e.target.value)}
               />
               <div style={{ width: "200px" }}>
-                <TextField
+                {/* <TextField
                   type="number"
                   className="form-control my-2"
                   id="customer-name"
@@ -126,9 +127,9 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
                   required
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
-                />
+                /> */}
               </div>
-              <div className="d-flex justify-content-center">
+              {/* <div className="d-flex justify-content-center">
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-TextField mx-2"
@@ -156,8 +157,8 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
                     Female
                   </label>
                 </div>
-              </div>
-              <TextField
+              </div> */}
+              {/* <TextField
                 type="text"
                 className="form-control my-2"
                 id="customer-name"
@@ -166,7 +167,7 @@ const AddCustomer = ({ openMenu, setOpenMenu }) => {
                 size="small"
                 value={occupation}
                 onChange={(e) => setOccupation(e.target.value)}
-              />
+              /> */}
               <div className="mt-3">
                 <button
                   type="submit"

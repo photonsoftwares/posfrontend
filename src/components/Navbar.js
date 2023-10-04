@@ -10,7 +10,9 @@ import NavTab1 from "./NavTab1";
 import { GrLogout } from "react-icons/gr";
 import { BiArrowBack, BiGroup } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   handleOpneMenuRequest,
   handleShowModal,
@@ -31,6 +33,7 @@ import logout from "../assets/logout.jpeg";
 import logout2 from "../assets/logout2.jpeg";
 
 const Navbar = () => {
+  // console.log("HISTORY", history);
   const {
     createdAt,
     password,
@@ -60,6 +63,7 @@ const Navbar = () => {
   }, open_menu);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  // console.log("NAVIGATE", navigate);
   useEffect(() => {
     const el = JSON.parse(localStorage.getItem("my-cart"));
     if (el) {
@@ -105,13 +109,6 @@ const Navbar = () => {
   };
   useEffect(() => {}, [handleLogout]);
 
-  // useEffect(() => {
-  //   if (localStorage.getItem("Store_data")) {
-  //     const allData = JSON.parse(localStorage.getItem("Store_data"));
-  //     // console.log("STORE NAME", storeName);
-  //     setStoreName(allData?.storeName);
-  //   }
-  // }, [storeName]);
 
   const footer_arr = [
     {
@@ -166,7 +163,7 @@ const Navbar = () => {
           )}
         </Link>
 
-        {!(location.pathname === "/" || location.pathname === "/login") && (
+        {/* {!(location.pathname === "/" || location.pathname === "/login") && (
           <>
             {userType === "CUSTOMER" ? (
               ""
@@ -181,7 +178,7 @@ const Navbar = () => {
               />
             )}
           </>
-        )}
+        )} */}
       </div>
       <div
         //  style={{ flexWrap: "nowrap" }}
@@ -243,7 +240,11 @@ const Navbar = () => {
                 justifyContent: "center",
                 marginRight: "10px",
               }}
-              onClick={() => handleShowCart()}
+              onClick={() => {
+                // window.location.reload();
+                handleShowCart();
+              }}
+              
             >
               <div
                 style={{
@@ -271,6 +272,7 @@ const Navbar = () => {
                   color: "#fecf59",
                 }}
               >
+                
                 {cartCount}
               </div>
               <span

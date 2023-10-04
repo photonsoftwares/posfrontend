@@ -34,7 +34,6 @@ const ViewOrdersCustomer = ({
           <Modal.Title>Your Orders</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div></div>
           <div className="table-responsive">
             <table className="table text-center table-bordered">
               <thead>

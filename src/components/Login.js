@@ -8,7 +8,10 @@ import { handleLoginRequest } from "../../src/redux/actions-reducers/ComponentPr
 import { useDispatch } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { isDev } from "../URL";
+import { BASE_Url, isDev } from "../URL";
+
+import AddToHomeScreenButton from "./AddToHome";
+import axios from "axios";
 const Login = () => {
   const params = useParams();
   console.log("LOGIN PARAMS", params);
@@ -17,6 +20,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [data, setData] = useState("");
   const location = useLocation();
 
   useEffect(() => {
@@ -26,12 +30,44 @@ const Login = () => {
     }
   }, [isDev]);
 
+  const userData = async () => {
+    axios
+      .get(
+        `${BASE_Url}/register/business-name/${params.BU}`
+      )
+      .then((res) => {
+        console.log("RESPONSE STORE DATA", res);
+        setUsername(res.data.data.username);
+        setPassword(res.data.data.password);
+        setData(res.data.data)
+        // setStoreData(res.data.data.store_name);
+      });
+  };
+
+  useEffect(() => {
+    if (params.BU) {
+      console.log("INN");
+      userData();
+    }
+  }, []);
+
+  useEffect(() => {
+    if(data){
+      dispatch(
+        handleLoginRequest({
+          user_name: username,
+          password: password,
+        })
+      );
+    }
+  }, [data])
+  
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
     console.log("USERNAME", username);
     console.log("PASSWORD", password);
-  
 
     // const params = {
     //   username,
@@ -50,6 +86,8 @@ const Login = () => {
     // }, 500);
   };
   return (
+    <>
+    {!data ?
     <div className="loyality-login">
       <div className="loyality-login_container">
         <div
@@ -126,7 +164,7 @@ const Login = () => {
             <h2>Sign Up</h2>
           </Link>
         </div> */}
-        <p
+        {/* <p
           className="mt-3"
           style={{
             color: "#808080",
@@ -146,9 +184,21 @@ const Login = () => {
           >
             Signup
           </Link>
-        </p>
+        </p> */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginTop: 10,
+            justifyContent: "center",
+          }}
+        >
+          <AddToHomeScreenButton />
+        </div>
       </div>
-    </div>
+    </div>:<>
+    <div>loding</div>
+    </>}</>
   );
 };
 

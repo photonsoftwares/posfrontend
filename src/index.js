@@ -11,6 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "react-toggle/style.css"; // for ES6 modules
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -18,8 +19,8 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-         <ToastContainer
-          position="top-right"
+        <ToastContainer
+          position="top-center"
           autoClose={3000}
           hideProgressBar={true}
           newestOnTop={true}
@@ -29,7 +30,7 @@ root.render(
           // draggable
           // pauseOnHover
           // theme="light"
-        /> 
+        />
 
         <App />
       </Provider>
@@ -37,6 +38,18 @@ root.render(
   </React.StrictMode>
 );
 
+if('serviceWorker' in navigator){
+window.addEventListener('load',()=>{
+  navigator.serviceWorker.register('/')
+  .then(registration =>{
+console.log("Service worker registred ",registration.scope);
+  }).catch(error=>{
+    console.log('service worker registration faild',error);
+  });
+});
+};
+
+serviceWorkerRegistration.register();
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

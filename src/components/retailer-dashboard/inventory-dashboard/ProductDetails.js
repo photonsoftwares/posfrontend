@@ -8,9 +8,8 @@ import { handleLowStockItemsRequest, handleLowStockItemListRequest, handleNoOfIt
 const ProductDetails = () => {
 
     const dispatch = useDispatch()
-    const { low_stock_items, no_of_items } = useSelector(state => state.ComponentPropsManagement)
+    const { low_stock_items, no_of_items ,low_stock_Allitems} = useSelector(state => state.ComponentPropsManagement)
     const [modalIsOpen, setModalIsOpen] = useState(false)
-
     const debounce = (func) => {
         let timer;
         return function (...args) {
@@ -33,29 +32,6 @@ const ProductDetails = () => {
     useEffect(() => {
         optimizedFn()
     }, [])
-
-    const obj = [
-        {
-            "item_code": "345",
-            "item_name": "Mayonaise",
-            "closing_quantity": 7
-        },
-        {
-            "item_code": "345",
-            "item_name": "Tomato sauce",
-            "closing_quantity": 5
-        },
-        {
-            "item_code": "345",
-            "item_name": "Sandwich Small",
-            "closing_quantity": 8
-        },
-        {
-            "item_code": "345",
-            "item_name": "Pizza Base",
-            "closing_quantity": 4
-        }
-    ]
 
     return (<>
         <Card style={{ border: "none", borderRadius: "12px", maxWidth: "400px" }} className='w-100 mb-4'>
@@ -81,7 +57,7 @@ const ProductDetails = () => {
                                 }
                             }}>
                                 <td>Low Stock Items</td>
-                                <td style={{ fontWeight: "bold" }}>{low_stock_items}</td>
+                                <td style={{ fontWeight: "bold", color:"blue", cursor:"pointer" }}>{low_stock_items}</td>
                             </tr>
                             {/* <tr>
                                 <td>Item Group</td>
@@ -118,7 +94,7 @@ const ProductDetails = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {obj.map(item => {
+                        {low_stock_Allitems.map(item => {
                             return (<>
                                 <tr key={item.item_code}>
                                     <td>{item.item_code}</td>

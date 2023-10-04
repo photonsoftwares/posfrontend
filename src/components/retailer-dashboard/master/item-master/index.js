@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { Button, Card, CardBody, Col, Input, Label, Row } from "reactstrap";
-import { host } from "../../../../URL";
+import { BASE_Url, host } from "../../../../URL";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import AddItem from "./AddItem";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
-
+import {Image} from 'antd'
 const ItemMaster = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -60,6 +60,19 @@ const ItemMaster = () => {
         return (
           <>
             <div style={{ fontWeight: "bolder" }}>{row.item_name}</div>
+          </>
+        );
+      },
+    },
+    {
+      name: "Image",
+      center: true,
+      selector: (row) => row.image_name,
+      cell: (row) => {
+        return (
+          <>
+          <Image src={`${BASE_Url}/item/get-image/${row && row.item_id}`} alt="" />
+            {/* <div style={{ fontWeight: "bolder" }}>{row.item_name}</div> */}
           </>
         );
       },
@@ -116,29 +129,27 @@ const ItemMaster = () => {
         const [addUpdateItemModalIsOpen, setAddUpdateItemModalIsOpen] =
           useState(false);
         const handleDelete = async () => {
-         
-            const response = await fetch(
-              `${host}item/inactive-item/${row.item_id}/${saasId}`,
-              {
-                method: "PUT",
-              }
-            );
-            const jsonData = await response.json();
-            if (jsonData) {
-              if (jsonData.status === true) {
-                toast.success(jsonData.message);
-                setFlag(!flag);
-                return;
-              }
-              /* toast.error(jsonData.message);
+          const response = await fetch(
+            `${host}item/inactive-item/${row.item_id}/${saasId}`,
+            {
+              method: "PUT",
+            }
+          );
+          const jsonData = await response.json();
+          if (jsonData) {
+            if (jsonData.status === true) {
+              toast.success(jsonData.message);
+              setFlag(!flag);
+              return;
+            }
+            /* toast.error(jsonData.message);
               setFlag(!flag); */
-            }/*  else {
+          } /*  else {
               toast.error("Something went wrong server side");
             } */
-          } /* catch (err) {
+        }; /* catch (err) {
             toast.error(err.message);
           } */
-        
 
         console.log("ITEM", item_master_list);
 

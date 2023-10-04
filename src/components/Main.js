@@ -65,7 +65,7 @@ const Main = () => {
     ? JSON.parse(localStorage.getItem("User_data"))
     : {};
   console.log(userType);
-  const checkCustomer = userType === "CUSTOMER";
+  const checkCustomer = (userType === "CUSTOMER" || userType ==="GUEST");
 
   // useEffect(() => {}, [checkCustomer]);
   const dispatch = useDispatch();
@@ -147,7 +147,7 @@ const Main = () => {
   const omni_channel_arr = [
     {
       id: 1,
-      label: "View Order",
+      label: "Order Mangement",
       value: "pending_orders",
       icon: <TfiViewListAlt size="25" color="#26cbaf" />,
       isActive: checkCustomer ? true : true,
@@ -225,7 +225,7 @@ const Main = () => {
       id: 1,
       label: "Home",
       value: "home",
-      icon: <AiFillHome color="#2c2c63" size="25" />,
+      icon: <AiFillHome color="#2c2c63" size="25"/>,
       isActive: true,
     },
     {
@@ -299,7 +299,7 @@ const Main = () => {
       } else if (item.value === "pending_orders") {
         setViewOrderModalIsOpen(!viewOrderModalIsOpen);
       } else if (item.value === "update_uom") {
-        navigate("/uom");
+        navigate("/");
       }
     }
   };
@@ -700,8 +700,8 @@ const Main = () => {
                           </>
                         ) : (
                           <>
-                            <div>{item.icon}</div>
-                            <div>{item.label}</div>
+                            <div onClick={()=>{window.location.reload()}}>{item.icon}</div>
+                            <div onClick={()=>{window.location.reload()}}>{item.label}</div>
                           </>
                         )}
                       </div>

@@ -5,6 +5,7 @@ import {
   handleAllDataByCategoryRequest,
   handleCategoriesRequest,
   handeleCategoriesHomeRequest,
+  Resetpage,
 } from "../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { Badge, Button, Stack, Card, Image } from "react-bootstrap";
 import Product from "../Product";
@@ -13,7 +14,18 @@ import { AiOutlineMail, AiOutlineSearch } from "react-icons/ai";
 import { FcSalesPerformance, FcSpeaker } from "react-icons/fc";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { BASE_Url } from "../../URL";
+import { ArrowLeftOutlined, ArrowRightOutlined, Style } from "@material-ui/icons";
+import "./Category.css"
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 const Category = ({
   setSearchValue,
   data,
@@ -26,17 +38,32 @@ const Category = ({
   searchValue,
   handleVoiceCommand,
 }) => {
-
+  const {
+    createdAt,
+    password,
+    registerId,
+    status,
+    saasId,
+    storeId,
+    storeName,
+    userId,
+    userName,
+    userType,
+  } = localStorage.getItem("User_data")
+      ? JSON.parse(localStorage.getItem("User_data"))
+      : {};
 
   const [category, setCategory] = useState([]);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     axios
-      .get("http://3.111.70.84:8088/test/api/v1/category/get-list/8/80001")
-      .then((res) => setCategory(res.data.data));
+      .get(`${BASE_Url}/category/get-list/${saasId}/${storeId}/${userName}`)
+      .then((res) => {
+        console.log("RES CATEGORY", res);
+        setCategory(res.data.data);
+      });
   }, []);
 
- 
   // console.log("this is category data",category)
   // const [category, setCategory] = useState([]);
   // // get_categories
@@ -61,119 +88,109 @@ const Category = ({
 
   // console.log("CATEGORIES", get_all_catrgory_data);
   return (
+    // <div>
+    //   <div>
 
-    <div>
-      <div>
-        {/* <div
-          style={{
-            marginTop: "5px",
-            display: "flex",
-            widows: "100%",
-            alignItems: "center",
-            justifyContent: "space-around",
-          }}>
-          {home_category.map((el) => (
-            <Button
-              size="lg"
-              variant="warning"
-              className="mx-2"
-              style={{ width: "60%" }}
-              onClick={() => {
-                dispatch(
-                  handleAllDataByCategoryRequest({ el: el.category_name })
-                );
-              }}>
-              {el.category_name}
-            </Button>
-          ))}
-        </div> */}
-        <div>
-          {/* <FilterCategory /> */}
-        </div>
+    //     <div>
+    //       <div className="d-flex justify-content-center gap-5 m-auto">
+    //       <div className="aerrowStyle" onClick={prevSlide}>
+    //     <ArrowLeftOutlined style={{ fontSize: "30px" }} />
+    //   </div>
+    //         {category.map((ele) => {
+    //           return (
+    //             <Link style={{ textDecoration: "none", color: "black" }} to={`/DataByCategory/${ele.category_name}`}>
+    //               <Card className="CatgorycardForPhone" onClick={()=>{dispatch(Resetpage(1));}} style={{
+    //                 borderRadius: "10px",
+    //                 // width: "18rem",
+    //                 boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    //               }}>
 
 
-        <div>
-        <div className="d-flex justify-content-center gap-5 m-auto">
+    //                 <div className="m-2 d-flex j-center" style={{ textAlign: "center", justifyContent: "center", display: "flex" }}>
+    //                   <Image
+    //                     src={ele.image_path}
+    //                     // className="cardCategory"
+    //                     roundedCircle
+    //                     style={{
+    //                       width: "100px",
+    //                       height: "100px",
+    //                       margin: "3px",
+    //                       padding: "1px",
+    //                       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.)",
+    //                     }}
+    //                   />
+    //                 </div>
+    //                 <div className="cardCategory d-flex justify-content-center">
+    //                 </div>
+    //                 <h4 style={{ textDecoration: "none", textAlign: "center" }}>{ele.category_name}</h4>
+    //               </Card>
+    //             </Link>
+    //           );
+    //         })}
+    //         <div className="aerrowStyle " onClick={nextSlide}>
+    //     <ArrowRightOutlined style={{ fontSize: "30px" }} />
+    //   </div>
+    //       </div>
+    //     </div>
+
       
-        {category.map((ele) => {
-          return (
-           
-              <Link to={`/DataByCategory/${ele.category_name}`}>
-                    <div className="m-2 d-flex j-center">
-                    <Image src={ele.image_path} className="cardCategory" roundedCircle style={{width:"100px",height:'100px',margin:'3px',padding:"1px" ,boxShadow:'0 4px 6px rgba(0, 0, 0, 0.)'}} />
+    //   </div>
+    // </div>
+    <Swiper
+    className="d-flex justify-content-center"
+      // install Swiper modules
+      modules={[Navigation, A11y]}
+      spaceBetween={70}
+      slidesPerView={category.length < 3 ?category.length:3}
+      navigation
+      // pagination={{ clickable: true }}
+      // scrollbar={{ draggable: true }}
+      // onSwiper={(swiper) => console.log(swiper)}
+      // onSlideChange={() => console.log('slide change')}
+    >
+      <div>
+      <div>
+
+        <div>
+          <div className="d-flex justify-content-center gap-5 m-auto">
+      {category.map((ele) => {     
+            return (<SwiperSlide>  <Link style={{ textDecoration: "none", color: "black" }} to={`/DataByCategory/${ele.category_name}`}>
+             <Card className="CatgorycardForPhone" onClick={()=>{dispatch(Resetpage(1));}} style={{
+                  border:"0px"
+                  }}>
+
+
+                    <div className="m-2 d-flex catimage j-center object-contain snipcss-VkhHe" style={{ textAlign: "center", justifyContent: "center", display: "flex" }}>
+                      <Image
+                        src={ele.image_path}
+                        // className="cardCategory"
+                        roundedCircle
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          margin: "3px",
+                          padding: "1px",
+                          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.)",
+                          border: "1px solid #913434"
+                        }}
+                      />
+                     
+
                     </div>
                     <div className="cardCategory d-flex justify-content-center">
-                  
-                    <h6 className="cardCategoryBtn">{ele.category_name}</h6>
-                   
                     </div>
-                 
-                   
-              </Link>
-           
-          );
-        })}
-       
-        </div>
-            </div>
-
-
-
-
-
-
-
-
-
-        {/* <div>
-          {category.map((ele) => {
-            return (
-              <div>
-                <Card style={{ width: "18rem" }}>
-                  <Card.Img variant="top" src="holder.js/100px180" />
-                  <Card.Body>
-                    <Card.Title>Card Title</Card.Title>
-                    <Card.Text>
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </Card.Text>
-                    <Button variant="primary">Go somewhere</Button>
-                  </Card.Body>
-                </Card>
-                {ele.data.id}
-              </div>
-            );
-          })}
-        </div> */}
-      </div>
-      <div
-        style={
-          {
-            // display: "grid",
-            // gridTemplateColumns: "repeat(2,1fr)",
-            // placeItems: "center",
-          }
-        }>
-        {/* {get_all_catrgory_data && get_all_catrgory_data.length > 0 ? (
-          <DataByCategory
-            get_all_catrgory_data={get_all_catrgory_data}
-            setSearchValue={setSearchValue}
-            setData={setSearchedData}
-            cartData={cartData}
-            setCartData={setCartData}
-            // data={searchedData}
-            setUpdatecart={setUpdatecart}
-            updatecart={updatecart}
-          />
-        ) : (
-          ""
-        )} */}
-      </div>
-
-     
+                    <h4 style={{ textDecoration: "none", textAlign: "center" }}>{ele.category_name}</h4>
+                  </Card>
+                </Link>
+    </SwiperSlide>
+      );
+    })}
     </div>
+        </div>
+      </div>
+      </div>
+    </Swiper>
   );
 };
-
 
 export default Category;

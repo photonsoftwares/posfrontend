@@ -28,11 +28,12 @@ const LinkCustomer = () => {
     if (inputValue.length > 0) {
       return new Promise((resolve, reject) => {
         resolve(handleItemFilter(inputValue));
+        console.log("this console",resolve(handleItemFilter(inputValue)))
       });
     } else {
-      // return new Promise((resolve, reject) => {
-      //     resolve(handleRecommendedDataRequest(inputValue));
-      // });
+      return new Promise((resolve, reject) => {
+          resolve(AllUser());
+      });
     }
   };
 
@@ -49,6 +50,7 @@ const LinkCustomer = () => {
 
   const handleItemFilter = async (inputValue) => {
     try {
+      // const inputValue = e.target.value
       const response = await fetch(
         `${BASE_Url}/customer/search-customer/${storeId}/${saasId}/${inputValue}`,
         {
@@ -60,6 +62,7 @@ const LinkCustomer = () => {
       );
       const jsonData = await response.json();
       // console.log("IN DELIVERY", jsonData);
+      // setDefaultItemData(jsonData)
       if (jsonData) {
         if (jsonData.status === true) {
           const d1 = jsonData.data;
@@ -73,6 +76,7 @@ const LinkCustomer = () => {
                   value: item.name,
                 });
               });
+              
               return arr;
             }
           }
@@ -122,10 +126,62 @@ const LinkCustomer = () => {
   // };
 
   // const optimizedFn = useCallback(debounce(handleSearch), []);
-
+   const AllUser = async ()=>{
+    try {
+      const response = await fetch(
+        `${BASE_Url}/user-master/get-user-details/${saasId}/${storeId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const jsonData = await response.json();
+      console.log("data aya",jsonData)
+      
+      if (jsonData) {
+        if (jsonData.status === true) {
+          const d1 = jsonData.data;
+          if (d1) {
+            if (d1.length > 0) {
+              const arr = [];
+              d1.map((item) => {
+                arr.push({
+                  ...item,
+                  label: item.name,
+                  value: item.name,
+                });
+              });
+              setDefaultItemData(arr)
+              return arr;
+            }
+          }
+          // setUserdata(jsonData);
+          return [];
+        }
+        toast.error(jsonData.message);
+      } else {
+        toast.error("Something went wrong server side");
+      }
+    } catch (error) {
+      console.log("error occure when api call", error)
+      
+    }
+   }
+   useEffect(() => {
+    AllUser()
+   }, [])
+   
   const handleSubmit = (e) => {
     e.preventDefault();
   };
+  useEffect(() => {
+    setUserMobile(userData.mobile_number?userData.mobile_number:userData.mobileNumber)
+    setUsername(userData.name)
+    console.log("user data ",userData.length)
+  }, [userData])
+  
   return (
     <div className="container">
       <div className="row d-flex justify-content-center">
@@ -139,7 +195,7 @@ const LinkCustomer = () => {
                 isSearchable={true}
                 defaultOptions={defaultItemData}
                 onChange={(e) => {
-                  // console.log("E", e);
+                  console.log("onchange", e);  
                   setUserdata(e);
                   const val = e.label;
                   dispatch(handleSaveSearchCustomerData({ e }));
@@ -155,8 +211,27 @@ const LinkCustomer = () => {
                 required={true}
                 placeholder="Select Customer"
               />
+          {/* <div>
+  <input onChange={(e)=>{
+                  // console.log("E", e);
+                  setUserdata(e);
+                  const val = e.label;
+                  dispatch(handleSaveSearchCustomerData({ e }));
+                  setItemObj(e);
+                  setCustomerState({
+                    ...customerState,
+                    customer_name: val,
+                    // customer_email: val,
+                  });
+                  // console.log("VAL", val);
+                }} className="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search..." />
+  <datalist id="datalistOptions">
+    {defaultItemData&& defaultItemData.map((item)=><option value={item.name}></option>)}
+    </datalist>
+</div> */}
+
             </div>
-            {userData && userData.email && userData.mobileNumber ? (
+            {userData.name ? (
               <div>
                 <div className="d-flex align-items-center justify-content-between">
                   <p style={{ padding: 0, margin: 0 }}>Customer Email</p>
@@ -181,13 +256,14 @@ const LinkCustomer = () => {
                       // fontSize: "20px",
                     }}
                   >
-                    {userData.mobileNumber}
+                    {userData.mobile_number?userData.mobile_number:userData.mobileNumber}
                   </p>
                 </div>
                 <div>
                   {userMobile && userName ? (
                     <div className="mt-3">
-                      <button
+                      <Link
+                      to={'/home'}
                         type="submit"
                         className="btn btn-primary"
                         style={{
@@ -201,9 +277,9 @@ const LinkCustomer = () => {
                         }}
                       >
                         Link
-                      </button>
+                      </Link>
                       <Link
-                        to="/"
+                        to="/home"
                         type="submit"
                         // onClick={()=>}
                         className="btn btn-primary"
@@ -227,10 +303,9 @@ const LinkCustomer = () => {
                 </div>
               </div>
             ) : (
-              err
-            )}
-            <div className="mt-3">
-              <button
+              <div className="mt-3">
+              <Link
+              to={'/home'}
                 type="submit"
                 className="btn btn-primary"
                 style={{
@@ -244,9 +319,9 @@ const LinkCustomer = () => {
                 }}
               >
                 Save
-              </button>
+              </Link>
               <Link
-                to="/"
+                to="/home"
                 type="submit"
                 // onClick={()=>}
                 className="btn btn-primary"
@@ -264,6 +339,8 @@ const LinkCustomer = () => {
                 Close
               </Link>
             </div>
+            )}
+            
           </form>
         </div>
       </div>

@@ -38,13 +38,16 @@ const Bahikhata = (props) => {
   const [updateItem, setUpdateItem] = useState("");
   const [updateIndexNumber, setUpdateIndexNumber] = useState("");
   const [addBahikhataArr, setAddBahikhataArr] = useState([]);
-
+  const { storeId, saasId, userName } = JSON.parse(
+    localStorage.getItem("User_data")
+  );
   const [bahikhataArr, setBahikhataArr] = useState({
-    party_name: "",
+    party: "",
     payment_type: "",
     payment_date: "",
     payment_mode: "",
     amount: "",
+    saas_id: saasId,
     payment_notes: "",
   });
 
@@ -58,7 +61,7 @@ const Bahikhata = (props) => {
     dispatch(handleBahikhataCreateRequest(payload));
     setTimeout(() => {
       setBahikhataArr({
-        party_name: "",
+        party: "",
         payment_type: "",
         payment_date: "",
         payment_mode: "",

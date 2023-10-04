@@ -19,7 +19,7 @@ div.react-confirm-alert-overlay {
 } */
 
 .app {
-  max-width: 915px;
+  max-width: 1006px;
   margin: auto;
   /* padding-top: 20px; */
   background-color: #fff !important;
@@ -218,7 +218,7 @@ input[type="number"] {
   margin-left: 16px;
   font-weight: bolder;
   border-radius: 10px;
-  color: #c41a1a;
+  color:green;
 }
 
 .btn-container {
@@ -296,7 +296,7 @@ input[type="file"] {
 }
 
 .cardCategory:hover{
-transform:scale(1.15);
+transform:scale(1.1);
 
 }
 .cardCategory{
@@ -304,4 +304,79 @@ transform:scale(1.15);
 }
 .cardCategoryBtn{
   color: #27374d;
+}
+.category{
+  font-style: none;
+}
+.CatgorycardForPhone{
+  width: 18rem;
+}
+.cardWidth{
+  width: 15rem;
+}
+.Repeatcard{
+  display: "grid";
+  grid-template-columns : repeat(3,1fr);
+  place-items:"center"
+}
+.active>.page-link{
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+.pagination{
+  --bs-pagination-color: #ffc107 !important;
+}
+.main {
+  width: 50%;
+  margin: 50px auto;
+}
+
+/* Bootstrap 4 text input with search icon */
+
+.has-search .form-control {
+  padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  width: 2.375rem;
+  height: 2.375rem;
+  line-height: 2.375rem;
+  text-align: center;
+  pointer-events: none;
+  color: #aaa;
+}
+.aerrowStyle{
+  width: fit-content;
+  height: fit-content;
+  margin-top: 3rem;
+  display: flex; 
+justify-content: center; 
+align-items: center; 
+border-radius: 9999px; 
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.aerrowStyle:hover {
+cursor: pointer; 
+background-color:#ffc107
+}
+
+
+
+
+@media only screen and (max-width: 600px) {
+  .CatgorycardForPhone {
+    width: 8rem;
+  }
+  .cardWidth{
+    width: 10rem;
+  }
+  .Repeatcard{
+    display: "grid";
+    grid-template-columns :repeat(2,1fr);
+    place-items :"center";
+
+  }
 }
