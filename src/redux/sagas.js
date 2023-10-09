@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { confirmAlert } from "react-confirm-alert";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 // import { useNavigate } from "react-router-dom";
 
 const {
@@ -98,12 +99,22 @@ function* handleRegisterRequest(e) {
       //   data: jsonData.data.user_data,
       // });
     } else {
+      if(jsonData.message == "User already register!"){
+        Swal.fire({
+          icon: 'error',
+          title:'User Already Exist',
+        })
+        yield put({
+          type: "ComponentPropsManagement/handleLoginResponse",
+          data: {},
+        });
+      }
       // toast.error("Please enter correct username and password");
       // toast.error(jsonData.message);
-      yield put({
-        type: "ComponentPropsManagement/handleLoginResponse",
-        data: {},
-      });
+      // yield put({
+      //   type: "ComponentPropsManagement/handleLoginResponse",
+      //   data: {},
+      // });
     }
   }
 }

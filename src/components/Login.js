@@ -12,6 +12,7 @@ import { BASE_Url, isDev } from "../URL";
 
 import AddToHomeScreenButton from "./AddToHome";
 import axios from "axios";
+import Swal from "sweetalert2";
 const Login = () => {
   const params = useParams();
   console.log("LOGIN PARAMS", params);
@@ -41,6 +42,9 @@ const Login = () => {
         setPassword(res.data.data.password);
         setData(res.data.data)
         // setStoreData(res.data.data.store_name);
+      }).catch((error)=>{
+        // console.log("error occure",error)
+        Swal.fire("Not Allow", `Please Give Correct URL`, "error");
       });
   };
 

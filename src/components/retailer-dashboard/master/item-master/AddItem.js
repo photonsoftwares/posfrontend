@@ -30,6 +30,7 @@ import { Label, FormGroup } from "reactstrap";
 import { BASE_Url } from "../../../../URL";
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
+import Swal from "sweetalert2";
 const videoConstraints = {
   width: 200,
   facinMode: "enviorment",
@@ -217,39 +218,39 @@ const AddItem = ({
 
     fetch(`${BASE_Url}/item/update-item/${row.item_id}`, requestOptions)
       .then((response) => response.text())
-      .then((result) => console.log(result))
+      .then((result) => console.log("this result",result))
       .catch((error) => console.log("error", error));
     
     // console.log("Æ");
-    dispatch(
-      handleInventoryMasterRequest({
-        item_name: itemName,
-        // item_code: Number(itemCode),
-        item_code: row.item_id,
-        description: itemName,
-        price: Number(itemPrice),
-        // discount: Number(selectedOptionDiscount.value),
-        tax: Number(taxPercentage),
-        tax_code: Number(0),
-        status: row.status,
-        saas_id: saasId,
-        product_av_cost: purchasePrice,
-        product_cost: purchasePrice,
-        mrp: mrp,
-        sold_qty: 0,
-        // closing_qty: closingQuantity,
-        closing_qty: 0,
-        opening_qty: openingQuantity,
-        received_qty: receivedQuantity,
-        category: row.category,
-        product_price: itemPrice,
-        stock_qty: "0",
-        tax_percentage: taxPercentage,
-        store_id: storeId,
-        department: itemName,
-        // promo_id: saasId,
-      })
-    );
+    // dispatch(
+    //   handleInventoryMasterRequest({
+    //     item_name: itemName,
+    //     // item_code: Number(itemCode),
+    //     item_code: row.item_id,
+    //     description: itemName,
+    //     price: Number(itemPrice),
+    //     // discount: Number(selectedOptionDiscount.value),
+    //     tax: Number(taxPercentage),
+    //     tax_code: Number(0),
+    //     status: row.status,
+    //     saas_id: saasId,
+    //     product_av_cost: purchasePrice,
+    //     product_cost: purchasePrice,
+    //     mrp: mrp,
+    //     sold_qty: 0,
+    //     // closing_qty: closingQuantity,
+    //     closing_qty: 0,
+    //     opening_qty: openingQuantity,
+    //     received_qty: receivedQuantity,
+    //     category: row.category,
+    //     product_price: itemPrice,
+    //     stock_qty: "0",
+    //     tax_percentage: taxPercentage,
+    //     store_id: storeId,
+    //     department: itemName,
+    //     // promo_id: saasId,
+    //   })
+    // );
     
     if(image){
       const formData = new FormData();
@@ -273,6 +274,7 @@ const AddItem = ({
     //setProductId(undefined)
     setFlag(!flag)
     setAddUpdateItemModalIsOpen(false);
+    Swal.fire("Good job", `Item Updated Successfully. `, "success");
     
     // dispatch(handleUpdateItemToStoreRequest({ formData, id: row.item_id }));
 

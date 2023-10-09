@@ -5,6 +5,7 @@ import { Link, json, useParams } from "react-router-dom";
 import {
   handleRegisterRequest,
   handleStoreNameRequest,
+  handleLoginRequest
 } from "../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
 import { toast } from "react-toastify";
 // import { Email } from "@material-ui/icons";
@@ -12,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_Url } from "../URL";
 import AddToHomeScreenButton from "./AddToHome";
+import Swal from "sweetalert2";
 const Register = () => {
   const navigate = useNavigate();
   const [storeData, setStoreData] = useState("");
@@ -55,16 +57,44 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password === confirmPassword) {
-      dispatch(
-        handleRegisterRequest({
-          mobile_number: mobile,
-          password: password,
-          customer_name: userName,
-          store_id: params.storeId,
-          email: email,
-          saas_id: params.saasId,
-        })
-      );
+      if(mobile.length ==10){
+        dispatch(
+          handleRegisterRequest({
+            mobile_number: mobile,
+            password: password,
+            customer_name: userName,
+            store_id: params.storeId,
+            email: email,
+            saas_id: params.saasId,
+          })
+        );
+
+      }else{
+        return( Swal.fire({
+          icon: 'error',
+          title:'Invalid Mobile Number!',
+        }))
+      }
+      Swal.fire({
+        title: 'Click On Login',
+        // showDenyButton: true,
+        // showCancelButton: true,
+        confirmButtonText: 'Login',
+        // denyButtonText: `Don't save`,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          dispatch(
+            handleLoginRequest({
+              user_name: mobile,
+              password: password,
+            }));
+          // Swal.fire('Saved!', '', 'success')
+        } else if (result.isDenied) {
+          Swal.fire('Changes are not saved', '', 'info')
+        }
+      })
+    
       setConfirmPassword("");
       setStoreName("");
       setSaasId("");
@@ -157,7 +187,8 @@ const Register = () => {
               >
                 <TextField
                   size="small"
-                  type="text"
+                  type="number"
+                  inputProps={{ maxLength: 10 }}
                   className="form-control my-2"
                   id="customer-name"
                   label="Enter Your Mobile Number"
