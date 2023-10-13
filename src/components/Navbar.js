@@ -289,7 +289,7 @@ const Navbar = () => {
           ) : (
             ""
           )}
-          <div
+          {userType == "RETAILER" ? <div
             style={{
               display: "flex",
               flexDirection: "row",
@@ -420,7 +420,7 @@ const Navbar = () => {
                   </>
                 );
               })}
-          </div>
+          </div>:""}
         </div>
       </div>
       <div className="nevbar-menu">

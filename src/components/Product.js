@@ -24,6 +24,7 @@ import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import PaginationComponent from "../PaginationComponent";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Product = ({
   setSearchValue,
@@ -156,7 +157,7 @@ const Product = ({
                                 navigate(`/${saasId}/${storeId}`)
                                 localStorage.clear();
                               }else{
-                              toast.success("Item Added");
+                              // toast.success("Item Added");
                               item.price = item.new_price;
                               setData([...data]);
                               const el = JSON.parse(localStorage.getItem("my-cart"));
@@ -334,7 +335,13 @@ const Product = ({
                         if (selecteditem) {
                           if (pcsPrice) {
                             console.log("selected item", selecteditem)
-                          toast.success("Item Added");
+                          // toast.success("Item Added");
+                          Swal.fire({
+                            icon: 'success',
+                            title: 'Item Added',
+                            showConfirmButton: false,
+                            timer: 1500
+                          })
                           const el = JSON.parse(localStorage.getItem("my-cart"));
                           if (el) {
                             console.log("cart me kuch toh pada hai", el)
@@ -431,7 +438,13 @@ const Product = ({
                           setSearchValue("");
                           }else if (price) {
                             console.log("selected item", selecteditem)
-                          toast.success("Item Added");
+                          // toast.success("Item Added");
+                          Swal.fire({
+                            icon: 'success',
+                            title: 'Item Added',
+                            showConfirmButton: false,
+                            timer: 1500
+                          })
                           const el = JSON.parse(localStorage.getItem("my-cart"));
                           if (el) {
                             console.log("cart me kuch toh pada hai", el)
@@ -517,10 +530,22 @@ const Product = ({
                           }
                           
                         } else{
-                          toast.error("Please selecte right price");
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Please selecte right price',
+                            showConfirmButton: false,
+                            timer: 1500
+                          })
+                          // toast.error("Please selecte right price");
                         }
                       } else {
-                          toast.success("Item Added");
+                          // toast.success("Item Added");
+                          Swal.fire({
+                            icon: 'success',
+                            title: 'Item Added',
+                            showConfirmButton: false,
+                            timer: 1500
+                          })
                           const el = JSON.parse(localStorage.getItem("my-cart"));
                           if (el) {
                             console.log("cart me kuch toh pada hai", el)
@@ -595,6 +620,7 @@ const Product = ({
                             item["discount_menu_is_open"] = false;
                             item["discount_value"] = "";
                             item["amount_value"] = "";
+                            item["productQty"] = Number(item.product_qty);
                             item["new_price"] =
                               Number(item.price) * Number(item.productQty);
                             item["zero_price"] =

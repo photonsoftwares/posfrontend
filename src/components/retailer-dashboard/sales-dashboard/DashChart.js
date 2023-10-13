@@ -3,7 +3,7 @@ import Chart from "react-apexcharts";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, CardBody, Col, Row } from "reactstrap";
 import { handleSalesDashboardChartRequest } from "../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement";
-
+import moment from "moment";
 const DashChart = () => {
   const dispatch = useDispatch();
   const { sales_dashboard_chart_data } = useSelector(
@@ -48,6 +48,17 @@ const DashChart = () => {
     // }
   ];
 
+  function customDateParser(dateString) {
+    const parts = dateString.split("-");
+    if (parts.length === 3) {
+      return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+    return null;
+  }
+  
+  const formattedLabels = sales_dashboard_chart_data
+    ?.filter((io) => customDateParser(io.month) !== null)
+    .map((io) => moment(customDateParser(io.month)).format("MMM YYYY"))
   const options = {
     chart: {
       background: "#fff",
@@ -68,7 +79,8 @@ const DashChart = () => {
       enabled: true,
       enabledOnSeries: [1],
     },
-    labels: sales_dashboard_chart_data?.map((io) => io.month),
+    labels: formattedLabels,
+    // labels: sales_dashboard_chart_data?.map((io) => io.month),
     xaxis: {
       type: "datetime",
     },

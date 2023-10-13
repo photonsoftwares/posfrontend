@@ -349,7 +349,7 @@ const DataByCategory = () => {
     if (cartData?.length > 0) {
       let arr = [];
       cartData.map((item) => {
-        // console.log("ITEM is where", item);
+        console.log("ITEM is where", item);
 
         arr.push({
           product_name: item.category,
@@ -871,6 +871,7 @@ const DataByCategory = () => {
           const tempArr = res.data.data;
           tempArr?.map((el) => {
             el["bill_qty"] = 0;
+            el["productQty"] = 1;
           });
           // console.log("RES DEALER & Retailer", tempArr);
           setFilterdetails(tempArr);

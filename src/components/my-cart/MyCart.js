@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BASE_Url } from "../../URL";
 import { PrimaryButton } from "@react-pdf-viewer/core";
+import axios from "axios";
 const MyCart = ({
   show,
   cartData,
@@ -62,7 +63,7 @@ const MyCart = ({
   const [appliedDiscount, setAppliedDiscount] = useState({});
 
   const navigate = useNavigate();
-  const { saasId, storeId, userType, userId, userName } = localStorage.getItem(
+  const { saasId, storeId, userType, userId, userName,promoCaseCheck } = localStorage.getItem(
     "User_data"
   )
     ? JSON.parse(localStorage.getItem("User_data"))
@@ -151,26 +152,94 @@ const MyCart = ({
     setCartData([...cartData]);
   };
 
-  const handleDec = (item) => {
-    console.log("this is Decrment", item)
-    if (item.productQty === 1) {
-      item.productQty = item.productQty = 1;
-      item.new_price = item.price;
+  const handleDiscountOnQTY =async (Item,val)=>{
+    console.log('handleDiscountOnQTY',val)
+    if (val && val > 0.001) {
+      Item.productQty = Number(
+        parseFloat(val).toFixed(3)
+      );
+      const DicountPrice = await axios.get(`${BASE_Url}/item/get-discount/${Item.price}/${Item.productQty}`)
+      const discountless_price = DicountPrice.data.discount_price
+      Item.new_price =
+        discountless_price * Item.productQty
+        cartData.map((item) => {
+          if(Item.item_id ==item.item_id){
+            item.productQty= Item.productQty
+            item.discount_onQty =  discountless_price
+            item.discount_value = "";
+            item.amount_value = "";
+            item.new_price = discountless_price * item.productQty;
+            console.log("discount Price",item.new_price)
+          }
+        });
+      setCartData([...cartData]);
+      handleQuantityChange(Item);
     } else {
-      const q = item.productQty - 1;
-      item.productQty = q;
-      item.new_price = item.price * q;
+      Item.productQty = Number(1);
+      setCartData([...cartData]);
+      handleQuantityChange(Item);
     }
-    cartData.map((item) => {
-      item.discount_value = "";
-      item.amount_value = "";
-      item.new_price = item.price * item.productQty;
-    });
-    setDiscountPercentVal("");
-    setDiscountAmountVal("");
-    setTotalDiscountVal(0);
-    setCartData([...cartData]);
-    updateCartInLocalStorage(cartData);
+  }
+
+  const handleDec =async (Items) => {
+    console.log("this is Decrment", Items)
+    const {promoCaseCheck} = JSON.parse(localStorage.getItem("User_data")) 
+    if (promoCaseCheck=="YES") {
+      
+      if (Items.productQty == 1) {
+        const DicountPrice = await axios.get(`${BASE_Url}/item/get-discount/${Items.price}/${Items.productQty}`)
+        const discountless_price = DicountPrice.data.discount_price
+        Items.productQty = Items.productQty = 1;
+        Items.new_price = discountless_price;
+      }else{
+        console.log("this product Qty",Items.productQty)
+        const q = Items.productQty - 1;
+        Items.productQty = q;
+        console.log("this product Qty",Items.productQty)
+        const DicountPrice = await axios.get(`${BASE_Url}/item/get-discount/${Items.price}/${q}`)
+        const discountless_price = DicountPrice.data.discount_price
+
+        console.log("discount Price",Items.price * Items.productQty -  discountless_price * Items.productQty )
+        const dicountVal = Items.price * Items.productQty -  discountless_price * Items.productQty
+        handleDiscountAmount(Items, dicountVal)
+        // Items.new_price = discountless_price * q;
+        cartData.map((item) => {
+          if(Items.item_id ==item.item_id){
+            item.productQty= q
+            item.discount_onQty =  discountless_price
+            item.discount_value = "";
+            item.amount_value = "";
+            item.new_price = discountless_price * item.productQty;
+            // console.log("discount Price",item.new_price)
+          }
+        });
+        setDiscountPercentVal("");
+        setDiscountAmountVal("");
+        setTotalDiscountVal(0);
+        setCartData([...cartData]);
+        updateCartInLocalStorage(cartData);
+      }
+    }else{
+      if (Items.productQty === 1) {
+        Items.productQty = Items.productQty = 1;
+        Items.new_price = Items.price;
+      } else {
+        const q = Items.productQty - 1;
+        Items.productQty = q;
+        Items.new_price = Items.price * q;
+      }
+      cartData.map((item) => {
+        item.discount_value = "";
+        item.amount_value = "";
+        item.new_price = item.price * item.productQty;
+      });
+      setDiscountPercentVal("");
+      setDiscountAmountVal("");
+      setTotalDiscountVal(0);
+      setCartData([...cartData]);
+      updateCartInLocalStorage(cartData);
+
+    }
   };
 
   // console.log("cartData", cartData);
@@ -254,22 +323,51 @@ const MyCart = ({
     updateCartInLocalStorage(cartData);
   };
 
-  const handlePlusSign = (item) => {
-    const q = item.productQty + 1;
-    item.productQty = q;
-    const newP = item.price * q;
-    item.new_price = newP;
-
-    cartData.map((item) => {
+  const handlePlusSign = async(Items) => {
+    const {promoCaseCheck} = JSON.parse(localStorage.getItem("User_data")) 
+    if (promoCaseCheck == "YES") {
+      console.log("this is promoCaseCheck",promoCaseCheck)
+      const q = Items.productQty + 1;
+      Items.productQty = q;
+      const newP = Items.price * q;
+      Items.new_price = newP;
+      const DicountPrice = await axios.get(`${BASE_Url}/item/get-discount/${Items.price}/${q}`)
+      console.log('this dicount',DicountPrice.data.discount_price)
+      const discountless_price = DicountPrice.data.discount_price
+      const dicountVal = Items.price * Items.productQty -  discountless_price * Items.productQty
+        handleDiscountAmount(Items, dicountVal)
+      cartData.map((item) => {
+        if(Items.item_id ==item.item_id){
+      item.discount_onQty =  discountless_price
       item.discount_value = "";
       item.amount_value = "";
-      item.new_price = item.price * item.productQty;
-    });
-    setDiscountPercentVal("");
-    setDiscountAmountVal("");
-    setTotalDiscountVal(0);
-    setCartData([...cartData]);
-    updateCartInLocalStorage(cartData);
+      item.new_price = discountless_price * item.productQty;
+      
+    }
+  });
+      setDiscountPercentVal("");
+      setDiscountAmountVal("");
+      setTotalDiscountVal(0);
+      setCartData([...cartData]);
+      updateCartInLocalStorage(cartData);
+    }else{
+      console.log("else part")
+      const q = Items.productQty + 1;
+      Items.productQty = q;
+      const newP = Items.price * q;
+      Items.new_price = newP;
+      cartData.map((item) => {
+        item.discount_value = "";
+        item.amount_value = "";
+        item.new_price = item.price * item.productQty;
+      });
+      setDiscountPercentVal("");
+      setDiscountAmountVal("");
+      setTotalDiscountVal(0);
+      setCartData([...cartData]);
+      updateCartInLocalStorage(cartData);
+    }
+
   };
 
   let finalSum = 0;
@@ -328,7 +426,28 @@ const MyCart = ({
       );
     }
   }, []);
+  //  <----------Discount for First add to cart------->
+  const [firstAddToCartDiscount, setFirstAddToCartDiscount] = useState();
+  useEffect(() => {
+    if (promoCaseCheck =="YES") {
+      setFirstAddToCartDiscount(promoCaseCheck)
+      cartData?.map(async(item) => {
+          console.log("this call",promoCaseCheck)
+          const DicountPrice = await axios.get(`${BASE_Url}/item/get-discount/${item.price}/${item.productQty}`)
+          const discountless_price = DicountPrice.data.discount_price
+        const dicountVal = item.price * item.productQty -  discountless_price * item.productQty
+          handleDiscountAmount(item, dicountVal)
+        item.discount_onQty =  discountless_price
+        item.discount_value = "";
+        item.amount_value = "";
+        item.new_price = discountless_price * item.productQty;
+        
+      })
+    }
+  }, [firstAddToCartDiscount])
 
+
+  
   return (
     <Modal
       show={show}
@@ -344,6 +463,7 @@ const MyCart = ({
               onClick={() => {
                 // confirmBack();
                 // window.location.reload();
+                console.log("this click")
                 dispatch(handleShowModal({ bagModalIsOpne: !show_cart_modal }));
                 setShow(false);
               }}
@@ -410,7 +530,22 @@ const MyCart = ({
                         {!item.productId ? item.item_name : item.itemName}
                       </h4>
                     }
-                    <h5>{Math.round(item.price * item.productQty, 0)}</h5>
+                    <h5>
+                     { item?.discount_onQty ?<>
+                                    <span
+                                      style={{
+                                        textDecorationLine: "line-through",
+                                      }}
+                                    >
+                                      {Math.round(
+                                        item.price * item.productQty,
+                                        0
+                                      )}
+                                    </span>
+                                    / {Math.round(item.new_price, 0)}
+                                  </>:<> {Math.round(item.new_price, 0)}</>
+                      }
+                      </h5>
                     <div
                     // className="cart_product"
                     >
@@ -429,7 +564,7 @@ const MyCart = ({
                             onClick={() => {
                               handleDec(item);
                             }}
-                            style={{ marginRight: "10px" }}
+                            style={{ marginRight: "10px" ,cursor:"pointer" }}
                           />
 
                           <div style={{ width: "100px" }}>
@@ -444,19 +579,24 @@ const MyCart = ({
                               }}
                               onChange={(e) => {
                                 const val = e.target.value;
-                                if (val && val > 0.001) {
-                                  item.productQty = Number(
-                                    parseFloat(val).toFixed(3)
-                                  );
-                                  item.new_price = Math.trunc(
-                                    item.price * item.productQty
-                                  );
-                                  setCartData([...cartData]);
-                                  handleQuantityChange(item);
+                                const {promoCaseCheck} = JSON.parse(localStorage.getItem("User_data")) 
+                                if (promoCaseCheck == "YES") {
+                                 handleDiscountOnQTY(item,val)
                                 } else {
-                                  item.productQty = Number(0);
-                                  setCartData([...cartData]);
-                                  handleQuantityChange(item);
+                                  if (val && val > 0.001) {
+                                    item.productQty = Number(
+                                      parseFloat(val).toFixed(3)
+                                    );
+                                    item.new_price = Math.trunc(
+                                      item.price * item.productQty
+                                    );
+                                    setCartData([...cartData]);
+                                    handleQuantityChange(item);
+                                  } else {
+                                    item.productQty = Number(1);
+                                    setCartData([...cartData]);
+                                    handleQuantityChange(item);
+                                  }
                                 }
                               }}
                             />
@@ -464,7 +604,7 @@ const MyCart = ({
 
                           {/* {item.productQty} */}
                           <AiOutlinePlus
-                            style={{ marginLeft: "10px" }}
+                            style={{ marginLeft: "10px" ,cursor:"pointer"}}
                             onClick={() => {
                               handlePlusSign(item);
                             }}
@@ -647,7 +787,7 @@ const MyCart = ({
                   </div>
                 </div>
               </div>
-              {totalDiscountVal === 0 && (
+              {totalDiscountVal === 0 && userType== "RETAILER"&& promoCaseCheck !=="YES" &&(
                 <>
                   <div
                     style={{
@@ -897,7 +1037,7 @@ const MyCart = ({
                       Remove All
                     </button>
 
-                    <div>
+                   {userType=="RETAILER"&& promoCaseCheck !=="YES"? <div>
                       <button
                         type="button"
                         className="dissabled"
@@ -925,7 +1065,7 @@ const MyCart = ({
                         <LiaCookieSolid size={30} />
                         Invoice Discount
                       </button>
-                    </div>
+                    </div>:""}
                   </>
                 )}
               </div>
@@ -1137,6 +1277,7 @@ const MyCart = ({
                                 customers_all_addresses.length > 0
                                 ? setCustomerId(true)
                                 : setCustomerId(false);
+                                console.log("All Address",customers_all_addresses)
                               dispatch(
                                 handelCustomerAllAddressRequest({
                                   address_ids: addressData,

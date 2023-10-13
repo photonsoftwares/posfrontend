@@ -41,7 +41,10 @@ function* handleLoginRequest(e) {
   console.log("LOGIN DATA", jsonData);
   if (jsonData) {
     if (jsonData.status === true) {
-      toast.success("Login Successfully");
+      console.log("this user data",jsonData.data.user_data.userType)
+      if (jsonData.data.user_data.userType !=="GUEST") {
+        toast.success("Login Successfully");
+      }
       localStorage.setItem("Token", JSON.stringify(jsonData.data.jwt_response));
       localStorage.setItem(
         "Store_data",
